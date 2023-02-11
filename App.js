@@ -1,5 +1,6 @@
+import React, { useCallback, useEffect, useState } from "react";
 import { StatusBar } from "expo-status-bar";
-import { StyleSheet, View } from "react-native";
+import { View } from "react-native";
 import * as SplashScreen from "expo-splash-screen";
 import {
     useFonts,
@@ -16,10 +17,8 @@ import {
     NanumGothic_700Bold,
     NanumGothic_800ExtraBold,
 } from "@expo-google-fonts/nanum-gothic";
-import { useCallback, useEffect, useState } from "react";
-import TitleText from "./component/text/TitleText";
-import SubTitleText from "./component/text/SubTitleText";
-import PlainText from "./component/text/PlainText";
+import { LoginProvider } from "./context/LoginContext";
+import RootNavigator from "./navigator/RootNavigator";
 
 SplashScreen.preventAutoHideAsync();
 
@@ -64,11 +63,11 @@ export default function App() {
     }
 
     return (
-        <View style={{ flex: 1 }} onLayout={onLayoutRootView}>
-            <TitleText>제목: 로그인 회원가입</TitleText>
-            <SubTitleText>부제목: 아이디 비밀번호</SubTitleText>
-            <PlainText>텍스트 원본</PlainText>
-            <StatusBar style="auto" />
-        </View>
+        <LoginProvider>
+            <View style={{ flex: 1 }} onLayout={onLayoutRootView}>
+                <RootNavigator />
+                <StatusBar style="auto" />
+            </View>
+        </LoginProvider>
     );
 }
