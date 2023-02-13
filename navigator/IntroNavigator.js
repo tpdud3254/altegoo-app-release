@@ -1,9 +1,7 @@
 import { createStackNavigator } from "@react-navigation/stack";
 import React from "react";
 import Intro from "../screen/Intro";
-// import Intro from "../screens/Intro";
-// import SignInNavigator from "./SignInNavigator";
-// import SignUpNavigator from "./SignUpNavigator";
+import SignInNavigator from "./SignInNavigator";
 
 const Stack = createStackNavigator();
 
@@ -15,15 +13,15 @@ export default function IntroNavigator() {
                 component={Intro}
                 options={{ headerShown: false }}
             />
-            {/* <Stack.Screen
+            <Stack.Screen
                 name="SignInNavigator"
                 component={SignInNavigator}
                 options={{
                     title: "",
                     headerShown: false,
-                    // headerShown: false,
                 }}
             />
+            {/*
             <Stack.Screen
                 name="SignUpNavigator"
                 component={SignUpNavigator}

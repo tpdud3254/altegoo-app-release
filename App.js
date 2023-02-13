@@ -1,6 +1,5 @@
 import React, { useCallback, useEffect, useState } from "react";
-import { StatusBar } from "expo-status-bar";
-import { View } from "react-native";
+import { StatusBar, View } from "react-native";
 import * as SplashScreen from "expo-splash-screen";
 import {
     useFonts,
@@ -17,8 +16,11 @@ import {
     NanumGothic_700Bold,
     NanumGothic_800ExtraBold,
 } from "@expo-google-fonts/nanum-gothic";
+import Toast from "react-native-toast-message";
 import { LoginProvider } from "./context/LoginContext";
 import RootNavigator from "./navigator/RootNavigator";
+import { toastConfig } from "./component/Toast";
+import { UserProvider } from "./context/UserContext";
 
 SplashScreen.preventAutoHideAsync();
 
@@ -63,11 +65,14 @@ export default function App() {
     }
 
     return (
-        <LoginProvider>
-            <View style={{ flex: 1 }} onLayout={onLayoutRootView}>
-                <RootNavigator />
-                <StatusBar style="auto" />
-            </View>
-        </LoginProvider>
+        <View style={{ flex: 1 }} onLayout={onLayoutRootView}>
+            <LoginProvider>
+                <UserProvider>
+                    <RootNavigator />
+                </UserProvider>
+            </LoginProvider>
+            <StatusBar style="dark-content" />
+            <Toast position="bottom" bottomOffset="50" config={toastConfig} />
+        </View>
     );
 }

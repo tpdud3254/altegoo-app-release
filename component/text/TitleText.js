@@ -8,6 +8,8 @@ function TitleText(props) {
             style={{
                 fontSize: 35,
                 fontFamily: "IBMPlexSansKR_500Medium",
+                marginTop: -20,
+                marginBottom: -20,
                 ...props.style,
             }}
         >
