@@ -1,7 +1,5 @@
 import React, { useContext, useEffect, useRef, useState } from "react";
 import styled from "styled-components/native";
-import PropTypes from "prop-types";
-import { Text, TouchableOpacity, View } from "react-native";
 import DefaultLayout from "../../component/layout/DefaultLayout";
 import TitleText from "../../component/text/TitleText";
 import ColumnInputItem from "../../component/item/ColumnInputItem";
