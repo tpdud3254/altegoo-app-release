@@ -1,6 +1,11 @@
 import { createStackNavigator } from "@react-navigation/stack";
 import * as React from "react";
 import SignUp from "../screen/auth/SignUp/SignUp";
+import SignUpStep1 from "../screen/auth/SignUp/SignUpStep1";
+import SignUpStep2 from "../screen/auth/SignUp/SignUpStep2";
+import SignUpStep3 from "../screen/auth/SignUp/SignUpStep3";
+import SignUpStep4 from "../screen/auth/SignUp/SignUpStep4";
+import SignUpStep5 from "../screen/auth/SignUp/SignUpStep5";
 // import DetailTerms from "../screens/DetailTerms";
 // import SignUp from "../screens/SignUp/SignUp";
 // import SignUpStep1 from "../screens/SignUp/SignUpStep1";
@@ -28,7 +33,7 @@ export default function SignUpNavigator() {
         component={SignUp}
         options={{ title: "알테구 회원가입" }}
       />
-      {/* <Stack.Screen name="SignUpStep1" component={SignUpStep1} />
+      <Stack.Screen name="SignUpStep1" component={SignUpStep1} />
       <Stack.Screen name="SignUpStep2" component={SignUpStep2} />
       <Stack.Screen name="SignUpStep3" component={SignUpStep3} />
       <Stack.Screen name="SignUpStep4" component={SignUpStep4} />
@@ -39,6 +44,7 @@ export default function SignUpNavigator() {
           headerShown: false,
         }}
       />
+      {/*
       <Stack.Screen
         name="TakePhoto"
         component={TakePhoto}

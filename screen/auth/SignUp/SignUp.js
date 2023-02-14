@@ -6,6 +6,7 @@ import DefaultLayout from "../../../component/layout/DefaultLayout";
 import SubTitleText from "../../../component/text/SubTitleText";
 import PlainText from "../../../component/text/PlainText";
 import { theme } from "../../../styles";
+import { ORDINARY, SPECIAL } from "../../../constant";
 
 const Container = styled.View`
   justify-content: space-evenly;
@@ -19,14 +20,7 @@ const Button = styled.TouchableOpacity`
   border-radius: 5px;
   margin-bottom: 5px;
 `;
-const ButtonText = styled.Text`
-  color: ${theme.lightFontColor};
-  font-size: 30px;
-`;
 const Content = styled.View``;
-const ContentText = styled.Text`
-  font-size: 20px;
-`;
 
 function SignUp() {
   const { setInfo } = useContext(UserContext);
