@@ -7,12 +7,13 @@ import Home from "../screen/main/home/Home";
 import RegistWork from "../screen/main/regist/RegistWork";
 import SearchAddress from "../screen/main/regist/SearchAddress";
 import SelectWorkTheme from "../screen/main/regist/SelectWorkTheme";
-import Works from "../screen/main/works/Works";
+import SearchWork from "../screen/main/search/SearchWork";
 import { Ionicons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 import PlainText from "../component/text/PlainText";
 import { View } from "react-native";
 import WorkSchedule from "../screen/main/schedule/WorkSchedule";
+import RegistDone from "../screen/main/regist/RegistDone";
 
 const Tabs = createBottomTabNavigator();
 const Stack = createStackNavigator();
@@ -94,7 +95,7 @@ export default function TabsNavigator() {
                             iconName="add-circle"
                             size={24}
                             focused={focused}
-                            iconText="작업 등록"
+                            iconText="작업등록"
                         />
                     ),
                 }}
@@ -122,22 +123,28 @@ export default function TabsNavigator() {
                                 headerShown: true,
                             }}
                         />
+                        <Stack.Screen
+                            name="RegistDone"
+                            component={RegistDone}
+                            options={{ headerShown: false }}
+                        />
                     </Stack.Navigator>
                 )}
             </Tabs.Screen>
             <Tabs.Screen
-                name="Works"
+                name="SearchWork"
                 options={{
+                    headerTitle: "작업검색",
                     tabBarIcon: ({ focused, color, size }) => (
                         <TabIcon
-                            iconName="list"
+                            iconName="search"
                             size={24}
                             focused={focused}
-                            iconText="내 작업"
+                            iconText="작업검색"
                         />
                     ),
                 }}
-                component={Works}
+                component={SearchWork}
             />
             <Tabs.Screen
                 name="WorkSchedule"

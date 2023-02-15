@@ -235,6 +235,10 @@ function RegistWork({ route, navigation }) {
             {text}
         </PlainText>
     );
+
+    const testSubmit = () => {
+        navigation.navigate("RegistDone");
+    };
     return (
         <DefaultLayout>
             <Container>
@@ -537,6 +541,7 @@ function RegistWork({ route, navigation }) {
                     <View style={{ marginTop: 10 }}>
                         <SubmitButton
                             text="작업등록"
+                            onPress={testSubmit}
                             // onPress={handleSubmit(onValid)}
                         />
                     </View>
