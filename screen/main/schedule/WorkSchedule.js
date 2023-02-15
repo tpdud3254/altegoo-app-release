@@ -12,7 +12,7 @@ import PlainText from "../../../component/text/PlainText";
 import TruckLogo from "../../../component/logo/TruckLogo";
 import { theme } from "../../../styles";
 
-function Home() {
+function WorkSchedule() {
   const { setIsLoggedIn } = useContext(LoginContext);
   const { setInfo } = useContext(UserContext);
   const navigation = useNavigation();
@@ -103,11 +103,11 @@ function Home() {
         </View>
         <View style={{ flexDirection: "row", alignItems: "center" }}>
           <Ionicons name="person" color="black" size={25} />
-          <PlainText>20건 작업 요청 중</PlainText>
+          <PlainText>6건 예정</PlainText>
         </View>
       </View>
       <ScrollView>
-        <View>
+        <View style={{ marginBottom: 10 }}>
           <View
             style={{
               flexDirection: "row",
@@ -118,10 +118,10 @@ function Home() {
             <TouchableOpacity
               style={{ flexDirection: "row", alignItems: "center" }}
             >
-              <PlainText>서울 작업 10개</PlainText>
+              <PlainText>서울 작업 3개</PlainText>
               <Ionicons name="checkmark-circle" color="black" size={25} />
             </TouchableOpacity>
-            <TouchableOpacity
+            {/* <TouchableOpacity
               style={{ flexDirection: "row", alignItems: "center" }}
             >
               <PlainText>모든 작업 보기</PlainText>
@@ -130,26 +130,51 @@ function Home() {
                 color="black"
                 size={25}
               />
-            </TouchableOpacity>
+            </TouchableOpacity> */}
           </View>
           <View>
             {/* list */}
             <Work />
             <Work />
             <Work />
-            <Work />
-            <Work />
+          </View>
+        </View>
+        <View style={{ marginBottom: 10 }}>
+          <View
+            style={{
+              flexDirection: "row",
+              alignItems: "center",
+              justifyContent: "space-between",
+            }}
+          >
+            <TouchableOpacity
+              style={{ flexDirection: "row", alignItems: "center" }}
+            >
+              <PlainText>경기 북서부 작업 3개</PlainText>
+              <Ionicons name="checkmark-circle" color="black" size={25} />
+            </TouchableOpacity>
+            {/* <TouchableOpacity
+              style={{ flexDirection: "row", alignItems: "center" }}
+            >
+              <PlainText>모든 작업 보기</PlainText>
+              <Ionicons
+                name="checkmark-circle-outline"
+                color="black"
+                size={25}
+              />
+            </TouchableOpacity> */}
+          </View>
+          <View>
+            {/* list */}
             <Work />
             <Work />
             <Work />
           </View>
         </View>
-
-        <View></View>
       </ScrollView>
     </DefaultLayout>
   );
 }
 
-Home.propTypes = {};
-export default Home;
+WorkSchedule.propTypes = {};
+export default WorkSchedule;
