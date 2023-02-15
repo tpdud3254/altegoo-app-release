@@ -1,6 +1,6 @@
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { createStackNavigator } from "@react-navigation/stack";
-import React from "react";
+import React, { useContext } from "react";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import TabIcon from "../component/icon/TabIcons";
 import Home from "../screen/main/home/Home";
@@ -14,11 +14,17 @@ import PlainText from "../component/text/PlainText";
 import { View } from "react-native";
 import WorkSchedule from "../screen/main/schedule/WorkSchedule";
 import RegistDone from "../screen/main/regist/RegistDone";
+import UserContext from "../context/UserContext";
+import { ORDINARY } from "../constant";
+import RegistNavigator from "./RegistNavigator";
 
 const Tabs = createBottomTabNavigator();
 const Stack = createStackNavigator();
 
 export default function TabsNavigator() {
+    const { info, setInfo } = useContext(UserContext);
+
+    console.log(info);
     const navigation = useNavigation();
 
     const onPress = () => {
@@ -29,6 +35,7 @@ export default function TabsNavigator() {
         // navigation.navigate("DrawerNavigator");
         console.log("user info??");
     };
+
     return (
         <Tabs.Navigator
             screenOptions={{
@@ -71,96 +78,88 @@ export default function TabsNavigator() {
                 ),
             }}
         >
-            <Tabs.Screen
-                name="Home"
-                options={{
-                    headerTitle: "작업요청 리스트",
-                    tabBarIcon: ({ focused, color, size }) => (
-                        <TabIcon
-                            iconName="home"
-                            size={22}
-                            focused={focused}
-                            iconText="홈"
-                        />
-                    ),
-                }}
-                component={Home}
-            />
-            <Tabs.Screen
-                name="TabRegistWork"
-                options={{
-                    headerShown: false,
-                    tabBarIcon: ({ focused, color, size }) => (
-                        <TabIcon
-                            iconName="add-circle"
-                            size={24}
-                            focused={focused}
-                            iconText="작업등록"
-                        />
-                    ),
-                }}
-            >
-                {() => (
-                    <Stack.Navigator>
-                        <Stack.Screen
-                            name="SelectWorkTheme"
-                            component={SelectWorkTheme}
-                            options={{ headerShown: false }}
-                        />
-                        <Stack.Screen
-                            name="RegistWork"
-                            component={RegistWork}
-                            options={{
-                                headerBackTitleVisible: false,
-                                title: "작업 등록",
-                            }}
-                        />
-                        <Stack.Screen
-                            name="SearchAddress"
-                            component={SearchAddress}
-                            options={{
-                                title: "주소 검색",
-                                headerShown: true,
-                            }}
-                        />
-                        <Stack.Screen
-                            name="RegistDone"
-                            component={RegistDone}
-                            options={{ headerShown: false }}
-                        />
-                    </Stack.Navigator>
-                )}
-            </Tabs.Screen>
-            <Tabs.Screen
-                name="SearchWork"
-                options={{
-                    headerTitle: "작업검색",
-                    tabBarIcon: ({ focused, color, size }) => (
-                        <TabIcon
-                            iconName="search"
-                            size={24}
-                            focused={focused}
-                            iconText="작업검색"
-                        />
-                    ),
-                }}
-                component={SearchWork}
-            />
-            <Tabs.Screen
-                name="WorkSchedule"
-                options={{
-                    headerTitle: "작업일정",
-                    tabBarIcon: ({ focused, color, size }) => (
-                        <TabIcon
-                            iconName="calendar"
-                            size={24}
-                            focused={focused}
-                            iconText="작업일정"
-                        />
-                    ),
-                }}
-                component={WorkSchedule}
-            />
+            {info.userType === ORDINARY ? (
+                <>
+                    <Tabs.Screen
+                        name="WorkSchedule"
+                        options={{
+                            headerTitle: "작업일정",
+                            tabBarIcon: ({ focused, color, size }) => (
+                                <TabIcon
+                                    iconName="calendar"
+                                    size={24}
+                                    focused={focused}
+                                    iconText="작업일정"
+                                />
+                            ),
+                        }}
+                        component={WorkSchedule}
+                    />
+                    <Tabs.Screen
+                        name="TabRegistWork"
+                        options={{
+                            headerShown: false,
+                            tabBarIcon: ({ focused, color, size }) => (
+                                <TabIcon
+                                    iconName="add-circle"
+                                    size={24}
+                                    focused={focused}
+                                    iconText="작업등록"
+                                />
+                            ),
+                        }}
+                        component={RegistNavigator}
+                    />
+                </>
+            ) : (
+                <>
+                    <Tabs.Screen
+                        name="SearchWork"
+                        options={{
+                            headerTitle: "작업요청 목록",
+                            tabBarIcon: ({ focused, color, size }) => (
+                                <TabIcon
+                                    iconName="search"
+                                    size={24}
+                                    focused={focused}
+                                    iconText="작업검색"
+                                />
+                            ),
+                        }}
+                        component={SearchWork}
+                    />
+                    <Tabs.Screen
+                        name="TabRegistWork"
+                        options={{
+                            headerShown: false,
+                            tabBarIcon: ({ focused, color, size }) => (
+                                <TabIcon
+                                    iconName="add-circle"
+                                    size={24}
+                                    focused={focused}
+                                    iconText="작업등록"
+                                />
+                            ),
+                        }}
+                        component={RegistNavigator}
+                    />
+                    <Tabs.Screen
+                        name="WorkSchedule"
+                        options={{
+                            headerTitle: "작업일정",
+                            tabBarIcon: ({ focused, color, size }) => (
+                                <TabIcon
+                                    iconName="calendar"
+                                    size={24}
+                                    focused={focused}
+                                    iconText="작업일정"
+                                />
+                            ),
+                        }}
+                        component={WorkSchedule}
+                    />
+                </>
+            )}
         </Tabs.Navigator>
     );
 }

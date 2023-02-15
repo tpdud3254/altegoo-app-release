@@ -1,6 +1,6 @@
 export const VALID = "VALID";
 
-export const ORDINARY = "ordinary";
-export const SPECIAL = "special";
-export const PERSON = "person";
-export const COMPANY = "company";
+export const ORDINARY = "ORDINARY";
+export const SPECIAL = "SPECIAL";
+export const PERSON = "PERSON";
+export const COMPANY = "COMPANY";

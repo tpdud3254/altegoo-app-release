@@ -1,10 +1,27 @@
-import React from "react";
+import React, { useContext } from "react";
 import styled from "styled-components/native";
 import PropTypes from "prop-types";
 import { TouchableOpacity, View } from "react-native";
 import PlainText from "../../../component/text/PlainText";
+import UserContext from "../../../context/UserContext";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import LoginContext from "../../../context/LoginContext";
 
 function Menus({ navigation }) {
+    const { setIsLoggedIn } = useContext(LoginContext);
+    const { setInfo } = useContext(UserContext);
+    const Logout = () => (
+        <TouchableOpacity
+            onPress={async () => {
+                setIsLoggedIn(false);
+                setInfo({});
+                await AsyncStorage.removeItem("token");
+            }}
+        >
+            <PlainText>로그아웃</PlainText>
+        </TouchableOpacity>
+    );
+
     return (
         <View
             style={{ flex: 1, alignItems: "center", justifyContent: "center" }}
@@ -47,6 +64,7 @@ function Menus({ navigation }) {
             >
                 <PlainText>부정당회원</PlainText>
             </TouchableOpacity>
+            <Logout />
         </View>
     );
 }
