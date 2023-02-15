@@ -9,7 +9,7 @@ const Container = styled.View`
     margin: 8px 0px 8px 0px;
 `;
 
-function ColumnInputItem({ title, children, width }) {
+function TitleInputItem({ title, children, width }) {
     return (
         <Container width={width}>
             <SubTitleText style={{ paddingBottom: 5 }}>{title}</SubTitleText>
@@ -18,8 +18,8 @@ function ColumnInputItem({ title, children, width }) {
     );
 }
 
-ColumnInputItem.propTypes = {
+TitleInputItem.propTypes = {
     title: PropTypes.string.isRequired,
     width: PropTypes.string,
 };
-export default ColumnInputItem;
+export default TitleInputItem;

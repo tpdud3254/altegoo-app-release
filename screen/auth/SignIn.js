@@ -4,7 +4,7 @@ import FormLayout from "../../component/layout/FormLayout";
 import TitleText from "../../component/text/TitleText";
 import SubTitleText from "../../component/text/SubTitleText";
 import { TextInput } from "../../component/input/TextInput";
-import ColumnInputItem from "../../component/item/ColumnInputItem";
+import TitleInputItem from "../../component/item/TitleInputItem";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import PlainText from "../../component/text/PlainText";
 import PlainButton from "../../component/button/PlainButton";
@@ -114,7 +114,7 @@ function SignIn() {
                 </Title>
                 <InputContainer>
                     <View>
-                        <ColumnInputItem title="휴대폰번호">
+                        <TitleInputItem title="휴대폰번호">
                             <TextInput
                                 placeholder="숫자만 적어주세요"
                                 keyboardType="number-pad"
@@ -122,8 +122,8 @@ function SignIn() {
                                 onSubmitEditing={() => onNext(passwordRef)}
                                 onChangeText={(text) => setValue("phone", text)}
                             />
-                        </ColumnInputItem>
-                        <ColumnInputItem title="비밀번호">
+                        </TitleInputItem>
+                        <TitleInputItem title="비밀번호">
                             <Password>
                                 <TextInput
                                     ref={passwordRef}
@@ -139,7 +139,7 @@ function SignIn() {
                                     <PlainText>보기</PlainText>
                                 </TouchableOpacity>
                             </Password>
-                        </ColumnInputItem>
+                        </TitleInputItem>
                     </View>
                     <PlainButton
                         text="비밀번호 초기화"

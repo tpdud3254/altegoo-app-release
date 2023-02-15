@@ -18,130 +18,142 @@ const Tabs = createBottomTabNavigator();
 const Stack = createStackNavigator();
 
 export default function TabsNavigator() {
-  const navigation = useNavigation();
+    const navigation = useNavigation();
 
-  const onPress = () => {
-    navigation.navigate("DrawerNavigator");
-  };
+    const onPress = () => {
+        navigation.navigate("DrawerNavigator");
+    };
 
-  const onPress2 = () => {
-    // navigation.navigate("DrawerNavigator");
-    console.log("user info??");
-  };
-  return (
-    <Tabs.Navigator
-      screenOptions={{
-        headerShown: true,
-        // headerShown: false,
-        tabBarShowLabel: false,
-        tabBarStyle: {
-          borderTopColor: "rgba(0,0,0,0.3)",
-          paddingTop: 0,
-          height: 70,
-        },
-        // headerStatusBarHeight: 80,
-        headerLeft: () => (
-          <TouchableOpacity onPress={onPress} style={{ marginLeft: 10 }}>
-            <Ionicons name="menu" color="black" size={30} />
-          </TouchableOpacity>
-        ),
-        headerRight: () => (
-          <TouchableOpacity onPress={onPress2} style={{ marginRight: 10 }}>
-            <View style={{ flexDirection: "row" }}>
-              <View>
-                <PlainText>고세영 님</PlainText>
-                <PlainText>10,000p</PlainText>
-              </View>
-              <View>
-                <Ionicons name="person-circle" color="black" size={50} />
-              </View>
-            </View>
-          </TouchableOpacity>
-        ),
-      }}
-    >
-      <Tabs.Screen
-        name="Home"
-        options={{
-          headerTitle: "작업요청 리스트",
-          tabBarIcon: ({ focused, color, size }) => (
-            <TabIcon
-              iconName="home"
-              size={22}
-              focused={focused}
-              iconText="홈"
+    const onPress2 = () => {
+        // navigation.navigate("DrawerNavigator");
+        console.log("user info??");
+    };
+    return (
+        <Tabs.Navigator
+            screenOptions={{
+                headerShown: true,
+                // headerShown: false,
+                tabBarShowLabel: false,
+                tabBarStyle: {
+                    borderTopColor: "rgba(0,0,0,0.3)",
+                    paddingTop: 0,
+                    height: 70,
+                },
+                // headerStatusBarHeight: 80,
+                headerLeft: () => (
+                    <TouchableOpacity
+                        onPress={onPress}
+                        style={{ marginLeft: 10 }}
+                    >
+                        <Ionicons name="menu" color="black" size={30} />
+                    </TouchableOpacity>
+                ),
+                headerRight: () => (
+                    <TouchableOpacity
+                        onPress={onPress2}
+                        style={{ marginRight: 10 }}
+                    >
+                        <View style={{ flexDirection: "row" }}>
+                            <View>
+                                <PlainText>고세영 님</PlainText>
+                                <PlainText>10,000p</PlainText>
+                            </View>
+                            <View>
+                                <Ionicons
+                                    name="person-circle"
+                                    color="black"
+                                    size={50}
+                                />
+                            </View>
+                        </View>
+                    </TouchableOpacity>
+                ),
+            }}
+        >
+            <Tabs.Screen
+                name="Home"
+                options={{
+                    headerTitle: "작업요청 리스트",
+                    tabBarIcon: ({ focused, color, size }) => (
+                        <TabIcon
+                            iconName="home"
+                            size={22}
+                            focused={focused}
+                            iconText="홈"
+                        />
+                    ),
+                }}
+                component={Home}
             />
-          ),
-        }}
-        component={Home}
-      />
-      <Tabs.Screen
-        name="TabRegistWork"
-        options={{
-          tabBarIcon: ({ focused, color, size }) => (
-            <TabIcon
-              iconName="add-circle"
-              size={24}
-              focused={focused}
-              iconText="작업 등록"
+            <Tabs.Screen
+                name="TabRegistWork"
+                options={{
+                    headerShown: false,
+                    tabBarIcon: ({ focused, color, size }) => (
+                        <TabIcon
+                            iconName="add-circle"
+                            size={24}
+                            focused={focused}
+                            iconText="작업 등록"
+                        />
+                    ),
+                }}
+            >
+                {() => (
+                    <Stack.Navigator>
+                        <Stack.Screen
+                            name="SelectWorkTheme"
+                            component={SelectWorkTheme}
+                            options={{ headerShown: false }}
+                        />
+                        <Stack.Screen
+                            name="RegistWork"
+                            component={RegistWork}
+                            options={{
+                                headerBackTitleVisible: false,
+                                title: "작업 등록",
+                            }}
+                        />
+                        <Stack.Screen
+                            name="SearchAddress"
+                            component={SearchAddress}
+                            options={{
+                                title: "주소 검색",
+                                headerShown: true,
+                            }}
+                        />
+                    </Stack.Navigator>
+                )}
+            </Tabs.Screen>
+            <Tabs.Screen
+                name="Works"
+                options={{
+                    tabBarIcon: ({ focused, color, size }) => (
+                        <TabIcon
+                            iconName="list"
+                            size={24}
+                            focused={focused}
+                            iconText="내 작업"
+                        />
+                    ),
+                }}
+                component={Works}
             />
-          ),
-        }}
-      >
-        {() => (
-          <Stack.Navigator>
-            <Stack.Screen
-              name="SelectWorkTheme"
-              component={SelectWorkTheme}
-              options={{ headerShown: false }}
+            <Tabs.Screen
+                name="WorkSchedule"
+                options={{
+                    headerTitle: "작업일정",
+                    tabBarIcon: ({ focused, color, size }) => (
+                        <TabIcon
+                            iconName="calendar"
+                            size={24}
+                            focused={focused}
+                            iconText="작업일정"
+                        />
+                    ),
+                }}
+                component={WorkSchedule}
             />
-            <Stack.Screen
-              name="RegistWork"
-              component={RegistWork}
-              options={{
-                headerBackTitleVisible: false,
-                title: "작업 등록",
-              }}
-            />
-            <Stack.Screen
-              name="SearchAddress"
-              component={SearchAddress}
-              options={{
-                headerShown: false,
-              }}
-            />
-          </Stack.Navigator>
-        )}
-      </Tabs.Screen>
-      <Tabs.Screen
-        name="Works"
-        options={{
-          tabBarIcon: ({ focused, color, size }) => (
-            <TabIcon
-              iconName="list"
-              size={24}
-              focused={focused}
-              iconText="내 작업보기"
-            />
-          ),
-        }}
-        component={Works}
-      />
-      <Tabs.Screen
-        name="WorkSchedule"
-        options={{
-          headerTitle: "작업일정",
-          tabBarIcon: ({ focused, color, size }) => (
-            <TabIcon
-              iconName="calendar"
-              size={24}
-              focused={focused}
-              iconText="작업일정"
-            />
-          ),
-        }}
-        component={WorkSchedule}
-      />
-    </Tabs.Navigator>
-  );
+        </Tabs.Navigator>
+    );
 }
