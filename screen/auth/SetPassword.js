@@ -67,29 +67,29 @@ function SetPassword() {
     //       const { result, msg } = data;
     //       if (result) {
     //         Toast.show({
-    //           type: "error",
-    //           text1: "비밀번호가 변경 되었습니다.",
+    //           type: "errorToast",
+    //           props: "비밀번호가 변경 되었습니다.",
     //         });
     //         navigation.navigate("SignIn", {
     //           reset: true,
     //         });
     //       } else {
     //         Toast.show({
-    //           type: "error",
-    //           text1: msg,
+    //           type: "errorToast",
+    //           props: msg,
     //         });
     //       }
     //     });
     //   } else {
     //     Toast.show({
-    //       type: "error",
-    //       text1: "비밀번호가 조건에 맞지 않습니다.",
+    //       type: "errorToast",
+    //       props: "비밀번호가 조건에 맞지 않습니다.",
     //     });
     //   }
     // } else {
     //   Toast.show({
-    //     type: "error",
-    //     text1: "비밀번호가 일치하지 않습니다.",
+    //     type: "errorToast",
+    //     props: "비밀번호가 일치하지 않습니다.",
     //   });
     // }
   };
