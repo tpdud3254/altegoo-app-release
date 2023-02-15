@@ -48,8 +48,6 @@ function SelectWorkTheme({ navigation }) {
             style={{
                 color: "white",
                 fontSize: 20,
-                marginTop: -10,
-                marginBottom: 15,
             }}
         >
             {text}

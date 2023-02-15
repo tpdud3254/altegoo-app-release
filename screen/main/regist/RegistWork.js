@@ -109,12 +109,55 @@ function RegistWork({ route, navigation }) {
     const [selectedFloor, setSelectedFloor] = useState();
     const [detailAddress, setDetailAddress] = useState(["", ""]);
     const [cost, setCost] = useState(10000);
-    const [commission, setCommission] = useState(10000);
+    const [commission, setCommission] = useState(10000); //TODO:수수료 받아오기
     const [directPayment, setDirectPayment] = useState(false);
     const { info, setInfo } = useContext(UserContext);
     const { register, handleSubmit, setValue, getValues, watch } = useForm();
 
-    console.log(route);
+    console.log(route?.params?.range);
+    console.log(route?.params?.type);
+    console.log(
+        route?.params?.addressArr ? route?.params?.addressArr[0] : null
+    );
+    console.log(
+        route?.params?.addressArr ? route?.params?.addressArr[1] : null
+    );
+
+    const dataArr = {
+        // TODO:이전 날짜 선택 안되게 하기
+        workDate: selectedDate.year
+            ? `${selectedDate.year}-${selectedDate.month}-${selectedDate.date}`
+            : `${initDate.year}-${initDate.month}-${initDate.date}`,
+        // TODO:지난 시간 선택 안되게 하기
+        workTime: `${time.hours}:${time.min}`,
+        workType: route?.params?.type,
+        workHeight: route?.params?.range,
+        workFloor: floor[selectedFloor],
+        upDown: false, //TODO:수정
+        phone: info.phone, //TODO:입력 받을 시 다시 수정
+        workQuantity: selectedQuantity,
+        address: route?.params?.addressArr //TODO:상세주소 추가
+            ? route?.params?.addressArr[0]
+            : null,
+        sendAddress: route?.params?.addressArr //TODO:상세주소 추가
+            ? route?.params?.addressArr[1]
+            : null,
+        cost,
+        commission,
+        onSitePayment: false, //TODO:수정
+        memo: "", //TODO: 수정
+    };
+
+    console.log(dataArr);
+
+    useEffect(() => {
+        register("phone", { required: true });
+        register("detailAddress");
+        register("sendDetailAddress");
+        register("cost", { required: true });
+        register("commision", { required: true });
+        register("memo");
+    }, [register]);
     useEffect(() => {
         const now = new Date();
 
@@ -143,9 +186,18 @@ function RegistWork({ route, navigation }) {
 
         setInitDate({ ...today });
         setTime({ ...time });
+
+        setSelectedFloor(
+            route?.params?.range === "high"
+                ? 11
+                : route?.params?.range === "middle"
+                ? 8
+                : 2
+        );
     }, []);
 
-    const pickerRef = useRef();
+    const floorPickerRef = useRef();
+    const QuantityPickerRef = useRef();
 
     const onValid = (data) => {
         console.log(data);
@@ -332,31 +384,40 @@ function RegistWork({ route, navigation }) {
                     </Row>
                     <Row>
                         <Title text="휴대전화" />
-                        <Content spaceBetween>
+                        <Content>
                             <InputItem>
-                                <TextInput>
-                                    {info.phone
-                                        ? info.phone.substring(0, 3)
-                                        : ""}
+                                <TextInput
+                                    placeholder="휴대폰번호"
+                                    returnKeyType="done"
+                                    onChangeText={(text) =>
+                                        setValue("phone", text)
+                                    }
+                                >
+                                    {info.phone}
                                 </TextInput>
                             </InputItem>
-                            <InputItem>
-                                <TextInput>
-                                    {info.phone
-                                        ? info.phone.substring(3, 7)
-                                        : ""}
-                                </TextInput>
-                            </InputItem>
-                            <InputItem>
-                                <TextInput>
-                                    {info.phone
-                                        ? info.phone.substring(
-                                              7,
-                                              info.phone.length
-                                          )
-                                        : ""}
-                                </TextInput>
-                            </InputItem>
+                        </Content>
+                    </Row>
+                    <Row>
+                        <Title text="작업 물량" />
+                        <Content>
+                            <Picker //TODO: Picker style
+                                ref={QuantityPickerRef}
+                                selectedValue={selectedQuantity}
+                                onValueChange={(itemValue, itemIndex) =>
+                                    setSelectedQuantity(itemValue)
+                                }
+                                style={{ width: "100%" }}
+                            >
+                                {quantity.map((value, index) => (
+                                    <Picker.Item
+                                        key={index}
+                                        label={value}
+                                        value={value}
+                                        style={{ fontSize: 20 }}
+                                    />
+                                ))}
+                            </Picker>
                         </Content>
                     </Row>
                     <Row marginBottom="3px">
@@ -379,7 +440,13 @@ function RegistWork({ route, navigation }) {
                         <Title />
                         <Content>
                             <InputItem>
-                                <TextInput placeholder="상세주소 입력" />
+                                <TextInput
+                                    placeholder="상세주소 입력"
+                                    returnKeyType="done"
+                                    onChangeText={(text) =>
+                                        setValue("detailAddress", text)
+                                    }
+                                />
                             </InputItem>
                         </Content>
                     </Row>
@@ -440,10 +507,10 @@ function RegistWork({ route, navigation }) {
                         <Title text="작업 층" />
                         <Content>
                             <Picker //TODO: Picker style
-                                ref={pickerRef}
-                                selectedValue={selectedFloor}
+                                ref={floorPickerRef}
+                                selectedValue={floor[selectedFloor]}
                                 onValueChange={(itemValue, itemIndex) =>
-                                    setSelectedFloor(itemValue)
+                                    setSelectedFloor(itemIndex)
                                 }
                                 style={{ width: "100%" }}
                             >
@@ -462,8 +529,16 @@ function RegistWork({ route, navigation }) {
                         <Title text="오더비용" />
                         <Content>
                             <InputItem>
-                                <TextInput placeholder="상세주소 입력">
-                                    {costWithComma(cost) + "원"}
+                                <TextInput
+                                    placeholder="비용을 입력해주세요"
+                                    returnKeyType="done"
+                                    keyboardType="number-pad"
+                                    onChangeText={(text) => {
+                                        setValue("cost", text);
+                                    }}
+                                >
+                                    {costWithComma(cost)}
+                                    {/* TODO: 원추가 */}
                                 </TextInput>
                             </InputItem>
                         </Content>

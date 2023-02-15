@@ -37,6 +37,8 @@ export default function RootNavigator() {
                             setInfo(user.user);
                             if (token) {
                                 setIsLoggedIn(true);
+                                setInterval(() => {}, 1000);
+                                setCheck(true);
                             }
                         } else {
                             Toast.show({
@@ -55,9 +57,6 @@ export default function RootNavigator() {
             } else {
                 setIsLoggedIn(false);
             }
-
-            setCheck(true);
-            setInterval(() => {}, 1000);
         }
 
         getStorage();
