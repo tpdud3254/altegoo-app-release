@@ -29,7 +29,7 @@ function SignUp() {
 
   const onPress = (data) => {
     setInfo({ userType: data });
-    navigation.navigate("SignUpStep4"); //TODO: test code
+    navigation.navigate("SignUpStep1");
   };
 
   return (

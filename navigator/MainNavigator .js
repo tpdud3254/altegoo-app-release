@@ -1,37 +1,19 @@
 import { createStackNavigator } from "@react-navigation/stack";
 import React from "react";
-import Home from "../screen/Home";
-import Intro from "../screen/Intro";
-// import Intro from "../screens/Intro";
-// import SignInNavigator from "./SignInNavigator";
-// import SignUpNavigator from "./SignUpNavigator";
+import Home from "../screen/main/home/Home";
+import DrawerNavigator from "./DrawerNavigator";
+import TabsNavigator from "./TabsNavigator";
+// import TabsNavigator from "./TabsNavigator";
 
 const Stack = createStackNavigator();
 
 export default function MainNavigator() {
-    return (
-        <Stack.Navigator screenOptions={{ presentation: "modal" }}>
-            <Stack.Screen
-                name="Home"
-                component={Home}
-                options={{ headerShown: false }}
-            />
-            {/* <Stack.Screen
-                name="SignInNavigator"
-                component={SignInNavigator}
-                options={{
-                    title: "",
-                    headerShown: false,
-                    // headerShown: false,
-                }}
-            />
-            <Stack.Screen
-                name="SignUpNavigator"
-                component={SignUpNavigator}
-                options={{
-                    headerShown: false,
-                }}
-            /> */}
-        </Stack.Navigator>
-    );
+  return (
+    <Stack.Navigator
+      screenOptions={{ presentation: "card", headerShown: false }}
+    >
+      <Stack.Screen name="TabsNavigator" component={TabsNavigator} />
+      <Stack.Screen name="DrawerNavigator" component={DrawerNavigator} />
+    </Stack.Navigator>
+  );
 }

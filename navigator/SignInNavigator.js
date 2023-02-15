@@ -5,6 +5,8 @@ import SignIn from "../screen/auth/SignIn";
 
 const Stack = createStackNavigator();
 
+//TODO: 네이게이션 옵션 presentation 적절하게변경
+
 export default function SignInNavigator() {
   return (
     <Stack.Navigator
