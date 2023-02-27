@@ -25,7 +25,6 @@ const Top = styled.View`
     padding-top: 15px;
     padding-bottom: 15px;
     align-items: center;
-    background-color: black;
 `;
 
 const Middle = styled.View`

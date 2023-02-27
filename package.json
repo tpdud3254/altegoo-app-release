@@ -40,7 +40,10 @@
     "react-native-tab-view": "^3.3.4",
     "react-native-toast-message": "^2.1.5",
     "react-native-webview": "11.23.1",
-    "styled-components": "^5.3.6"
+    "styled-components": "^5.3.6",
+    "expo-speech": "~11.0.0",
+    "expo-notifications": "~0.17.0",
+    "expo-device": "~5.0.0"
   },
   "devDependencies": {
     "@babel/core": "^7.12.9"

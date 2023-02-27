@@ -1,9 +1,10 @@
 export const theme = {
-    main: "#ff5001",
+    // main: "#ff5001",
+    main: "#cf6741",
     sub: {
-        green: "#56d034",
+        green: "#6cc653",
         yellow: "#ffd13f",
-        blue: "#CBDCF6",
+        blue: "#87b3da",
     },
     fontColor: "black",
     darkFontColor: "#555555",
