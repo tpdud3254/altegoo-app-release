@@ -7,7 +7,7 @@ const Container = styled.View`
     flex: 1;
     justify-content: space-between;
     background-color: ${theme.backgroundColor};
-    padding: 0px 10px 10px 10px;
+    padding: 0px 10px 0px 10px;
 `;
 
 export default function FormLayout({ children }) {

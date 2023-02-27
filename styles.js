@@ -12,6 +12,6 @@ export const theme = {
     backgroundColor: "white",
     boxColor: "#00000055",
     textBoxColor: "#00000055",
-    btnPointColor: "#f5904c",
+    btnPointColor: "#e58c50",
     btnColor: "#bbbbbb",
 };
