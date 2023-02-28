@@ -22,7 +22,6 @@ const Button = styled.TouchableOpacity`
 `;
 const Content = styled.View``;
 
-//TODOS: 회원가입 절차 버튼 텍스트 수정
 function SignUp() {
   const { setInfo } = useContext(UserContext);
   const navigation = useNavigation();

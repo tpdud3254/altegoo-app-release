@@ -9,6 +9,8 @@ import Checkbox from "expo-checkbox";
 import PlainText from "../../../component/text/PlainText";
 import { theme } from "../../../styles";
 import Loading from "../../../component/Loading";
+import * as Location from "expo-location";
+import LoadingLayout from "../../../component/layout/LoadingLayout";
 
 const termsTexts = [
   "만 14세 이상입니다.",
@@ -49,7 +51,7 @@ function SignUpStep3() {
   const { info, setInfo } = useContext(UserContext);
   const navigation = useNavigation();
 
-  console.log("step e info : ", info);
+  console.log("step3 info : ", info);
 
   const clickAllCheckButton = (value) => {
     if (value) {
@@ -100,32 +102,32 @@ function SignUpStep3() {
   const onNextStep = async () => {
     setLoading(true); //TODO: test code
 
-    // const {
-    //     coords: { latitude, longitude },
-    // } = await Location.getCurrentPositionAsync({
-    //     accuracy: 5,
-    // });
+    const {
+      coords: { latitude, longitude },
+    } = await Location.getCurrentPositionAsync({
+      accuracy: 5,
+    });
 
-    // const location = await Location.reverseGeocodeAsync(
-    //     { latitude, longitude },
-    //     { useGoogleMaps: false }
-    // );
+    const location = await Location.reverseGeocodeAsync(
+      { latitude, longitude },
+      { useGoogleMaps: false }
+    );
 
-    // const accessedRegion = `${
-    //     location[0].city ? location[0].city : location[0].region
-    // }>${
-    //     location[0].subregion ? location[0].subregion : location[0].district
-    // }`;
+    const accessedRegion = `${
+      location[0].city ? location[0].city : location[0].region
+    }>${location[0].subregion ? location[0].subregion : location[0].district}`;
 
-    // const workCategory = [1];
-    // const sendingData = {
-    //     workCategory,
-    //     sms: checkArr[4],
-    //     accessedRegion,
-    // };
+    // const workCategory = [1]; //TODO:일반 사용자는 x
+    const sendingData = {
+      // workCategory,
+      sms: checkArr[4],
+      accessedRegion,
+    };
 
-    // setInfo({ ...sendingData, ...info, license: info.licenseUrl });
+    setInfo({ ...sendingData, ...info });
+    // setInfo({ ...sendingData, ...info, license: info.licenseUrl }); //TODO: 일반회원은 라이센스 x
 
+    navigation.navigate("SignUpStep4"); //TODO: test code
     // axios({
     //     url: SERVER + `/users/sign-up`,
     //     method: "POST",
@@ -188,70 +190,73 @@ function SignUpStep3() {
   };
   return (
     <>
-      {loading ? <Loading /> : null}
-      <DefaultLayout>
-        <Container>
-          <Title>
-            <TitleText>약관동의</TitleText>
-          </Title>
-          <Wrapper>
-            <Terms>
-              <PlainText style={{ fontSize: 22 }}>전체 동의합니다.</PlainText>
-              <Checkbox
-                style={{ width: 30, height: 30 }}
-                value={isAllChecked}
-                onValueChange={clickAllCheckButton}
-                color={isAllChecked ? theme.btnPointColor : undefined}
-              />
-            </Terms>
-            {termsTexts.map((text, index) => (
-              <Terms key={index}>
-                <TermsButton
-                  disabled={index === 0 || index === 4 ? true : false}
-                  onPress={() => ShowDetailTerms(index)}
-                >
-                  <PlainText
-                    style={{
-                      fontSIze: 20,
-                      textDecorationLine:
-                        index === 0 || index === 4 ? "none" : "underline",
-                      color: theme.darkFontColor,
-                    }}
-                  >
-                    {text}
-                    {index < 4 ? " (필수)" : ""}
-                  </PlainText>
-                </TermsButton>
+      {loading ? (
+        <LoadingLayout />
+      ) : (
+        <DefaultLayout>
+          <Container>
+            <Title>
+              <TitleText>약관동의</TitleText>
+            </Title>
+            <Wrapper>
+              <Terms>
+                <PlainText style={{ fontSize: 22 }}>전체 동의합니다.</PlainText>
                 <Checkbox
                   style={{ width: 30, height: 30 }}
-                  value={checkArr[index]}
-                  onValueChange={(value) => {
-                    clickCheckButton(value, index);
-                  }}
-                  color={checkArr[index] ? theme.btnPointColor : undefined}
+                  value={isAllChecked}
+                  onValueChange={clickAllCheckButton}
+                  color={isAllChecked ? theme.btnPointColor : undefined}
                 />
               </Terms>
-            ))}
-          </Wrapper>
-          <PlainText
-            style={{
-              fontSize: 18,
-              color: theme.darkFontColor,
-              bottom: 10,
-              position: "absolute",
-            }}
-          >
-            각 항목 클릭 시 상세 내용을 보실 수 있습니다.
-          </PlainText>
-        </Container>
-        <ButtonContainer>
-          <SubmitButton
-            text="동의하기"
-            onPress={onNextStep}
-            disabled={isAgree}
-          />
-        </ButtonContainer>
-      </DefaultLayout>
+              {termsTexts.map((text, index) => (
+                <Terms key={index}>
+                  <TermsButton
+                    disabled={index === 0 || index === 4 ? true : false}
+                    onPress={() => ShowDetailTerms(index)}
+                  >
+                    <PlainText
+                      style={{
+                        fontSIze: 20,
+                        textDecorationLine:
+                          index === 0 || index === 4 ? "none" : "underline",
+                        color: theme.darkFontColor,
+                      }}
+                    >
+                      {text}
+                      {index < 4 ? " (필수)" : ""}
+                    </PlainText>
+                  </TermsButton>
+                  <Checkbox
+                    style={{ width: 30, height: 30 }}
+                    value={checkArr[index]}
+                    onValueChange={(value) => {
+                      clickCheckButton(value, index);
+                    }}
+                    color={checkArr[index] ? theme.btnPointColor : undefined}
+                  />
+                </Terms>
+              ))}
+            </Wrapper>
+            <PlainText
+              style={{
+                fontSize: 18,
+                color: theme.darkFontColor,
+                bottom: 10,
+                position: "absolute",
+              }}
+            >
+              각 항목 클릭 시 상세 내용을 보실 수 있습니다.
+            </PlainText>
+          </Container>
+          <ButtonContainer>
+            <SubmitButton
+              text="동의하기"
+              onPress={onNextStep}
+              disabled={isAgree}
+            />
+          </ButtonContainer>
+        </DefaultLayout>
+      )}
     </>
   );
 }

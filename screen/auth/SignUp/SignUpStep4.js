@@ -49,6 +49,7 @@ function SignUpStep4() {
   const { setIsLoggedIn } = useContext(LoginContext);
   const navigation = useNavigation();
 
+  console.log("step4 info : ", info);
   useEffect(() => {
     BackHandler.addEventListener("hardwareBackPress", onNextStep);
   });

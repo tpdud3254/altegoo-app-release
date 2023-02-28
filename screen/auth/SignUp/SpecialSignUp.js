@@ -225,6 +225,7 @@ function SpecialSignUp({ route }) {
   const getPhoneAuth = () => {
     console.log("본인인증");
     setPhoneAuth(true); //TODO:test code
+    //TODO: 본인 인증 후 존재하는 아이디면 빠꾸
   };
 
   const onValid = (data) => {
