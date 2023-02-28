@@ -30,6 +30,7 @@ import axios from "axios";
 import { SERVER } from "../../../server";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { VALID } from "../../../constant";
+import { getAsyncStorageToken } from "../../../utils";
 
 const Container = styled.View`
   margin-top: 10px;
@@ -212,7 +213,7 @@ function RegistWork({ route, navigation }) {
         },
         {
           headers: {
-            auth: await AsyncStorage.getItem("token"),
+            auth: await getAsyncStorageToken(),
           },
         }
       )

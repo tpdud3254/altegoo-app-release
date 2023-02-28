@@ -77,7 +77,7 @@ function SignIn() {
       withCredentials: true,
       data: { phone, password },
     })
-      .then(async ({ data }) => {
+      .then(({ data }) => {
         const {
           result,
           data: { token, user },
@@ -87,7 +87,7 @@ function SignIn() {
         if (result === VALID) {
           console.log(user);
           setInfo(user);
-          await AsyncStorage.setItem("token", token);
+          setAsyncStorageToken(token);
           setIsLoggedIn(true);
         } else {
           Toast.show({

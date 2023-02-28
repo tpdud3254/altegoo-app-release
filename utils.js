@@ -1,3 +1,6 @@
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { TOKEN } from "./constant";
+
 export const checkPassword = (password) => {
   const regExp = /^.*(?=^.{8,}$)(?=.*\d)(?=.*[a-zA-Z]).*$/;
 
@@ -6,4 +9,12 @@ export const checkPassword = (password) => {
   } else {
     return true;
   }
+};
+
+export const getAsyncStorageToken = () => {
+  return AsyncStorage.getItem(TOKEN);
+};
+
+export const setAsyncStorageToken = async (token) => {
+  await AsyncStorage.setItem(TOKEN, token);
 };

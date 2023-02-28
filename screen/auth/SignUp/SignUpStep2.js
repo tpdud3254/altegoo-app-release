@@ -2,13 +2,16 @@ import React, { useContext, useEffect, useState } from "react";
 import styled from "styled-components/native";
 import { useNavigation } from "@react-navigation/native";
 import PlainText from "../../../component/text/PlainText";
-import { Image } from "react-native";
+import { Image, TouchableOpacity } from "react-native";
 import UserContext from "../../../context/UserContext";
 import DefaultLayout from "../../../component/layout/DefaultLayout";
 import TitleText from "../../../component/text/TitleText";
 import { theme } from "../../../styles";
 import SubmitButton from "../../../component/button/SubmitButton";
 import Toast from "react-native-toast-message";
+import { Modal, Portal, Text, Button, Provider } from "react-native-paper";
+import SubTitleText from "../../../component/text/SubTitleText";
+import { Ionicons } from "@expo/vector-icons";
 
 const Container = styled.View`
   flex: 1;
@@ -44,6 +47,31 @@ const GuideTextContainer = styled.View`
   align-items: center;
 `;
 
+const Help = styled.View``;
+const HelpButton = styled.TouchableOpacity``;
+const modalStyle = {
+  backgroundColor: "white",
+  paddingTop: 10,
+  paddingLeft: 20,
+  paddingRight: 20,
+  paddingBottom: 10,
+  alignItems: "center",
+};
+const ModalTop = styled.View`
+  width: 100%;
+  flex-direction: row;
+  margin-top: 10px;
+  margin-bottom: 20px;
+  justify-content: space-between;
+`;
+const ModalTitle = styled.View`
+  flex-direction: row;
+  align-items: center;
+`;
+const modalTitleStyle = { marginLeft: 5, marginRight: 5 };
+const modalSubTitleStyle = { fontSize: 22, color: theme.main, marginBottom: 3 };
+const modalTextStyle = { marginBottom: 20 };
+
 const imageSize = {
   //실제 이미지 크기
   1: [231, 190],
@@ -57,6 +85,7 @@ const imageSize = {
 function SignUpStep2() {
   const [adjustedImage, setAdjustedImage] = useState({}); //조정된 이미지 크기
   const [imageResized, setImageResized] = useState(false); //이미지 resize 여부
+  const [helpVisible, setHelpVisible] = useState(false);
   const [regionArr, setRegionArr] = useState([
     false,
     false,
@@ -94,6 +123,9 @@ function SignUpStep2() {
     setImageResized(true);
   }, []);
 
+  const showModal = () => setHelpVisible(true);
+  const hideModal = () => setHelpVisible(false);
+
   const onNextStep = () => {
     const workRegion = [];
 
@@ -124,186 +156,252 @@ function SignUpStep2() {
     setRegionArr(prevArr);
   };
 
+  const HelpModal = () => (
+    <Portal>
+      <Modal
+        visible={helpVisible}
+        onDismiss={hideModal}
+        contentContainerStyle={modalStyle}
+      >
+        <ModalTop>
+          <Ionicons name="close" size={30} color="white" />
+          <ModalTitle>
+            <Ionicons
+              name="alert-circle-outline"
+              size={30}
+              color={theme.sub.yellow}
+            />
+            <SubTitleText style={modalTitleStyle}>작업 지역 안내</SubTitleText>
+            <Ionicons
+              name="alert-circle-outline"
+              size={30}
+              color={theme.sub.yellow}
+            />
+          </ModalTitle>
+          <TouchableOpacity
+            style={{ marginTop: -10, marginRight: -10 }}
+            onPress={hideModal}
+          >
+            <Ionicons name="close" size={30} color="black" />
+          </TouchableOpacity>
+        </ModalTop>
+        <PlainText style={modalSubTitleStyle}>[경기 북서부]</PlainText>
+        <PlainText style={modalTextStyle}>
+          김포시 / 부천시 / 파주시 / 고양시 / 동두천시 / 연천군
+        </PlainText>
+        <PlainText style={modalSubTitleStyle}>[경기 북동부]</PlainText>
+        <PlainText style={modalTextStyle}>
+          의정부시 / 양주시 / 구리시 / 남양주시 / 포천시 / 가평군
+        </PlainText>
+        <PlainText style={modalSubTitleStyle}>[경기 남서부]</PlainText>
+        <PlainText style={modalTextStyle}>
+          광명시 / 시흥시 / 안산시 / 안양시 / 과천시 / 의왕시 / 군포시 / 수원시
+          / 오산시 / 화성시 / 평택시
+        </PlainText>
+        <PlainText style={modalSubTitleStyle}>[경기 남동부]</PlainText>
+        <PlainText style={modalTextStyle}>
+          성남시 / 하남시 / 광주시 / 용인시 / 안성시 / 이천시 / 여주시 / 양평군
+        </PlainText>
+      </Modal>
+    </Portal>
+  );
   return (
     <DefaultLayout>
-      <Container>
-        <Title>
-          <TitleText>작업지역 선택하기</TitleText>
-        </Title>
-        <MapContainer>
-          {imageResized ? (
-            <Map>
-              <MapButton
+      <Provider>
+        <HelpModal />
+        <Container>
+          <Title>
+            <TitleText>작업지역 선택하기</TitleText>
+          </Title>
+          <Help>
+            <HelpButton onPress={showModal}>
+              <PlainText
                 style={{
-                  top: 240,
-                  left: 98,
-                }}
-                onPress={() => {
-                  onPress(0);
+                  textDecorationLine: "underline",
+                  textAlign: "right",
+                  color: theme.boxColor,
                 }}
               >
-                <PlainText style={{ fontSize: 20 }}>서울시</PlainText>
-              </MapButton>
-              <Image //서울
-                style={{
-                  resizeMode: "contain",
-                  width: adjustedImage.width[0],
-                  height: adjustedImage.height[0],
-                  position: "absolute",
-                  top: 206,
-                  left: 75,
-                }}
-                source={
-                  regionArr[0]
-                    ? require(`../../../assets/images/map/selected1.png`)
-                    : require(`../../../assets/images/map/unselected1.png`)
-                }
-              />
-              <MapButton
-                style={{
-                  top: 259,
-                  left: 10,
-                }}
-                onPress={() => {
-                  onPress(1);
-                }}
-              >
-                <PlainText style={{ fontSize: 20 }}>인천시</PlainText>
-              </MapButton>
-              <Image //인천
-                style={{
-                  resizeMode: "contain",
-                  width: adjustedImage.width[1],
-                  height: adjustedImage.height[1],
-                  position: "absolute",
-                  top: 229,
-                  left: 21,
-                }}
-                source={
-                  regionArr[1]
-                    ? require(`../../../assets/images/map/selected2.png`)
-                    : require(`../../../assets/images/map/unselected2.png`)
-                }
-              />
-              <MapButton
-                style={{
-                  top: 150,
-                  left: 10,
-                }}
-                onPress={() => {
-                  onPress(2);
-                }}
-              >
-                <PlainText style={{ fontSize: 20 }}>경기 북서부</PlainText>
-              </MapButton>
-              <Image //북서부
-                style={{
-                  resizeMode: "contain",
-                  width: adjustedImage.width[2],
-                  height: adjustedImage.height[2],
-                  position: "absolute",
-                  left: 2,
-                }}
-                source={
-                  regionArr[2]
-                    ? require(`../../../assets/images/map/selected3.png`)
-                    : require(`../../../assets/images/map/unselected3.png`)
-                }
-              />
-              <MapButton
-                style={{
-                  top: 150,
-                  left: 150,
-                }}
-                onPress={() => {
-                  onPress(3);
-                }}
-              >
-                <PlainText style={{ fontSize: 20 }}>경기 북동부</PlainText>
-              </MapButton>
-              <Image //북동부
-                style={{
-                  resizeMode: "contain",
-                  width: adjustedImage.width[3],
-                  height: adjustedImage.height[3],
-                  position: "absolute",
-                  left: 109,
-                  top: 38,
-                }}
-                source={
-                  regionArr[3]
-                    ? require(`../../../assets/images/map/selected4.png`)
-                    : require(`../../../assets/images/map/unselected4.png`)
-                }
-              />
-              <MapButton
-                style={{
-                  top: 357,
-                  left: 41,
-                }}
-                onPress={() => {
-                  onPress(4);
-                }}
-              >
-                <PlainText style={{ fontSize: 20 }}>경기 남서부</PlainText>
-              </MapButton>
-              <Image //남서부
-                style={{
-                  resizeMode: "contain",
-                  width: adjustedImage.width[4],
-                  height: adjustedImage.height[4],
-                  position: "absolute",
-                  top: 276,
-                  left: 41,
-                }}
-                source={
-                  regionArr[4]
-                    ? require(`../../../assets/images/map/selected5.png`)
-                    : require(`../../../assets/images/map/unselected5.png`)
-                }
-              />
-              <MapButton
-                style={{
-                  top: 318,
-                  left: 190,
-                }}
-                onPress={() => {
-                  onPress(5);
-                }}
-              >
-                <PlainText style={{ fontSize: 20 }}>경기 남동부</PlainText>
-              </MapButton>
-              <Image //남동부
-                style={{
-                  resizeMode: "contain",
-                  width: adjustedImage.width[5],
-                  height: adjustedImage.height[5],
-                  position: "absolute",
-                  top: 218,
-                  left: 140,
-                }}
-                source={
-                  regionArr[5]
-                    ? require(`../../../assets/images/map/selected6.png`)
-                    : require(`../../../assets/images/map/unselected6.png`)
-                }
-              />
-            </Map>
-          ) : null}
-        </MapContainer>
-        <GuideTextContainer>
-          <PlainText
-            style={{
-              fontSize: 20,
-              color: theme.darkFontColor,
-            }}
-          >
-            작업을 희망하시는 위치를 선택해 주세요.{"\n"}
-            작업지역은 언제든지 추가, 제거 및 변경이 가능합니다.
-          </PlainText>
-        </GuideTextContainer>
-      </Container>
-      <SubmitButton text="다음으로" onPress={onNextStep} />
+                작업지역 도움말
+              </PlainText>
+            </HelpButton>
+          </Help>
+          <MapContainer>
+            {imageResized ? (
+              <Map>
+                <MapButton
+                  style={{
+                    top: 245,
+                    left: 103,
+                  }}
+                  onPress={() => {
+                    onPress(0);
+                  }}
+                >
+                  <PlainText style={{ fontSize: 20 }}>서울시</PlainText>
+                </MapButton>
+                <Image //서울
+                  style={{
+                    resizeMode: "contain",
+                    width: adjustedImage.width[0],
+                    height: adjustedImage.height[0],
+                    position: "absolute",
+                    top: 206,
+                    left: 75,
+                  }}
+                  source={
+                    regionArr[0]
+                      ? require(`../../../assets/images/map/selected1.png`)
+                      : require(`../../../assets/images/map/unselected1.png`)
+                  }
+                />
+                <MapButton
+                  style={{
+                    top: 259,
+                    left: 15,
+                  }}
+                  onPress={() => {
+                    onPress(1);
+                  }}
+                >
+                  <PlainText style={{ fontSize: 20 }}>인천시</PlainText>
+                </MapButton>
+                <Image //인천
+                  style={{
+                    resizeMode: "contain",
+                    width: adjustedImage.width[1],
+                    height: adjustedImage.height[1],
+                    position: "absolute",
+                    top: 229,
+                    left: 21,
+                  }}
+                  source={
+                    regionArr[1]
+                      ? require(`../../../assets/images/map/selected2.png`)
+                      : require(`../../../assets/images/map/unselected2.png`)
+                  }
+                />
+                <MapButton
+                  style={{
+                    top: 150,
+                    left: 10,
+                  }}
+                  onPress={() => {
+                    onPress(2);
+                  }}
+                >
+                  <PlainText style={{ fontSize: 20 }}>경기 북서부</PlainText>
+                </MapButton>
+                <Image //북서부
+                  style={{
+                    resizeMode: "contain",
+                    width: adjustedImage.width[2],
+                    height: adjustedImage.height[2],
+                    position: "absolute",
+                    left: 2,
+                    top: -1,
+                  }}
+                  source={
+                    regionArr[2]
+                      ? require(`../../../assets/images/map/selected3.png`)
+                      : require(`../../../assets/images/map/unselected3.png`)
+                  }
+                />
+                <MapButton
+                  style={{
+                    top: 160,
+                    left: 160,
+                  }}
+                  onPress={() => {
+                    onPress(3);
+                  }}
+                >
+                  <PlainText style={{ fontSize: 20 }}>경기 북동부</PlainText>
+                </MapButton>
+                <Image //북동부
+                  style={{
+                    resizeMode: "contain",
+                    width: adjustedImage.width[3],
+                    height: adjustedImage.height[3],
+                    position: "absolute",
+                    left: 110,
+                    top: 37,
+                  }}
+                  source={
+                    regionArr[3]
+                      ? require(`../../../assets/images/map/selected4.png`)
+                      : require(`../../../assets/images/map/unselected4.png`)
+                  }
+                />
+                <MapButton
+                  style={{
+                    top: 357,
+                    left: 61,
+                  }}
+                  onPress={() => {
+                    onPress(4);
+                  }}
+                >
+                  <PlainText style={{ fontSize: 20 }}>경기 남서부</PlainText>
+                </MapButton>
+                <Image //남서부
+                  style={{
+                    resizeMode: "contain",
+                    width: adjustedImage.width[4],
+                    height: adjustedImage.height[4],
+                    position: "absolute",
+                    top: 276,
+                    left: 41,
+                  }}
+                  source={
+                    regionArr[4]
+                      ? require(`../../../assets/images/map/selected5.png`)
+                      : require(`../../../assets/images/map/unselected5.png`)
+                  }
+                />
+                <MapButton
+                  style={{
+                    top: 318,
+                    left: 200,
+                  }}
+                  onPress={() => {
+                    onPress(5);
+                  }}
+                >
+                  <PlainText style={{ fontSize: 20 }}>경기 남동부</PlainText>
+                </MapButton>
+                <Image //남동부
+                  style={{
+                    resizeMode: "contain",
+                    width: adjustedImage.width[5],
+                    height: adjustedImage.height[5],
+                    position: "absolute",
+                    top: 218,
+                    left: 140,
+                  }}
+                  source={
+                    regionArr[5]
+                      ? require(`../../../assets/images/map/selected6.png`)
+                      : require(`../../../assets/images/map/unselected6.png`)
+                  }
+                />
+              </Map>
+            ) : null}
+          </MapContainer>
+          <GuideTextContainer>
+            <PlainText
+              style={{
+                fontSize: 20,
+                color: theme.darkFontColor,
+              }}
+            >
+              작업지역은 언제든지 추가, 제거 및 변경이 가능합니다.{"\n"}
+              작업을 희망하시는 위치를 선택해 주세요.
+            </PlainText>
+          </GuideTextContainer>
+        </Container>
+        <SubmitButton text="다음으로" onPress={onNextStep} />
+      </Provider>
     </DefaultLayout>
   );
 }
