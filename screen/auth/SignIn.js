@@ -19,6 +19,8 @@ import LoginContext from "../../context/LoginContext";
 import { SERVER } from "../../server";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Toast } from "react-native-toast-message/lib/src/Toast";
+import { setAsyncStorageToken } from "../../utils";
+import LoadingLayout from "../../component/layout/LoadingLayout";
 
 const Container = styled.View`
   flex: 1;
@@ -37,6 +39,7 @@ const Password = styled.View`
 `;
 
 function SignIn() {
+  const [loading, setLoading] = useState(false);
   const [textSecure, setTextSecure] = useState(true);
   const { register, handleSubmit, setValue, watch } = useForm();
   const navigation = useNavigation();
@@ -67,16 +70,12 @@ function SignIn() {
   };
 
   const onValid = ({ phone, password }) => {
-    axios({
-      url: SERVER + "/users/login",
-      method: "POST",
-      header: {
-        Accept: "application/json",
-        "Content-Type": "application/json;charset=UTP-8",
-      },
-      withCredentials: true,
-      data: { phone, password },
-    })
+    setLoading(true);
+    axios
+      .post(SERVER + "/users/login", {
+        phone,
+        password,
+      })
       .then(({ data }) => {
         const {
           result,
@@ -90,66 +89,72 @@ function SignIn() {
           setAsyncStorageToken(token);
           setIsLoggedIn(true);
         } else {
-          Toast.show({
-            type: "errorToast",
-            props: msg,
-          });
+          //TODO:에러처리
+          // Toast.show({
+          //   type: "errorToast",
+          //   props: msg,
+          // });
         }
       })
       .catch((error) => {
-        console.log("error : ", error.response.data);
-        Toast.show({
-          type: "errorToast",
-          props: error.response.data.msg,
-        });
+        console.log("error: ", error); //TODO:에러처리
+      })
+      .finally(() => {
+        setLoading(false);
       });
   };
 
   return (
-    <FormLayout>
-      <Container>
-        <Title>
-          <TitleText>로그인</TitleText>
-          <SubTitleText>안녕하세요. 환영합니다.</SubTitleText>
-        </Title>
-        <InputContainer>
-          <View>
-            <TitleInputItem title="휴대폰번호">
-              <TextInput
-                placeholder="숫자만 적어주세요"
-                keyboardType="number-pad"
-                returnKeyType="next"
-                onSubmitEditing={() => onNext(passwordRef)}
-                onChangeText={(text) => setValue("phone", text)}
-              />
-            </TitleInputItem>
-            <TitleInputItem title="비밀번호">
-              <Password>
-                <TextInput
-                  ref={passwordRef}
-                  placeholder="비밀번호"
-                  secureTextEntry={textSecure}
-                  returnKeyType="done"
-                  onChangeText={(text) => setValue("password", text)}
-                  width="87%"
-                />
-                <TouchableOpacity onPress={ShowPassword}>
-                  <PlainText>보기</PlainText>
-                </TouchableOpacity>
-              </Password>
-            </TitleInputItem>
-          </View>
-          <PlainButton text="비밀번호 초기화" onPress={ResetPassword} />
-        </InputContainer>
-      </Container>
-      <ButtonContainer>
-        <SubmitButton
-          text="로그인"
-          disabled={!(watch("phone") && watch("password"))}
-          onPress={handleSubmit(onValid)}
-        />
-      </ButtonContainer>
-    </FormLayout>
+    <>
+      {loading ? (
+        <LoadingLayout />
+      ) : (
+        <FormLayout>
+          <Container>
+            <Title>
+              <TitleText>로그인</TitleText>
+              <SubTitleText>안녕하세요. 환영합니다.</SubTitleText>
+            </Title>
+            <InputContainer>
+              <View>
+                <TitleInputItem title="휴대폰번호">
+                  <TextInput
+                    placeholder="숫자만 적어주세요"
+                    keyboardType="number-pad"
+                    returnKeyType="next"
+                    onSubmitEditing={() => onNext(passwordRef)}
+                    onChangeText={(text) => setValue("phone", text)}
+                  />
+                </TitleInputItem>
+                <TitleInputItem title="비밀번호">
+                  <Password>
+                    <TextInput
+                      ref={passwordRef}
+                      placeholder="비밀번호"
+                      secureTextEntry={textSecure}
+                      returnKeyType="done"
+                      onChangeText={(text) => setValue("password", text)}
+                      width="87%"
+                    />
+                    <TouchableOpacity onPress={ShowPassword}>
+                      <PlainText>보기</PlainText>
+                    </TouchableOpacity>
+                  </Password>
+                </TitleInputItem>
+              </View>
+              <PlainButton text="비밀번호 초기화" onPress={ResetPassword} />
+            </InputContainer>
+          </Container>
+          <ButtonContainer>
+            <SubmitButton
+              text="로그인"
+              disabled={!(watch("phone") && watch("password"))}
+              onPress={handleSubmit(onValid)}
+            />
+          </ButtonContainer>
+        </FormLayout>
+      )}
+    </>
   );
 }
 

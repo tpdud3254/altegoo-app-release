@@ -13,7 +13,7 @@ import { VALID } from "../constant";
 import { getAsyncStorageToken } from "../utils";
 
 export default function RootNavigator() {
-  const [check, setCheck] = useState(false);
+  const [loading, setLoading] = useState(false);
   const { isLoggedIn, setIsLoggedIn } = useContext(LoginContext);
   const { setInfo } = useContext(UserContext);
 
@@ -22,41 +22,26 @@ export default function RootNavigator() {
       const token = await getAsyncStorageToken();
       console.log(token);
       if (token) {
-        axios({
-          url: SERVER + `/users/user?token=${token}`,
-          method: "GET",
-          header: {
-            Accept: "application/json",
-            "Content-Type": "application/json;charset=UTP-8",
-          },
-          withCredentials: true,
-          validateStatus: false,
-        })
-          .then(async ({ data }) => {
+        axios
+          .post(SERVER + "/users/user", {
+            token,
+          })
+          .then(({ data }) => {
             const { result, data: user, msg } = data;
             if (result === VALID) {
               setInfo(user.user);
-              if (token) {
-                setIsLoggedIn(true);
-                setInterval(() => {}, 1000);
-                setCheck(true);
-              }
+              setIsLoggedIn(true);
+              setLoading(true);
             } else {
-              Toast.show({
-                type: "errorToast",
-                props: msg,
-              });
+              //TODO:에러처리
             }
           })
           .catch((error) => {
-            console.log("error : ", error.response.data);
-            Toast.show({
-              type: "errorToast",
-              props: error.response.data.msg,
-            });
-          });
+            console.log("error: ", error); //TODO:에러처리
+          })
+          .finally(() => {});
       } else {
-        setCheck(true);
+        setLoading(true);
         setIsLoggedIn(false);
       }
     }
@@ -66,7 +51,7 @@ export default function RootNavigator() {
 
   return (
     <>
-      {check ? (
+      {loading ? (
         <NavigationContainer>
           {isLoggedIn ? <MainNavigator /> : <IntroNavigator />}
         </NavigationContainer>
