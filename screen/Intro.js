@@ -7,6 +7,8 @@ import { theme } from "../styles";
 import VerticalDivider from "../component/divider/VerticalDivider";
 import { useNavigation } from "@react-navigation/native";
 import SubTitleText from "../component/text/SubTitleText";
+import axios from "axios";
+import { SERVER } from "../server";
 
 const imagePath = [
   require(`../assets/images/intro/intro_1.jpeg`),
@@ -101,6 +103,41 @@ function Intro() {
     navigation.navigate("SignInNavigator");
   };
 
+  const photo = () => {
+    const imageUri =
+      "file:///var/mobile/Containers/Data/Application/A5B50B9F-3FAA-429B-A2D3-FF2072463D65/Library/Caches/ExponentExperienceData/%2540anonymous%252Faltegoo-app-b8ed9f5c-cc24-4599-8ccc-fc15fe1a69fb/Camera/BF345B94-8BB7-4848-8807-ED9F4E4AD77B.jpg";
+
+    const localUri = imageUri;
+    const filename = localUri.split("/").pop();
+    const match = /\.(\w+)$/.exec(filename ?? "");
+    const type = match ? `image/${match[1]}` : `image`;
+
+    const formData = new FormData();
+    formData.append("image", { uri: localUri, name: filename, type });
+
+    axios
+      .post(
+        SERVER + "/users/image",
+        {
+          data: formData,
+        },
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      )
+      .then(({ data }) => {
+        console.log(data);
+      })
+      .catch((error) => {
+        console.log("error: ", error);
+      })
+      .finally(() => {
+        setLoading(false);
+      });
+  };
+
   const goToSignUp = () => {
     navigation.navigate("SignUpNavigator");
   };
@@ -140,7 +177,9 @@ function Intro() {
             </Middle>
             <Bottom>
               <BottomButtonWrapper>
-                <Button onPress={goToSignIn}>
+                <Button onPress={photo}>
+                  {/* TODO: testcode */}
+                  {/* <Button onPress={goToSignIn}> */}
                   <SubTitleText>로그인</SubTitleText>
                 </Button>
                 <VerticalDivider color="#cccccc" />
