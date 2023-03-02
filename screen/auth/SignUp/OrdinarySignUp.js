@@ -11,9 +11,13 @@ import { TouchableOpacity } from "react-native-gesture-handler";
 import PlainText from "../../../component/text/PlainText";
 import SubmitButton from "../../../component/button/SubmitButton";
 import { useForm } from "react-hook-form";
-import { checkPassword } from "../../../utils";
+import { checkPassword, getAsyncStorageToken } from "../../../utils";
 import Toast from "react-native-toast-message";
 import PlainButton from "../../../component/button/PlainButton";
+import axios from "axios";
+import { SERVER } from "../../../server";
+import { VALID } from "../../../constant";
+import { theme } from "../../../styles";
 
 const Container = styled.View`
   flex: 1;
@@ -73,10 +77,35 @@ function OrdinarySignUp() {
     navigation.navigate("SignUpStep3");
   };
 
-  const getPhoneAuth = () => {
+  const getPhoneAuth = ({ phone }) => {
     console.log("본인인증");
-    setPhoneAuth(true); //TODO:test code
-    //TODO: 본인 인증 후 존재하는 아이디면 빠꾸
+    axios
+      .get(SERVER + "/users/search", {
+        params: {
+          phone,
+        },
+        headers: {
+          token: getAsyncStorageToken(),
+        },
+      })
+      .then(({ data }) => {
+        const { result } = data;
+
+        if (result === VALID) {
+          Toast.show({
+            type: "errorToast",
+            props: "이미 존재하는 사용자입니다.",
+          });
+          setPhoneAuth(false);
+        } else {
+          setPhoneAuth(true); //TODO:test code
+        }
+      })
+      .catch((error) => {
+        console.log("error: ", error);
+        setPhoneAuth(true); //TODO:test code/얘외처리 보강
+      })
+      .finally(() => {});
   };
   const onValid = ({ name, password, phone }) => {
     if (name.length < 2) {
@@ -113,8 +142,6 @@ function OrdinarySignUp() {
 
       return;
     }
-
-    //TODO: 가입된 회원인지 check
 
     onNextStep({ name, password, phone });
   };
@@ -165,7 +192,13 @@ function OrdinarySignUp() {
               returnKeyType="done"
             />
           </TitleInputItem>
-          <PlainButton text="본인인증하기" onPress={getPhoneAuth} />
+          <PlainButton
+            text={phoneAuth ? "본인인증완료" : "본인인증하기"}
+            onPress={handleSubmit(getPhoneAuth)}
+            style={{
+              ...(phoneAuth ? { backgroundColor: theme.sub.blue } : null),
+            }}
+          />
           {/* TODO: 본인인증 완료 텍스트 추가 */}
         </InputContainer>
       </Container>

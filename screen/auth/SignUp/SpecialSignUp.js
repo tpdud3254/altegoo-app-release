@@ -155,7 +155,7 @@ const AddButton = styled.TouchableOpacity`
 `;
 
 const vehicleWeightArr = ["1t", "2.5t", "3.5t", "5t"];
-const workTypeArr = [
+const workCategoryArr = [
   "건설 계열",
   "가구 계열",
   "가전 계열",
@@ -174,10 +174,11 @@ function SpecialSignUp({ route }) {
   const [recommendUserId, setRecommendUserId] = useState(0);
   const [checkRecommendUser, setCheckRecommendUser] = useState(false);
   const [vehicleList, setVehicleList] = useState([]);
-  const [workType, setWorkType] = useState(-1);
+  const [workCategory, setWorkCategory] = useState(-1);
+
   const [textSecure, setTextSecure] = useState(true);
   const [registVehicleVisible, setRegistVehicleVisible] = useState(false);
-  const [workTypevisible, setWorkTypevisible] = useState(false);
+  const [workCategoryVisible, setWorkCategoryVisible] = useState(false);
 
   const passwordRef = useRef();
   const phoneRef = useRef();
@@ -204,10 +205,16 @@ function SpecialSignUp({ route }) {
 
   useEffect(() => {
     closeWorkTypeMenu();
-  }, [workType]);
-  const openWorkTypeMenu = () => setWorkTypevisible(true);
+  }, [workCategory]);
 
-  const closeWorkTypeMenu = () => setWorkTypevisible(false);
+  useEffect(() => {
+    setRegistVehicleVisible(false);
+    setWorkCategoryVisible(false);
+  }, [userDetailType]);
+
+  const openWorkTypeMenu = () => setWorkCategoryVisible(true);
+
+  const closeWorkTypeMenu = () => setWorkCategoryVisible(false);
 
   const addVehicleList = () => {
     const obj = { type: 0, weight: 0, number: "" };
@@ -222,8 +229,6 @@ function SpecialSignUp({ route }) {
 
     setVehicleList([...newList]);
   };
-
-  console.log(vehicleList);
 
   const onNext = (nextOne) => {
     nextOne?.current?.focus();
@@ -318,6 +323,7 @@ function SpecialSignUp({ route }) {
   };
 
   const onValidUserInfo = (data) => {
+    console.log("data: ", data);
     //기사회원, 기업회원 공통 예외처리
     if (userDetailType === "") {
       Toast.show({
@@ -402,6 +408,24 @@ function SpecialSignUp({ route }) {
       }
 
       setRegistVehicleVisible(true);
+    } else {
+      //기업회원 예외처리
+      if (workCategory < 0) {
+        Toast.show({
+          type: "errorToast",
+          props: "사업 종류를 선택해주세요.",
+        });
+
+        setWorkCategoryVisible(true);
+        return;
+      }
+
+      if (!data.vehicleNum || data.vehicleNum.length < 0) {
+        //차량번호가 없는 경우
+        onNextStep();
+      } else {
+        setRegistVehicleVisible(true);
+      }
     }
   };
 
@@ -440,8 +464,12 @@ function SpecialSignUp({ route }) {
       return;
     }
 
-    //기사회원
-    const { name, password, phone } = data;
+    onNextStep();
+  };
+
+  const onNextStep = () => {
+    const { name, password, phone } = getValues();
+
     const authData = {
       //TODO:: test code
       userName: "고응주",
@@ -455,26 +483,24 @@ function SpecialSignUp({ route }) {
       password,
       phone,
       license: info.licenseUrl,
-      recommendUserId,
       vehicle: vehicleList,
-      vehiclePermission: info.vehiclePermissionUrl,
+      vehiclePermission: info.vehiclePermissionUrl || null,
+      recommendUserId: recommendUserId === 0 ? null : recommendUserId,
+      workCategory: workCategory > -1 ? workCategory + 1 : null,
       ...authData,
     };
+    setInfo({ ...info, ...sendingData });
 
-    console.log(sendingData);
-  };
-
-  const next = () => {
     navigation.navigate("SignUpStep2");
-  }; //TODO: test code
+  };
 
   const UserInfoContainer = () => (
     <>
       {userDetailType === COMPANY ? (
         <>
           <WorkTypeButton
-            onPress={workTypevisible ? closeWorkTypeMenu : openWorkTypeMenu}
-            color={workType > 0 ? theme.btnPointColor : theme.textBoxColor}
+            onPress={workCategoryVisible ? closeWorkTypeMenu : openWorkTypeMenu}
+            color={workCategory > 0 ? theme.btnPointColor : theme.textBoxColor}
           >
             <Ionicons
               name={"checkmark-circle"}
@@ -482,21 +508,23 @@ function SpecialSignUp({ route }) {
               color={"rgba(1,1,1,0.0)"}
             />
             <SubTitleText style={{ fontSize: 18 }}>
-              {workType < 0
+              {workCategory < 0
                 ? "사업 종류 선택"
-                : `사업 종류 : ${workTypeArr[workType]}`}
+                : `사업 종류 : ${workCategoryArr[workCategory]}`}
             </SubTitleText>
             <Ionicons
               name={"checkmark-circle"}
               size={30}
-              color={workType > 0 ? theme.btnPointColor : theme.textBoxColor}
+              color={
+                workCategory > 0 ? theme.btnPointColor : theme.textBoxColor
+              }
             />
           </WorkTypeButton>
-          {workTypevisible ? (
+          {workCategoryVisible ? (
             <SelectWorkType>
-              {workTypeArr.map((value, index) => (
+              {workCategoryArr.map((value, index) => (
                 <View key={index}>
-                  <SelectWorkTypeBtn onPress={() => setWorkType(index)}>
+                  <SelectWorkTypeBtn onPress={() => setWorkCategory(index)}>
                     <PlainText>
                       {value}
                       {index === 0 ? " (철거, 인테리어, 샷시 등)" : null}
@@ -505,10 +533,10 @@ function SpecialSignUp({ route }) {
                       name="checkmark"
                       size={30}
                       color={theme.sub.blue}
-                      style={{ opacity: index === workType ? 1 : 0 }}
+                      style={{ opacity: index === workCategory ? 1 : 0 }}
                     />
                   </SelectWorkTypeBtn>
-                  {index === workTypeArr.length - 1 ? null : (
+                  {index === workCategoryArr.length - 1 ? null : (
                     <HorizontalDivider color={"#dddddd"} />
                   )}
                 </View>
@@ -551,8 +579,11 @@ function SpecialSignUp({ route }) {
           returnKeyType="done"
         />
       </TitleInputItem>
-      <PlainButton text="본인인증하기" onPress={handleSubmit(getPhoneAuth)} />
-      {/* TODO: 본인인증 완료 텍스트 추가 */}
+      <PlainButton
+        text={phoneAuth ? "본인인증완료" : "본인인증하기"}
+        onPress={handleSubmit(getPhoneAuth)}
+        style={{ ...(phoneAuth ? { backgroundColor: theme.sub.blue } : null) }}
+      />
       <LicenseContainer>
         <LicenseWrapper>
           <TitleInputItem title="사업자 등록증">
@@ -630,25 +661,21 @@ function SpecialSignUp({ route }) {
         <TitleInputItem title="차량번호">
           <TextInput
             placeholder="123가 0124"
-            onChangeText={(text) => setValue("vehicleNum", text)}
+            onChangeText={(text) => {
+              setValue("vehicleNum", text);
+              setVehicleNumber(text, 0);
+            }}
           />
         </TitleInputItem>
       ) : null}
       <SubmitButton
         text={
-          userDetailType === "" ||
-          userDetailType === PERSON ||
-          (userDetailType === COMPANY && watch("vehicleNum"))
-            ? "차량등록하러 가기"
-            : "작업지역 선택"
+          userDetailType === COMPANY && !watch("vehicleNum")
+            ? "작업지역 선택"
+            : "차량등록하러 가기"
         }
         disabled={!(watch("name") && watch("password") && watch("phone"))}
         onPress={handleSubmit(onValidUserInfo)}
-        // onPress={() =>
-        //   userDetailType === COMPANY && !watch("vehicleNum")
-        //     ? next()
-        //     : setRegistVehicleVisible(true)
-        // }
         style={{ marginTop: 20 }}
       />
     </>
@@ -713,14 +740,17 @@ function SpecialSignUp({ route }) {
                 차량번호
               </PlainText>
               <BorderBox>
-                {/*TODO: 기업회원인 경우 첛번째 차량번호에 받은 값 자동으로 넣기 */}
                 <TextInput
                   placeholder="123아 0124"
                   onChangeText={(text) => {
-                    setValue("vehicleNum", text);
                     setVehicleNumber(text, index);
                   }}
                   width="255px"
+                  value={
+                    userDetailType === COMPANY && index === 0
+                      ? vehicleList[0].number
+                      : null
+                  }
                 />
               </BorderBox>
             </VehicleWrapper>
@@ -785,14 +815,6 @@ function SpecialSignUp({ route }) {
       </LicenseContainer>
       <SubmitButton
         text="작업지역 선택"
-        // disabled={
-        //     !(
-        //         watch("name") &&
-        //         watch("password") &&
-        //         watch("phone")
-        //     )
-        // }
-        // onPress={handleSubmit(onValid)}
         onPress={handleSubmit(onValidRegist)}
         style={{ marginTop: 20 }}
       />

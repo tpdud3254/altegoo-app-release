@@ -11,6 +11,9 @@ import { theme } from "../../../styles";
 import Loading from "../../../component/Loading";
 import * as Location from "expo-location";
 import LoadingLayout from "../../../component/layout/LoadingLayout";
+import { COMPANY, ORDINARY, PERSON, SPECIAL } from "../../../constant";
+import axios from "axios";
+import { SERVER } from "../../../server";
 
 const termsTexts = [
   "만 14세 이상입니다.",
@@ -117,17 +120,138 @@ function SignUpStep3() {
       location[0].city ? location[0].city : location[0].region
     }>${location[0].subregion ? location[0].subregion : location[0].district}`;
 
-    // const workCategory = [1]; //TODO:일반 사용자는 x
-    const sendingData = {
-      // workCategory,
-      sms: checkArr[4],
-      accessedRegion,
+    // const sendingData = {
+    //   // workCategory,
+    //   sms: checkArr[4],
+    //   accessedRegion,
+    // };
+
+    const getUserCode = () => {
+      if (info.userType === ORDINARY) return "P";
+      else if (info.userDetailType === PERSON) return "S";
+      else {
+        switch (info.workCategory) {
+          case 1:
+            return "C";
+          case 2:
+            return "F";
+          case 3:
+            return "E";
+          case 4:
+            return "H";
+          case 5:
+            return "M";
+          case 6:
+            return "G";
+          default:
+            break;
+        }
+      }
     };
 
-    setInfo({ ...sendingData, ...info });
-    // setInfo({ ...sendingData, ...info, license: info.licenseUrl }); //TODO: 일반회원은 라이센스 x
+    const getUserType = (code) => {
+      switch (code) {
+        case "C":
+          return 1;
+        case "F":
+          return 2;
+        case "E":
+          return 3;
+        case "H":
+          return 4;
+        case "M":
+          return 5;
+        case "G":
+          return 6;
+        case "P":
+          return 7;
+        case "S":
+          return 8;
+        default:
+          break;
+      }
+    };
 
-    navigation.navigate("SignUpStep4"); //TODO: test code
+    const ValidateVehicleList = () => {
+      return info.vehicle[0].type === 0 ||
+        info.vehicle[0].weight === 0 ||
+        info.vehicle[0].number
+        ? false
+        : true;
+    };
+    const userCode = getUserCode();
+    const userType = getUserType(userCode);
+    //공통
+    let sendingData = {
+      userCode: userCode,
+      userType: userType,
+      userName: info.userName,
+      name: info.name,
+      password: info.password,
+      phone: info.phone,
+      birth: info.birth,
+      gender: info.gender,
+      status: "정상",
+      accessedRegion,
+      sms: checkArr[4],
+      grade: 1,
+    };
+
+    if (info.userType === SPECIAL) {
+      //기사회원, 기업회원 공통
+      sendingData = {
+        license: info.license,
+        workRegion: info.workRegion,
+        vehiclePermission: info.vehiclePermission,
+        vehicle:
+          info.userDetailType === COMPANY && ValidateVehicleList()
+            ? null
+            : info.vehicle,
+        recommendUserId: info.recommendUserId,
+        ...sendingData,
+      };
+
+      if (info.userDetailType === COMPANY) {
+        sendingData = {
+          workCategory: info.workCategory,
+          ...sendingData,
+        };
+      }
+    }
+
+    console.log(sendingData);
+
+    axios
+      .post(SERVER + "/users/create", {
+        ...sendingData,
+      })
+      .then(({ data }) => {
+        console.log(data);
+        // const {
+        //   result,
+        //   data: { token, user },
+        //   msg,
+        // } = data;
+
+        // if (result === VALID) {
+        //   setInfo(user);
+        //   setAsyncStorageToken(token);
+        //   setIsLoggedIn(true);
+        // } else {
+        //TODO:에러처리
+        // Toast.show({
+        //   type: "errorToast",
+        //   props: msg,
+        // });
+        // }
+      })
+      .catch((error) => {
+        console.log("error: ", error); //TODO:에러처리
+      })
+      .finally(() => {
+        setLoading(false);
+      });
+
     // axios({
     //     url: SERVER + `/users/sign-up`,
     //     method: "POST",
@@ -145,7 +269,7 @@ function SignUpStep3() {
     //             console.log("userData : ", userData);
     //             // saveLicense(info.licenseUrl, userData.id); //TODO:file 저장
     //             setLoading(false);
-    //             navigation.navigate("SignUpStep5");
+    //             navigation.navigate("SignUpStep4");
     //         }
     //     })
     //     .catch((e) => {

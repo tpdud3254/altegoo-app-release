@@ -62,32 +62,36 @@ function SignUpStep4() {
   const signIn = () => {
     const { phone, password } = info;
 
-    console.log(phone);
-    console.log(password);
-    // axios({
-    //     url: SERVER + "/users/sign-in",
-    //     method: "POST",
-    //     header: {
-    //         Accept: "application/json",
-    //         "Content-Type": "application/json;charset=UTP-8",
-    //     },
-    //     withCredentials: true,
-    //     data: { phone, password },
-    // }).then(async ({ data }) => {
-    //     const { result, token, msg, user } = data;
-    //     if (result) {
-    //         // setLogin(token, user.id, user);
-    //         setInfo(user);
-    //         await AsyncStorage.setItem("token", token);
-    //         await AsyncStorage.setItem("userId", user.id + "");
-    //         setIsLoggedIn(true);
-    //     } else {
-    //         Toast.show({
-    //             type: "errorToast",
-    //             props: msg,
-    //         });
-    //     }
-    // });
+    axios
+      .post(SERVER + "/users/login", {
+        phone,
+        password,
+      })
+      .then(({ data }) => {
+        const {
+          result,
+          data: { token, user },
+          msg,
+        } = data;
+
+        if (result === VALID) {
+          setInfo(user);
+          setAsyncStorageToken(token);
+          setIsLoggedIn(true);
+        } else {
+          //TODO:에러처리
+          // Toast.show({
+          //   type: "errorToast",
+          //   props: msg,
+          // });
+        }
+      })
+      .catch((error) => {
+        console.log("error: ", error); //TODO:에러처리
+      })
+      .finally(() => {
+        setLoading(false);
+      });
   };
 
   return (
@@ -96,9 +100,7 @@ function SignUpStep4() {
         <Header>
           <Ionicons name={"close-outline"} size={45} color={"white"} />
           <TitleText style={{ fontSize: 23 }}>회원가입 완료</TitleText>
-          <HeaderButton
-          // onPress={onNextStep}
-          >
+          <HeaderButton onPress={onNextStep}>
             <Ionicons name={"close-outline"} size={45} color={"black"} />
           </HeaderButton>
         </Header>
