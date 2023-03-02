@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useState } from "react";
-import { StatusBar, View } from "react-native";
+import { View } from "react-native";
 import * as SplashScreen from "expo-splash-screen";
 import {
   useFonts,
@@ -22,6 +22,7 @@ import RootNavigator from "./navigator/RootNavigator";
 import { toastConfig } from "./component/Toast";
 import { UserProvider } from "./context/UserContext";
 import { TimerProvider } from "./context/TimerContext";
+import { StatusBar } from "expo-status-bar";
 
 SplashScreen.preventAutoHideAsync();
 
@@ -74,7 +75,7 @@ export default function App() {
           </TimerProvider>
         </UserProvider>
       </LoginProvider>
-      <StatusBar style="dark-content" />
+      <StatusBar style="dark" />
       <Toast position="bottom" bottomOffset="50" config={toastConfig} />
     </View>
   );

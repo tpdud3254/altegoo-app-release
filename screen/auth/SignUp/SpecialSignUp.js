@@ -28,6 +28,7 @@ import { Picker } from "@react-native-picker/picker";
 import BorderBox from "../../../component/box/BorderBox";
 import HorizontalDivider from "../../../component/divider/HorizontalDivider";
 import { SegmentedButtons } from "react-native-paper";
+import { Toast } from "react-native-toast-message/lib/src/Toast";
 
 const UserDetailContainer = styled.View`
   margin-bottom: 10px;
@@ -187,17 +188,17 @@ function SpecialSignUp({ route }) {
 
   useEffect(() => {
     register("name", {
-      // required: true,
+      required: true,
     });
     register("password", {
-      // required: true,
+      required: true,
     });
     register("phone", {
-      // required: true,
+      required: true,
     });
     register("recommendUserPhone");
     register("vehicleNum", {
-      // required: true,
+      required: true, //TODO: 기사회우너일경우
     });
   }, [register]);
 
@@ -228,8 +229,43 @@ function SpecialSignUp({ route }) {
     //TODO: 본인 인증 후 존재하는 아이디면 빠꾸
   };
 
-  const onValid = (data) => {
-    console.log(data);
+  const onValidUserInfo = (data) => {
+    //TODO: 예외처리 마저하기
+    if (userDetailType === "") {
+      Toast.show({
+        type: "error",
+        text1: "사업 종류를 선택해주세요.",
+      });
+      return;
+    }
+
+    if (data.name.length < 2) {
+      Toast.show({
+        type: "error",
+        text1: "이름을 2자리 이상 입력해주세요.",
+      });
+      return;
+    }
+    //기사회원
+    const { name, password, phone, recommendUserPhone } = data;
+    const authData = {
+      //TODO:: test code
+      userName: "고응주",
+      gender: "남",
+      birth: "580820",
+    };
+
+    const sendingData = {
+      userDetailType,
+      name,
+      password,
+      phone,
+      license: info.licenseUrl,
+      recommendUserPhone,
+      ...authData,
+    };
+
+    console.log(sendingData);
   };
 
   const next = () => {
@@ -415,19 +451,13 @@ function SpecialSignUp({ route }) {
             ? "차량등록하러 가기"
             : "작업지역 선택"
         }
-        // disabled={
-        //     !(
-        //         watch("name") &&
-        //         watch("password") &&
-        //         watch("phone")
-        //     )
+        disabled={!(watch("name") && watch("password") && watch("phone"))}
+        onPress={handleSubmit(onValidUserInfo)}
+        // onPress={() =>
+        //   userDetailType === COMPANY && !watch("vehicleNum")
+        //     ? next()
+        //     : setRegistVehicleVisible(true)
         // }
-        // onPress={handleSubmit(onValid)}
-        onPress={() =>
-          userDetailType === COMPANY && !watch("vehicleNum")
-            ? next()
-            : setRegistVehicleVisible(true)
-        }
         style={{ marginTop: 20 }}
       />
     </>
