@@ -13,7 +13,7 @@ import styled from "styled-components/native";
 import { theme } from "../../../styles";
 import SubTitleText from "../../../component/text/SubTitleText";
 import VerticalDivider from "../../../component/divider/VerticalDivider";
-import { COMPANY, PERSON } from "../../../constant";
+import { COMPANY, PERSON, VALID } from "../../../constant";
 import TitleInputItem from "../../../component/item/TitleInputItem";
 import { TextInput } from "../../../component/input/TextInput";
 import PlainText from "../../../component/text/PlainText";
@@ -29,6 +29,9 @@ import BorderBox from "../../../component/box/BorderBox";
 import HorizontalDivider from "../../../component/divider/HorizontalDivider";
 import { SegmentedButtons } from "react-native-paper";
 import { Toast } from "react-native-toast-message/lib/src/Toast";
+import axios from "axios";
+import { SERVER } from "../../../server";
+import { checkPassword, getAsyncStorageToken } from "../../../utils";
 
 const UserDetailContainer = styled.View`
   margin-bottom: 10px;
@@ -168,11 +171,10 @@ function SpecialSignUp({ route }) {
 
   const [userDetailType, setUserDetailType] = useState(""); //기사회원, 기업회원
   const [phoneAuth, setPhoneAuth] = useState(false); //휴대폰 본인인증
-  const [vehicleType, setVehicleType] = useState(0);
-  const [vehicleWeight, setVehicleWeight] = useState(0);
+  const [recommendUserId, setRecommendUserId] = useState(0);
+  const [checkRecommendUser, setCheckRecommendUser] = useState(false);
   const [vehicleList, setVehicleList] = useState([]);
   const [workType, setWorkType] = useState(-1);
-
   const [textSecure, setTextSecure] = useState(true);
   const [registVehicleVisible, setRegistVehicleVisible] = useState(false);
   const [workTypevisible, setWorkTypevisible] = useState(false);
@@ -197,9 +199,7 @@ function SpecialSignUp({ route }) {
       required: true,
     });
     register("recommendUserPhone");
-    register("vehicleNum", {
-      required: true, //TODO: 기사회우너일경우
-    });
+    register("vehicleNum");
   }, [register]);
 
   useEffect(() => {
@@ -210,10 +210,20 @@ function SpecialSignUp({ route }) {
   const closeWorkTypeMenu = () => setWorkTypevisible(false);
 
   const addVehicleList = () => {
-    const obj = { vehicleType: 0, vehicleWeight: 0, vehicleNum: "" };
+    const obj = { type: 0, weight: 0, number: "" };
 
-    setVehicleList((prev) => [obj, ...prev]);
+    setVehicleList((prev) => [...prev, obj]);
   };
+
+  const deleteVehicleList = (index) => {
+    const newList = vehicleList;
+
+    newList.splice(index, 1);
+
+    setVehicleList([...newList]);
+  };
+
+  console.log(vehicleList);
 
   const onNext = (nextOne) => {
     nextOne?.current?.focus();
@@ -223,31 +233,215 @@ function SpecialSignUp({ route }) {
     navigation.navigate("TakePhoto", { type });
   };
 
-  const getPhoneAuth = () => {
-    console.log("본인인증");
-    setPhoneAuth(true); //TODO:test code
-    //TODO: 본인 인증 후 존재하는 아이디면 빠꾸
+  const setVehicleType = (value, index) => {
+    const newList = vehicleList;
+
+    newList[index].type = value;
+
+    setVehicleList([...newList]);
+  };
+
+  const setVehicleWeight = (value, index) => {
+    const newList = vehicleList;
+
+    newList[index].weight = value;
+
+    setVehicleList([...newList]);
+  };
+
+  const setVehicleNumber = (value, index) => {
+    const newList = vehicleList;
+
+    newList[index].number = value;
+
+    setVehicleList([...newList]);
+  };
+
+  const getPhoneAuth = ({ phone }) => {
+    console.log("본인인증 : ", phone);
+
+    axios
+      .get(SERVER + "/users/search", {
+        params: {
+          phone,
+        },
+        headers: {
+          token: getAsyncStorageToken(),
+        },
+      })
+      .then(({ data }) => {
+        const { result } = data;
+
+        if (result === VALID) {
+          Toast.show({
+            type: "errorToast",
+            props: "이미 존재하는 사용자입니다.",
+          });
+          setPhoneAuth(false);
+        } else {
+          setPhoneAuth(true); //TODO:test code
+        }
+      })
+      .catch((error) => {
+        console.log("error: ", error);
+        setPhoneAuth(true); //TODO:test code/얘외처리 보강
+      })
+      .finally(() => {});
+  };
+
+  const checkRecommnedUser = async (phone) => {
+    axios
+      .get(SERVER + "/users/search", {
+        params: {
+          phone,
+        },
+        headers: {
+          token: getAsyncStorageToken(),
+        },
+      })
+      .then(({ data }) => {
+        const { result, userId } = data;
+
+        if (result === VALID) {
+          setRecommendUserId(userId);
+        } else {
+          setRecommendUserId(0);
+        }
+      })
+      .catch((error) => {
+        console.log("error: ", error);
+        setRecommendUserId(0); //TODO: 예외처리 보강
+      })
+      .finally(() => {
+        setCheckRecommendUser(true);
+      });
   };
 
   const onValidUserInfo = (data) => {
-    //TODO: 예외처리 마저하기
+    //기사회원, 기업회원 공통 예외처리
     if (userDetailType === "") {
       Toast.show({
-        type: "error",
-        text1: "사업 종류를 선택해주세요.",
+        type: "errorToast",
+        props: "사업 종류를 선택해주세요.",
       });
       return;
     }
 
     if (data.name.length < 2) {
       Toast.show({
-        type: "error",
-        text1: "이름을 2자리 이상 입력해주세요.",
+        type: "errorToast",
+        props: "이름을 2자리 이상 입력해주세요.",
       });
       return;
     }
+
+    if (data.password.length < 8) {
+      Toast.show({
+        type: "errorToast",
+        props: "비밀번호를 8자리 이상 입력해주세요.",
+      });
+
+      return;
+    }
+
+    if (!checkPassword(data.password)) {
+      Toast.show({
+        type: "errorToast",
+        props: "비밀번호가 조건에 맞지 않습니다.",
+      });
+
+      return;
+    }
+
+    if (data.phone.length < 1) {
+      //TODO: 휴대폰인증 api 리턴값에 따라 달라질 수 있음
+      Toast.show({
+        type: "errorToast",
+        props: "휴대폰번호를 입력해주세요.",
+      });
+
+      return;
+    }
+
+    if (!phoneAuth) {
+      Toast.show({
+        type: "errorToast",
+        props: "휴대폰 본인인증을 진행해주세요.",
+      });
+
+      return;
+    }
+
+    if (!info.licenseUrl || info.licenseUrl === "") {
+      Toast.show({
+        type: "errorToast",
+        props: "사업자 등록증을 등록해주세요.",
+      });
+
+      return;
+    }
+
+    if (userDetailType === PERSON) {
+      //기사회원 예외처리
+      if (!checkRecommendUser) {
+        Toast.show({
+          type: "errorToast",
+          props: "추천 회원을 입력해주세요.",
+        });
+
+        return;
+      }
+
+      if (recommendUserId === 0) {
+        Toast.show({
+          type: "errorToast",
+          props: "올바른 추천 회원을 입력해주세요.",
+        });
+
+        return;
+      }
+
+      setRegistVehicleVisible(true);
+    }
+  };
+
+  const onValidRegist = (data) => {
+    let vehicleListError = false;
+
+    vehicleList.map((value, index) => {
+      if (value.number === "" || value.type === 0 || value.weight === 0)
+        vehicleListError = true;
+    });
+
+    if (vehicleListError) {
+      if (vehicleList.length > 1) {
+        Toast.show({
+          type: "errorToast",
+          props: "유효한 차량정보를 입력해주세요.",
+        });
+
+        return;
+      } else {
+        Toast.show({
+          type: "errorToast",
+          props: "차량정보를 입력해주세요.",
+        });
+
+        return;
+      }
+    }
+
+    if (!info.vehiclePermissionUrl || info.vehiclePermissionUrl === "") {
+      Toast.show({
+        type: "errorToast",
+        props: "화물자동차 운송사업 허가증을 등록해주세요.",
+      });
+
+      return;
+    }
+
     //기사회원
-    const { name, password, phone, recommendUserPhone } = data;
+    const { name, password, phone } = data;
     const authData = {
       //TODO:: test code
       userName: "고응주",
@@ -261,7 +455,9 @@ function SpecialSignUp({ route }) {
       password,
       phone,
       license: info.licenseUrl,
-      recommendUserPhone,
+      recommendUserId,
+      vehicle: vehicleList,
+      vehiclePermission: info.vehiclePermissionUrl,
       ...authData,
     };
 
@@ -355,7 +551,7 @@ function SpecialSignUp({ route }) {
           returnKeyType="done"
         />
       </TitleInputItem>
-      <PlainButton text="본인인증하기" onPress={getPhoneAuth} />
+      <PlainButton text="본인인증하기" onPress={handleSubmit(getPhoneAuth)} />
       {/* TODO: 본인인증 완료 텍스트 추가 */}
       <LicenseContainer>
         <LicenseWrapper>
@@ -405,33 +601,28 @@ function SpecialSignUp({ route }) {
             width="80%"
             onChangeText={(text) => {
               setValue("recommendUserPhone", text);
-              // checkRecommnedUser(text);
+              text.length > 10 ? checkRecommnedUser(text) : null;
             }}
             keyboardType="number-pad"
           />
           <Icon>
-            {/* {checked ? (
-                            checkUser ? (
-                                <Ionicons
-                                    name={"checkmark-circle"}
-                                    size={40}
-                                    color={"#33aa11"}
-                                />
-                            ) : (
-                                <Ionicons
-                                    name={"close-circle"}
-                                    size={41}
-                                    color={"#cc2222"}
-                                />
-                            )
-                        ) : (
-                            <Ionicons
-                                name={"checkmark-circle"}
-                                size={40}
-                                color={"#33aa1155"}
-                            />
-                        )} */}
-            <Ionicons name={"checkmark-circle"} size={40} color={"#33aa1155"} />
+            {checkRecommendUser ? (
+              recommendUserId !== 0 ? (
+                <Ionicons
+                  name={"checkmark-circle"}
+                  size={40}
+                  color={"#33aa11"}
+                />
+              ) : (
+                <Ionicons name={"close-circle"} size={40} color={"#cc2222"} />
+              )
+            ) : (
+              <Ionicons
+                name={"checkmark-circle"}
+                size={40}
+                color={"#33aa1155"}
+              />
+            )}
           </Icon>
         </RowContainer>
       </TitleInputItem>
@@ -472,8 +663,8 @@ function SpecialSignUp({ route }) {
             <VehicleWrapper>
               <VehicleType>
                 <RadioButton.Group
-                  onValueChange={(newValue) => setVehicleType(newValue)}
-                  value={vehicleType}
+                  onValueChange={(newValue) => setVehicleType(newValue, index)}
+                  value={vehicleList[index].type}
                 >
                   <RadioContainer>
                     <Radio>
@@ -486,28 +677,13 @@ function SpecialSignUp({ route }) {
                     </Radio>
                   </RadioContainer>
                 </RadioButton.Group>
-                {/* <SegmentedButtons
-                  value={vehicleType}
-                  onValueChange={setVehicleType}
-                  buttons={[
-                    {
-                      value: "walk",
-                      label: "Walking",
-                    },
-                    {
-                      value: "train",
-                      label: "Transit",
-                    },
-                    { value: "drive", label: "Driving" },
-                  ]}
-                /> */}
               </VehicleType>
               <VehicleWeight>
                 <Picker //TODO: Picker style
                   ref={vehicleWeightRef}
-                  selectedValue={vehicleWeightArr[vehicleWeight]}
+                  selectedValue={vehicleWeightArr[vehicleList[index].weight]}
                   onValueChange={(itemValue, itemIndex) =>
-                    setVehicleWeight(itemIndex)
+                    setVehicleWeight(itemIndex, index)
                   }
                   style={{
                     width: "100%",
@@ -540,15 +716,27 @@ function SpecialSignUp({ route }) {
                 {/*TODO: 기업회원인 경우 첛번째 차량번호에 받은 값 자동으로 넣기 */}
                 <TextInput
                   placeholder="123아 0124"
-                  onChangeText={(text) => setValue("vehicleNum", text)}
+                  onChangeText={(text) => {
+                    setValue("vehicleNum", text);
+                    setVehicleNumber(text, index);
+                  }}
                   width="255px"
                 />
               </BorderBox>
             </VehicleWrapper>
+            {index > 0 ? (
+              <VehicleWrapper>
+                <PlainButton
+                  text="삭제"
+                  onPress={() => deleteVehicleList(index)}
+                  style={{ width: 70, height: 40, marginTop: 20 }}
+                />
+              </VehicleWrapper>
+            ) : null}
           </VehicleContainer>
         ))}
         <AddButtonContainer>
-          <AddButton onPress={() => addVehicleList()}>
+          <AddButton onPress={addVehicleList}>
             <Ionicons name="add" size={35} color={theme.btnPointColor} />
 
             <PlainText>차량추가</PlainText>
@@ -605,7 +793,7 @@ function SpecialSignUp({ route }) {
         //     )
         // }
         // onPress={handleSubmit(onValid)}
-        onPress={next}
+        onPress={handleSubmit(onValidRegist)}
         style={{ marginTop: 20 }}
       />
     </>

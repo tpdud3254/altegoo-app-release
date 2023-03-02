@@ -76,7 +76,7 @@ export default function App() {
         </UserProvider>
       </LoginProvider>
       <StatusBar style="dark" />
-      <Toast position="bottom" bottomOffset="50" config={toastConfig} />
+      <Toast position="bottom" bottomOffset="100" config={toastConfig} />
     </View>
   );
 }
