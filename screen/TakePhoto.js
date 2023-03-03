@@ -8,6 +8,9 @@ import * as MediaLibrary from "expo-media-library";
 import { theme } from "../styles";
 import SubTitleText from "../component/text/SubTitleText";
 import UserContext from "../context/UserContext";
+import axios from "axios";
+import { SERVER } from "../server";
+import { getAsyncStorageToken } from "../utils";
 
 const Container = styled.View`
   flex: 1;
@@ -106,6 +109,44 @@ function TakePhoto({ navigation, route }) {
   };
 
   const isFocusd = useIsFocused();
+
+  const uploadFile = async (fileName) => {
+    const localUri = fileName;
+    const filename = localUri.split("/").pop();
+    const match = /\.(\w+)$/.exec(filename ?? "");
+    const type = match ? `image/${match[1]}` : `image`;
+    const formData = new FormData();
+    console.log(filename, type);
+    formData.append("file", { uri: localUri, name: filename, type });
+
+    axios
+      .post(
+        SERVER + "/users/image",
+        {
+          formData,
+        },
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+            auth: await getAsyncStorageToken(),
+          },
+          transformRequest: [
+            function () {
+              return formData;
+            },
+          ],
+        }
+      )
+      .then(({ data }) => {
+        console.log(data);
+      })
+      .catch((error) => {
+        console.log("error: ", error);
+      })
+      .finally(() => {
+        // setLoading(false);
+      });
+  };
   return (
     <Container>
       {isFocusd ? <StatusBar hidden={true} /> : null}
@@ -147,6 +188,10 @@ function TakePhoto({ navigation, route }) {
             >
               <SubTitleText style={{ color: "white" }}>저장</SubTitleText>
             </PhotoAction>
+            <PhotoAction onPress={() => uploadFile(takenPhoto)}>
+              <SubTitleText style={{ color: "white" }}>전송</SubTitleText>
+            </PhotoAction>
+            {/* TODO:test code */}
           </PhotoActions>
         )
       ) : null}
