@@ -22,6 +22,7 @@ import RootNavigator from "./navigator/RootNavigator";
 import { toastConfig } from "./component/Toast";
 import { UserProvider } from "./context/UserContext";
 import { StatusBar } from "expo-status-bar";
+import { RegistProvider } from "./context/RegistContext";
 
 SplashScreen.preventAutoHideAsync();
 
@@ -69,7 +70,9 @@ export default function App() {
         <View style={{ flex: 1 }} onLayout={onLayoutRootView}>
             <LoginProvider>
                 <UserProvider>
-                    <RootNavigator />
+                    <RegistProvider>
+                        <RootNavigator />
+                    </RegistProvider>
                 </UserProvider>
             </LoginProvider>
             <StatusBar style="dark" />
