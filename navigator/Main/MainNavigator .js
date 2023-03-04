@@ -1,6 +1,6 @@
 import { createStackNavigator } from "@react-navigation/stack";
 import React from "react";
-import Home from "../screen/main/home/Home";
+import Home from "../../screen/main/home/Home";
 import TabsNavigator from "./TabsNavigator";
 // import TabsNavigator from "./TabsNavigator";
 

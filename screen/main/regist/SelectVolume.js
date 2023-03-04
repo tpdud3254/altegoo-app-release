@@ -1,12 +1,12 @@
 import React from "react";
 import { Text, View } from "react-native";
 
-function SearchAddress() {
+function SelectVolume() {
     return (
         <View>
-            <Text>SearchAddress</Text>
+            <Text>SelectVolume</Text>
         </View>
     );
 }
 
-export default SearchAddress;
+export default SelectVolume;

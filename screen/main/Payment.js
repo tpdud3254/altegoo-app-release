@@ -1,12 +1,12 @@
 import React from "react";
 import { Text, View } from "react-native";
 
-function SearchAddress() {
+function Payment() {
     return (
         <View>
-            <Text>SearchAddress</Text>
+            <Text>Payment</Text>
         </View>
     );
 }
 
-export default SearchAddress;
+export default Payment;

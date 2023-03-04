@@ -1,12 +1,12 @@
 import React from "react";
 import { Text, View } from "react-native";
 
-function SearchAddress() {
+function RegistCompleted() {
     return (
         <View>
-            <Text>SearchAddress</Text>
+            <Text>RegistCompleted</Text>
         </View>
     );
 }
 
-export default SearchAddress;
+export default RegistCompleted;

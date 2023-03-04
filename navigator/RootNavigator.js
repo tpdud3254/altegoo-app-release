@@ -1,8 +1,8 @@
 import React, { useContext, useEffect, useState } from "react";
 import { NavigationContainer } from "@react-navigation/native";
 import LoginContext from "../context/LoginContext";
-import IntroNavigator from "./IntroNavigator";
-import MainNavigator from "./MainNavigator ";
+import IntroNavigator from "./Auth/IntroNavigator";
+import MainNavigator from "./Main/MainNavigator ";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import Toast from "react-native-toast-message";
 import axios from "axios";

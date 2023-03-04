@@ -1,12 +1,12 @@
 import { createStackNavigator } from "@react-navigation/stack";
 import * as React from "react";
-import DetailTerms from "../screen/auth/SignUp/DetailTerms";
-import SignUp from "../screen/auth/SignUp/SignUp";
-import SignUpStep1 from "../screen/auth/SignUp/SignUpStep1";
-import SignUpStep2 from "../screen/auth/SignUp/SignUpStep2";
-import SignUpStep3 from "../screen/auth/SignUp/SignUpStep3";
-import SignUpStep4 from "../screen/auth/SignUp/SignUpStep4";
-import TakePhoto from "../screen/TakePhoto";
+import DetailTerms from "../../screen/auth/SignUp/DetailTerms";
+import SignUp from "../../screen/auth/SignUp/SignUp";
+import SignUpStep1 from "../../screen/auth/SignUp/SignUpStep1";
+import SignUpStep2 from "../../screen/auth/SignUp/SignUpStep2";
+import SignUpStep3 from "../../screen/auth/SignUp/SignUpStep3";
+import SignUpStep4 from "../../screen/auth/SignUp/SignUpStep4";
+import TakePhoto from "../../screen/TakePhoto";
 
 const Stack = createStackNavigator();
 

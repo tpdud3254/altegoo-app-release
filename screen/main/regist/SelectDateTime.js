@@ -1,12 +1,12 @@
 import React from "react";
 import { Text, View } from "react-native";
 
-function SearchAddress() {
+function SelectDateTime() {
     return (
         <View>
-            <Text>SearchAddress</Text>
+            <Text>SelectDateTime</Text>
         </View>
     );
 }
 
-export default SearchAddress;
+export default SelectDateTime;

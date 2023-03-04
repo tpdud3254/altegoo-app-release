@@ -6,3 +6,15 @@ export const PERSON = "PERSON";
 export const COMPANY = "COMPANY";
 
 export const TOKEN = "token";
+
+export const REGIST_NAV = [
+    "SelectWorkType",
+    "SelectDateTime",
+    "SearchAddress",
+    "SelectFloor",
+    "SelectVolume",
+    "AddOtherData",
+    "RegistDone",
+    "Payment",
+    "RegistCompleted",
+];

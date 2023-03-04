@@ -1,12 +1,12 @@
 import React from "react";
 import { Text, View } from "react-native";
 
-function SearchAddress() {
+function AddOtherData() {
     return (
         <View>
-            <Text>SearchAddress</Text>
+            <Text>AddOtherData</Text>
         </View>
     );
 }
 
-export default SearchAddress;
+export default AddOtherData;

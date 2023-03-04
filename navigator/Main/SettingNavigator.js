@@ -1,12 +1,12 @@
 import { createStackNavigator } from "@react-navigation/stack";
 import React from "react";
 import { Ionicons } from "@expo/vector-icons";
-import Menus from "../screen/main/setting/Menus";
-import BlockUser from "../screen/main/setting/BlockUser";
-import Events from "../screen/main/setting/Events";
-import ModifyUserInfo from "../screen/main/setting/ModifyUserInfo";
-import Setting from "../screen/main/setting/Setting";
+import BlockUser from "../../screen/main/setting/BlockUser";
+import Events from "../../screen/main/setting/Events";
+import ModifyUserInfo from "../../screen/main/setting/ModifyUserInfo";
+import Setting from "../../screen/main/setting/Setting";
 import PointNavigator from "./PointNavigator";
+import Menus from "../../screen/main/setting/Menus";
 
 const Stack = createStackNavigator();
 

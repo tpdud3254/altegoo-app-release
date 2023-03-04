@@ -1,12 +1,12 @@
 import React from "react";
 import { Text, View } from "react-native";
 
-function SearchAddress() {
+function SelectWorkType() {
     return (
         <View>
-            <Text>SearchAddress</Text>
+            <Text>SelectWorkType</Text>
         </View>
     );
 }
 
-export default SearchAddress;
+export default SelectWorkType;
