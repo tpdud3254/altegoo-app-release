@@ -55,7 +55,7 @@ function SignUpStep4() {
 
     console.log("step4 info : ", info);
     useEffect(() => {
-        BackHandler.addEventListener("hardwareBackPress", onNextStep);
+        BackHandler.addEventListener("hardwareBackPress", onNextStep); //TODO: 뒤로가기 안됨
     });
 
     const goToPage = (pageName) => {
@@ -171,12 +171,14 @@ function SignUpStep4() {
                     </Button>
                     <VerticalDivider color={theme.textBoxColor} />
                     <Button
-                        onPress={() =>
-                            info.userType === ORDINARY
-                                ? goToPage("Setting")
-                                : info.userDetailType === PERSON
-                                ? goToPage("Home")
-                                : goToPage("Setting")
+                        onPress={
+                            () =>
+                                info.userType === ORDINARY
+                                    ? goToPage("Setting")
+                                    : info.userDetailType === PERSON
+                                    ? goToPage("Home")
+                                    : goToPage("Setting")
+                            // TODO: 기능추가
                         }
                     >
                         {/* TODO: 기능추가 */}
