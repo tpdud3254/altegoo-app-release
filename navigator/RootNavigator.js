@@ -13,51 +13,53 @@ import { VALID } from "../constant";
 import { getAsyncStorageToken } from "../utils";
 
 export default function RootNavigator() {
-  const [loading, setLoading] = useState(false);
-  const { isLoggedIn, setIsLoggedIn } = useContext(LoginContext);
-  const { setInfo } = useContext(UserContext);
+    const [loading, setLoading] = useState(false);
+    const { isLoggedIn, setIsLoggedIn } = useContext(LoginContext);
+    const { setInfo } = useContext(UserContext);
 
-  useEffect(() => {
-    async function getStorage() {
-      const token = await getAsyncStorageToken();
-      console.log(token);
-      if (token) {
-        axios
-          .post(SERVER + "/users/user", {
-            token,
-          })
-          .then(({ data }) => {
-            const { result, data: user, msg } = data;
-            if (result === VALID) {
-              setInfo(user.user);
-              setIsLoggedIn(true);
-              setLoading(true);
+    useEffect(() => {
+        async function getStorage() {
+            const token = await getAsyncStorageToken();
+            console.log("token : ", token);
+            if (token) {
+                axios
+                    .post(SERVER + "/users/user", {
+                        token,
+                    })
+                    .then(({ data }) => {
+                        const { result, data: user, msg } = data;
+                        if (result === VALID) {
+                            setInfo(user.user);
+                            setIsLoggedIn(true);
+                            setLoading(true);
+                        } else {
+                            //TODO:에러처리
+                        }
+                    })
+                    .catch((error) => {
+                        console.log("error: ", error); //TODO:에러처리
+                        setLoading(true);
+                        setIsLoggedIn(false);
+                    })
+                    .finally(() => {});
             } else {
-              //TODO:에러처리
+                setLoading(true);
+                setIsLoggedIn(false);
             }
-          })
-          .catch((error) => {
-            console.log("error: ", error); //TODO:에러처리
-          })
-          .finally(() => {});
-      } else {
-        setLoading(true);
-        setIsLoggedIn(false);
-      }
-    }
+        }
 
-    getStorage();
-  }, []);
+        getStorage();
+    }, []);
 
-  return (
-    <>
-      {loading ? (
-        <NavigationContainer>
-          {isLoggedIn ? <MainNavigator /> : <IntroNavigator />}
-        </NavigationContainer>
-      ) : (
-        <LoadingLayout />
-      )}
-    </>
-  );
+    return (
+        <>
+            {loading ? (
+                <NavigationContainer>
+                    {isLoggedIn ? <MainNavigator /> : <IntroNavigator />}
+                </NavigationContainer>
+            ) : (
+                <LoadingLayout />
+            )}
+        </>
+    );
 }
