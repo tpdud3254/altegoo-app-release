@@ -10,12 +10,23 @@ import SelectDateTime from "../../screen/main/regist/SelectDateTime";
 import SelectFloor from "../../screen/main/regist/SelectFloor";
 import SelectVolume from "../../screen/main/regist/SelectVolume";
 import SelectWorkType from "../../screen/main/regist/SelectWorkType";
+import { theme } from "../../styles";
 
 const Stack = createStackNavigator();
 
 export default function RegistNavigator() {
     return (
-        <Stack.Navigator>
+        <Stack.Navigator
+            screenOptions={{
+                headerStyle: {
+                    backgroundColor: theme.sub.blue,
+                },
+                headerTitleStyle: {
+                    color: "white",
+                },
+                headerTitleAlign: "center",
+            }}
+        >
             <Stack.Screen
                 name={REGIST_NAV[0]}
                 component={SelectWorkType}
