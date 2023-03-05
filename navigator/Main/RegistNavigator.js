@@ -65,7 +65,11 @@ export default function RegistNavigator() {
                 options={{ headerTitle: "최종 등록" }}
             />
             <Stack.Screen name={REGIST_NAV[7]} component={Payment} />
-            <Stack.Screen name={REGIST_NAV[8]} component={RegistCompleted} />
+            <Stack.Screen
+                name={REGIST_NAV[8]}
+                component={RegistCompleted}
+                options={{ headerShown: false }}
+            />
             <Stack.Screen
                 name="Address"
                 component={Address}
