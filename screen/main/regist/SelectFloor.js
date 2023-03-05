@@ -38,7 +38,6 @@ const OtherFloorContainer = styled(FloorContainer)`
 `;
 const HelpWrapper = styled.View`
     flex-direction: row;
-    align-items: center;
 `;
 
 const FloorClass = styled.View`

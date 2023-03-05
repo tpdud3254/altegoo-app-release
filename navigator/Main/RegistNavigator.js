@@ -49,7 +49,11 @@ export default function RegistNavigator() {
                 component={SelectFloor}
                 options={{ headerTitle: "층수 선택" }}
             />
-            <Stack.Screen name={REGIST_NAV[4]} component={SelectVolume} />
+            <Stack.Screen
+                name={REGIST_NAV[4]}
+                component={SelectVolume}
+                options={{ headerTitle: "물량/시간 선택" }}
+            />
             <Stack.Screen name={REGIST_NAV[5]} component={AddOtherData} />
             <Stack.Screen name={REGIST_NAV[6]} component={RegistDone} />
             <Stack.Screen name={REGIST_NAV[7]} component={Payment} />

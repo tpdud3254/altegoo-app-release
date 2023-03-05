@@ -143,7 +143,6 @@ const HelpContainer = styled.View`
 
 const HelpWrapper = styled.View`
     flex-direction: row;
-    align-items: center;
 `;
 
 const Notice = styled.View`

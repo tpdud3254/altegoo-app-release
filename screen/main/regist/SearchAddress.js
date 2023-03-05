@@ -28,7 +28,6 @@ const InputOtherAddress = styled(InputAddress)`
 `;
 const HelpWrapper = styled.View`
     flex-direction: row;
-    align-items: center;
 `;
 
 const InputAddWrapper = styled.View`
