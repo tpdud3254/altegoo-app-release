@@ -9,7 +9,7 @@ const Container = styled.View`
     background-color: ${theme.backgroundColor};
     padding: 0px 10px 0px 10px;
 `;
-
+//TODO: KeyboardAvoidingView추가
 export default function FormLayout({ children }) {
     return (
         <DismissKeyboard>

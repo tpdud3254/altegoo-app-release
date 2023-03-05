@@ -1,12 +1,10 @@
 import React, { useContext, useEffect, useState } from "react";
-import { Image } from "react-native";
 import { RadioButton } from "react-native-paper";
 import styled from "styled-components/native";
 import MainLayout from "../../../component/layout/MainLayout";
 import PlainText from "../../../component/text/PlainText";
 import { theme } from "../../../styles";
 import { MaterialCommunityIcons, Feather } from "@expo/vector-icons";
-import SubmitButton from "../../../component/button/SubmitButton";
 import VerticalDivider from "../../../component/divider/VerticalDivider";
 import HorizontalDivider from "../../../component/divider/HorizontalDivider";
 import PlainButton from "../../../component/button/PlainButton";
@@ -70,7 +68,7 @@ const HelpContainer = styled.View`
 `;
 
 function SelectWorkType({ navigation }) {
-    const { registInfo, setRegistInfo } = useContext(RegistContext);
+    const { setRegistInfo } = useContext(RegistContext);
     const [vehicleType, setVehicleType] = useState(null);
     const [upDown, setUpDown] = useState(null);
     const [both, setBoth] = useState(null);
@@ -117,7 +115,7 @@ function SelectWorkType({ navigation }) {
                 color={cur ? theme.sub.blue : "#777777"}
             />
             <PlainText
-                style={{ marginLeft: 10, color: cur ? "black" : "#777777" }}
+                style={{ marginLeft: 5, color: cur ? "black" : "#777777" }}
             >
                 {text}
             </PlainText>

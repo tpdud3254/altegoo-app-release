@@ -1,5 +1,6 @@
 import React from "react";
 import styled from "styled-components/native";
+import DismissKeyboard from "../DismissKeyboard";
 
 const Container = styled.View`
     flex: 1;
@@ -7,5 +8,9 @@ const Container = styled.View`
 `;
 
 export default function MainLayout({ children }) {
-    return <Container>{children}</Container>;
+    return (
+        <DismissKeyboard>
+            <Container>{children}</Container>
+        </DismissKeyboard>
+    );
 }

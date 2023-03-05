@@ -25,6 +25,7 @@ export default function RegistNavigator() {
                     color: "white",
                 },
                 headerTitleAlign: "center",
+                headerTintColor: "white",
             }}
         >
             <Stack.Screen
@@ -32,7 +33,11 @@ export default function RegistNavigator() {
                 component={SelectWorkType}
                 options={{ headerTitle: "작업 선택" }}
             />
-            <Stack.Screen name={REGIST_NAV[1]} component={SelectDateTime} />
+            <Stack.Screen
+                name={REGIST_NAV[1]}
+                component={SelectDateTime}
+                options={{ headerTitle: "작업 일시" }}
+            />
             <Stack.Screen name={REGIST_NAV[2]} component={SearchAddress} />
             <Stack.Screen name={REGIST_NAV[3]} component={SelectFloor} />
             <Stack.Screen name={REGIST_NAV[4]} component={SelectVolume} />
