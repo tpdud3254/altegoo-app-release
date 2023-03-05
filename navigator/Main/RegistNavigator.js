@@ -44,7 +44,11 @@ export default function RegistNavigator() {
                 component={SearchAddress}
                 options={{ headerTitle: "주소 입력" }}
             />
-            <Stack.Screen name={REGIST_NAV[3]} component={SelectFloor} />
+            <Stack.Screen
+                name={REGIST_NAV[3]}
+                component={SelectFloor}
+                options={{ headerTitle: "층수 선택" }}
+            />
             <Stack.Screen name={REGIST_NAV[4]} component={SelectVolume} />
             <Stack.Screen name={REGIST_NAV[5]} component={AddOtherData} />
             <Stack.Screen name={REGIST_NAV[6]} component={RegistDone} />

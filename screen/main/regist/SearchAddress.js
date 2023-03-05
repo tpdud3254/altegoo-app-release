@@ -1,6 +1,5 @@
 import React, { useContext, useEffect } from "react";
 import { useForm } from "react-hook-form";
-import { Text, View } from "react-native";
 import styled from "styled-components/native";
 import KakaoButton, {
     ButtonContainer,
@@ -12,7 +11,6 @@ import RegistContext from "../../../context/RegistContext";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { theme } from "../../../styles";
 import { Toast } from "react-native-toast-message/lib/src/Toast";
-import Address from "../../Address";
 import { REGIST_NAV } from "../../../constant";
 
 const Container = styled.KeyboardAvoidingView`
@@ -155,7 +153,8 @@ function SearchAddress({ route, navigation }) {
                     />
                     <InputAddWrapper>
                         <Search onPress={() => searchAddress(0)}>
-                            {route?.params?.addressArr ? (
+                            {route?.params?.addressArr &&
+                            route?.params?.addressArr[0] !== "" ? (
                                 <PlainText>
                                     {route?.params?.addressArr[0]}
                                 </PlainText>
@@ -186,7 +185,8 @@ function SearchAddress({ route, navigation }) {
                         />
                         <InputAddWrapper>
                             <Search onPress={() => searchAddress(1)}>
-                                {route?.params?.addressArr ? (
+                                {route?.params?.addressArr &&
+                                route?.params?.addressArr[1] !== "" ? (
                                     <PlainText>
                                         {route?.params?.addressArr[1]}
                                     </PlainText>
