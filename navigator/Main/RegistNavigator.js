@@ -1,6 +1,7 @@
 import { createStackNavigator } from "@react-navigation/stack";
 import React from "react";
 import { REGIST_NAV } from "../../constant";
+import Address from "../../screen/Address";
 import Payment from "../../screen/main/Payment";
 import AddOtherData from "../../screen/main/regist/AddOtherData";
 import RegistCompleted from "../../screen/main/regist/RegistCompleted";
@@ -38,13 +39,18 @@ export default function RegistNavigator() {
                 component={SelectDateTime}
                 options={{ headerTitle: "작업 일시" }}
             />
-            <Stack.Screen name={REGIST_NAV[2]} component={SearchAddress} />
+            <Stack.Screen
+                name={REGIST_NAV[2]}
+                component={SearchAddress}
+                options={{ headerTitle: "주소 입력" }}
+            />
             <Stack.Screen name={REGIST_NAV[3]} component={SelectFloor} />
             <Stack.Screen name={REGIST_NAV[4]} component={SelectVolume} />
             <Stack.Screen name={REGIST_NAV[5]} component={AddOtherData} />
             <Stack.Screen name={REGIST_NAV[6]} component={RegistDone} />
             <Stack.Screen name={REGIST_NAV[7]} component={Payment} />
             <Stack.Screen name={REGIST_NAV[8]} component={RegistCompleted} />
+            <Stack.Screen name="Address" component={Address} />
         </Stack.Navigator>
     );
 }

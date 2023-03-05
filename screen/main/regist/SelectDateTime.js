@@ -368,7 +368,11 @@ function SelectDateTime({ navigation }) {
                                     justifyContent: "center",
                                     alignItems: "center",
                                 }}
-                                onPress={() => setSelectedDay(date.dateString)}
+                                onPress={
+                                    state === "disabled"
+                                        ? null
+                                        : () => setSelectedDay(date.dateString)
+                                }
                             >
                                 <PlainText
                                     style={{
