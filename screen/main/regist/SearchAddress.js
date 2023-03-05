@@ -139,7 +139,7 @@ function SearchAddress({ route, navigation }) {
             </PlainText>
         </HelpWrapper>
     );
-
+    // TODO: 경기도, 인천, 서울 이외에는 막기
     return (
         <MainLayout>
             <Container behavior="position" keyboardVerticalOffset={0}>

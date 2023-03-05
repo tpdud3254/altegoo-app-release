@@ -59,7 +59,11 @@ export default function RegistNavigator() {
                 component={AddOtherData}
                 options={{ headerTitle: "추가 정보 입력" }}
             />
-            <Stack.Screen name={REGIST_NAV[6]} component={RegistDone} />
+            <Stack.Screen
+                name={REGIST_NAV[6]}
+                component={RegistDone}
+                options={{ headerTitle: "최종 등록" }}
+            />
             <Stack.Screen name={REGIST_NAV[7]} component={Payment} />
             <Stack.Screen name={REGIST_NAV[8]} component={RegistCompleted} />
             <Stack.Screen

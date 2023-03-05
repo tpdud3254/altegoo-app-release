@@ -162,11 +162,11 @@ function AddOtherData({ navigation }) {
 
     const getPrice = () => {
         //TODO: 작업비용
-        return `${numberWithComma(price)} P`;
+        return `${numberWithComma(price)} AP`;
     };
 
     const getPoint = () => {
-        return `${numberWithComma(price * 0.15)} P`;
+        return `${numberWithComma(price * 0.15)} AP`;
     };
 
     const onNextStep = ({ directPhone, memo }) => {
@@ -178,6 +178,7 @@ function AddOtherData({ navigation }) {
             memo: memo || null,
             directPhone: directPhone || info.phone,
             emergency: emergencyOrder,
+            ...registInfo,
         });
 
         navigation.navigate(REGIST_NAV[6]);
@@ -318,6 +319,7 @@ function AddOtherData({ navigation }) {
                                         style={{
                                             fontSize: 18,
                                             color: theme.main,
+                                            marginBottom: 5,
                                         }}
                                     >
                                         긴급 오더 선택 시 작업 비용이 20%
