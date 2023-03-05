@@ -96,7 +96,7 @@ function SearchAddress({ route, navigation }) {
                 route?.params?.addressArr[1] + " " + detailAddress2;
 
             setRegistInfo({
-                Address: Address1,
+                address: Address1,
                 otherAddress: Address2,
                 ...registInfo,
             });
@@ -118,7 +118,7 @@ function SearchAddress({ route, navigation }) {
                 route?.params?.addressArr[0] + " " + detailAddress1;
 
             setRegistInfo({
-                Address: Address1,
+                address: Address1,
                 otherAddress: null,
                 ...registInfo,
             });
@@ -142,7 +142,7 @@ function SearchAddress({ route, navigation }) {
 
     return (
         <MainLayout>
-            <Container>
+            <Container behavior="position" keyboardVerticalOffset={0}>
                 <InputAddress>
                     <Help
                         number="1"

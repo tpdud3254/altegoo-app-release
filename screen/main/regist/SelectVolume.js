@@ -17,7 +17,7 @@ import { Modal, Portal, Provider } from "react-native-paper";
 import SubTitleText from "../../../component/text/SubTitleText";
 import { TouchableOpacity, View } from "react-native";
 
-const Container = styled.KeyboardAvoidingView`
+const Container = styled.View`
     flex: 1;
 `;
 
@@ -119,7 +119,7 @@ function SelectVolume({ navigation }) {
             }
 
             if (type === "quantity") {
-                if (!quantity) {
+                if (!quantity && quantity !== 0) {
                     Toast.show({
                         type: "errorToast",
                         props: "물량을 선택해주세요.",
@@ -133,7 +133,7 @@ function SelectVolume({ navigation }) {
                     ...registInfo,
                 });
             } else {
-                if (!time) {
+                if (!time && time !== 0) {
                     Toast.show({
                         type: "errorToast",
                         props: "시간을 선택해주세요.",
@@ -148,7 +148,7 @@ function SelectVolume({ navigation }) {
                 });
             }
         } else {
-            if (!quantity) {
+            if (!quantity && quantity !== 0) {
                 Toast.show({
                     type: "errorToast",
                     props: "물량을 선택해주세요.",

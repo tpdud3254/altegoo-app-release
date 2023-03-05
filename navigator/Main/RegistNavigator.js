@@ -54,11 +54,19 @@ export default function RegistNavigator() {
                 component={SelectVolume}
                 options={{ headerTitle: "물량/시간 선택" }}
             />
-            <Stack.Screen name={REGIST_NAV[5]} component={AddOtherData} />
+            <Stack.Screen
+                name={REGIST_NAV[5]}
+                component={AddOtherData}
+                options={{ headerTitle: "추가 정보 입력" }}
+            />
             <Stack.Screen name={REGIST_NAV[6]} component={RegistDone} />
             <Stack.Screen name={REGIST_NAV[7]} component={Payment} />
             <Stack.Screen name={REGIST_NAV[8]} component={RegistCompleted} />
-            <Stack.Screen name="Address" component={Address} />
+            <Stack.Screen
+                name="Address"
+                component={Address}
+                options={{ headerTitle: "주소 검색" }}
+            />
         </Stack.Navigator>
     );
 }

@@ -17,7 +17,7 @@ import { Modal, Portal, Provider } from "react-native-paper";
 import SubTitleText from "../../../component/text/SubTitleText";
 import { TouchableOpacity } from "react-native";
 
-const Container = styled.KeyboardAvoidingView`
+const Container = styled.View`
     flex: 1;
 `;
 
@@ -132,14 +132,18 @@ function SelectFloor({ navigation }) {
     const hideModal = () => setPriceVisible(false);
 
     const onNextStep = () => {
+        console.log(selectedFloor);
+        console.log(selectedOtherFloor);
         if (registInfo.upDown === "양사") {
             if (
-                !selectedFloor ||
-                floorArr.length < 1 ||
-                !floorArr[selectedFloor] ||
-                !selectedOtherFloor ||
-                otherFloorArr.length < 1 ||
-                !otherFloorArr[selectedOtherFloor]
+                (!selectedFloor ||
+                    floorArr.length < 1 ||
+                    !floorArr[selectedFloor] ||
+                    !selectedOtherFloor ||
+                    otherFloorArr.length < 1 ||
+                    !otherFloorArr[selectedOtherFloor]) &&
+                selectedFloor !== 0 &&
+                selectedOtherFloor !== 0
             ) {
                 Toast.show({
                     type: "errorToast",
@@ -155,9 +159,10 @@ function SelectFloor({ navigation }) {
             });
         } else {
             if (
-                !selectedFloor ||
-                floorArr.length < 1 ||
-                !floorArr[selectedFloor]
+                (!selectedFloor ||
+                    floorArr.length < 1 ||
+                    !floorArr[selectedFloor]) &&
+                selectedFloor !== 0
             ) {
                 Toast.show({
                     type: "errorToast",
