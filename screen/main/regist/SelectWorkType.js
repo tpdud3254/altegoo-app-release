@@ -14,6 +14,8 @@ import KakaoButton, {
     ButtonContainer,
 } from "../../../component/button/KakaoButton";
 import { REGIST_NAV } from "../../../constant";
+import UpIcon from "../../../component/icon/UpIcon";
+import DownIcon from "../../../component/icon/DownIcon";
 
 const Container = styled.View`
     flex: 1;
@@ -137,24 +139,6 @@ function SelectWorkType({ navigation }) {
                 {type === "up" ? "올림" : type === "down" ? "내림" : "양사"}
             </PlainText>
         </STypeButton>
-    );
-
-    const UpIcon = () => (
-        <MaterialCommunityIcons
-            name="arrow-expand-up"
-            size={24}
-            color="#777777"
-            style={{ marginRight: 5 }}
-        />
-    );
-
-    const DownIcon = () => (
-        <MaterialCommunityIcons
-            name="arrow-expand-down"
-            size={24}
-            color="#777777"
-            style={{ marginRight: 5 }}
-        />
     );
 
     return (

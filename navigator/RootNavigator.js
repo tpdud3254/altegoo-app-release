@@ -30,8 +30,8 @@ export default function RootNavigator() {
                         const { result, data: user, msg } = data;
                         if (result === VALID) {
                             setInfo(user.user);
-                            setIsLoggedIn(true);
                             setLoading(true);
+                            setIsLoggedIn(true);
                         } else {
                             //TODO:에러처리
                         }
