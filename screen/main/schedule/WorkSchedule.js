@@ -11,11 +11,36 @@ import { Ionicons } from "@expo/vector-icons";
 import PlainText from "../../../component/text/PlainText";
 import TruckLogo from "../../../component/logo/TruckLogo";
 import { theme } from "../../../styles";
+import axios from "axios";
+import { SERVER } from "../../../server";
+import { getAsyncStorageToken } from "../../../utils";
 
 function WorkSchedule() {
   const { setIsLoggedIn } = useContext(LoginContext);
   const { setInfo } = useContext(UserContext);
   const navigation = useNavigation();
+
+  const getMyOrderList = async () => {
+    axios
+      .get(SERVER + "/works/mylist", {
+        headers: {
+          auth: await getAsyncStorageToken(),
+        },
+      })
+      .then(({ data }) => {
+        console.log(data);
+        // const {
+        //   result,
+        //   data: { list },
+        // } = data;
+        // console.log("result: ", result);
+        // console.log("list: ", list);
+      })
+      .catch((error) => {
+        console.log("error: ", error); //TODO:에러처리
+      })
+      .finally(() => {});
+  };
 
   const Work = () => (
     <View style={{ backgroundColor: "#efefef", marginBottom: 5 }}>
