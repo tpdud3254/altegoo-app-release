@@ -97,7 +97,9 @@ function SignIn() {
         }
       })
       .catch((error) => {
-        console.log("error: ", error); //TODO:에러처리
+        console.log("error: ", error.response.status); //TODO:에러처리
+        console.log("error: ", error.response.data.msg); //TODO:에러처리
+        console.log("error: ", error.response.data.result); //TODO:에러처리
       })
       .finally(() => {
         setLoading(false);

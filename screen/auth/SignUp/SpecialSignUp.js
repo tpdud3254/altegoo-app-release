@@ -285,6 +285,7 @@ function SpecialSignUp({ route }) {
           setPhoneAuth(false);
         } else {
           setPhoneAuth(true); //TODO:test code
+          console.log(data);
         }
       })
       .catch((error) => {
