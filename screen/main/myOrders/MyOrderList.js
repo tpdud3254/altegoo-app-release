@@ -25,10 +25,23 @@ import {
     MaterialIcons,
     Ionicons,
     FontAwesome5,
+    Feather,
 } from "@expo/vector-icons";
 import LadderIcon from "../../../component/icon/LadderIcon";
 import SkyIcon from "../../../component/icon/SkyIcon";
 import { Menu, Divider, Provider } from "react-native-paper";
+import HeaderRight from "../../../component/HeaderRight";
+import HeaderLeft from "../../../component/HeaderLeft";
+
+const TopContainer = styled.View`
+    margin: -10px -10px 0px -10px;
+    background-color: white;
+    border-top-width: 0.5px;
+    border-top-color: ${theme.boxColor};
+`;
+
+const Week = styled.View``;
+const OrderCount = styled.View``;
 
 const ProgressContainer = styled.View`
     background-color: #ffffffaa;
@@ -117,7 +130,7 @@ const statusArr = [
     },
 ];
 
-function OrderList({ navigation }) {
+function MyOrderList({ navigation }) {
     const { info } = useContext(UserContext);
 
     const [isLoading, setIsLoading] = useState(false);
@@ -151,6 +164,47 @@ function OrderList({ navigation }) {
         getOrderList();
         setIsLoading(false);
     }, []);
+    useEffect(() => {
+        navigation.setOptions({
+            headerRight: () => <HeaderRight />,
+        });
+        getPoint(); //포인트가져오기
+    }, []);
+
+    const getPoint = async () => {
+        axios
+            .get(SERVER + "/users/point", {
+                headers: {
+                    auth: await getAsyncStorageToken(),
+                },
+            })
+            .then(({ data }) => {
+                const {
+                    result,
+                    data: { point },
+                } = data;
+                console.log("result: ", result);
+                console.log("point: ", point);
+
+                navigation.setOptions({
+                    headerLeft: () => (
+                        <HeaderLeft
+                            onPress={goToPoint}
+                            name={info.name}
+                            point={point?.curPoint}
+                        />
+                    ),
+                });
+            })
+            .catch((error) => {
+                console.log("error: ", error); //TODO:에러처리
+            })
+            .finally(() => {});
+    };
+
+    const goToPoint = () => {
+        navigation.navigate("SettingNavigator", { screen: "PointNavigator" });
+    };
 
     useEffect(() => {
         const originalOrder = orderList;
@@ -419,6 +473,21 @@ function OrderList({ navigation }) {
                 <LoadingLayout />
             ) : info.userType === ORDINARY ? null : (
                 <MainLayout>
+                    <TopContainer>
+                        <Week>
+                            <Ionicons
+                                name="caret-back-circle-outline"
+                                size={40}
+                                color="black"
+                            />
+                            <Ionicons
+                                name="caret-forward-circle-outline"
+                                size={40}
+                                color="black"
+                            />
+                        </Week>
+                        <OrderCount></OrderCount>
+                    </TopContainer>
                     <ScrollView
                         refreshControl={
                             <RefreshControl
@@ -707,5 +776,5 @@ function OrderList({ navigation }) {
     );
 }
 
-OrderList.propTypes = {};
-export default OrderList;
+MyOrderList.propTypes = {};
+export default MyOrderList;

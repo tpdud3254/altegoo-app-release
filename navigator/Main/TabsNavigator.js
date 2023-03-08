@@ -14,6 +14,7 @@ import { ORDINARY } from "../../constant";
 import RegistNavigator from "./RegistNavigator";
 import SettingNavigator from "./SettingNavigator";
 import TabIcon from "../../component/icon/TabIcons";
+import MyOrderList from "../../screen/main/myOrders/MyOrderList";
 
 const Tabs = createBottomTabNavigator();
 const Stack = createStackNavigator();
@@ -121,9 +122,9 @@ export default function TabsNavigator() {
                         component={Home}
                     />
                     <Tabs.Screen
-                        name="WorkSchedule"
+                        name="MyOrderList"
                         options={{
-                            headerTitle: "작업일정",
+                            headerTitle: "내 작업",
                             tabBarIcon: ({ focused, color, size }) => (
                                 <TabIcon
                                     iconName="list"
@@ -133,7 +134,7 @@ export default function TabsNavigator() {
                                 />
                             ),
                         }}
-                        component={WorkSchedule}
+                        component={MyOrderList}
                     />
                     <Tabs.Screen
                         name="TabRegistWork"
