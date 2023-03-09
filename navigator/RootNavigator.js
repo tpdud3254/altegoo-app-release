@@ -10,56 +10,54 @@ import { SERVER } from "../server";
 import UserContext from "../context/UserContext";
 import LoadingLayout from "../component/layout/LoadingLayout";
 import { VALID } from "../constant";
-import { getAsyncStorageToken } from "../utils";
+import { getAsyncStorageToken, showError } from "../utils";
 
 export default function RootNavigator() {
-    const [loading, setLoading] = useState(false);
-    const { isLoggedIn, setIsLoggedIn } = useContext(LoginContext);
-    const { setInfo } = useContext(UserContext);
+  const [loading, setLoading] = useState(false);
+  const { isLoggedIn, setIsLoggedIn } = useContext(LoginContext);
+  const { setInfo } = useContext(UserContext);
 
-    useEffect(() => {
-        async function getStorage() {
-            const token = await getAsyncStorageToken();
-            console.log("token : ", token);
-            if (token) {
-                axios
-                    .post(SERVER + "/users/user", {
-                        token,
-                    })
-                    .then(({ data }) => {
-                        const { result, data: user, msg } = data;
-                        if (result === VALID) {
-                            setInfo(user.user);
-                            setLoading(true);
-                            setIsLoggedIn(true);
-                        } else {
-                            //TODO:에러처리
-                        }
-                    })
-                    .catch((error) => {
-                        console.log("error: ", error); //TODO:에러처리
-                        setLoading(true);
-                        setIsLoggedIn(false);
-                    })
-                    .finally(() => {});
-            } else {
-                setLoading(true);
-                setIsLoggedIn(false);
+  useEffect(() => {
+    async function getStorage() {
+      const token = await getAsyncStorageToken();
+      console.log("token : ", token);
+      if (token) {
+        axios
+          .post(SERVER + "/users/user", {
+            token,
+          })
+          .then(({ data }) => {
+            const { result, data: user, msg } = data;
+            if (result === VALID) {
+              setInfo(user.user);
+              setLoading(true);
+              setIsLoggedIn(true);
             }
-        }
+          })
+          .catch((error) => {
+            showError(error);
+            setLoading(true);
+            setIsLoggedIn(false);
+          })
+          .finally(() => {});
+      } else {
+        setLoading(true);
+        setIsLoggedIn(false);
+      }
+    }
 
-        getStorage();
-    }, []);
+    getStorage();
+  }, []);
 
-    return (
-        <>
-            {loading ? (
-                <NavigationContainer>
-                    {isLoggedIn ? <MainNavigator /> : <IntroNavigator />}
-                </NavigationContainer>
-            ) : (
-                <LoadingLayout />
-            )}
-        </>
-    );
+  return (
+    <>
+      {loading ? (
+        <NavigationContainer>
+          {isLoggedIn ? <MainNavigator /> : <IntroNavigator />}
+        </NavigationContainer>
+      ) : (
+        <LoadingLayout />
+      )}
+    </>
+  );
 }

@@ -1,4 +1,5 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { Toast } from "react-native-toast-message/lib/src/Toast";
 import { TOKEN } from "./constant";
 
 export const checkPassword = (password) => {
@@ -64,4 +65,25 @@ export const getWorkTime = (dateTime) => {
       ? "0" + workDateTime.getMinutes()
       : workDateTime.getMinutes()
   }`;
+};
+
+export const showError = (error) => {
+  console.log(error.response);
+  if (!error?.response?.data?.msg || error.response.data.msg.length < 1) {
+    console.log("msg.len : ", error.response.data.msg.length);
+    Toast.show({
+      type: "errorToast",
+      props: "서버와의 통신이 원활하지 않습니다. 다시 시도하여 주십시오.",
+    });
+  } else {
+    console.log("Error Message : ", error.response.data.msg);
+    Toast.show({
+      type: "errorToast",
+      props: error.response.data.msg,
+    });
+  }
+
+  // console.log("error: ", error.response.status);
+  // console.log("error: ", error.response.data.msg);
+  // console.log("error: ", error.response.data.result);
 };

@@ -9,7 +9,7 @@ import SubmitButton from "../../component/button/SubmitButton";
 import PlainButton from "../../component/button/PlainButton";
 import { useForm } from "react-hook-form";
 import { useNavigation } from "@react-navigation/native";
-import { checkPassword } from "../../utils";
+import { checkPassword, showError } from "../../utils";
 import axios from "axios";
 import { VALID } from "../../constant";
 import { Toast } from "react-native-toast-message/lib/src/Toast";
@@ -73,16 +73,10 @@ function SetPassword() {
               navigation.navigate("SignIn", {
                 reset: true,
               });
-            } else {
-              //TODO:에러처리
-              // Toast.show({
-              //   type: "errorToast",
-              //   props: msg,
-              // });
             }
           })
           .catch((error) => {
-            console.log("error: ", error); //TODO:에러처리
+            showError(error);
           })
           .finally(() => {});
       } else {
@@ -97,47 +91,6 @@ function SetPassword() {
         props: "비밀번호가 일치하지 않습니다.",
       });
     }
-
-    // if (newPassword === newPasswordCheck) {
-    //   if (checkPassword(newPassword)) {
-    //     axios({
-    //       url: SERVER + "/users/password",
-    //       method: "POST",
-    //       header: {
-    //         Accept: "application/json",
-    //         "Content-Type": "application/json;charset=UTP-8",
-    //       },
-    //       withCredentials: true,
-    //       data: { phone, password: newPassword },
-    //     }).then(async ({ data }) => {
-    //       const { result, msg } = data;
-    //       if (result) {
-    //         Toast.show({
-    //           type: "errorToast",
-    //           props: "비밀번호가 변경 되었습니다.",
-    //         });
-    //         navigation.navigate("SignIn", {
-    //           reset: true,
-    //         });
-    //       } else {
-    //         Toast.show({
-    //           type: "errorToast",
-    //           props: msg,
-    //         });
-    //       }
-    //     });
-    //   } else {
-    //     Toast.show({
-    //       type: "errorToast",
-    //       props: "비밀번호가 조건에 맞지 않습니다.",
-    //     });
-    //   }
-    // } else {
-    //   Toast.show({
-    //     type: "errorToast",
-    //     props: "비밀번호가 일치하지 않습니다.",
-    //   });
-    // }
   };
 
   return (

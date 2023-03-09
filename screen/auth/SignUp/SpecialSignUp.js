@@ -31,7 +31,7 @@ import { SegmentedButtons } from "react-native-paper";
 import { Toast } from "react-native-toast-message/lib/src/Toast";
 import axios from "axios";
 import { SERVER } from "../../../server";
-import { checkPassword, getAsyncStorageToken } from "../../../utils";
+import { checkPassword, getAsyncStorageToken, showError } from "../../../utils";
 
 const UserDetailContainer = styled.View`
   margin-bottom: 10px;
@@ -285,12 +285,11 @@ function SpecialSignUp({ route }) {
           setPhoneAuth(false);
         } else {
           setPhoneAuth(true); //TODO:test code
-          console.log(data);
         }
       })
       .catch((error) => {
-        console.log("error: ", error);
-        setPhoneAuth(true); //TODO:test code/얘외처리 보강
+        showError(error);
+        setPhoneAuth(true); //TODO:test code
       })
       .finally(() => {});
   };
@@ -315,8 +314,9 @@ function SpecialSignUp({ route }) {
         }
       })
       .catch((error) => {
-        console.log("error: ", error);
-        setRecommendUserId(0); //TODO: 예외처리 보강
+        showError(error);
+
+        setRecommendUserId(0);
       })
       .finally(() => {
         setCheckRecommendUser(true);

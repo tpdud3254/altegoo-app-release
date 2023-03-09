@@ -6,7 +6,11 @@ import PlainText from "../../../component/text/PlainText";
 import RegistContext from "../../../context/RegistContext";
 import UserContext from "../../../context/UserContext";
 import { theme } from "../../../styles";
-import { getAsyncStorageToken, numberWithComma } from "../../../utils";
+import {
+  getAsyncStorageToken,
+  numberWithComma,
+  showError,
+} from "../../../utils";
 import { REGIST_NAV, VALID } from "../../../constant";
 import VerticalDivider from "../../../component/divider/VerticalDivider";
 import SubTitleText from "../../../component/text/SubTitleText";
@@ -122,7 +126,6 @@ function RegistDone({ navigation }) {
   };
 
   const onNextStep = async () => {
-    //TODO: 정보 저장
     //TODO: 첫 결제 시 포인트 지급
 
     const sendingData = {
@@ -164,16 +167,10 @@ function RegistDone({ navigation }) {
 
         if (result === VALID) {
           navigation.navigate(REGIST_NAV[8]);
-        } else {
-          // TODO:에러처리
-          // Toast.show({
-          //   type: "errorToast",
-          //   props: msg,
-          // });
         }
       })
       .catch((error) => {
-        console.log("error: ", error); //TODO:에러처리
+        showError(error);
       })
       .finally(() => {});
   };

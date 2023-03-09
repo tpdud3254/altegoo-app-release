@@ -13,7 +13,7 @@ import TruckLogo from "../../../component/logo/TruckLogo";
 import { theme } from "../../../styles";
 import axios from "axios";
 import { SERVER } from "../../../server";
-import { getAsyncStorageToken } from "../../../utils";
+import { getAsyncStorageToken, showError } from "../../../utils";
 
 function WorkSchedule() {
   const { setIsLoggedIn } = useContext(LoginContext);
@@ -37,7 +37,7 @@ function WorkSchedule() {
         // console.log("list: ", list);
       })
       .catch((error) => {
-        console.log("error: ", error); //TODO:에러처리
+        showError(error);
       })
       .finally(() => {});
   };

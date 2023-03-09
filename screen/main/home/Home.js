@@ -3,7 +3,7 @@ import UserContext from "../../../context/UserContext";
 import { ORDINARY } from "../../../constant";
 import axios from "axios";
 import { SERVER } from "../../../server";
-import { getAsyncStorageToken } from "../../../utils";
+import { getAsyncStorageToken, showError } from "../../../utils";
 import HeaderLeft from "../../../component/HeaderLeft";
 import HeaderRight from "../../../component/HeaderRight";
 import OrderList from "../orders/OrderList";
@@ -44,7 +44,7 @@ function Home({ navigation }) {
         });
       })
       .catch((error) => {
-        console.log("error: ", error); //TODO:에러처리
+        showError(error);
       })
       .finally(() => {});
   };

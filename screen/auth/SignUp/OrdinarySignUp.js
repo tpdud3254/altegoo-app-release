@@ -11,7 +11,7 @@ import { TouchableOpacity } from "react-native-gesture-handler";
 import PlainText from "../../../component/text/PlainText";
 import SubmitButton from "../../../component/button/SubmitButton";
 import { useForm } from "react-hook-form";
-import { checkPassword, getAsyncStorageToken } from "../../../utils";
+import { checkPassword, getAsyncStorageToken, showError } from "../../../utils";
 import Toast from "react-native-toast-message";
 import PlainButton from "../../../component/button/PlainButton";
 import axios from "axios";
@@ -102,8 +102,8 @@ function OrdinarySignUp() {
         }
       })
       .catch((error) => {
-        console.log("error: ", error);
-        setPhoneAuth(true); //TODO:test code/얘외처리 보강
+        showError(error);
+        setPhoneAuth(true); //TODO:test code
       })
       .finally(() => {});
   };
