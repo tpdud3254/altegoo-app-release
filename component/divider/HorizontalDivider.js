@@ -9,7 +9,7 @@ const Divider = styled.View`
 `;
 
 function HorizontalDivider({ thickness, color }) {
-    return <Divider width={thickness} color={color} />;
+    return <Divider thickness={thickness} color={color} />;
 }
 
 HorizontalDivider.propTypes = {

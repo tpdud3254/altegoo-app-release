@@ -109,7 +109,7 @@ export default function TabsNavigator() {
                     <Tabs.Screen
                         name="Home"
                         options={{
-                            headerTitle: "작업요청 목록",
+                            headerTitle: "요청 오더 목록",
                             tabBarIcon: ({ focused, color, size }) => (
                                 <TabIcon
                                     iconName="search"
