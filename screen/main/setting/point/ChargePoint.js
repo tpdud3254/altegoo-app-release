@@ -7,9 +7,13 @@ import PlainText from "../../../../component/text/PlainText";
 import { theme } from "../../../../styles";
 import SubTitleText from "../../../../component/text/SubTitleText";
 
-function ChargePoint() {
+function ChargePoint({ navigation }) {
     const onPay = (price) => {
         console.log(price);
+        navigation.navigate("Payment", {
+            callBackPage: "PointMain",
+            price,
+        });
     };
     return (
         <View

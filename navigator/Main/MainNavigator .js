@@ -5,6 +5,8 @@ import Home from "../../screen/main/home/Home";
 import OrderDetail from "../../screen/main/OrderDetail";
 import OrderProgress from "../../screen/main/OrderProgress";
 import OrdinaryOrderDetail from "../../screen/main/OrdinaryOrderDetail";
+import Payment from "../../screen/main/Payment";
+import ChargePoint from "../../screen/main/setting/point/ChargePoint";
 import TabsNavigator from "./TabsNavigator";
 // import TabsNavigator from "./TabsNavigator";
 
@@ -50,6 +52,15 @@ export default function MainNavigator() {
                 component={OrdinaryOrderDetail}
                 options={{
                     title: "상세 보기",
+                    headerShown: true,
+                    headerTitleAlign: "center",
+                }}
+            />
+            <Stack.Screen
+                name="Payment"
+                component={Payment}
+                options={{
+                    title: "결제하기",
                     headerShown: true,
                     headerTitleAlign: "center",
                 }}
