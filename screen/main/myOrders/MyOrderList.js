@@ -515,7 +515,7 @@ function MyOrderList({ navigation }) {
         <>
             {isLoading ? (
                 <LoadingLayout />
-            ) : info.userType === ORDINARY ? null : (
+            ) : (
                 <MainLayout>
                     <TopContainer>
                         <Week>

@@ -6,7 +6,7 @@ import Home from "../../screen/main/home/Home";
 import { Ionicons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 import PlainText from "../../component/text/PlainText";
-import { View } from "react-native";
+import { Image, View } from "react-native";
 import WorkSchedule from "../../screen/main/schedule/WorkSchedule";
 import RegistDone from "../../screen/main/regist/RegistDone";
 import UserContext from "../../context/UserContext";
@@ -15,6 +15,7 @@ import RegistNavigator from "./RegistNavigator";
 import SettingNavigator from "./SettingNavigator";
 import TabIcon from "../../component/icon/TabIcons";
 import MyOrderList from "../../screen/main/myOrders/MyOrderList";
+import MyOrdinaryOrderList from "../../screen/main/myOrders/MyOrdinaryOrderList";
 
 const Tabs = createBottomTabNavigator();
 const Stack = createStackNavigator();
@@ -46,7 +47,6 @@ export default function TabsNavigator() {
                     <Tabs.Screen
                         name="Home"
                         options={{
-                            headerTitle: "홈",
                             tabBarIcon: ({ focused, color, size }) => (
                                 <TabIcon
                                     iconName="home"
@@ -55,23 +55,38 @@ export default function TabsNavigator() {
                                     iconText="홈"
                                 />
                             ),
+                            headerTitle: () => (
+                                <View style={{ marginBottom: 5 }}>
+                                    <Image
+                                        style={{
+                                            resizeMode: "contain",
+                                            width: 200,
+                                            height: 55,
+                                        }}
+                                        source={require(`../../assets/images/logo/text-logo.png`)}
+                                    />
+                                </View>
+                            ),
+                            headerStyle: {
+                                height: 85,
+                            },
                         }}
                         component={Home}
                     />
                     <Tabs.Screen
-                        name="WorkSchedule"
+                        name="MyOrdinaryOrderList"
                         options={{
-                            headerTitle: "작업일정",
+                            headerTitle: "내 작업",
                             tabBarIcon: ({ focused, color, size }) => (
                                 <TabIcon
-                                    iconName="calendar"
+                                    iconName="list"
                                     size={27}
                                     focused={focused}
-                                    iconText="작업일정"
+                                    iconText="내 작업"
                                 />
                             ),
                         }}
-                        component={WorkSchedule}
+                        component={MyOrdinaryOrderList}
                     />
                     <Tabs.Screen
                         name="TabRegistWork"
@@ -82,16 +97,17 @@ export default function TabsNavigator() {
                                     iconName="add-circle"
                                     size={27}
                                     focused={focused}
-                                    iconText="작업등록"
+                                    iconText="오더등록"
                                 />
                             ),
                         }}
                         component={RegistNavigator}
                     />
+
                     <Tabs.Screen
                         name="SettingNavigator"
                         options={{
-                            headerTitle: "내 정보",
+                            headerShown: false,
                             tabBarIcon: ({ focused, color, size }) => (
                                 <TabIcon
                                     iconName="person"
@@ -155,7 +171,7 @@ export default function TabsNavigator() {
                     <Tabs.Screen
                         name="SettingNavigator"
                         options={{
-                            headerTitle: "내 정보",
+                            headerShown: false,
                             tabBarIcon: ({ focused, color, size }) => (
                                 <TabIcon
                                     iconName="person"

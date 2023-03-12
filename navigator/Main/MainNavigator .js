@@ -4,6 +4,7 @@ import CompleteOrder from "../../screen/main/CompleteOrder";
 import Home from "../../screen/main/home/Home";
 import OrderDetail from "../../screen/main/OrderDetail";
 import OrderProgress from "../../screen/main/OrderProgress";
+import OrdinaryOrderDetail from "../../screen/main/OrdinaryOrderDetail";
 import TabsNavigator from "./TabsNavigator";
 // import TabsNavigator from "./TabsNavigator";
 
@@ -40,6 +41,15 @@ export default function MainNavigator() {
                 component={CompleteOrder}
                 options={{
                     title: "작업 완료 요청",
+                    headerShown: true,
+                    headerTitleAlign: "center",
+                }}
+            />
+            <Stack.Screen
+                name="OrdinaryOrderDetail"
+                component={OrdinaryOrderDetail}
+                options={{
+                    title: "상세 보기",
                     headerShown: true,
                     headerTitleAlign: "center",
                 }}
