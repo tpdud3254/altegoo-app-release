@@ -23,6 +23,7 @@ import { toastConfig } from "./component/Toast";
 import { UserProvider } from "./context/UserContext";
 import { StatusBar } from "expo-status-bar";
 import { RegistProvider } from "./context/RegistContext";
+const server = require("./server");
 
 SplashScreen.preventAutoHideAsync();
 

@@ -1,6 +1,7 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Toast } from "react-native-toast-message/lib/src/Toast";
 import { TOKEN } from "./constant";
+import * as Speech from "expo-speech";
 
 export const checkPassword = (password) => {
     const regExp = /^.*(?=^.{8,}$)(?=.*\d)(?=.*[a-zA-Z]).*$/;
@@ -105,4 +106,13 @@ export const showError = (error) => {
     // console.log("error: ", error.response.status);
     // console.log("error: ", error.response.data.msg);
     // console.log("error: ", error.response.data.result);
+};
+
+export const speech = () => {
+    const speak = () => {
+        const thingToSay = "안녕하세요";
+        Speech.speak(thingToSay);
+    };
+
+    speak();
 };
