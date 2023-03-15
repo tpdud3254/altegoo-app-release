@@ -1,7 +1,6 @@
 import { speech } from "./utils";
 
-export const SERVER =
-    "http://ec2-3-35-110-238.ap-northeast-2.compute.amazonaws.com:4000";
+export const SERVER = "https://altegoo.shop";
 
 function createSocket() {
     console.log(ws);
@@ -34,8 +33,6 @@ function createSocket() {
     };
 }
 
-export const ws = new WebSocket(
-    `ws:///ec2-3-35-110-238.ap-northeast-2.compute.amazonaws.com:4000`
-);
+export const ws = new WebSocket(`wss://altegoo.shop`);
 
 createSocket();
