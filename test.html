@@ -1,0 +1,70 @@
+<!-- BootPay.request({application_id 이건 내거로 -->
+
+<html>
+    <head>
+        <title></title>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+    </head>
+    <body></body>
+    <script
+        src="https://cdn.bootpay.co.kr/js/bootpay-3.1.0.min.js"
+        type="application/javascript"
+    ></script>
+    <script type="text/javascript">
+        var count = 0;
+        window.addEventListener("message", function (event) {
+            try {
+                var parsed = JSON.parse(event.data);
+                if (parsed.action === "BootpayResize") {
+                    count = count + 1;
+                }
+                if (count < 1) {
+                    BootPay.request({
+                        price: parsed.price, //실제 결제되는 가격
+                        application_id: "",
+                        name: parsed.title, //결제창에서 보여질 이름
+                        pg: "nicepay",
+                        method: "card", //결제수단, 입력하지 않으면 결제수단 선택부터 화면이 시작합니다.
+                        show_agree_window: 0, // 부트페이 정보 동의 창 보이기 여부
+                        user_info: {
+                            username: parsed.name,
+                            email: parsed.email,
+                            phone: parsed.phone,
+                        },
+                        order_id: parsed.title + new Date().getTime(), //고유 주문번호로, 생성하신 값을 보내주셔야 합니다.
+                        params: {
+                            callback1: "그대로 콜백받을 변수 1",
+                            callback2: "그대로 콜백받을 변수 2",
+                            customvar1234: "변수명도 마음대로",
+                        },
+                    })
+                        .error(function (data) {
+                            data.handle = "error";
+                            window.postMessage(JSON.stringify(data));
+                        })
+                        .cancel(function (data) {
+                            data.handle = "cancle";
+                            window.postMessage(JSON.stringify(data));
+                        })
+                        .confirm(function (data) {
+                            data.handle = "confirm";
+                            var enable = true; // 재고 수량 관리 로직 혹은 다른 처리
+                            if (enable) {
+                                BootPay.transactionConfirm(data); // 조건이 맞으면 승인 처리를 한다.
+                            } else {
+                                BootPay.removePaymentWindow(); // 조건이 맞지 않으면 결제 창을 닫고 결제를 승인하지 않는다.
+                            }
+                        })
+                        .done(function (data) {
+                            data.handle = "confirm";
+                            window.postMessage(JSON.stringify(data));
+                        });
+                }
+            } catch (e) {
+                alert(e);
+                console.log("정상적인 접근이 아닙니다.");
+            }
+        });
+    </script>
+</html>
