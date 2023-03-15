@@ -1,84 +1,29 @@
 {
-    "expo": {
-        "name": "altegoo-app",
-        "slug": "altegoo-app",
-        "version": "1.0.0",
-        "orientation": "portrait",
-        "icon": "./assets/icon.png",
-        "userInterfaceStyle": "light",
-        "splash": {
-            "image": "./assets/splash5.png",
-            "resizeMode": "cover",
-            "backgroundColor": "#ffffff"
-        },
-        "updates": {
-            "fallbackToCacheTimeout": 0
-        },
-        "assetBundlePatterns": ["**/*"],
-        "ios": {
-            "bundleIdentifier": "com.altegoo.altegooapp",
-            "buildNumber": "1.0.0",
-            "supportsTablet": true,
-            "infoPlist": {
-                "LSApplicationQueriesSchemes": [
-                    "kftc-bankpay",
-                    "ispmobile",
-                    "itms-apps",
-                    "hdcardappcardansimclick",
-                    "smhyundaiansimclick",
-                    "shinhan-sr-ansimclick",
-                    "smshinhanansimclick",
-                    "kb-acp",
-                    "mpocket.online.ansimclick",
-                    "ansimclickscard",
-                    "ansimclickipcollect",
-                    "vguardstart",
-                    "samsungpay",
-                    "scardcertiapp",
-                    "lottesmartpay",
-                    "lotteappcard",
-                    "cloudpay",
-                    "nhappcardansimclick",
-                    "nonghyupcardansimclick",
-                    "citispay",
-                    "citicardappkr",
-                    "citimobileapp",
-                    "kakaotalk",
-                    "payco",
-                    "chaipayment",
-                    "kb-auth",
-                    "hyundaicardappcardid",
-                    "com.wooricard.wcard",
-                    "lmslpay",
-                    "lguthepay-xpay",
-                    "liivbank",
-                    "supertoss"
-                ],
-                "NSAppTransportSecurity": {
-                    "NSAllowsArbitraryLoads": true,
-                    "NSAllowsArbitraryLoadsInWebContent": true
-                }
-            }
-        },
-        "android": {
-            "adaptiveIcon": {
-                "foregroundImage": "./assets/adaptive-icon.png",
-                "backgroundColor": "#FFFFFF"
-            },
-            "package": "com.altegoo.altegooapp",
-            "versionCode": 1,
-            "intentFilters": [
-                {
-                    "action": "VIEW",
-                    "category": ["DEFAULT", "BROWSABLE"],
-                    "data": {
-                        "scheme": "exampleformanagedexpo"
-                    }
-                }
-            ]
-        },
-        "web": {
-            "favicon": "./assets/favicon.png"
-        }
+  "expo": {
+    "name": "altegoo-app",
+    "slug": "altegoo-app",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "light",
+    "splash": {
+      "image": "./assets/splash5.png",
+      "resizeMode": "cover",
+      "backgroundColor": "#ffffff"
+    },
+    "updates": {
+      "fallbackToCacheTimeout": 0
+    },
+    "assetBundlePatterns": ["**/*"],
+    "ios": {},
+    "android": {
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/adaptive-icon.png",
+        "backgroundColor": "#FFFFFF"
+      }
+    },
+    "web": {
+      "favicon": "./assets/favicon.png"
     }
+  }
 }
