@@ -8,7 +8,7 @@ const Background = styled.View`
 
 const LogoImage = styled.Image`
     width: 100%;
-    height: 70px;
+    height: 65px;
 `;
 function Logo() {
     return (
