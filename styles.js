@@ -1,6 +1,8 @@
 export const theme = {
     // main: "#ff5001",
-    main: "#cf6741",
+    // main: "#cf6741",
+    main: "#CD6A41",
+    main_disbaled: "rgba(205, 106, 65, 0.4)",
     sub: {
         green: "#6cc653",
         yellow: "#ffd13f",
@@ -14,4 +16,5 @@ export const theme = {
     textBoxColor: "#00000055",
     btnPointColor: "#e58c50",
     btnColor: "#bbbbbb",
+    // btnColor: "#EAF4FE",
 };
