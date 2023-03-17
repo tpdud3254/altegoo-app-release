@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import styled from "styled-components/native";
 import DefaultLayout from "../../../component/layout/DefaultLayout";
 import { Ionicons } from "@expo/vector-icons";
@@ -40,16 +40,79 @@ const ButtonContainer = styled.View`
 `;
 const Button = styled.TouchableOpacity``;
 
-function RegistCompleted({ navigation }) {
+function RegistCompleted({ navigation, route }) {
+    const [socketConnected, setSocketConnected] = useState(false);
+    const [sendMsg, setSendMsg] = useState(false);
+
+    const webSocketUrl = `wss://d0ba-211-59-182-118.jp.ngrok.io`;
+    const ws = useRef();
+
+    console.log("route?.params.", route?.params);
+
+    // 소켓 객체 생성
+    useEffect(() => {
+        if (!ws.current) {
+            ws.current = new WebSocket(webSocketUrl);
+            ws.current.onopen = () => {
+                console.log("connected to " + webSocketUrl);
+                setSocketConnected(true);
+            };
+            ws.current.onclose = (error) => {
+                console.log("disconnect from " + webSocketUrl);
+                console.log(error);
+            };
+            ws.current.onerror = (error) => {
+                console.log("connection error " + webSocketUrl);
+                console.log(error);
+            };
+        }
+
+        return () => {
+            console.log("clean up");
+            ws.current.close();
+        };
+    }, []);
+
     useEffect(() => {
         BackHandler.addEventListener("hardwareBackPress", () =>
             goToPage("Home")
         ); //TODO: 뒤로가기 안됨
     });
 
+    // 소켓이 연결되었을 시에 send 메소드
+    useEffect(() => {
+        if (socketConnected) {
+            const data = route?.params?.paymentData;
+            const sendMessage = {
+                type: "REGIST",
+                msg: `몇시 몇분에 어디의 작업이 등록되었습니다.`,
+            };
+            ws.current.send(
+                JSON.stringify({
+                    message: sendMessage,
+                })
+            );
+
+            setSendMsg(true);
+        }
+    }, [socketConnected]);
+
+    // send 후에 onmessage로 데이터 가져오기
+    useEffect(() => {
+        if (sendMsg) {
+            ws.current.onmessage = (evt) => {
+                // const data = JSON.parse(evt.data);
+                console.log(evt.BackHandlerdata);
+                // JSON.stringify(item)
+            };
+        }
+    }, [sendMsg]);
+
     const goToPage = (pageName) => {
         navigation.navigate(pageName);
     };
+
+    console.log(route?.params);
 
     return (
         <DefaultLayout>

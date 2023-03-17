@@ -259,7 +259,7 @@ function OrderDetail({ navigation, route }) {
                                                 ? "내림"
                                                 : "올림") + " 주소"
                                         }
-                                        content={registInfo.address}
+                                        content={registInfo.address1}
                                     />
                                     <Row
                                         title={
@@ -267,7 +267,7 @@ function OrderDetail({ navigation, route }) {
                                                 ? "올림"
                                                 : "내림") + " 주소"
                                         }
-                                        content={registInfo.otherAddress}
+                                        content={registInfo.address2}
                                     />
                                 </>
                             ) : (

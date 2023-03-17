@@ -16,7 +16,7 @@ export default function MainNavigator() {
     return (
         <Stack.Navigator
             screenOptions={{
-                presentation: "card",
+                presentation: "modal",
                 headerShown: false,
             }}
         >
@@ -61,7 +61,7 @@ export default function MainNavigator() {
                 component={Payment}
                 options={{
                     title: "결제하기",
-                    headerShown: true,
+                    headerShown: false,
                     headerTitleAlign: "center",
                 }}
             />
