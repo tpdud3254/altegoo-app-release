@@ -14,7 +14,7 @@ import UserContext from "../../context/UserContext";
 import { PAYMENT_APP_ID } from "@env";
 import { REGIST_NAV, VALID } from "../../constant";
 import axios from "axios";
-import { SERVER } from "../../server";
+import { PAYMENT_SERVER, SERVER } from "../../server";
 import { getAsyncStorageToken, showError } from "../../utils";
 import RegistContext from "../../context/RegistContext";
 
@@ -31,7 +31,7 @@ function Payment({ navigation, route }) {
     };
 
     const errorHandler = ({ nativeEvent }) =>
-        console.warn("WebView error: ", nativeEvent);
+        console.log("WebView error: ", nativeEvent);
 
     const receiveMessage = async (event) => {
         console.log("받음");
@@ -181,8 +181,8 @@ function Payment({ navigation, route }) {
                         ref={webViewRef}
                         containerStyle={{ width: 400, height: 700 }}
                         source={{
-                            uri: "https://master.d1p7wg3e032x9j.amplifyapp.com/payment",
-                            // uri: "https://07ec-211-59-182-118.jp.ngrok.io/payment",
+                            // uri: "https://master.d1p7wg3e032x9j.amplifyapp.com/payment",
+                            uri: PAYMENT_SERVER,
                         }}
                         javaScriptEnabled={true}
                         onError={errorHandler}

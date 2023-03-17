@@ -2,6 +2,7 @@ import React, { useContext, useEffect, useState } from "react";
 import {
     ScrollView,
     TextInput,
+    TouchableOpacity,
     TouchableWithoutFeedback,
     View,
 } from "react-native";
@@ -56,7 +57,7 @@ const Button = styled.TouchableOpacity`
 function AddOtherData({ navigation }) {
     const { registInfo, setRegistInfo } = useContext(RegistContext);
     const { info } = useContext(UserContext);
-    const [price, setPrice] = useState(66000);
+    const [price, setPrice] = useState(0);
     const [emergencyOrder, setEmergencyOrder] = useState(false);
     const [isDirectPhone, setIsDirectPhone] = useState(false);
     const { setValue, register, handleSubmit } = useForm();
@@ -184,14 +185,18 @@ function AddOtherData({ navigation }) {
         navigation.navigate(REGIST_NAV[6]);
     };
 
-    const Row = ({ title, content }) => (
+    const Row = ({ title, content, view }) => (
         <SRow>
             <STitle>
                 <PlainText style={{ fontSize: 18 }}>{title}</PlainText>
             </STitle>
-            <SContent>
-                <PlainText style={{ fontSize: 18 }}>{content}</PlainText>
-            </SContent>
+            {view ? (
+                view
+            ) : (
+                <SContent>
+                    <PlainText style={{ fontSize: 18 }}>{content}</PlainText>
+                </SContent>
+            )}
         </SRow>
     );
 
@@ -241,6 +246,35 @@ function AddOtherData({ navigation }) {
                 )}
             </SContent>
         </SRow>
+    );
+
+    const SetPriceView = (
+        <View style={{ flexDirection: "row" }}>
+            <TouchableOpacity
+                style={{
+                    backgroundColor: "white",
+                    borderRadius: 3,
+                    padding: 3,
+                    marginRight: 10,
+                }}
+                onPress={() =>
+                    setPrice(price - 10000 <= 0 ? price : price - 10000)
+                }
+            >
+                <PlainText>-10,000</PlainText>
+            </TouchableOpacity>
+            <TouchableOpacity
+                style={{
+                    backgroundColor: "white",
+                    borderRadius: 3,
+                    padding: 3,
+                    marginRight: 10,
+                }}
+                onPress={() => setPrice(price + 10000)}
+            >
+                <PlainText>+10,000</PlainText>
+            </TouchableOpacity>
+        </View>
     );
     return (
         <MainLayout>
@@ -299,6 +333,7 @@ function AddOtherData({ navigation }) {
                             <InputRow title="" checkBox />
 
                             <Row title="작업 비용" content={getPrice()} />
+                            <Row title="" view={SetPriceView} />
                             <Row title="적립 포인트" content={getPoint()} />
                             <SRow>
                                 <STitle>

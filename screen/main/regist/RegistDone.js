@@ -154,11 +154,10 @@ function RegistDone({ navigation }) {
                     data: { msg },
                 } = response;
 
-                alert(msg);
+                console.log(msg);
             }
         } catch (error) {
             console.log(error);
-            alert("error");
         }
 
         let price = registInfo.price;
