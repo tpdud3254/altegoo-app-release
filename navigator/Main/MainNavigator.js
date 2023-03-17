@@ -1,18 +1,19 @@
 import { createStackNavigator } from "@react-navigation/stack";
-import React from "react";
+import React, { useContext } from "react";
+import LoginContext from "../../context/LoginContext";
 import CompleteOrder from "../../screen/main/CompleteOrder";
-import Home from "../../screen/main/home/Home";
 import OrderDetail from "../../screen/main/OrderDetail";
 import OrderProgress from "../../screen/main/OrderProgress";
 import OrdinaryOrderDetail from "../../screen/main/OrdinaryOrderDetail";
 import Payment from "../../screen/main/Payment";
-import ChargePoint from "../../screen/main/setting/point/ChargePoint";
+import Welcome from "../../screen/main/Welcome";
 import TabsNavigator from "./TabsNavigator";
-// import TabsNavigator from "./TabsNavigator";
 
 const Stack = createStackNavigator();
 
 export default function MainNavigator() {
+    const { firstLogin } = useContext(LoginContext);
+    console.log(firstLogin);
     return (
         <Stack.Navigator
             screenOptions={{
@@ -20,6 +21,16 @@ export default function MainNavigator() {
                 headerShown: false,
             }}
         >
+            {firstLogin ? (
+                <Stack.Screen
+                    name="Welcome"
+                    component={Welcome}
+                    options={{
+                        headerShown: false,
+                        headerTitleAlign: "center",
+                    }}
+                />
+            ) : null}
             <Stack.Screen name="TabsNavigator" component={TabsNavigator} />
             <Stack.Screen
                 name="OrderDetail"

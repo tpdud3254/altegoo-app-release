@@ -5,7 +5,6 @@ import SignUp from "../../screen/auth/SignUp/SignUp";
 import SignUpStep1 from "../../screen/auth/SignUp/SignUpStep1";
 import SignUpStep2 from "../../screen/auth/SignUp/SignUpStep2";
 import SignUpStep3 from "../../screen/auth/SignUp/SignUpStep3";
-import SignUpStep4 from "../../screen/auth/SignUp/SignUpStep4";
 import TakePhoto from "../../screen/TakePhoto";
 
 const Stack = createStackNavigator();
@@ -29,11 +28,7 @@ export default function SignUpNavigator() {
             <Stack.Screen name="SignUpStep1" component={SignUpStep1} />
             <Stack.Screen name="SignUpStep2" component={SignUpStep2} />
             <Stack.Screen name="SignUpStep3" component={SignUpStep3} />
-            <Stack.Screen
-                name="SignUpStep4"
-                component={SignUpStep4}
-                options={{ headerShown: false }}
-            />
+
             <Stack.Screen name="DetailTerms" component={DetailTerms} />
             <Stack.Screen
                 name="TakePhoto"

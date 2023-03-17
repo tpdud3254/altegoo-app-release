@@ -16,5 +16,5 @@ export const theme = {
     textBoxColor: "#00000055",
     btnPointColor: "#e58c50",
     btnColor: "#bbbbbb",
-    // btnColor: "#EAF4FE",
+    btnColor2: "#EAF4FE",
 };
