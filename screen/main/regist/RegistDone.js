@@ -124,24 +124,148 @@ function RegistDone({ navigation }) {
         // navigation.popToTop(); //TODO: 저장된 값 입력 추가
     };
 
-    const onPay = () => {
-        //TODO:결제 전 포인트 조회해서 최종 결제 값,,
-        const data = {
-            application_id: PAYMENT_APP_ID,
-            price: registInfo.price,
-            order_name: registInfo.vehicleType + " 이용비 결제",
-            order_id: info.userId + "_" + Date.now(),
-            user: {
-                username: info.userName,
-                phone: info.phone,
-            },
-        };
-        navigation.navigate("Payment", { data });
-        // const result = true; //TODO: 결제 기능 추가
+    const onPay = async () => {
+        let curPoint = 0;
+        let pointId = 0;
+        try {
+            const response = await axios.get(SERVER + "/users/point", {
+                headers: {
+                    auth: await getAsyncStorageToken(),
+                },
+            });
 
-        // if (result) {
-        //   onNextStep();
-        // }
+            console.log(response.data);
+
+            const {
+                data: { result },
+            } = response;
+
+            if (result === VALID) {
+                const {
+                    data: {
+                        data: { point },
+                    },
+                } = response;
+
+                curPoint = point.curPoint;
+                pointId = point.id;
+            } else {
+                const {
+                    data: { msg },
+                } = response;
+
+                alert(msg);
+            }
+        } catch (error) {
+            console.log(error);
+            alert("error");
+        }
+
+        let price = registInfo.price;
+        if (curPoint >= registInfo.price) {
+            //포인트 >= 결제금액
+            //작업 등록
+            const sendingData = {
+                workDateTime: registInfo.dateTime,
+                type: registInfo.upDown,
+                bothType: registInfo.bothType || null,
+                address1: registInfo.address1,
+                simpleAddress1: registInfo.simpleAddress1,
+                address2: registInfo.address2,
+                simpleAddress2: registInfo.simpleAddress2,
+                regionId: registInfo.region,
+                floor: registInfo.floor,
+                otherFloor: registInfo.otherFloor || null,
+                phone: info.phone,
+                directPhone: registInfo.directPhone,
+                price: registInfo.price,
+                point: registInfo.point,
+                volumeType: registInfo.volumeType,
+                quantity: registInfo.quantity || null,
+                time: registInfo.time || null,
+                vehicleType: registInfo.vehicleType,
+                emergency: registInfo.emergency,
+                memo: registInfo.memo || null,
+            };
+
+            try {
+                const response = await axios.post(
+                    SERVER + "/works/upload",
+                    { ...sendingData },
+                    {
+                        headers: {
+                            auth: await getAsyncStorageToken(),
+                        },
+                    }
+                );
+
+                console.log(response.data);
+
+                const {
+                    data: { result },
+                } = response;
+
+                if (result === VALID) {
+                    const {
+                        data: {
+                            data: { order },
+                        },
+                    } = response;
+
+                    //포인트 차감
+                    //TODO: admin 말고 다른거 파서 포인트 내역도 남기기
+                    try {
+                        const response = await axios.patch(
+                            SERVER + "/admin/points",
+                            {
+                                pointId,
+                                points: curPoint - registInfo.price,
+                            }
+                        );
+
+                        const {
+                            data: {
+                                data: { points },
+                                result,
+                            },
+                        } = response;
+
+                        console.log(points);
+
+                        if (result === VALID) {
+                            navigation.navigate(REGIST_NAV[8], {
+                                paymentData: order,
+                            });
+                        } else console.log(msg);
+                    } catch (error) {
+                        console.log(error);
+                    }
+                } else {
+                    const {
+                        data: { msg },
+                    } = response;
+
+                    console.log(msg);
+                }
+            } catch (error) {
+                console.log("error : ", error);
+            }
+        } else {
+            //결제하기
+            const data = {
+                application_id: PAYMENT_APP_ID,
+                price: price - curPoint,
+                order_name: registInfo.vehicleType + " 이용비 결제",
+                order_id: info.userId + "_" + Date.now(),
+                user: {
+                    username: info.userName,
+                    phone: info.phone,
+                },
+                curPoint,
+                pointId,
+            };
+            navigation.navigate("Payment", { data });
+        }
     };
 
     const onNextStep = async () => {

@@ -56,7 +56,7 @@ const Button = styled.TouchableOpacity`
 function AddOtherData({ navigation }) {
     const { registInfo, setRegistInfo } = useContext(RegistContext);
     const { info } = useContext(UserContext);
-    const [price, setPrice] = useState(60000);
+    const [price, setPrice] = useState(66000);
     const [emergencyOrder, setEmergencyOrder] = useState(false);
     const [isDirectPhone, setIsDirectPhone] = useState(false);
     const { setValue, register, handleSubmit } = useForm();

@@ -109,7 +109,44 @@ function Home({ navigation }) {
             });
         }
         getPoint(); //포인트가져오기
+
+        getTest();
     }, []);
+
+    const getTest = async () => {
+        axios
+            .get(SERVER + "/users/test", {
+                headers: {
+                    auth: await getAsyncStorageToken(),
+                },
+            })
+            .then(({ data }) => {
+                console.log(data);
+                // const {
+                //     result,
+                //     data: { point },
+                // } = data;
+                // console.log("result: ", result);
+                // console.log("point: ", point);
+                // if (info.userType !== ORDINARY) {
+                //     navigation.setOptions({
+                //         headerLeft: () => (
+                //             <HeaderLeft
+                //                 onPress={goToPoint}
+                //                 name={info.name}
+                //                 point={point?.curPoint}
+                //             />
+                //         ),
+                //     });
+                // } else {
+                //     setPoint(point?.curPoint);
+                // }
+            })
+            .catch((error) => {
+                showError(error);
+            })
+            .finally(() => {});
+    };
 
     const getPoint = async () => {
         axios

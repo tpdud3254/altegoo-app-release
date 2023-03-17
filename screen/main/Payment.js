@@ -67,7 +67,7 @@ function Payment({ navigation, route }) {
         }
     };
     //TODO: eject후 ,,
-    const registWork = async (parsed) => {
+    const registWork = async () => {
         const sendingData = {
             workDateTime: registInfo.dateTime,
             type: registInfo.upDown,
@@ -91,37 +91,75 @@ function Payment({ navigation, route }) {
             memo: registInfo.memo || null,
         };
 
-        console.log(sendingData);
-
-        axios
-            .post(
+        try {
+            const response = await axios.post(
                 SERVER + "/works/upload",
-                {
-                    ...sendingData,
-                },
+                { ...sendingData },
                 {
                     headers: {
                         auth: await getAsyncStorageToken(),
                     },
                 }
-            )
-            .then(({ data }) => {
-                const { result } = data;
-                console.log("result : ", result);
-                if (result === VALID) {
-                    navigation.navigate("TabRegistWork", {
-                        screen: REGIST_NAV[8],
-                        params: { paymentData: parsed },
-                    });
+            );
+
+            console.log(response.data);
+
+            const {
+                data: { result },
+            } = response;
+
+            if (result === VALID) {
+                const {
+                    data: {
+                        data: { order },
+                    },
+                } = response;
+
+                //포인트 차감
+                //TODO: admin 말고 다른거 파서 포인트 내역도 남기기
+
+                if (route?.params?.data?.curPoint > 0) {
+                    try {
+                        const response = await axios.patch(
+                            SERVER + "/admin/points",
+                            {
+                                pointId: route?.params?.data?.pointId,
+                                points: 0,
+                            }
+                        );
+
+                        const {
+                            data: {
+                                data: { points },
+                                result,
+                            },
+                        } = response;
+
+                        console.log(points);
+
+                        if (result === VALID) {
+                            navigation.navigate(REGIST_NAV[8], {
+                                paymentData: order,
+                            });
+                        } else console.log(msg);
+                    } catch (error) {
+                        console.log(error);
+                    }
                 } else {
-                    console.log(data.msg);
+                    navigation.navigate(REGIST_NAV[8], {
+                        paymentData: order,
+                    });
                 }
-            })
-            .catch((error) => {
-                console.log(error);
-                // showError(error);
-            })
-            .finally(() => {});
+            } else {
+                const {
+                    data: { msg },
+                } = response;
+
+                console.log(msg);
+            }
+        } catch (error) {
+            console.log("error : ", error);
+        }
     };
     useEffect(() => {
         if (progress === 1) {
