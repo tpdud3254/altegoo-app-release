@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import styled from "styled-components/native";
 import KakaoButton, {
     ButtonContainer,
@@ -105,6 +105,16 @@ function SelectVolume({ navigation }) {
 
     console.log("registInfo : ", registInfo);
 
+    useEffect(() => {
+        if (registInfo.volumeType) {
+            setType(registInfo.volumeType);
+            if (registInfo.volumeType === "quantity") {
+                setQuantity(registInfo.quantity);
+            } else {
+                setTime(registInfo.time);
+            }
+        }
+    }, []);
     const showModal = () => setPriceVisible(true);
     const hideModal = () => setPriceVisible(false);
 

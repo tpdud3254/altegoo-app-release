@@ -70,11 +70,32 @@ const HelpContainer = styled.View`
 `;
 
 function SelectWorkType({ navigation }) {
-    const { setRegistInfo } = useContext(RegistContext);
+    const { registInfo, setRegistInfo } = useContext(RegistContext);
     const [vehicleType, setVehicleType] = useState(null);
     const [upDown, setUpDown] = useState(null);
     const [both, setBoth] = useState(null);
     const [cur, setCur] = useState(-1);
+
+    console.log(registInfo);
+    useEffect(() => {
+        if (registInfo.vehicleType) {
+            setVehicleType(registInfo.vehicleType === 1 ? "사다리" : "스카이");
+        }
+
+        if (registInfo.upDown) {
+            setUpDown(
+                registInfo.upDown === "up"
+                    ? "올림"
+                    : registInfo.upDown === "down"
+                    ? "내림"
+                    : "양사"
+            );
+        }
+
+        if (registInfo.bothType) {
+            setBoth(both);
+        }
+    }, []);
 
     useEffect(() => {
         if (!vehicleType) {
@@ -104,6 +125,7 @@ function SelectWorkType({ navigation }) {
             upDown:
                 upDown === "up" ? "올림" : upDown === "down" ? "내림" : "양사",
             bothType: both,
+            ...registInfo,
         });
 
         navigation.navigate(REGIST_NAV[1]);

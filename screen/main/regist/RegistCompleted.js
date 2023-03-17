@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import styled from "styled-components/native";
 import DefaultLayout from "../../../component/layout/DefaultLayout";
 import { Ionicons } from "@expo/vector-icons";
@@ -10,6 +10,7 @@ import Logo from "../../../component/logo/Logo";
 import TruckLogo from "../../../component/logo/TruckLogo";
 import PlainText from "../../../component/text/PlainText";
 import { BackHandler, View } from "react-native";
+import RegistContext from "../../../context/RegistContext";
 
 const Container = styled.View`
     flex: 1;
@@ -43,6 +44,7 @@ const Button = styled.TouchableOpacity``;
 function RegistCompleted({ navigation, route }) {
     const [socketConnected, setSocketConnected] = useState(false);
     const [sendMsg, setSendMsg] = useState(false);
+    const { setRegistInfo } = useContext(RegistContext);
 
     const webSocketUrl = `wss://d0ba-211-59-182-118.jp.ngrok.io`;
     const ws = useRef();
@@ -51,6 +53,7 @@ function RegistCompleted({ navigation, route }) {
 
     // 소켓 객체 생성
     useEffect(() => {
+        // setRegistInfo({}) TODO:초기화
         if (!ws.current) {
             ws.current = new WebSocket(webSocketUrl);
             ws.current.onopen = () => {

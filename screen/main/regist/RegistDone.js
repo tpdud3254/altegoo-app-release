@@ -120,7 +120,8 @@ function RegistDone({ navigation }) {
     };
 
     const onOrderModify = () => {
-        navigation.popToTop(); //TODO: 저장된 값 입력 추가
+        navigation.navigate(REGIST_NAV[0]);
+        // navigation.popToTop(); //TODO: 저장된 값 입력 추가
     };
 
     const onPay = () => {

@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from "react";
-import { TouchableOpacity, View } from "react-native";
+import { TextInput, TouchableOpacity, View } from "react-native";
 import { Calendar, LocaleConfig } from "react-native-calendars";
 import { theme } from "../../../styles";
 import PlainText from "../../../component/text/PlainText";
@@ -202,12 +202,37 @@ const Input = styled.TextInput`
 function SelectDateTime({ navigation }) {
     const [selectedDay, setSelectedDay] = useState("");
     const [ampm, setAmpm] = useState(null);
-    const { setValue, register, handleSubmit } = useForm();
+    const { setValue, register, handleSubmit, getValues } = useForm();
     const { registInfo, setRegistInfo } = useContext(RegistContext);
+
+    console.log(registInfo);
 
     useEffect(() => {
         register("hour");
         register("min");
+
+        if (registInfo.dateTime) {
+            const date = new Date(registInfo.dateTime);
+            setSelectedDay(
+                `${date.getFullYear()}-${getMonth(date)}-${getDate(date)}`
+            );
+
+            if (date.getHours() >= 12 || date.getHours() <= 23) {
+                setAmpm("pm");
+            } else {
+                setAmpm("am");
+            }
+
+            if (date.getHours() > 12) {
+                setValue("hour", date.getHours() - 12);
+            } else if (date.getHours() === 0) {
+                setValue("hour", "12");
+            } else {
+                setValue("hour", date.getHours());
+            }
+
+            setValue("min", date.getMinutes());
+        }
     }, []);
 
     const getMonth = (date) => {
@@ -215,6 +240,11 @@ function SelectDateTime({ navigation }) {
             ? "0" + (date.getMonth() + 1)
             : date.getMonth() + 1;
     };
+
+    const getDate = (date) => {
+        return date.getDate() < 10 ? "0" + date.getDate() : date.getDate();
+    };
+
     const getMinDate = () => {
         const today = new Date();
 
@@ -417,11 +447,16 @@ function SelectDateTime({ navigation }) {
                             <Input
                                 keyboardType="number-pad"
                                 onChangeText={(text) => setValue("hour", text)}
+                                defaultValue={getValues("hour")}
                             />
+
                             <PlainText>시</PlainText>
                             <Input
                                 keyboardType="number-pad"
                                 onChangeText={(text) => setValue("min", text)}
+                                defaultValue={() => {
+                                    getValues("min");
+                                }}
                             />
                             <PlainText>분</PlainText>
                         </InputTime>

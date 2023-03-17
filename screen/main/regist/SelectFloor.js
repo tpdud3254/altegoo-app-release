@@ -102,6 +102,33 @@ function SelectFloor({ navigation }) {
     console.log("registInfo : ", registInfo);
 
     useEffect(() => {
+        if (registInfo.floor) {
+            if (registInfo.floor < 7) {
+                setFloorClass("row");
+                setSelectedFloor(registInfo.floor - 1);
+            } else if (registInfo.floor < 13) {
+                setFloorClass("middle");
+                setSelectedFloor(registInfo.floor - 7);
+            } else {
+                setFloorClass("high");
+                setSelectedFloor(registInfo.floor - 13);
+            }
+        }
+
+        if (registInfo.otherFloor) {
+            if (registInfo.otherFloor < 7) {
+                setFloorOtherClass("row");
+                setSelectedOtherFloor(registInfo.otherFloor - 1);
+            } else if (registInfo.otherFloor < 13) {
+                setFloorOtherClass("middle");
+                setSelectedOtherFloor(registInfo.otherFloor - 7);
+            } else {
+                setFloorOtherClass("high");
+                setSelectedOtherFloor(registInfo.otherFloor - 13);
+            }
+        }
+    }, []);
+    useEffect(() => {
         if (floorClass === "row") setFloorArr([1, 2, 3, 4, 5, 6]);
         else if (floorClass === "middle") {
             setFloorArr([7, 8, 9, 10, 11, 12]);
