@@ -40,6 +40,7 @@ export default function TabsNavigator() {
                     paddingTop: 0,
                     height: 70,
                 },
+                unmountOnBlur: true,
             }}
         >
             {info.userType === ORDINARY ? (
