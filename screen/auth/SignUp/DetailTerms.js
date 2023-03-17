@@ -1,6 +1,7 @@
 import React, { useEffect } from "react";
-import { Text } from "react-native";
+import { ScrollView, Text } from "react-native";
 import DefaultLayout from "../../../component/layout/DefaultLayout";
+import { terms } from "./terms";
 
 function DetailTerms({ route, navigation }) {
     useEffect(() => {
@@ -9,7 +10,9 @@ function DetailTerms({ route, navigation }) {
 
     return (
         <DefaultLayout>
-            <Text>상세약관 {route?.params?.index}</Text>
+            <ScrollView>
+                <Text>{terms[route?.params?.index]}</Text>
+            </ScrollView>
         </DefaultLayout>
     );
 }
