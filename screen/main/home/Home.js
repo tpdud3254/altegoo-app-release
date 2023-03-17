@@ -110,7 +110,7 @@ function Home({ navigation }) {
         }
         getPoint(); //포인트가져오기
 
-        getTest();
+        // getTest();
     }, []);
 
     const getTest = async () => {

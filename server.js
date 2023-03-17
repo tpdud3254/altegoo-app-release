@@ -3,22 +3,26 @@ import { speech } from "./utils";
 
 // export const SERVER = "https://altegoo.shop";
 export const SERVER = "https://d0ba-211-59-182-118.jp.ngrok.io";
+
 function createSocket() {
     // ws = new WebSocket(`wss://altegoo.shop`);
     const ws = new WebSocket(`wss://d0ba-211-59-182-118.jp.ngrok.io`);
-    console.log(ws);
-    ws.onopen = () => {
+
+    ws.onopen = (e) => {
         // connection opened
         console.log("connected");
+
         // send a message
-        ws.send("hello");
+        // ws.send("hello");
     };
 
     ws.onmessage = (e) => {
         // a message was received
         console.log("message : ", e.data);
-        if (e.data === "hello") {
-            speech();
+        const parsed = JSON.parse(e.data);
+
+        if (parsed.type === "REGIST") {
+            speech(parsed.tts_msg, parsed.exceptionUserId);
         }
     };
 
@@ -30,12 +34,10 @@ function createSocket() {
     ws.onclose = (e) => {
         // connection closed
         console.log("ws.onclose:", e);
-        setTimeout(() => createSocket(), 1000);
+        // setTimeout(() => createSocket(), 1000);
     };
 
-    // return () => {
-    //     ws.close();
-    // };
+    // ws.close();
 }
 
 // export const ws = new WebSocket(`wss://altegoo.shop`);

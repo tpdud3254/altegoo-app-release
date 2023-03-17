@@ -28,6 +28,7 @@ export default function RegistNavigator() {
                 headerTitleAlign: "center",
                 headerTintColor: "white",
             }}
+            initialRouteName={REGIST_NAV[0]}
         >
             <Stack.Screen
                 name={REGIST_NAV[0]}

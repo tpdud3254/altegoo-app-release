@@ -108,11 +108,15 @@ export const showError = (error) => {
     // console.log("error: ", error.response.data.result);
 };
 
-export const speech = () => {
+export const speech = (msg, exceptionUserId) => {
+    // const { info } = useContext(UserContext);
+
     const speak = () => {
-        const thingToSay = "안녕하세요";
+        const thingToSay = msg;
         Speech.speak(thingToSay);
     };
+
+    // if (info.id === exceptionUserId) return;
 
     speak();
 };
