@@ -171,6 +171,11 @@ const statusArr = [
         color: theme.btnColor,
         textColor: "white",
     },
+    {
+        text: "완료",
+        color: theme.btnColor,
+        textColor: "white",
+    },
 ];
 
 function MyOrderList({ navigation }) {
@@ -486,6 +491,7 @@ function MyOrderList({ navigation }) {
     );
 
     const SetStatusButton = ({ order }) => {
+        if (order.userId === info.id) return null;
         if (order.orderStatusId === 1)
             //작업 요청
             return <AcceptButton orderId={order.id} />;

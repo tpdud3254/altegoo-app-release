@@ -1,7 +1,7 @@
 import React, { useCallback, useContext, useEffect, useState } from "react";
 import LoginContext from "../../../context/LoginContext";
 import UserContext from "../../../context/UserContext";
-import { ORDINARY } from "../../../constant";
+import { ORDINARY, VALID } from "../../../constant";
 import {
     ScrollView,
     View,
@@ -116,6 +116,16 @@ const statusArr = [
         color: theme.btnColor,
         textColor: "white",
     },
+    {
+        text: "완료",
+        color: theme.btnColor,
+        textColor: "white",
+    },
+    {
+        text: "완료",
+        color: theme.btnColor,
+        textColor: "white",
+    },
 ];
 
 function OrderList() {
@@ -161,7 +171,7 @@ function OrderList() {
         if (regionFilterType === "my") {
             info.workRegion.map((region) => {
                 const result = originalOrder.filter(
-                    (order) => order.regionCode === region
+                    (order) => order.regionId === region
                 );
 
                 if (result.length > 0) regionFiltered = [...result];
@@ -238,7 +248,7 @@ function OrderList() {
                     result,
                     data: { list },
                 } = data;
-                console.log("result: ", result);
+                // console.log("result: ", result);
                 console.log("list: ", list);
                 setOrderList(list);
             })
@@ -248,8 +258,8 @@ function OrderList() {
             .finally(() => {});
     };
     const setAcceptOrder = async (orderId) => {
-        axios
-            .patch(
+        try {
+            const response = await axios.patch(
                 SERVER + "/works/status",
                 {
                     status: 2, //1: 작업 요청, 2: 작업 예약, 3: 작업 중, 4: 작업 완료
@@ -260,20 +270,33 @@ function OrderList() {
                         auth: await getAsyncStorageToken(),
                     },
                 }
-            )
-            .then(({ data }) => {
+            );
+
+            // console.log(response.data);
+
+            const {
+                data: { result },
+            } = response;
+
+            if (result === VALID) {
                 const {
-                    result,
-                    data: { list },
-                } = data;
-                console.log("result: ", result);
+                    data: {
+                        data: { list },
+                    },
+                } = response;
+
                 setOrderList(list);
                 getOrderInProgressCounts();
-            })
-            .catch((error) => {
-                showError(error);
-            })
-            .finally(() => {});
+            } else {
+                const {
+                    data: { msg },
+                } = response;
+
+                console.log(msg);
+            }
+        } catch (error) {
+            console.log(error);
+        }
     };
     const setCancleOrder = async (orderId) => {
         axios
@@ -393,6 +416,7 @@ function OrderList() {
     );
 
     const SetStatusButton = ({ order }) => {
+        if (order.userId === info.id) return null;
         if (order.orderStatusId === 1)
             //작업 요청
             return <AcceptButton orderId={order.id} />;
@@ -587,7 +611,7 @@ function OrderList() {
                                         {filteredList.map((order, index) => (
                                             <Order
                                                 key={index}
-                                                done={order.orderStatusId === 4}
+                                                done={order.orderStatusId >= 4}
                                                 onPress={() =>
                                                     order.userId === info.id
                                                         ? goToPage(
@@ -675,7 +699,10 @@ function OrderList() {
                                                             }}
                                                             numberOfLines={1}
                                                         >
-                                                            {order.address}
+                                                            {order.type ===
+                                                            "양사"
+                                                                ? `${order.simpleAddress1} > ${order.simpleAddress2}`
+                                                                : order.address1}
                                                         </PlainText>
                                                     </OrderContent>
                                                     <OrderContent>

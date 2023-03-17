@@ -12,7 +12,11 @@ import {
 } from "@expo/vector-icons";
 import styled from "styled-components/native";
 import { theme } from "../../styles";
-import { getWorkTime, numberWithComma } from "../../utils";
+import {
+    getAsyncStorageToken,
+    getWorkTime,
+    numberWithComma,
+} from "../../utils";
 import MainLayout from "../../component/layout/MainLayout";
 import PlainButton from "../../component/button/PlainButton";
 import HorizontalDivider from "../../component/divider/HorizontalDivider";
@@ -21,6 +25,9 @@ import SubmitButton from "../../component/button/SubmitButton";
 import KakaoButton, {
     ButtonContainer,
 } from "../../component/button/KakaoButton";
+import axios from "axios";
+import { SERVER } from "../../server";
+import { VALID } from "../../constant";
 
 const Order = styled.TouchableOpacity`
     background-color: white;
@@ -64,34 +71,16 @@ const InProgress = styled.View`
 `;
 
 function OrderProgress({ route, navigation }) {
-    const [orderStatusId, setOrderStatusId] = useState(2);
-    const order = {
-        acceptUser: 55,
-        address: "서울 관악구 신림동길 3 4츤",
-        bothType: 2,
-        createdAt: "2023-03-08T01:35:27.631Z",
-        directPhone: "01090665452",
-        emergency: false,
-        floor: 4,
-        id: 31,
-        memo: null,
-        orderReservation: [],
-        orderStatusId: 2,
-        otherAddress: null,
-        otherFloor: null,
-        phone: "01090665452",
-        point: 9000,
-        price: 60000,
-        quantity: null,
-        regionCode: 1,
-        registUser: { userName: "고응주" },
-        time: "추가 1시간 당",
-        type: "올림",
-        userId: 55,
-        vehicleType: "스카이",
-        volumeType: "time",
-        workDateTime: "2023-03-15T06:00:00.000Z",
-    };
+    const [order, setOrder] = useState({});
+
+    console.log(route?.params.orderData);
+
+    useEffect(() => {
+        setOrder(route?.params?.orderData);
+        navigation.setOptions({
+            title: order.orderStatusId === 2 ? "작업 시작" : "작업 진행",
+        });
+    }, []);
 
     console.log(route?.params);
 
@@ -119,14 +108,8 @@ function OrderProgress({ route, navigation }) {
         }
     }, []);
 
-    useEffect(() => {
-        navigation.setOptions({
-            title: orderStatusId === 2 ? "작업 시작" : "작업 진행",
-        });
-    }, [orderStatusId]);
-
     const onClose = () => {
-        navigation.navigate("Home");
+        navigation.replace("TabsNavigator");
     };
 
     const goToPage = (page, data) => {
@@ -142,7 +125,7 @@ function OrderProgress({ route, navigation }) {
         Alert.alert("작업이 시작되었습니다!", "안전한 작업 부탁드립니다 ^^", [
             {
                 text: "확인",
-                onPress: () => setStatus(3),
+                onPress: () => setOrderStatus(3),
             },
         ]);
     };
@@ -154,16 +137,61 @@ function OrderProgress({ route, navigation }) {
             [
                 {
                     text: "확인",
-                    onPress: () => onClose(),
+                    onPress: () => setOrderStatus(4),
                 },
             ]
         );
     };
 
-    const setStatus = (statusId) => {
-        console.log(statusId);
+    const setOrderStatus = async (status) => {
+        try {
+            const response = await axios.patch(
+                SERVER + "/works/status",
+                {
+                    status, //1: 작업 요청, 2: 작업 예약, 3: 작업 중, 4: 작업 완료
+                    id: order.id,
+                },
+                {
+                    headers: {
+                        auth: await getAsyncStorageToken(),
+                    },
+                }
+            );
 
-        if (statusId === 3) setOrderStatusId(statusId);
+            // console.log(response.data);
+
+            const {
+                data: { result },
+            } = response;
+
+            if (result === VALID) {
+                const {
+                    data: {
+                        data: { list },
+                    },
+                } = response;
+
+                list.map((resultOrder, index) => {
+                    if (resultOrder.id === order.id) {
+                        setOrder(resultOrder);
+                    }
+                });
+                //TODO: 나중에 효율적으로 바꾸기
+                // setOrderList(list);
+            } else {
+                const {
+                    data: { msg },
+                } = response;
+
+                console.log(msg);
+            }
+        } catch (error) {
+            console.log(error);
+        }
+
+        if (status === 4) {
+            onClose();
+        }
     };
     return (
         <MainLayout>
@@ -204,9 +232,23 @@ function OrderProgress({ route, navigation }) {
                             }}
                             numberOfLines={1}
                         >
-                            {order.address}
+                            {order.address1}
                         </PlainText>
                     </OrderContent>
+                    {order.type === "양사" ? (
+                        <OrderContent>
+                            <Ionicons name="location" color="#777" size={24} />
+                            <PlainText
+                                style={{
+                                    marginLeft: 5,
+                                    fontSize: 19,
+                                }}
+                                numberOfLines={1}
+                            >
+                                {order.address2}
+                            </PlainText>
+                        </OrderContent>
+                    ) : null}
                     <OrderContent>
                         <Ionicons name="time" color="#777" size={24} />
                         <PlainText
@@ -233,8 +275,8 @@ function OrderProgress({ route, navigation }) {
                             }}
                             numberOfLines={1}
                         >
-                            {numberWithComma(order.price)}
-                            AP / 수수료 : {numberWithComma(order.point)}
+                            {numberWithComma(order.price || 0)}
+                            AP / 수수료 : {numberWithComma(order.point || 0)}
                             AP
                         </PlainText>
                     </OrderContent>
@@ -242,7 +284,7 @@ function OrderProgress({ route, navigation }) {
             </Order>
             <HorizontalDivider />
             <Container>
-                {orderStatusId === 2 ? (
+                {order.orderStatusId === 2 ? (
                     <PlainButton text="출발하기" onPress={onStart} />
                 ) : (
                     <InProgress>
@@ -272,7 +314,7 @@ function OrderProgress({ route, navigation }) {
                             color={theme.sub.blue}
                         />
                     </NotiIcon>
-                    {orderStatusId === 2 ? (
+                    {order.orderStatusId === 2 ? (
                         <NotiText>
                             <SubTitleText
                                 style={{
@@ -330,8 +372,10 @@ function OrderProgress({ route, navigation }) {
                     )}
                 </Noti>
                 <SubmitButton
-                    text={orderStatusId === 2 ? "작업 시작" : "작업 완료"}
-                    onPress={orderStatusId === 2 ? onStartOrder : onOrderDone}
+                    text={order.orderStatusId === 2 ? "작업 시작" : "작업 완료"}
+                    onPress={
+                        order.orderStatusId === 2 ? onStartOrder : onOrderDone
+                    }
                 />
             </Container>
         </MainLayout>

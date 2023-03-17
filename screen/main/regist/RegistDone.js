@@ -37,7 +37,7 @@ const ButtonContainer = styled.View`
 `;
 const Button = styled.TouchableOpacity``;
 function RegistDone({ navigation }) {
-    const { registInfo } = useContext(RegistContext);
+    const { registInfo, setRegistInfo } = useContext(RegistContext);
     const { info } = useContext(UserContext);
     console.log("registInfo : ", registInfo);
 
@@ -251,6 +251,7 @@ function RegistDone({ navigation }) {
             }
         } else {
             //결제하기
+            setRegistInfo({ actualPayment: price - curPoint, ...registInfo });
             const data = {
                 application_id: PAYMENT_APP_ID,
                 price: price - curPoint,

@@ -489,6 +489,7 @@ function MyOrdinaryOrderList({ navigation }) {
     );
 
     const SetStatusButton = ({ order }) => {
+        if (order.userId === info.id) return null;
         if (order.orderStatusId === 1)
             //작업 요청
             return <AcceptButton orderId={order.id} />;
@@ -569,7 +570,7 @@ function MyOrdinaryOrderList({ navigation }) {
                                         {filteredList.map((order, index) => (
                                             <Order
                                                 key={index}
-                                                done={order.orderStatusId === 4}
+                                                done={order.orderStatusId >= 4}
                                                 onPress={() =>
                                                     goToPage(
                                                         "OrdinaryOrderDetail",

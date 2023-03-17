@@ -93,7 +93,8 @@ function RegistCompleted({ navigation, route }) {
     };
 
     const goToPage = (pageName) => {
-        navigation.navigate(pageName);
+        if (pageName === "TabRegistWork") navigation.popToTop();
+        else navigation.navigate(pageName);
     };
 
     console.log(route?.params);

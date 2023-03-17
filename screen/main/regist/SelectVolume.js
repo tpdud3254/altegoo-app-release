@@ -115,6 +115,9 @@ function SelectVolume({ navigation }) {
         //     }
         // }
     }, []);
+
+    console.log(quantity);
+    console.log(time);
     const showModal = () => setPriceVisible(true);
     const hideModal = () => setPriceVisible(false);
 

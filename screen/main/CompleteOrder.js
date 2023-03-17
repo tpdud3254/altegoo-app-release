@@ -12,7 +12,11 @@ import {
 } from "@expo/vector-icons";
 import styled from "styled-components/native";
 import { theme } from "../../styles";
-import { getWorkTime, numberWithComma } from "../../utils";
+import {
+    getAsyncStorageToken,
+    getWorkTime,
+    numberWithComma,
+} from "../../utils";
 import MainLayout from "../../component/layout/MainLayout";
 import HorizontalDivider from "../../component/divider/HorizontalDivider";
 import SubTitleText from "../../component/text/SubTitleText";
@@ -20,6 +24,9 @@ import SubmitButton from "../../component/button/SubmitButton";
 import KakaoButton, {
     ButtonContainer,
 } from "../../component/button/KakaoButton";
+import axios from "axios";
+import { SERVER } from "../../server";
+import { VALID } from "../../constant";
 
 const Order = styled.TouchableOpacity`
     background-color: white;
@@ -63,35 +70,11 @@ const InProgress = styled.View`
 `;
 
 function CompleteOrder({ route, navigation }) {
-    const order = {
-        acceptUser: 55,
-        address: "서울 관악구 신림동길 3 4츤",
-        bothType: 2,
-        createdAt: "2023-03-08T01:35:27.631Z",
-        directPhone: "01090665452",
-        emergency: false,
-        floor: 4,
-        id: 31,
-        memo: null,
-        orderReservation: [],
-        orderStatusId: 2,
-        otherAddress: null,
-        otherFloor: null,
-        phone: "01090665452",
-        point: 9000,
-        price: 60000,
-        quantity: null,
-        regionCode: 1,
-        registUser: { userName: "고응주" },
-        time: "추가 1시간 당",
-        type: "올림",
-        userId: 55,
-        vehicleType: "스카이",
-        volumeType: "time",
-        workDateTime: "2023-03-15T06:00:00.000Z",
-    };
+    const [order, setOrder] = useState({});
 
-    console.log(route?.params);
+    useEffect(() => {
+        setOrder(route?.params?.orderData);
+    });
 
     useEffect(() => {
         if (route?.params?.back) {
@@ -118,7 +101,7 @@ function CompleteOrder({ route, navigation }) {
     }, []);
 
     const onClose = () => {
-        navigation.navigate("Home");
+        navigation.replace("TabsNavigator");
     };
 
     const goToPage = (page, data) => {
@@ -129,9 +112,44 @@ function CompleteOrder({ route, navigation }) {
         Alert.alert("작업이 완료 되었습니다!", "이용해 주셔서 감사합니다. ^^", [
             {
                 text: "확인",
-                onPress: () => onClose(),
+                onPress: () => setOrderStatus(5),
             },
         ]);
+    };
+
+    const setOrderStatus = async (status) => {
+        try {
+            const response = await axios.patch(
+                SERVER + "/works/status",
+                {
+                    status, //1: 작업 요청, 2: 작업 예약, 3: 작업 중, 4: 작업 완료
+                    id: order.id,
+                },
+                {
+                    headers: {
+                        auth: await getAsyncStorageToken(),
+                    },
+                }
+            );
+
+            // console.log(response.data);
+
+            const {
+                data: { result },
+            } = response;
+
+            if (result === VALID) {
+                onClose();
+            } else {
+                const {
+                    data: { msg },
+                } = response;
+
+                console.log(msg);
+            }
+        } catch (error) {
+            console.log(error);
+        }
     };
 
     return (
@@ -173,9 +191,23 @@ function CompleteOrder({ route, navigation }) {
                             }}
                             numberOfLines={1}
                         >
-                            {order.address}
+                            {order.address1}
                         </PlainText>
                     </OrderContent>
+                    {order.type === "양사" ? (
+                        <OrderContent>
+                            <Ionicons name="location" color="#777" size={24} />
+                            <PlainText
+                                style={{
+                                    marginLeft: 5,
+                                    fontSize: 19,
+                                }}
+                                numberOfLines={1}
+                            >
+                                {order.address2}
+                            </PlainText>
+                        </OrderContent>
+                    ) : null}
                     <OrderContent>
                         <Ionicons name="time" color="#777" size={24} />
                         <PlainText
@@ -202,8 +234,8 @@ function CompleteOrder({ route, navigation }) {
                             }}
                             numberOfLines={1}
                         >
-                            {numberWithComma(order.price)}
-                            AP / 수수료 : {numberWithComma(order.point)}
+                            {numberWithComma(order.price || 0)}
+                            AP / 수수료 : {numberWithComma(order.point || 0)}
                             AP
                         </PlainText>
                     </OrderContent>
