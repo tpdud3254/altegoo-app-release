@@ -106,14 +106,14 @@ function SelectVolume({ navigation }) {
     console.log("registInfo : ", registInfo);
 
     useEffect(() => {
-        if (registInfo.volumeType) {
-            setType(registInfo.volumeType);
-            if (registInfo.volumeType === "quantity") {
-                setQuantity(registInfo.quantity);
-            } else {
-                setTime(registInfo.time);
-            }
-        }
+        // if (registInfo.volumeType) {
+        //     setType(registInfo.volumeType);
+        //     if (registInfo.volumeType === "quantity") {
+        //         setQuantity(registInfo.quantity);
+        //     } else {
+        //         setTime(registInfo.time);
+        //     }
+        // }
     }, []);
     const showModal = () => setPriceVisible(true);
     const hideModal = () => setPriceVisible(false);

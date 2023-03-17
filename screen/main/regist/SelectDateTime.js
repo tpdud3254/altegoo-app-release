@@ -211,28 +211,28 @@ function SelectDateTime({ navigation }) {
         register("hour");
         register("min");
 
-        if (registInfo.dateTime) {
-            const date = new Date(registInfo.dateTime);
-            setSelectedDay(
-                `${date.getFullYear()}-${getMonth(date)}-${getDate(date)}`
-            );
+        // if (registInfo.dateTime) {
+        //     const date = new Date(registInfo.dateTime);
+        //     setSelectedDay(
+        //         `${date.getFullYear()}-${getMonth(date)}-${getDate(date)}`
+        //     );
 
-            if (date.getHours() >= 12 || date.getHours() <= 23) {
-                setAmpm("pm");
-            } else {
-                setAmpm("am");
-            }
+        //     if (date.getHours() >= 12 || date.getHours() <= 23) {
+        //         setAmpm("pm");
+        //     } else {
+        //         setAmpm("am");
+        //     }
 
-            if (date.getHours() > 12) {
-                setValue("hour", date.getHours() - 12);
-            } else if (date.getHours() === 0) {
-                setValue("hour", "12");
-            } else {
-                setValue("hour", date.getHours());
-            }
+        //     if (date.getHours() > 12) {
+        //         setValue("hour", date.getHours() - 12);
+        //     } else if (date.getHours() === 0) {
+        //         setValue("hour", "12");
+        //     } else {
+        //         setValue("hour", date.getHours());
+        //     }
 
-            setValue("min", date.getMinutes());
-        }
+        //     setValue("min", date.getMinutes());
+        // }
     }, []);
 
     const getMonth = (date) => {
