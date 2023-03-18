@@ -11,10 +11,14 @@ import PlainText from "../../component/text/PlainText";
 import RegistContext from "../../context/RegistContext";
 import UserContext from "../../context/UserContext";
 import { theme } from "../../styles";
-import { getWorkTime, numberWithComma } from "../../utils";
+import {
+    getAsyncStorageToken,
+    getWorkTime,
+    numberWithComma,
+} from "../../utils";
 import Checkbox from "expo-checkbox";
 import { useForm } from "react-hook-form";
-import { REGIST_NAV } from "../../constant";
+import { REGIST_NAV, VALID } from "../../constant";
 import LadderIcon from "../../component/icon/LadderIcon";
 import SkyIcon from "../../component/icon/SkyIcon";
 import DefaultLayout from "../../component/layout/DefaultLayout";
@@ -22,6 +26,8 @@ import SubTitleText from "../../component/text/SubTitleText";
 import { Entypo } from "@expo/vector-icons";
 import HorizontalDivider from "../../component/divider/HorizontalDivider";
 import VerticalDivider from "../../component/divider/VerticalDivider";
+import axios from "axios";
+import { SERVER } from "../../server";
 
 const Container = styled.View`
     padding-left: 10px;
@@ -121,7 +127,7 @@ const Bar = styled.View`
     width: 55px;
 `;
 
-const order = {
+const ordsdfer = {
     acceptUser: null,
     address: "서울 마포구 마포대로14길 32 ㅇㅇㅇ",
     bothType: 2,
@@ -132,7 +138,7 @@ const order = {
     id: 28,
     memo: null,
     orderReservation: [[Object]],
-    orderStatusId: 2,
+    orderStatusId: 1,
     otherAddress: "인천 마포구 마포대로14길 32 ㅇㅇㅇ",
     otherFloor: null,
     phone: "01090665452",
@@ -156,177 +162,95 @@ function OrdinaryOrderDetail({ navigation, route }) {
     const [isDirectPhone, setIsDirectPhone] = useState(false);
     const { setValue, register, handleSubmit } = useForm();
     const [orderStatus, setOrderStatus] = useState(null);
+    const [user, setUser] = useState({});
+
+    const [order, setOrder] = useState({});
     console.log("registInfo : ", registInfo);
 
-    console.log(route?.params);
+    console.log(route?.params.orderData);
+    let interval;
     useEffect(() => {
         setOrderStatus(order.orderStatusId);
+        setOrder(route?.params?.orderData);
+        getUser();
+        interval = setInterval(getWorkInfo, 10000);
 
-        // register("directPhone");
-        // register("memo");
+        return () => {
+            clearInterval(interval);
+        };
     }, []);
 
-    useEffect(() => {
-        if (isDirectPhone) {
-            setValue("directPhone", info.phone);
-        } else {
-            setValue("directPhone", null);
+    const getWorkInfo = async () => {
+        try {
+            const response = await axios.get(SERVER + "/works/work", {
+                params: { id: order.id },
+                headers: {
+                    auth: await getAsyncStorageToken(),
+                },
+            });
+
+            console.log(response.data);
+
+            const {
+                data: { result },
+            } = response;
+
+            if (result === VALID) {
+                const {
+                    data: {
+                        data: { work },
+                    },
+                } = response;
+                console.log(work);
+                setOrder(work);
+            } else {
+                const {
+                    data: { msg },
+                } = response;
+
+                console.log(msg);
+            }
+        } catch (error) {
+            console.log(error);
         }
-    }, [isDirectPhone]);
+    };
 
-    useEffect(() => {
-        setPrice(60000);
-        if (emergencyOrder) {
-            setPrice((prev) => prev + prev * 0.2);
+    const getUser = async () => {
+        try {
+            const response = await axios.get(SERVER + "/users/user", {
+                params: { id: route?.params?.orderData.acceptUser },
+                headers: {
+                    auth: await getAsyncStorageToken(),
+                },
+            });
+
+            console.log(response.data);
+
+            const {
+                data: { result },
+            } = response;
+
+            if (result === VALID) {
+                const {
+                    data: {
+                        data: { user },
+                    },
+                } = response;
+                console.log(user);
+                setUser(user);
+            } else {
+                const {
+                    data: { msg },
+                } = response;
+
+                console.log(msg);
+            }
+        } catch (error) {
+            console.log(error);
         }
-    }, [emergencyOrder]);
-
-    const getWorkType = () => {
-        const info = registInfo;
-
-        let text = "";
-        text = `${info.vehicleType} / ${info.upDown} (${
-            info.bothType === 1 ? "내림" : "올림 > 내림"
-        })`;
-        // return bothType === 1 ;
-    };
-
-    // const getWorkTime = () => {
-    //     const getDay = (index) => {
-    //         switch (index) {
-    //             case 0:
-    //                 return "일";
-    //             case 1:
-    //                 return "월";
-    //             case 2:
-    //                 return "화";
-    //             case 3:
-    //                 return "수";
-    //             case 4:
-    //                 return "목";
-    //             case 5:
-    //                 return "금";
-    //             case 6:
-    //                 return "토";
-
-    //             default:
-    //                 break;
-    //         }
-    //     };
-    //     const info = registInfo;
-    //     const workTime = new Date(info.dateTime);
-    //     let text = `${workTime.getFullYear()}년 ${
-    //         workTime.getMonth() + 1 < 10
-    //             ? "0" + (workTime.getMonth() + 1)
-    //             : workTime.getMonth() + 1
-    //     }월 ${
-    //         workTime.getDate() < 10
-    //             ? "0" + workTime.getDate()
-    //             : workTime.getDate()
-    //     }일 (${getDay(workTime.getDay())}) ${
-    //         workTime.getHours() < 10
-    //             ? "0" + workTime.getHours()
-    //             : workTime.getHours()
-    //     }:${
-    //         workTime.getMinutes() < 10
-    //             ? "0" + workTime.getMinutes()
-    //             : workTime.getMinutes()
-    //     }`;
-
-    //     return text;
-    // };
-
-    const getWorkFloor = () => {
-        const info = registInfo;
-
-        let text = "";
-
-        if (info.upDown === "양사") {
-            text = `${info.floor}층(${
-                info.bothType === 1 ? "내림" : "올림"
-            }) > ${info.otherFloor}층(${
-                info.bothType === 1 ? "올림" : "내림"
-            })`;
-        } else {
-            text = `${info.floor}층`;
-        }
-
-        return text;
-    };
-
-    const getPrice = () => {
-        //TODO: 작업비용
-        return `${numberWithComma(price)} AP`;
-    };
-
-    const getPoint = () => {
-        return `${numberWithComma(price * 0.15)} AP`;
-    };
-
-    const onNextStep = ({ directPhone, memo }) => {
-        const point = price * 0.15;
-
-        setRegistInfo({
-            price,
-            point,
-            memo: memo || null,
-            directPhone: directPhone || info.phone,
-            emergency: emergencyOrder,
-            ...registInfo,
-        });
-
-        navigation.navigate(REGIST_NAV[6]);
     };
 
     const CancleOrder = () => {};
-
-    const InputRow = ({ title, placeholder, checkBox, defaultValue, type }) => (
-        <SRow>
-            <STitle>
-                <PlainText style={{ fontSize: 18 }}>{title}</PlainText>
-            </STitle>
-            <SContent
-                inputBorderLine={!checkBox}
-                borderLine={checkBox}
-                background={!checkBox}
-            >
-                {checkBox ? (
-                    <View
-                        style={{
-                            flexDirection: "row",
-                            alignItems: "center",
-                            marginTop: -5,
-                            marginBottom: -5,
-                        }}
-                    >
-                        <Checkbox
-                            style={{
-                                width: 28,
-                                height: 28,
-                                marginRight: 5,
-                            }}
-                            value={isDirectPhone}
-                            onValueChange={setIsDirectPhone}
-                            color="#777"
-                        />
-                        <PlainText style={{ fontSize: 18 }}>
-                            핸드폰 번호 동일
-                        </PlainText>
-                    </View>
-                ) : (
-                    <TextInput
-                        style={{ fontSize: 18 }}
-                        placeholder={placeholder}
-                        defaultValue={defaultValue}
-                        onChangeText={(text) => setValue(type, text)}
-                        keyboardType={
-                            type === "memo" ? "default" : "number-pad"
-                        }
-                    />
-                )}
-            </SContent>
-        </SRow>
-    );
 
     const Divider = () => (
         <Center>
@@ -369,7 +293,7 @@ function OrdinaryOrderDetail({ navigation, route }) {
                                         )}
                                     </PlainText>
                                 </TextRow>
-                                {order.type === "양사" || true ? (
+                                {order.type === "양사" ? (
                                     <>
                                         <TextRow>
                                             <PlainText style={{ width: "25%" }}>
@@ -385,7 +309,8 @@ function OrdinaryOrderDetail({ navigation, route }) {
                                                     color: "#777",
                                                 }}
                                             >
-                                                {order.address}
+                                                {order.address1}{" "}
+                                                {order.detailAddress1}
                                             </PlainText>
                                         </TextRow>
                                         <TextRow>
@@ -402,7 +327,8 @@ function OrdinaryOrderDetail({ navigation, route }) {
                                                     color: "#777",
                                                 }}
                                             >
-                                                {order.otherAddress}
+                                                {order.address2}
+                                                {order.detailAddress2}
                                             </PlainText>
                                         </TextRow>
                                     </>
@@ -412,15 +338,14 @@ function OrdinaryOrderDetail({ navigation, route }) {
                                             작업 주소
                                         </PlainText>
                                         <PlainText
+                                            numberOfLines={1}
                                             style={{
                                                 width: "80%",
                                                 color: "#777",
                                             }}
                                         >
-                                            {getWorkTime(
-                                                order.workDateTime,
-                                                "short"
-                                            )}
+                                            {order.address1}{" "}
+                                            {order.detailAddress1}
                                         </PlainText>
                                     </TextRow>
                                 )}
@@ -585,22 +510,30 @@ function OrdinaryOrderDetail({ navigation, route }) {
                     ) : (
                         <Container>
                             <ProgressBar>
-                                <Indicator cur />
+                                <Indicator cur={order.orderStatusId === 1} />
                                 <Bar />
                                 <Indicator />
                                 <Bar />
-                                <Indicator />
+                                <Indicator cur={order.orderStatusId === 2} />
                                 <Bar />
-                                <Indicator />
+                                <Indicator cur={order.orderStatusId === 3} />
                                 <Bar />
-                                <Indicator />
+                                <Indicator
+                                    cur={
+                                        order.orderStatusId === 4 ||
+                                        order.orderStatusId === 5
+                                    }
+                                />
                             </ProgressBar>
                             <TextProgressBar>
-                                <TextIndicator cur>
+                                <TextIndicator cur={order.orderStatusId === 1}>
                                     <PlainText
                                         style={{
                                             fontSize: 18,
-                                            color: theme.main,
+                                            color:
+                                                order.orderStatusId === 1
+                                                    ? theme.main
+                                                    : theme.darkFontColor,
                                         }}
                                     >
                                         {" "}
@@ -618,32 +551,47 @@ function OrdinaryOrderDetail({ navigation, route }) {
                                         이동 중
                                     </PlainText>
                                 </TextIndicator>
-                                <TextIndicator>
+                                <TextIndicator cur={order.orderStatusId === 2}>
                                     <PlainText
                                         style={{
                                             fontSize: 18,
-                                            color: theme.darkFontColor,
+                                            color:
+                                                order.orderStatusId === 2
+                                                    ? theme.main
+                                                    : theme.darkFontColor,
                                         }}
                                     >
                                         {" "}
                                         작업시작
                                     </PlainText>
                                 </TextIndicator>
-                                <TextIndicator>
+                                <TextIndicator cur={order.orderStatusId === 3}>
                                     <PlainText
                                         style={{
                                             fontSize: 18,
-                                            color: theme.darkFontColor,
+                                            color:
+                                                order.orderStatusId === 3
+                                                    ? theme.main
+                                                    : theme.darkFontColor,
                                         }}
                                     >
                                         완료요청
                                     </PlainText>
                                 </TextIndicator>
-                                <TextIndicator>
+                                <TextIndicator
+                                    cur={
+                                        order.orderStatusId === 4 ||
+                                        order.orderStatusId === 5
+                                    }
+                                >
                                     <PlainText
                                         style={{
                                             fontSize: 18,
-                                            color: theme.darkFontColor,
+                                            color:
+                                                order.orderStatusId === 4 ||
+                                                order.orderStatusId === 5
+                                                    ? theme.main
+                                                    : theme.darkFontColor,
                                         }}
                                     >
                                         작업완료
@@ -653,7 +601,252 @@ function OrdinaryOrderDetail({ navigation, route }) {
                             <View style={{ marginTop: 20, marginBottom: 20 }}>
                                 <HorizontalDivider />
                             </View>
-                            <View></View>
+                            <View>
+                                <View style={{ flexDirection: "row" }}>
+                                    {/* <PlainText style={{ fontWeight: "400" }}>
+                                        {order.orderStatusId === 1
+                                            ? "출발전"
+                                            : order.orderStatusId === 2
+                                            ? "작업시작"
+                                            : order.orderStatusId === 3
+                                            ? "완료요청"
+                                            : "작업완료"}
+                                    </PlainText> */}
+                                    <View>
+                                        <PlainText>
+                                            {order.vehicleType}, {order.type}(
+                                            {order.floor}
+                                            층),{" "}
+                                            {order.volumeType === "time"
+                                                ? order.time
+                                                : order.quantity}
+                                        </PlainText>
+                                    </View>
+                                </View>
+                                <View>
+                                    <View style={{ flexDirection: "row" }}>
+                                        <PlainText style={{ marginRight: 10 }}>
+                                            작업비용
+                                        </PlainText>
+                                        <PlainText
+                                            style={{ fontWeight: "500" }}
+                                        >
+                                            {numberWithComma(order.price || 0)}
+                                            AP
+                                        </PlainText>
+                                    </View>
+                                    <View style={{ flexDirection: "row" }}>
+                                        <PlainText style={{ marginRight: 10 }}>
+                                            작업AP
+                                        </PlainText>
+                                        <PlainText
+                                            style={{ fontWeight: "500" }}
+                                        >
+                                            {numberWithComma(order.point || 0)}
+                                            AP
+                                        </PlainText>
+                                    </View>
+                                </View>
+                                <View
+                                    style={{ marginTop: 20, marginBottom: 20 }}
+                                >
+                                    <HorizontalDivider />
+                                </View>
+                                <View>
+                                    <View style={{ flexDirection: "row" }}>
+                                        <PlainText
+                                            style={{ fontWeight: "400" }}
+                                        >
+                                            작업일시 :{" "}
+                                        </PlainText>
+                                        <PlainText style={{}}>
+                                            {getWorkTime(order.workDateTime)}
+                                        </PlainText>
+                                    </View>
+
+                                    {order.type === "양사" ? (
+                                        <>
+                                            <View
+                                                style={{ flexDirection: "row" }}
+                                            >
+                                                <PlainText
+                                                    style={{
+                                                        fontWeight: "400",
+                                                    }}
+                                                >
+                                                    {(order.bothType === 1
+                                                        ? "내림"
+                                                        : "올림") +
+                                                        " 주소"}{" "}
+                                                    :{" "}
+                                                </PlainText>
+                                                <PlainText style={{}}>
+                                                    {order.address1 +
+                                                        " " +
+                                                        order.detailAddress1}
+                                                </PlainText>
+                                            </View>
+                                            <View
+                                                style={{ flexDirection: "row" }}
+                                            >
+                                                <PlainText
+                                                    style={{
+                                                        fontWeight: "400",
+                                                    }}
+                                                >
+                                                    {(order.bothType === 1
+                                                        ? "올림"
+                                                        : "내림") +
+                                                        " 주소"}{" "}
+                                                    :{" "}
+                                                </PlainText>
+                                                <PlainText style={{}}>
+                                                    {order.address2 +
+                                                        " " +
+                                                        order.detailAddress2}
+                                                </PlainText>
+                                            </View>
+                                        </>
+                                    ) : (
+                                        <>
+                                            <View
+                                                style={{ flexDirection: "row" }}
+                                            >
+                                                <PlainText
+                                                    style={{
+                                                        fontWeight: "400",
+                                                    }}
+                                                >
+                                                    작업 주소 :{" "}
+                                                </PlainText>
+                                                <PlainText style={{}}>
+                                                    {order.address1 +
+                                                        " " +
+                                                        order.detailAddress1}
+                                                </PlainText>
+                                            </View>
+                                        </>
+                                    )}
+                                    <View style={{ flexDirection: "row" }}>
+                                        <PlainText
+                                            style={{
+                                                fontWeight: "400",
+                                            }}
+                                        >
+                                            전화번호 :{" "}
+                                        </PlainText>
+                                        <PlainText style={{}}>
+                                            {order.phone}
+                                        </PlainText>
+                                    </View>
+                                    <View style={{ flexDirection: "row" }}>
+                                        <PlainText
+                                            style={{
+                                                fontWeight: "400",
+                                            }}
+                                        >
+                                            특이사항 :{" "}
+                                        </PlainText>
+                                        <PlainText style={{}}>
+                                            {order.memo || "없음"}
+                                        </PlainText>
+                                    </View>
+                                </View>
+                                <View
+                                    style={{ marginTop: 20, marginBottom: 20 }}
+                                >
+                                    <HorizontalDivider />
+                                </View>
+                                <View>
+                                    <PlainText style={{ fontWeight: "400" }}>
+                                        작업 기사님 정보
+                                    </PlainText>
+                                    <View style={{ flexDirection: "row" }}>
+                                        <PlainText
+                                            style={{
+                                                fontWeight: "400",
+                                            }}
+                                        >
+                                            기사명 :{" "}
+                                        </PlainText>
+                                        <PlainText style={{}}>
+                                            {user?.userName} 기사님
+                                        </PlainText>
+                                    </View>
+                                    <View style={{ flexDirection: "row" }}>
+                                        <PlainText
+                                            style={{
+                                                fontWeight: "400",
+                                            }}
+                                        >
+                                            연락처 :{" "}
+                                        </PlainText>
+                                        <PlainText style={{}}>
+                                            {user?.phone}
+                                        </PlainText>
+                                    </View>
+                                    {user?.vehicle ? (
+                                        user?.vehicle?.length > 0 ? (
+                                            <>
+                                                <View
+                                                    style={{
+                                                        flexDirection: "row",
+                                                    }}
+                                                >
+                                                    <PlainText
+                                                        style={{
+                                                            fontWeight: "400",
+                                                        }}
+                                                    >
+                                                        차량번호 :{" "}
+                                                    </PlainText>
+                                                    <PlainText style={{}}>
+                                                        123가 1234
+                                                    </PlainText>
+                                                </View>
+                                                <View
+                                                    style={{
+                                                        flexDirection: "row",
+                                                    }}
+                                                >
+                                                    <PlainText
+                                                        style={{
+                                                            fontWeight: "400",
+                                                        }}
+                                                    >
+                                                        차량무게 :{" "}
+                                                    </PlainText>
+                                                    <PlainText style={{}}>
+                                                        3ton
+                                                    </PlainText>
+                                                </View>
+                                            </>
+                                        ) : null
+                                    ) : null}
+
+                                    <View
+                                        style={{
+                                            marginTop: 20,
+                                            marginBottom: 20,
+                                        }}
+                                    >
+                                        <HorizontalDivider />
+                                    </View>
+                                    <View>
+                                        <PlainText
+                                            style={{ textAlign: "center" }}
+                                        >
+                                            {order.orderStatusId === 1
+                                                ? "작업 시작 전입니다.\n작업 시작 24시간 이내부터\n취소가 불가능합니다.\n알테구 기사님 정보를 확인해 주세요."
+                                                : order.orderStatusId === 2
+                                                ? "작업이 시작되었습니다."
+                                                : order.orderStatusId === 3
+                                                ? "작업이 완료되었습니다."
+                                                : "작업이 모두 완료되었습니다.\n알테구 서비스를 이용해주셔서\n감사합니다."}
+                                        </PlainText>
+                                    </View>
+                                </View>
+                            </View>
                         </Container>
                     )}
                 </TouchableWithoutFeedback>

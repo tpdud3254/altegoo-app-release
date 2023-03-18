@@ -206,7 +206,7 @@ function Home({ navigation }) {
                         <Container>
                             <Greeting>
                                 <PlainText style={{ fontSize: 25 }}>
-                                    안녕하세요! 최진욱님.
+                                    안녕하세요! {info.name}님.
                                 </PlainText>
                             </Greeting>
                             <Point>
@@ -218,7 +218,7 @@ function Home({ navigation }) {
                                 <SubTitleText
                                     style={{ fontSize: 20, color: theme.main }}
                                 >
-                                    {" " + numberWithComma(point)}AP
+                                    {" " + numberWithComma(point || 0)}AP
                                 </SubTitleText>
                             </Point>
                             <RegistButtons>
@@ -233,7 +233,11 @@ function Home({ navigation }) {
                                         작업 등록만 진행하셔도{"\n"}포인트가
                                         지급됩니다.
                                     </SubTitleText>
-                                    <RegistButton>
+                                    <RegistButton
+                                        onPress={() =>
+                                            navigation.navigate("TabRegistWork")
+                                        }
+                                    >
                                         <PlainText
                                             style={{
                                                 color: "white",
@@ -272,6 +276,9 @@ function Home({ navigation }) {
                                             alignItems: "center",
                                             width: 250,
                                         }}
+                                        onPress={() =>
+                                            navigation.navigate("TabRegistWork")
+                                        }
                                     >
                                         <View
                                             style={{

@@ -745,9 +745,12 @@ function MyOrderList({ navigation }) {
                                                                         1
                                                                     }
                                                                 >
-                                                                    {
-                                                                        order.address
-                                                                    }
+                                                                    {order.type ===
+                                                                    "양사"
+                                                                        ? `${order.simpleAddress1} > ${order.simpleAddress2}`
+                                                                        : order.address1 +
+                                                                          " " +
+                                                                          order.detailAddress1}
                                                                 </PlainText>
                                                             </OrderContent>
                                                             <OrderContent>

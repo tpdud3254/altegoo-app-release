@@ -171,6 +171,11 @@ const statusArr = [
         color: theme.btnColor,
         textColor: "white",
     },
+    {
+        text: "완료",
+        color: theme.btnColor,
+        textColor: "white",
+    },
 ];
 
 function MyOrdinaryOrderList({ navigation }) {
@@ -186,6 +191,7 @@ function MyOrdinaryOrderList({ navigation }) {
     const [orderInProgressCount, setOrderInProgressCount] = useState(0);
     const [orderList, setOrderList] = useState([]);
     const [filteredList, setFilteredList] = useState([]);
+    const [totalCount, setTotalCount] = useState(0);
 
     const openRegionFilter = () => {
         setRegionFilterVisible(true);
@@ -203,7 +209,7 @@ function MyOrdinaryOrderList({ navigation }) {
 
     useEffect(() => {
         setIsLoading(true);
-        getOrderInProgressCounts();
+
         getOrderList();
         setIsLoading(false);
     }, []);
@@ -336,7 +342,17 @@ function MyOrdinaryOrderList({ navigation }) {
                 } = data;
                 console.log("result: ", result);
                 console.log("list: ", list);
-                setOrderList(list);
+                const newList = [];
+                setTotalCount(0);
+                list.map((value, index) => {
+                    if (value.userId === info.id) {
+                        newList.push(value);
+                        if (value.orderStatusId < 3) {
+                            setTotalCount((prev) => prev + 1);
+                        }
+                    }
+                });
+                setOrderList(newList);
             })
             .catch((error) => {
                 showError(error);
@@ -575,8 +591,7 @@ function MyOrdinaryOrderList({ navigation }) {
                                                     goToPage(
                                                         "OrdinaryOrderDetail",
                                                         {
-                                                            orderId:
-                                                                order.orderId,
+                                                            orderData: order,
                                                         }
                                                     )
                                                 }
@@ -639,7 +654,12 @@ function MyOrdinaryOrderList({ navigation }) {
                                                             }}
                                                             numberOfLines={1}
                                                         >
-                                                            {order.address}
+                                                            {order.type ===
+                                                            "양사"
+                                                                ? `${order.simpleAddress1} > ${order.simpleAddress2}`
+                                                                : order.address1 +
+                                                                  " " +
+                                                                  order.detailAddress1}
                                                         </PlainText>
                                                     </OrderContent>
                                                     <OrderContent>

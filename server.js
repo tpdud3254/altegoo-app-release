@@ -1,15 +1,15 @@
 import { useRef } from "react";
 import { speech } from "./utils";
 
-// export const SERVER = "https://altegoo.shop";
-export const SERVER = "https://cab2-211-59-182-118.jp.ngrok.io";
+export const SERVER = "https://altegoo.shop";
+// export const SERVER = "https://cab2-211-59-182-118.jp.ngrok.io";
 
 export const PAYMENT_SERVER =
     "https://master.d1p7wg3e032x9j.amplifyapp.com/payment";
 // export const PAYMENT_SERVER = "https://c031-211-59-182-118.jp.ngrok.io/payment";
 function createSocket() {
-    // const ws = new WebSocket(`wss://altegoo.shop`);
-    const ws = new WebSocket(`wss://cab2-211-59-182-118.jp.ngrok.io`);
+    const ws = new WebSocket(`wss://altegoo.shop`);
+    // const ws = new WebSocket(`wss://cab2-211-59-182-118.jp.ngrok.io`);
 
     ws.onopen = (e) => {
         // connection opened
