@@ -428,8 +428,8 @@ function OrderDetail({ route, navigation }) {
                                                         height: 350,
                                                     }}
                                                     source={{
-                                                        // uri: "https://master.d1p7wg3e032x9j.amplifyapp.com/payment",
-                                                        uri: "https://dd79-211-59-182-118.jp.ngrok.io/map",
+                                                        uri: "https://master.d1p7wg3e032x9j.amplifyapp.com/map",
+                                                        // uri: "https://dd79-211-59-182-118.jp.ngrok.io/map",
                                                     }}
                                                     onLoad={() =>
                                                         sendMessage(
@@ -482,8 +482,8 @@ function OrderDetail({ route, navigation }) {
                                                         height: 350,
                                                     }}
                                                     source={{
-                                                        // uri: "https://master.d1p7wg3e032x9j.amplifyapp.com/payment",
-                                                        uri: "https://dd79-211-59-182-118.jp.ngrok.io/map2",
+                                                        uri: "https://master.d1p7wg3e032x9j.amplifyapp.com/map2",
+                                                        // uri: "https://dd79-211-59-182-118.jp.ngrok.io/map2",
                                                     }}
                                                     onLoad={() =>
                                                         sendMessage(
@@ -535,8 +535,8 @@ function OrderDetail({ route, navigation }) {
                                                         height: 350,
                                                     }}
                                                     source={{
-                                                        // uri: "https://master.d1p7wg3e032x9j.amplifyapp.com/payment",
-                                                        uri: "https://dd79-211-59-182-118.jp.ngrok.io/map",
+                                                        uri: "https://master.d1p7wg3e032x9j.amplifyapp.com/map",
+                                                        // uri: "https://dd79-211-59-182-118.jp.ngrok.io/map",
                                                     }}
                                                     onLoad={() =>
                                                         sendMessage(

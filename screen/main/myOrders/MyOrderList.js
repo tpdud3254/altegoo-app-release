@@ -291,6 +291,10 @@ function MyOrderList({ navigation }) {
         setRefreshing(false);
     }, []);
 
+    const goToPage = (page, data) => {
+        navigation.navigate(page, data);
+    };
+
     const filterOrderList = (type, classify) => {
         console.log(type, classify);
         if (type === "region") {
@@ -663,6 +667,13 @@ function MyOrderList({ navigation }) {
                                                             order.orderStatusId ===
                                                             4
                                                         }
+                                                        onPress={goToPage(
+                                                            "OrderDetail",
+                                                            {
+                                                                orderData:
+                                                                    order,
+                                                            }
+                                                        )}
                                                     >
                                                         <Status
                                                             status={

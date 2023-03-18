@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import styled from "styled-components/native";
 import PropTypes from "prop-types";
 import { Text, View } from "react-native";
@@ -6,8 +6,12 @@ import SubTitleText from "../../../../component/text/SubTitleText";
 import PlainText from "../../../../component/text/PlainText";
 import SubmitButton from "../../../../component/button/SubmitButton";
 import UserContext from "../../../../context/UserContext";
-import { numberWithComma } from "../../../../utils";
+import { getAsyncStorageToken, numberWithComma } from "../../../../utils";
 import PlainButton from "../../../../component/button/PlainButton";
+import axios from "axios";
+import { SERVER } from "../../../../server";
+import { VALID } from "../../../../constant";
+import { useIsFocused } from "@react-navigation/native";
 
 const point = {
     accountName: null,
@@ -22,15 +26,61 @@ const point = {
     withdrawalPoint: 0,
 };
 function PointMain({ navigation }) {
+    const [account, setAccount] = useState({});
+    const [createAccountVisible, setCreateAccountVisible] = useState(false);
     const { info } = useContext(UserContext);
+    const isFocused = useIsFocused();
+
+    useEffect(() => {
+        getMyPoint();
+    }, [isFocused]);
     const goToPage = (page, data) => {
         navigation.navigate(page, data);
     };
 
     console.log(info);
+
+    const getMyPoint = async () => {
+        try {
+            const response = await axios.get(SERVER + "/points/my", {
+                headers: {
+                    auth: await getAsyncStorageToken(),
+                },
+            });
+
+            console.log(response.data);
+
+            const {
+                data: { result },
+            } = response;
+
+            if (result === VALID) {
+                const {
+                    data: {
+                        data: { points },
+                    },
+                } = response;
+                console.log("point info : ", points);
+                setAccount(points);
+                if (points.accountNumber) {
+                    setCreateAccountVisible(false);
+                } else {
+                    setCreateAccountVisible(true);
+                }
+            } else {
+                const {
+                    data: { msg },
+                } = response;
+
+                console.log(msg);
+            }
+        } catch (error) {
+            console.log(error);
+        }
+    };
     return (
         <>
-            {false ? (
+            {createAccountVisible ? (
                 <View
                     style={{
                         flex: 1,
@@ -52,14 +102,16 @@ function PointMain({ navigation }) {
 
                     <SubmitButton
                         text="계좌등록 하러가기"
-                        onPress={() => goToPage("RegistPointAccount")}
+                        onPress={() =>
+                            goToPage("RegistPointAccount", { account: account })
+                        }
                     />
                 </View>
             ) : (
                 <View>
                     <SubTitleText>{info.name}님의 포인트</SubTitleText>
                     <SubTitleText>
-                        {numberWithComma(point.curPoint)} AP
+                        {numberWithComma(account.curPoint || 0)} AP
                     </SubTitleText>
                     <PlainText>
                         포인트 출금을 위해 정확한 계좌번호를 입력해주세요.
@@ -70,22 +122,28 @@ function PointMain({ navigation }) {
                     </PlainText>
                     <PlainButton
                         text="계좌수정하기"
-                        onPress={() => goToPage("ModifyPointAccount")}
+                        onPress={() =>
+                            goToPage("ModifyPointAccount", { account: account })
+                        }
                     />
 
                     <PlainButton
                         text="포인트 충전"
-                        onPress={() => goToPage("ChargePoint")}
+                        onPress={() =>
+                            goToPage("ChargePoint", { account: account })
+                        }
                     />
 
                     <PlainButton
                         text="포인트 출금"
-                        onPress={() => goToPage("WithdrawalPoint")}
+                        onPress={() =>
+                            goToPage("WithdrawalPoint", { account: account })
+                        }
                     />
 
                     <PlainButton
                         text="포인트 사용내역"
-                        onPress={() => goToPage("PointBreakdown")}
+                        // onPress={() => goToPage("PointBreakdown")}
                     />
                 </View>
             )}

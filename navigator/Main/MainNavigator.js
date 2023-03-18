@@ -4,6 +4,7 @@ import React, { useContext, useEffect, useState } from "react";
 import LoadingLayout from "../../component/layout/LoadingLayout";
 import { VALID } from "../../constant";
 import LoginContext from "../../context/LoginContext";
+import Charge from "../../screen/main/Charge";
 import CompleteOrder from "../../screen/main/CompleteOrder";
 import OrderDetail from "../../screen/main/OrderDetail";
 import OrderProgress from "../../screen/main/OrderProgress";
@@ -212,6 +213,15 @@ export default function MainNavigator() {
                     <Stack.Screen
                         name="Payment"
                         component={Payment}
+                        options={{
+                            title: "결제하기",
+                            headerShown: false,
+                            headerTitleAlign: "center",
+                        }}
+                    />
+                    <Stack.Screen
+                        name="Charge"
+                        component={Charge}
                         options={{
                             title: "결제하기",
                             headerShown: false,
