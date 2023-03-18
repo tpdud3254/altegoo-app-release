@@ -191,6 +191,7 @@ function MyOrderList({ navigation }) {
     const [orderInProgressCount, setOrderInProgressCount] = useState(0);
     const [orderList, setOrderList] = useState([]);
     const [filteredList, setFilteredList] = useState([]);
+    const [totalCount, setTotalCount] = useState(0);
 
     const openRegionFilter = () => {
         setRegionFilterVisible(true);
@@ -208,10 +209,10 @@ function MyOrderList({ navigation }) {
 
     useEffect(() => {
         setIsLoading(true);
-        getOrderInProgressCounts();
         getOrderList();
         setIsLoading(false);
     }, []);
+
     useEffect(() => {
         navigation.setOptions({
             headerRight: () => <HeaderRight />,
@@ -338,7 +339,18 @@ function MyOrderList({ navigation }) {
                 } = data;
                 console.log("result: ", result);
                 console.log("list: ", list);
-                setOrderList(list);
+
+                const newList = [];
+                setTotalCount(0);
+                list.map((value, index) => {
+                    if (value.userId === info.id) {
+                        newList.push(value);
+                        if (value.orderStatusId < 3) {
+                            setTotalCount((prev) => prev + 1);
+                        }
+                    }
+                });
+                setOrderList(newList);
             })
             .catch((error) => {
                 showError(error);
@@ -553,7 +565,7 @@ function MyOrderList({ navigation }) {
                                 color={theme.sub.yellow}
                             />
                             <PlainText style={{ marginLeft: 5 }}>
-                                {orderInProgressCount}건 (예정)
+                                {totalCount}건 (예정)
                             </PlainText>
                         </OrderCount>
                     </TopContainer>
@@ -791,9 +803,9 @@ function MyOrderList({ navigation }) {
                                 </Provider>
                             </TouchableWithoutFeedback>
                         </ScrollView>
-                        <HorizontalDivider thickness={1.5} color="#777" />
+                        {/* <HorizontalDivider thickness={1.5} color="#777" /> */}
                     </View>
-                    <View
+                    {/* <View
                         style={{
                             flex: 1,
                             marginTop: 10,
@@ -915,7 +927,7 @@ function MyOrderList({ navigation }) {
                                 </Notifications>
                             </TouchableWithoutFeedback>
                         </ScrollView>
-                    </View>
+                    </View> */}
                 </MainLayout>
             )}
         </>

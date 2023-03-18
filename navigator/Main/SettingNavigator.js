@@ -38,7 +38,8 @@ export default function SettingNavigator() {
                 name="ModifyUserInfo"
                 component={ModifyUserInfo}
                 options={{
-                    title: "회원 정보 수정",
+                    title: "회원 정보",
+                    // title: "회원 정보 수정", TODO: 수정으로 변경
                 }}
             />
             <Stack.Screen

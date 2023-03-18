@@ -31,7 +31,8 @@ function Menus({ navigation }) {
                     navigation.navigate("ModifyUserInfo");
                 }}
             >
-                <PlainText>회원정보수정</PlainText>
+                {/* <PlainText>회원정보수정</PlainText> ㅅTODO: 추후변경 */}
+                <PlainText>회원정보</PlainText>
             </TouchableOpacity>
             <TouchableOpacity
                 onPress={() => {
@@ -44,9 +45,9 @@ function Menus({ navigation }) {
                 <PlainText>보험</PlainText>
             </TouchableOpacity>
             <TouchableOpacity
-                onPress={() => {
-                    navigation.navigate("Events");
-                }}
+            // onPress={() => {
+            //     navigation.navigate("Events");
+            // }}
             >
                 <PlainText>이벤트</PlainText>
             </TouchableOpacity>
@@ -58,9 +59,9 @@ function Menus({ navigation }) {
                 <PlainText>설정</PlainText>
             </TouchableOpacity>
             <TouchableOpacity
-                onPress={() => {
-                    navigation.navigate("BlockUser");
-                }}
+            // onPress={() => {
+            //     navigation.navigate("BlockUser");
+            // }}
             >
                 <PlainText>부정당회원</PlainText>
             </TouchableOpacity>
