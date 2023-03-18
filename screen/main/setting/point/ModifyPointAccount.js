@@ -36,7 +36,7 @@ const bank = [
     "한국수출입은행",
 ];
 
-function ModifyPointAccount({ route }) {
+function ModifyPointAccount({ route, navigation }) {
     const [selectedBank, setSelectedBank] = useState(0);
     const { register, handleSubmit, setValue, watch } = useForm();
 
