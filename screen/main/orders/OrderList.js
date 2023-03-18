@@ -612,33 +612,41 @@ function OrderList() {
                                             <Order
                                                 key={index}
                                                 done={order.orderStatusId >= 4}
-                                                onPress={() =>
-                                                    order.userId === info.id
-                                                        ? goToPage(
-                                                              "CompleteOrder",
-                                                              {
-                                                                  orderId:
-                                                                      order.id,
-                                                                  back: true,
-                                                              }
-                                                          )
-                                                        : order.acceptUser ===
-                                                          info.id
-                                                        ? goToPage(
-                                                              "OrderProgress",
-                                                              {
-                                                                  orderId:
-                                                                      order.id,
-                                                                  back: true,
-                                                              }
-                                                          )
-                                                        : goToPage(
-                                                              "OrderDetail",
-                                                              {
-                                                                  orderId:
-                                                                      order.id,
-                                                              }
-                                                          )
+                                                onPress={
+                                                    () =>
+                                                        goToPage(
+                                                            "OrderDetail",
+                                                            {
+                                                                orderData:
+                                                                    order,
+                                                            }
+                                                        )
+                                                    // order.userId === info.id
+                                                    //     ? goToPage(
+                                                    //           "CompleteOrder",
+                                                    //           {
+                                                    //               orderId:
+                                                    //                   order.id,
+                                                    //               back: true,
+                                                    //           }
+                                                    //       )
+                                                    //     : order.acceptUser ===
+                                                    //       info.id
+                                                    //     ? goToPage(
+                                                    //           "OrderProgress",
+                                                    //           {
+                                                    //               orderId:
+                                                    //                   order.id,
+                                                    //               back: true,
+                                                    //           }
+                                                    //       )
+                                                    //     : goToPage(
+                                                    //           "OrderDetail",
+                                                    //           {
+                                                    //               orderData:
+                                                    //                   order,
+                                                    //           }
+                                                    //       )
                                                 }
                                             >
                                                 <Status
@@ -702,7 +710,9 @@ function OrderList() {
                                                             {order.type ===
                                                             "양사"
                                                                 ? `${order.simpleAddress1} > ${order.simpleAddress2}`
-                                                                : order.address1}
+                                                                : order.address1 +
+                                                                  " " +
+                                                                  order.detailAddress1}
                                                         </PlainText>
                                                     </OrderContent>
                                                     <OrderContent>

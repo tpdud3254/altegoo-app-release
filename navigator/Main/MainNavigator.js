@@ -179,7 +179,8 @@ export default function MainNavigator() {
                         options={{
                             headerShown: true,
                             headerTitleAlign: "center",
-                            headerTitle: "오더 상세",
+                            headerTitle: "작업 상세 보기",
+                            headerBackTitleVisible: false,
                         }}
                     />
                     <Stack.Screen

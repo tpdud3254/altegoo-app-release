@@ -1,20 +1,23 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import {
     ScrollView,
     TextInput,
+    TouchableOpacity,
     TouchableWithoutFeedback,
     View,
 } from "react-native";
 import styled from "styled-components/native";
 import MainLayout from "../../component/layout/MainLayout";
 import PlainText from "../../component/text/PlainText";
-import RegistContext from "../../context/RegistContext";
 import UserContext from "../../context/UserContext";
 import { theme } from "../../styles";
-import { numberWithComma } from "../../utils";
+import { getAsyncStorageToken, numberWithComma } from "../../utils";
 import Checkbox from "expo-checkbox";
 import { useForm } from "react-hook-form";
-import { REGIST_NAV } from "../../constant";
+import axios from "axios";
+import { SERVER } from "../../server";
+import { VALID } from "../../constant";
+import WebView from "react-native-webview";
 
 const Container = styled.View``;
 const SRow = styled.View`
@@ -36,62 +39,55 @@ const SContent = styled.View`
     background-color: ${(props) => (props.background ? "white" : "")};
 `;
 
-const Emergency = styled.View`
-    align-items: center;
-    margin-top: -5px;
-`;
-
 const ButtonContainer = styled.View`
     align-items: center;
 `;
 const Button = styled.TouchableOpacity`
     background-color: ${theme.sub.blue};
-    width: 100px;
+    width: 120px;
     align-items: center;
     border-radius: 5px;
     margin-top: 15px;
     margin-bottom: 10px;
     padding: 10px;
 `;
-function OrderDetail({ navigation, route }) {
-    const { registInfo, setRegistInfo } = useContext(RegistContext);
+function OrderDetail({ route, navigation }) {
+    const webViewRef1 = useRef();
+    const webViewRef2 = useRef();
     const { info } = useContext(UserContext);
-    const [price, setPrice] = useState(60000);
-    const [emergencyOrder, setEmergencyOrder] = useState(false);
-    const [isDirectPhone, setIsDirectPhone] = useState(false);
-    const { setValue, register, handleSubmit } = useForm();
-    console.log("registInfo : ", registInfo);
+    const [order, setOrder] = useState({});
+    const [showMap1, setShowMap1] = useState(false);
+    const [showMap2, setShowMap2] = useState(false);
+    const [progress, setProgress] = useState(0.0);
 
-    console.log(route?.params);
+    console.log(route?.params?.orderData);
     useEffect(() => {
-        register("directPhone");
-        register("memo");
+        setOrder(route?.params?.orderData);
     }, []);
 
-    useEffect(() => {
-        if (isDirectPhone) {
-            setValue("directPhone", info.phone);
+    const sendMessage = (index, data) => {
+        if (index === 1) {
+            webViewRef1.current.postMessage(data);
         } else {
-            setValue("directPhone", null);
+            webViewRef2.current.postMessage(data);
         }
-    }, [isDirectPhone]);
+    };
 
-    useEffect(() => {
-        setPrice(60000);
-        if (emergencyOrder) {
-            setPrice((prev) => prev + prev * 0.2);
+    const toggleMap = (index) => {
+        if (index === 1) {
+            setShowMap1((prev) => !prev);
+        } else {
+            setShowMap2((prev) => !prev);
         }
-    }, [emergencyOrder]);
+    };
 
     const getWorkType = () => {
-        const info = registInfo;
-
         let text = "";
-        if (info.upDown !== "양사") {
-            text = `${info.vehicleType} / ${info.upDown}`;
+        if (order.type !== "양사") {
+            text = `${order.vehicleType} / ${order.type}`;
         } else {
-            text = `${info.vehicleType} / ${info.upDown} (${
-                info.bothType === 1 ? "내림 > 올림" : "올림 > 내림"
+            text = `${order.vehicleType} / ${order.type} (${
+                order.bothType === 1 ? "내림 > 올림" : "올림 > 내림"
             })`;
         }
 
@@ -120,8 +116,8 @@ function OrderDetail({ navigation, route }) {
                     break;
             }
         };
-        const info = registInfo;
-        const workTime = new Date(info.dateTime);
+
+        const workTime = new Date(order.workDateTime);
         let text = `${workTime.getFullYear()}년 ${
             workTime.getMonth() + 1 < 10
                 ? "0" + (workTime.getMonth() + 1)
@@ -144,105 +140,256 @@ function OrderDetail({ navigation, route }) {
     };
 
     const getWorkFloor = () => {
-        const info = registInfo;
-
         let text = "";
 
-        if (info.upDown === "양사") {
-            text = `${info.floor}층(${
-                info.bothType === 1 ? "내림" : "올림"
-            }) > ${info.otherFloor}층(${
-                info.bothType === 1 ? "올림" : "내림"
+        if (order.type === "양사") {
+            text = `${order.floor}층(${
+                order.bothType === 1 ? "내림" : "올림"
+            }) > ${order.otherFloor}층(${
+                order.bothType === 1 ? "올림" : "내림"
             })`;
         } else {
-            text = `${info.floor}층`;
+            text = `${order.floor}층`;
         }
 
         return text;
     };
 
     const getPrice = () => {
-        //TODO: 작업비용
-        return `${numberWithComma(price)} AP`;
+        return `${numberWithComma(order.price || 0)} AP`;
     };
 
     const getPoint = () => {
-        return `${numberWithComma(price * 0.15)} AP`;
+        return `${numberWithComma(order.point || 0)} AP`;
     };
 
-    const onNextStep = ({ directPhone, memo }) => {
-        const point = price * 0.15;
+    const onNextStep = ({ directPhone, memo }) => {};
 
-        setRegistInfo({
-            price,
-            point,
-            memo: memo || null,
-            directPhone: directPhone || info.phone,
-            emergency: emergencyOrder,
-            ...registInfo,
-        });
-
-        navigation.navigate(REGIST_NAV[6]);
+    const onClose = () => {
+        navigation.goBack();
     };
 
-    const Row = ({ title, content }) => (
+    const setAcceptOrder = async (orderId) => {
+        try {
+            const response = await axios.patch(
+                SERVER + "/works/status",
+                {
+                    status: 2, //1: 작업 요청, 2: 작업 예약, 3: 작업 중, 4: 작업 완료
+                    id: orderId,
+                },
+                {
+                    headers: {
+                        auth: await getAsyncStorageToken(),
+                    },
+                }
+            );
+
+            const {
+                data: { result },
+            } = response;
+
+            if (result === VALID) {
+                const {
+                    data: {
+                        data: { list },
+                    },
+                } = response;
+
+                list.map((resultOrder, index) => {
+                    if (resultOrder.id === order.id) {
+                        setOrder(resultOrder);
+                    }
+                });
+                //TODO: 나중에 효율적으로 바꾸기
+            } else {
+                const {
+                    data: { msg },
+                } = response;
+
+                console.log(msg);
+            }
+        } catch (error) {
+            console.log(error);
+        }
+    };
+    const setCancleOrder = async (orderId) => {
+        axios
+            .patch(
+                SERVER + "/works/status",
+                {
+                    status: 1, //1: 작업 요청, 2: 작업 예약, 3: 작업 중, 4: 작업 완료
+                    id: orderId,
+                },
+                {
+                    headers: {
+                        auth: await getAsyncStorageToken(),
+                    },
+                }
+            )
+            .then(({ data }) => {
+                const {
+                    result,
+                    data: { list },
+                } = data;
+                console.log("result: ", result);
+                list.map((resultOrder, index) => {
+                    if (resultOrder.id === order.id) {
+                        setOrder(resultOrder);
+                    }
+                });
+                //TODO: 나중에 효율적으로 바꾸기
+            })
+            .catch((error) => {
+                showError(error);
+            })
+            .finally(() => {});
+    };
+    const setReserveOrder = async (orderId) => {
+        axios
+            .post(
+                SERVER + "/works/reservation",
+                {
+                    orderId,
+                },
+                {
+                    headers: {
+                        auth: await getAsyncStorageToken(),
+                    },
+                }
+            )
+            .then(({ data }) => {
+                const {
+                    result,
+                    data: { list },
+                } = data;
+                list.map((resultOrder, index) => {
+                    if (resultOrder.id === order.id) {
+                        setOrder(resultOrder);
+                    }
+                });
+                //TODO: 나중에 효율적으로 바꾸기
+            })
+            .catch((error) => {
+                showError(error);
+            })
+            .finally(() => {});
+    };
+    const setCancleReservation = async (orderId) => {
+        axios
+            .delete(SERVER + "/works/reservation", {
+                data: { orderId },
+                headers: {
+                    auth: await getAsyncStorageToken(),
+                },
+            })
+            .then(({ data }) => {
+                const {
+                    result,
+                    data: { list },
+                } = data;
+                list.map((resultOrder, index) => {
+                    if (resultOrder.id === order.id) {
+                        setOrder(resultOrder);
+                    }
+                });
+                //TODO: 나중에 효율적으로 바꾸기
+            })
+            .catch((error) => {
+                showError(error);
+            })
+            .finally(() => {});
+    };
+
+    const AcceptButton = ({ orderId }) => (
+        <Button
+            color={theme.btnPointColor}
+            onPress={() => setAcceptOrder(orderId)}
+        >
+            <PlainText style={{ fontSize: 19, color: "white" }}>
+                예약하기
+            </PlainText>
+        </Button>
+    );
+
+    const ReserveButton = ({ orderId }) => (
+        <Button color={theme.sub.blue} onPress={() => setReserveOrder(orderId)}>
+            <PlainText style={{ fontSize: 19, color: "white" }}>
+                예약대기
+            </PlainText>
+        </Button>
+    );
+
+    const CancleButton = ({ orderId }) => (
+        <Button color="#777" onPress={() => setCancleOrder(orderId)}>
+            <PlainText style={{ fontSize: 19, color: "white" }}>
+                예약취소
+            </PlainText>
+        </Button>
+    );
+
+    const CancleReserveButton = ({ orderId }) => (
+        <Button
+            color={theme.sub.green}
+            onPress={() => setCancleReservation(orderId)}
+        >
+            <PlainText style={{ fontSize: 19, color: "white" }}>
+                예약대기 취소
+            </PlainText>
+        </Button>
+    );
+
+    const DefaultButton = () => (
+        <Button onPress={() => onClose()}>
+            <PlainText style={{ fontSize: 19, color: "white" }}>확인</PlainText>
+        </Button>
+    );
+
+    const SetStatusButton = ({ order }) => {
+        if (order.userId === info.id) return <DefaultButton />;
+        if (order.orderStatusId === 1)
+            //작업 요청
+            return <AcceptButton orderId={order.id} />;
+        else if (order.orderStatusId === 2) {
+            //예약 완료
+
+            //내가 예약한 오더인 경우
+            if (order.acceptUser === info.id)
+                return <CancleButton orderId={order.id} />;
+
+            //내가 예약하지 않은 오더인 경우
+            if (order.orderReservation && order.orderReservation.length > 0) {
+                let exist = false;
+                order.orderReservation.map((value, index) => {
+                    exist = value.userId === info.id;
+                });
+
+                //예약대기 목록에 내가 존재할 경우
+                if (exist) return <CancleReserveButton orderId={order.id} />;
+            }
+
+            return <ReserveButton orderId={order.id} />;
+        }
+    };
+
+    const Row = ({ title, content, button }) => (
         <SRow>
             <STitle>
                 <PlainText style={{ fontSize: 18 }}>{title}</PlainText>
             </STitle>
-            <SContent>
-                <PlainText style={{ fontSize: 18 }}>{content}</PlainText>
-            </SContent>
+            {button ? (
+                <View style={{ width: "75%", alignItems: "flex-end" }}>
+                    <TouchableOpacity onPress={() => toggleMap(button)}>
+                        <PlainText>거리뷰 보기</PlainText>
+                    </TouchableOpacity>
+                </View>
+            ) : (
+                <SContent>
+                    <PlainText style={{ fontSize: 18 }}>{content}</PlainText>
+                </SContent>
+            )}
         </SRow>
     );
 
-    const InputRow = ({ title, placeholder, checkBox, defaultValue, type }) => (
-        <SRow>
-            <STitle>
-                <PlainText style={{ fontSize: 18 }}>{title}</PlainText>
-            </STitle>
-            <SContent
-                inputBorderLine={!checkBox}
-                borderLine={checkBox}
-                background={!checkBox}
-            >
-                {checkBox ? (
-                    <View
-                        style={{
-                            flexDirection: "row",
-                            alignItems: "center",
-                            marginTop: -5,
-                            marginBottom: -5,
-                        }}
-                    >
-                        <Checkbox
-                            style={{
-                                width: 28,
-                                height: 28,
-                                marginRight: 5,
-                            }}
-                            value={isDirectPhone}
-                            onValueChange={setIsDirectPhone}
-                            color="#777"
-                        />
-                        <PlainText style={{ fontSize: 18 }}>
-                            핸드폰 번호 동일
-                        </PlainText>
-                    </View>
-                ) : (
-                    <TextInput
-                        style={{ fontSize: 18 }}
-                        placeholder={placeholder}
-                        defaultValue={defaultValue}
-                        onChangeText={(text) => setValue(type, text)}
-                        keyboardType={
-                            type === "memo" ? "default" : "number-pad"
-                        }
-                    />
-                )}
-            </SContent>
-        </SRow>
-    );
     return (
         <MainLayout>
             <ScrollView>
@@ -251,53 +398,183 @@ function OrderDetail({ navigation, route }) {
                         <Container>
                             <Row title="작업 종류" content={getWorkType()} />
                             <Row title="작업 일시" content={getWorkTime()} />
-                            {registInfo.upDown === "양사" ? (
+                            {order.type === "양사" ? (
                                 <>
                                     <Row
                                         title={
-                                            (registInfo.bothType === 1
+                                            (order.bothType === 1
                                                 ? "내림"
                                                 : "올림") + " 주소"
                                         }
-                                        content={registInfo.address1}
+                                        content={
+                                            order.address1 +
+                                            " " +
+                                            order.detailAddress1
+                                        }
                                     />
+                                    <Row title="" button={1} />
+                                    {showMap1 ? (
+                                        <View
+                                            style={{
+                                                alignItems: "center",
+                                                marginBottom: 20,
+                                            }}
+                                        >
+                                            <View style={{ height: 350 }}>
+                                                <WebView
+                                                    ref={webViewRef1}
+                                                    containerStyle={{
+                                                        width: 350,
+                                                        height: 350,
+                                                    }}
+                                                    source={{
+                                                        // uri: "https://master.d1p7wg3e032x9j.amplifyapp.com/payment",
+                                                        uri: "https://dd79-211-59-182-118.jp.ngrok.io/map",
+                                                    }}
+                                                    onLoad={() =>
+                                                        sendMessage(
+                                                            1,
+                                                            JSON.stringify({
+                                                                address:
+                                                                    order.address1,
+                                                            })
+                                                        )
+                                                    }
+                                                    onLoadProgress={(event) => {
+                                                        setProgress(
+                                                            event.nativeEvent
+                                                                .progress
+                                                        );
+                                                    }}
+                                                />
+                                            </View>
+                                        </View>
+                                    ) : null}
                                     <Row
                                         title={
-                                            (registInfo.bothType === 1
+                                            (order.bothType === 1
                                                 ? "올림"
                                                 : "내림") + " 주소"
                                         }
-                                        content={registInfo.address2}
+                                        content={
+                                            order.address2 +
+                                            " " +
+                                            order.detailAddress2
+                                        }
                                     />
+                                    <Row title="" button={2} />
+                                    {showMap2 ? (
+                                        <View
+                                            style={{
+                                                alignItems: "center",
+                                            }}
+                                        >
+                                            <View
+                                                style={{
+                                                    height: 350,
+                                                    marginBottom: 20,
+                                                }}
+                                            >
+                                                <WebView
+                                                    ref={webViewRef2}
+                                                    containerStyle={{
+                                                        width: 350,
+                                                        height: 350,
+                                                    }}
+                                                    source={{
+                                                        // uri: "https://master.d1p7wg3e032x9j.amplifyapp.com/payment",
+                                                        uri: "https://dd79-211-59-182-118.jp.ngrok.io/map2",
+                                                    }}
+                                                    onLoad={() =>
+                                                        sendMessage(
+                                                            2,
+                                                            JSON.stringify({
+                                                                address:
+                                                                    order.address2,
+                                                            })
+                                                        )
+                                                    }
+                                                    onLoadProgress={(event) => {
+                                                        setProgress(
+                                                            event.nativeEvent
+                                                                .progress
+                                                        );
+                                                    }}
+                                                />
+                                            </View>
+                                        </View>
+                                    ) : null}
                                 </>
                             ) : (
-                                <Row
-                                    title="작업 주소"
-                                    content={registInfo.address}
-                                />
+                                <>
+                                    <Row
+                                        title="작업 주소"
+                                        content={
+                                            order.address1 +
+                                            " " +
+                                            order.detailAddress1
+                                        }
+                                    />
+                                    <Row title="" button={1} />
+                                    {showMap1 ? (
+                                        <View
+                                            style={{
+                                                alignItems: "center",
+                                                marginBottom: 20,
+                                            }}
+                                        >
+                                            <View
+                                                style={{
+                                                    height: 350,
+                                                }}
+                                            >
+                                                <WebView
+                                                    ref={webViewRef1}
+                                                    containerStyle={{
+                                                        width: 350,
+                                                        height: 350,
+                                                    }}
+                                                    source={{
+                                                        // uri: "https://master.d1p7wg3e032x9j.amplifyapp.com/payment",
+                                                        uri: "https://dd79-211-59-182-118.jp.ngrok.io/map",
+                                                    }}
+                                                    onLoad={() =>
+                                                        sendMessage(
+                                                            1,
+                                                            JSON.stringify({
+                                                                address:
+                                                                    order.address1,
+                                                            })
+                                                        )
+                                                    }
+                                                    onLoadProgress={(event) => {
+                                                        setProgress(
+                                                            event.nativeEvent
+                                                                .progress
+                                                        );
+                                                    }}
+                                                />
+                                            </View>
+                                        </View>
+                                    ) : null}
+                                </>
                             )}
                             <Row title="작업 높이" content={getWorkFloor()} />
 
-                            {registInfo.volumeType === "quantity" ? (
+                            {order.volumeType === "quantity" ? (
                                 <Row
                                     title="작업 물량"
-                                    content={registInfo.quantity}
+                                    content={order.quantity}
                                 />
                             ) : (
-                                <Row
-                                    title="작업 시간"
-                                    content={registInfo.time}
-                                />
+                                <Row title="작업 시간" content={order.time} />
                             )}
 
-                            <Row title="휴대 전화" content={info.phone} />
-                            <InputRow
+                            <Row title="휴대 전화" content={order.phone} />
+                            <Row
                                 title="현장 연락처"
-                                placeholder="현장에서 연락 가능한 번호 입력"
-                                defaultValue={isDirectPhone ? info.phone : null}
-                                type="directPhone"
+                                content={order.directPhone}
                             />
-                            <InputRow title="" checkBox />
 
                             <Row title="작업 비용" content={getPrice()} />
                             <Row title="적립 포인트" content={getPoint()} />
@@ -309,38 +586,19 @@ function OrderDetail({ navigation, route }) {
                                 </STitle>
                                 <Checkbox
                                     style={{ width: 28, height: 28 }}
-                                    value={emergencyOrder}
-                                    onValueChange={setEmergencyOrder}
+                                    value={order.emergency}
                                     color={theme.btnPointColor}
                                 />
                             </SRow>
-                            {emergencyOrder ? (
-                                <Emergency>
-                                    <PlainText
-                                        style={{
-                                            fontSize: 18,
-                                            color: theme.main,
-                                            marginBottom: 5,
-                                        }}
-                                    >
-                                        긴급 오더 선택 시 작업 비용이 20%
-                                        증가하며
-                                        {"\n"}
-                                        모든 기사님에게 알림이 전송됩니다.
-                                    </PlainText>
-                                </Emergency>
-                            ) : null}
-                            <InputRow
+                            <Row
                                 title="특이 사항"
-                                placeholder="특이사항을 입력해주세요."
-                                type="memo"
+                                content={order.memo || "없음"}
                             />
                         </Container>
-                        <ButtonContainer>
-                            <Button onPress={handleSubmit(onNextStep)}>
-                                <PlainText>예약</PlainText>
-                            </Button>
-                        </ButtonContainer>
+
+                        <View style={{ alignItems: "center" }}>
+                            <SetStatusButton order={order} />
+                        </View>
                     </View>
                 </TouchableWithoutFeedback>
             </ScrollView>

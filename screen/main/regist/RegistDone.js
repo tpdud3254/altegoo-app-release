@@ -170,8 +170,10 @@ function RegistDone({ navigation }) {
                 bothType: registInfo.bothType || null,
                 address1: registInfo.address1,
                 simpleAddress1: registInfo.simpleAddress1,
+                detailAddress1: registInfo.detailAddress1,
                 address2: registInfo.address2,
                 simpleAddress2: registInfo.simpleAddress2,
+                detailAddress2: registInfo.detailAddress2,
                 regionId: registInfo.region,
                 floor: registInfo.floor,
                 otherFloor: registInfo.otherFloor || null,
@@ -266,56 +268,6 @@ function RegistDone({ navigation }) {
             };
             navigation.navigate("Payment", { data });
         }
-    };
-
-    const onNextStep = async () => {
-        //TODO: 첫 결제 시 포인트 지급
-
-        const sendingData = {
-            workDateTime: registInfo.dateTime,
-            type: registInfo.upDown,
-            bothType: registInfo.bothType || null,
-            address: registInfo.address,
-            otherAddress: registInfo.otherAddress || null,
-            floor: registInfo.floor,
-            otherFloor: registInfo.otherFloor || null,
-            phone: info.phone,
-            directPhone: registInfo.directPhone,
-            price: registInfo.price,
-            point: registInfo.point,
-            volumeType: registInfo.volumeType,
-            quantity: registInfo.quantity || null,
-            time: registInfo.time || null,
-            vehicleType: registInfo.vehicleType,
-            emergency: registInfo.emergency,
-            memo: registInfo.memo || null,
-        };
-
-        console.log(sendingData);
-
-        axios
-            .post(
-                SERVER + "/works/upload",
-                {
-                    ...sendingData,
-                },
-                {
-                    headers: {
-                        auth: await getAsyncStorageToken(),
-                    },
-                }
-            )
-            .then(({ data }) => {
-                const { result } = data;
-
-                if (result === VALID) {
-                    navigation.navigate(REGIST_NAV[8]);
-                }
-            })
-            .catch((error) => {
-                showError(error);
-            })
-            .finally(() => {});
     };
 
     const Row = ({ title, content }) => (

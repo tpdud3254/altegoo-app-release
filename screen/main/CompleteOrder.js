@@ -157,7 +157,7 @@ function CompleteOrder({ route, navigation }) {
             <Order
                 onPress={() =>
                     goToPage("OrderDetail", {
-                        orderId: order.id,
+                        orderData: order,
                     })
                 }
             >
@@ -191,7 +191,7 @@ function CompleteOrder({ route, navigation }) {
                             }}
                             numberOfLines={1}
                         >
-                            {order.address1}
+                            {order.address1} {order.detailAddress1}
                         </PlainText>
                     </OrderContent>
                     {order.type === "양사" ? (
@@ -204,7 +204,7 @@ function CompleteOrder({ route, navigation }) {
                                 }}
                                 numberOfLines={1}
                             >
-                                {order.address2}
+                                {order.address2} {order.detailAddress2}
                             </PlainText>
                         </OrderContent>
                     ) : null}
