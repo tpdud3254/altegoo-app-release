@@ -7,8 +7,6 @@ import { TextInput } from "../../component/input/TextInput";
 import TitleInputItem from "../../component/item/TitleInputItem";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import PlainText from "../../component/text/PlainText";
-import PlainButton from "../../component/button/PlainButton";
-import SubmitButton from "../../component/button/SubmitButton";
 import { useForm } from "react-hook-form";
 import { useNavigation } from "@react-navigation/native";
 import { View } from "react-native";
@@ -17,21 +15,22 @@ import { VALID } from "../../constant";
 import UserContext from "../../context/UserContext";
 import LoginContext from "../../context/LoginContext";
 import { SERVER } from "../../utils";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import { Toast } from "react-native-toast-message/lib/src/Toast";
 import { setAsyncStorageToken, showError } from "../../utils";
-import LoadingLayout from "../../component/layout/LoadingLayout";
+import { color } from "../../styles";
+import Button from "../../component/button/Button";
 
 const Container = styled.View`
     flex: 1;
 `;
 const Title = styled.View`
-    margin-bottom: 15px;
+    margin-bottom: 20px;
 `;
 
-const InputContainer = styled.View``;
+const Wrapper = styled.View``;
 
-const ButtonContainer = styled.View``;
+const Buttons = styled.View`
+    margin-top: 15px;
+`;
 
 const Password = styled.View`
     flex-direction: row;
@@ -101,13 +100,17 @@ function SignIn() {
                 <Container>
                     <Title>
                         <TitleText>로그인</TitleText>
-                        <SubTitleText>안녕하세요. 환영합니다.</SubTitleText>
+                        <SubTitleText
+                            style={{ color: color.darkGrey, marginTop: 10 }}
+                        >
+                            안녕하세요. 환영합니다.
+                        </SubTitleText>
                     </Title>
-                    <InputContainer>
+                    <Wrapper>
                         <View>
-                            <TitleInputItem title="휴대폰번호">
+                            <TitleInputItem>
                                 <TextInput
-                                    placeholder="숫자만 적어주세요"
+                                    placeholder="휴대폰번호"
                                     keyboardType="number-pad"
                                     returnKeyType="next"
                                     onSubmitEditing={() => onNext(passwordRef)}
@@ -116,7 +119,7 @@ function SignIn() {
                                     }
                                 />
                             </TitleInputItem>
-                            <TitleInputItem title="비밀번호">
+                            <TitleInputItem>
                                 <Password>
                                     <TextInput
                                         ref={passwordRef}
@@ -134,19 +137,30 @@ function SignIn() {
                                 </Password>
                             </TitleInputItem>
                         </View>
-                        <PlainButton
-                            text="비밀번호 초기화"
-                            onPress={ResetPassword}
-                        />
-                    </InputContainer>
+                        <Buttons>
+                            <Button
+                                text="로그인"
+                                type="accent"
+                                onPress={handleSubmit(onValid)}
+                                disabled={
+                                    !(watch("phone") && watch("password"))
+                                }
+                            />
+                            <TouchableOpacity>
+                                <PlainText
+                                    style={{
+                                        color: color.darkGrey,
+                                        textAlign: "center",
+                                        marginTop: 15,
+                                    }}
+                                    onPress={ResetPassword}
+                                >
+                                    비밀번호 재설정
+                                </PlainText>
+                            </TouchableOpacity>
+                        </Buttons>
+                    </Wrapper>
                 </Container>
-                <ButtonContainer>
-                    <SubmitButton
-                        text="로그인"
-                        disabled={!(watch("phone") && watch("password"))}
-                        onPress={handleSubmit(onValid)}
-                    />
-                </ButtonContainer>
             </FormLayout>
         </>
     );

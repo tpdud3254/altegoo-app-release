@@ -5,4 +5,5 @@ export const TextInput = styled.TextInput`
     font-size: 20px;
     padding: 10px;
     font-weight: 300;
+    height: 55px;
 `;

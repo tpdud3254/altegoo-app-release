@@ -6,7 +6,7 @@ function TitleText(props) {
         <Text
             {...props}
             style={{
-                fontSize: 35,
+                fontSize: 30,
                 fontFamily: "IBMPlexSansKR_500Medium",
                 marginTop: -20,
                 marginBottom: -20,

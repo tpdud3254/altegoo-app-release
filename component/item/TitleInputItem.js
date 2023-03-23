@@ -5,21 +5,25 @@ import SubTitleText from "../text/SubTitleText";
 import BorderBox from "../box/BorderBox";
 
 const Container = styled.View`
-    /* width: ${(props) => (props.width ? props.width : "unset")}; */
     margin: 8px 0px 8px 0px;
 `;
 
 function TitleInputItem({ title, children, width }) {
     return (
         <Container width={width}>
-            <SubTitleText style={{ paddingBottom: 5 }}>{title}</SubTitleText>
+            {title ? (
+                <SubTitleText style={{ paddingBottom: 5, fontSize: 21 }}>
+                    {title}
+                </SubTitleText>
+            ) : null}
+
             <BorderBox>{children}</BorderBox>
         </Container>
     );
 }
 
 TitleInputItem.propTypes = {
-    title: PropTypes.string.isRequired,
+    title: PropTypes.string,
     width: PropTypes.string,
 };
 export default TitleInputItem;

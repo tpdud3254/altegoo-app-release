@@ -1,9 +1,10 @@
 import React from "react";
 import styled from "styled-components/native";
-import { theme } from "../../styles";
+import { color } from "../../styles";
 
 const Box = styled.View`
-    border: 1px solid ${theme.boxColor};
+    background-color: ${color.inputColor};
+    border-radius: 2px;
 `;
 
 function BorderBox({ children }) {

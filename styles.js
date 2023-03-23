@@ -1,6 +1,4 @@
 export const theme = {
-    // main: "#ff5001",
-    // main: "#cf6741",
     main: "#CD6A41",
     main_disbaled: "rgba(205, 106, 65, 0.4)",
     sub: {
@@ -17,4 +15,13 @@ export const theme = {
     btnPointColor: "#e58c50",
     btnColor: "#bbbbbb",
     btnColor2: "#EAF4FE",
+};
+
+export const color = {
+    main: "#CD6A41",
+    btnAccentColor: "#CD6A41",
+    btnDefaultColor: "#EAF4FE",
+    btnDisableColor: "rgba(205, 106, 65, 0.4)",
+    inputColor: "#eeeeee88",
+    darkGrey: "#555555",
 };

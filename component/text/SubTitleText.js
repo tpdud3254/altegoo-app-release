@@ -6,7 +6,7 @@ function SubTitleText(props) {
         <Text
             {...props}
             style={{
-                fontSize: 23,
+                fontSize: 22,
                 fontFamily: "NanumGothic_400Regular",
                 ...props.style,
             }}

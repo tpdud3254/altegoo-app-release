@@ -1,15 +1,10 @@
 import React, { useEffect, useRef, useState } from "react";
 import styled from "styled-components/native";
-import { FlatList, useWindowDimensions, View } from "react-native";
+import { FlatList, useWindowDimensions } from "react-native";
 import * as Location from "expo-location";
-import Logo from "../component/logo/Logo";
-import { theme } from "../styles";
-import VerticalDivider from "../component/divider/VerticalDivider";
 import { useNavigation } from "@react-navigation/native";
-import SubTitleText from "../component/text/SubTitleText";
-import axios from "axios";
-import { SERVER } from "../utils";
-import PlainText from "../component/text/PlainText";
+import { color } from "../styles";
+import Button from "../component/button/Button";
 
 const imagePath = [
     require(`../assets/images/intro/img_01.png`),
@@ -23,14 +18,7 @@ const Container = styled.View`
     background-color: white;
 `;
 
-const Top = styled.View`
-    flex: 1.2;
-    padding-top: 30px;
-    padding-bottom: 30px;
-    align-items: center;
-`;
-
-const Middle = styled.View`
+const Wrapper = styled.View`
     flex: 10;
     align-items: center;
     margin-top: 120px;
@@ -45,13 +33,13 @@ const IntroImage = styled.Image`
     height: ${(props) => props.size + "px"};
 `;
 
-const MiddleButtonWrapper = styled.View`
+const Indicators = styled.View`
     flex-direction: row;
     justify-content: center;
     margin-bottom: 35px;
 `;
 
-const CircleButton = styled.TouchableOpacity`
+const Indicator = styled.TouchableOpacity`
     width: ${(props) => (props.cur ? "35px" : "13px")};
     height: 13px;
     background-color: ${(props) => props.color || props.theme.main};
@@ -61,21 +49,10 @@ const CircleButton = styled.TouchableOpacity`
     margin: 0px 5px 0px 5px;
 `;
 
-const BottomButtonWrapper = styled.View`
+const Buttons = styled.View`
     flex-direction: row;
     align-items: center;
-    /* margin-top: 50px; */
-    /* height: 60%; */
     justify-content: space-evenly;
-`;
-
-const Button = styled.TouchableOpacity`
-    background-color: ${(props) => (props.accent ? "#CD6A41" : "#EAF4FE")};
-    width: 185px;
-    height: 60px;
-    justify-content: center;
-    align-items: center;
-    border-radius: 12px;
 `;
 
 function Intro() {
@@ -117,10 +94,7 @@ function Intro() {
             {
                 ok ? (
                     <Container>
-                        {/* <Top>
-                            <Logo />
-                        </Top> */}
-                        <Middle>
+                        <Wrapper>
                             <FlatList
                                 horizontal
                                 pagingEnabled
@@ -141,41 +115,37 @@ function Intro() {
                                     setImageIndex(index);
                                 }}
                             />
-                            <MiddleButtonWrapper>
+                            <Indicators>
                                 {imagePath.map((__, index) => (
-                                    <CircleButton
+                                    <Indicator
                                         key={index}
                                         onPress={() =>
                                             scrollToIntroImage(index)
                                         }
                                         color={
                                             imageIndex === index
-                                                ? "#CD6A41"
-                                                : "rgba(205, 106, 65, 0.4)"
+                                                ? color.btnAccentColor
+                                                : color.btnDisableColor
                                         }
                                         cur={imageIndex === index}
                                     />
                                 ))}
-                            </MiddleButtonWrapper>
-                        </Middle>
+                            </Indicators>
+                        </Wrapper>
                         <Bottom>
-                            <BottomButtonWrapper>
-                                <Button onPress={goToSignIn} accent>
-                                    <PlainText
-                                        style={{
-                                            fontWeight: "500",
-                                            color: "white",
-                                        }}
-                                    >
-                                        로그인
-                                    </PlainText>
-                                </Button>
-                                <Button onPress={goToSignUp}>
-                                    <PlainText style={{ fontWeight: "500" }}>
-                                        회원가입
-                                    </PlainText>
-                                </Button>
-                            </BottomButtonWrapper>
+                            <Buttons>
+                                <Button
+                                    onPress={goToSignIn}
+                                    type="accent"
+                                    style={{ width: 185 }}
+                                    text="로그인"
+                                />
+                                <Button
+                                    onPress={goToSignUp}
+                                    style={{ width: 185 }}
+                                    text="회원가입"
+                                />
+                            </Buttons>
                         </Bottom>
                     </Container>
                 ) : null //TODO: 어플종료 추가
