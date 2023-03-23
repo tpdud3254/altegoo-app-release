@@ -15,7 +15,7 @@ import { getAsyncStorageToken, numberWithComma } from "../../utils";
 import Checkbox from "expo-checkbox";
 import { useForm } from "react-hook-form";
 import axios from "axios";
-import { SERVER } from "../../server";
+import { SERVER } from "../../utils";
 import { VALID } from "../../constant";
 import WebView from "react-native-webview";
 

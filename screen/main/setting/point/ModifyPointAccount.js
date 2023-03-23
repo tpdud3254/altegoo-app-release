@@ -10,7 +10,7 @@ import TitleInputItem from "../../../../component/item/TitleInputItem";
 import SubmitButton from "../../../../component/button/SubmitButton";
 import { TextInput } from "react-native-paper";
 import axios from "axios";
-import { SERVER } from "../../../../server";
+import { SERVER } from "../../../../utils";
 import { getAsyncStorageToken } from "../../../../utils";
 import { VALID } from "../../../../constant";
 

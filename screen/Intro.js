@@ -8,7 +8,7 @@ import VerticalDivider from "../component/divider/VerticalDivider";
 import { useNavigation } from "@react-navigation/native";
 import SubTitleText from "../component/text/SubTitleText";
 import axios from "axios";
-import { SERVER } from "../server";
+import { SERVER } from "../utils";
 import PlainText from "../component/text/PlainText";
 
 const imagePath = [

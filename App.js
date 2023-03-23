@@ -23,9 +23,14 @@ import { toastConfig } from "./component/Toast";
 import { UserProvider } from "./context/UserContext";
 import { StatusBar } from "expo-status-bar";
 import { RegistProvider } from "./context/RegistContext";
-const server = require("./server");
 
 SplashScreen.preventAutoHideAsync();
+
+import { speech, SERVER, PAYMENT_SERVER } from "./utils";
+
+// export const SERVER = "https://cab2-211-59-182-118.jp.ngrok.io";
+
+// export const PAYMENT_SERVER = "https://c031-211-59-182-118.jp.ngrok.io/payment";
 
 export default function App() {
     const [appIsReady, setAppIsReady] = useState(false);
@@ -53,7 +58,45 @@ export default function App() {
                 setAppIsReady(true);
             }
         }
+        function createSocket() {
+            const ws = new WebSocket(`wss://altegoo.shop`);
+            // const ws = new WebSocket(`wss://cab2-211-59-182-118.jp.ngrok.io`);
 
+            ws.onopen = (e) => {
+                // connection opened
+                console.log("connected");
+
+                // send a message
+                // ws.send("hello");
+            };
+
+            ws.onmessage = (e) => {
+                // a message was received
+                console.log("message : ", e.data);
+                const parsed = JSON.parse(e.data);
+
+                if (parsed.type === "REGIST") {
+                    speech(parsed.tts_msg, parsed.exceptionUserId);
+                }
+            };
+
+            ws.onerror = (e) => {
+                // an error occurred
+                console.log("ws.onerror:", e.message);
+            };
+
+            ws.onclose = (e) => {
+                // connection closed
+                console.log("ws.onclose:", e);
+                // setTimeout(() => createSocket(), 1000);
+            };
+
+            // ws.close();
+        }
+
+        // export const ws = new WebSocket(`wss://altegoo.shop`);
+
+        createSocket();
         prepare();
     }, []);
 

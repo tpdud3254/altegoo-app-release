@@ -3,7 +3,7 @@ import styled from "styled-components/native";
 import PropTypes from "prop-types";
 import { Text, View } from "react-native";
 import axios from "axios";
-import { SERVER } from "../../../server";
+import { SERVER } from "../../../utils";
 import { getAsyncStorageToken } from "../../../utils";
 import { VALID } from "../../../constant";
 import PlainText from "../../../component/text/PlainText";

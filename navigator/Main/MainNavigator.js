@@ -11,7 +11,7 @@ import OrderProgress from "../../screen/main/OrderProgress";
 import OrdinaryOrderDetail from "../../screen/main/OrdinaryOrderDetail";
 import Payment from "../../screen/main/Payment";
 import Welcome from "../../screen/main/Welcome";
-import { SERVER } from "../../server";
+import { SERVER } from "../../utils";
 import { getAsyncStorageToken } from "../../utils";
 import TabsNavigator from "./TabsNavigator";
 

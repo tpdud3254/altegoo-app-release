@@ -30,7 +30,7 @@ import HorizontalDivider from "../../../component/divider/HorizontalDivider";
 import { SegmentedButtons } from "react-native-paper";
 import { Toast } from "react-native-toast-message/lib/src/Toast";
 import axios from "axios";
-import { SERVER } from "../../../server";
+import { SERVER } from "../../../utils";
 import { checkPassword, getAsyncStorageToken, showError } from "../../../utils";
 
 const UserDetailContainer = styled.View`

@@ -27,7 +27,7 @@ import { Entypo } from "@expo/vector-icons";
 import HorizontalDivider from "../../component/divider/HorizontalDivider";
 import VerticalDivider from "../../component/divider/VerticalDivider";
 import axios from "axios";
-import { SERVER } from "../../server";
+import { SERVER } from "../../utils";
 
 const Container = styled.View`
     padding-left: 10px;

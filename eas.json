@@ -1,0 +1,25 @@
+{
+    "build": {
+        "preview": {
+            "android": {
+                "buildType": "apk"
+            }
+        },
+        "preview2": {
+            "android": {
+                "gradleCommand": ":app:assembleRelease"
+            }
+        },
+        "preview3": {
+            "developmentClient": true
+        },
+        "production": {
+            "env": {
+                "PAYMENT_APP_ID": "641080ba755e27001c692292"
+            },
+            "android": {
+                "buildType": "apk"
+            }
+        }
+    }
+}

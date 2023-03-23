@@ -14,7 +14,7 @@ import {
 import { REGIST_NAV, VALID } from "../../../constant";
 import VerticalDivider from "../../../component/divider/VerticalDivider";
 import SubTitleText from "../../../component/text/SubTitleText";
-import { SERVER } from "../../../server";
+import { SERVER } from "../../../utils";
 import axios from "axios";
 import { PAYMENT_APP_ID } from "@env";
 

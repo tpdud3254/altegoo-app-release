@@ -25,7 +25,7 @@ import KakaoButton, {
     ButtonContainer,
 } from "../../component/button/KakaoButton";
 import axios from "axios";
-import { SERVER } from "../../server";
+import { SERVER } from "../../utils";
 import { VALID } from "../../constant";
 
 const Order = styled.TouchableOpacity`

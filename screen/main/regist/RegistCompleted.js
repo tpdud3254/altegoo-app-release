@@ -6,7 +6,7 @@ import Logo from "../../../component/logo/Logo";
 import PlainText from "../../../component/text/PlainText";
 import { BackHandler, View } from "react-native";
 import RegistContext from "../../../context/RegistContext";
-import { SERVER } from "../../../server";
+import { SERVER } from "../../../utils";
 import axios from "axios";
 import { getAsyncStorageToken } from "../../../utils";
 import { VALID } from "../../../constant";

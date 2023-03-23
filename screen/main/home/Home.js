@@ -2,7 +2,7 @@ import React, { useContext, useEffect, useState } from "react";
 import UserContext from "../../../context/UserContext";
 import { ORDINARY } from "../../../constant";
 import axios from "axios";
-import { SERVER } from "../../../server";
+import { SERVER } from "../../../utils";
 import {
     getAsyncStorageToken,
     numberWithComma,

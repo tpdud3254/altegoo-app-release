@@ -12,7 +12,7 @@ import * as Location from "expo-location";
 import LoadingLayout from "../../../component/layout/LoadingLayout";
 import { COMPANY, ORDINARY, PERSON, SPECIAL, VALID } from "../../../constant";
 import axios from "axios";
-import { SERVER } from "../../../server";
+import { SERVER } from "../../../utils";
 import { setAsyncStorageToken, showError } from "../../../utils";
 import LoginContext from "../../../context/LoginContext";
 

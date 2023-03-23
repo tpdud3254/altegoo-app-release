@@ -12,7 +12,7 @@ import PlainText from "../../../component/text/PlainText";
 import styled from "styled-components/native";
 import { theme } from "../../../styles";
 import axios from "axios";
-import { SERVER } from "../../../server";
+import { SERVER } from "../../../utils";
 import {
     getAsyncStorageToken,
     getWorkTime,
