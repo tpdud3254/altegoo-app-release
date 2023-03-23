@@ -24,7 +24,8 @@ export default function SignInNavigator() {
                 name="SetPassword"
                 component={SetPassword}
                 options={{
-                    title: "",
+                    title: "비밀번호 재설정",
+                    headerTitleAlign: "center",
                     headerShadowVisible: false,
                 }}
             />
