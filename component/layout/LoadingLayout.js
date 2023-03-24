@@ -4,15 +4,16 @@ import styled from "styled-components/native";
 import { theme } from "../../styles";
 
 const Container = styled.View`
-    flex: 1;
-    justify-content: center;
-    align-items: center;
+  flex: 1;
+  justify-content: center;
+  align-items: center;
+  background-color: white;
 `;
 
 export default function LoadingLayout() {
-    return (
-        <Container>
-            <ActivityIndicator size={50} color={theme.main} />
-        </Container>
-    );
+  return (
+    <Container>
+      <ActivityIndicator size={50} color={theme.main} />
+    </Container>
+  );
 }
