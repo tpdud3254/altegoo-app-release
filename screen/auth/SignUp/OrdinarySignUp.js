@@ -17,6 +17,7 @@ import { color } from "../../../styles";
 import Button from "../../../component/button/Button";
 import { AntDesign } from "@expo/vector-icons";
 import LoadingLayout from "../../../component/layout/LoadingLayout";
+import Rule from "../../../component/Rule";
 
 const Container = styled.View`
   flex: 1;
@@ -27,12 +28,6 @@ const Password = styled.View`
   align-items: center;
 `;
 
-const Rule = styled.View`
-  flex-direction: row;
-  align-items: center;
-  justify-content: center;
-  margin-top: -5px;
-`;
 function OrdinarySignUp() {
   const navigation = useNavigation();
   const { info, setInfo } = useContext(UserContext);
@@ -165,20 +160,7 @@ function OrdinarySignUp() {
                 defaultValue={getValues("name")}
               />
             </TitleInputItem>
-            {showNameRule ? (
-              <Rule>
-                <ExclamationMark />
-                <PlainText
-                  style={{
-                    fontSize: 20,
-                    color: color.darkGrey,
-                    marginLeft: 5,
-                  }}
-                >
-                  두 자리 이상 입력해주세요.
-                </PlainText>
-              </Rule>
-            ) : null}
+            {showNameRule ? <Rule text="두 자리 이상 입력해주세요" /> : null}
             <TitleInputItem>
               <Password>
                 <TextInput
@@ -199,18 +181,7 @@ function OrdinarySignUp() {
               </Password>
             </TitleInputItem>
             {showPwdRule ? (
-              <Rule>
-                <ExclamationMark />
-                <PlainText
-                  style={{
-                    fontSize: 20,
-                    color: color.darkGrey,
-                    marginLeft: 5,
-                  }}
-                >
-                  영문, 숫자 포함 8자리 이상 입력해주세요.
-                </PlainText>
-              </Rule>
+              <Rule text="영문, 숫자 포함 8자리 이상 입력해주세요" />
             ) : null}
             <TitleInputItem>
               {/* TODO: 휴대폰 API 리턴값 따라 달라질 수 있음 */}
@@ -225,20 +196,7 @@ function OrdinarySignUp() {
                 onBlur={() => setShowPhoneRule(false)}
               />
             </TitleInputItem>
-            {showPhoneRule ? (
-              <Rule>
-                <ExclamationMark />
-                <PlainText
-                  style={{
-                    fontSize: 20,
-                    color: color.darkGrey,
-                    marginLeft: 5,
-                  }}
-                >
-                  숫자만 입력해 주세요.
-                </PlainText>
-              </Rule>
-            ) : null}
+            {showPhoneRule ? <Rule text="숫자만 입력해 주세요" /> : null}
           </Container>
           <Button
             type="accent"
