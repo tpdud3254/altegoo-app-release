@@ -1,5 +1,7 @@
 import { createStackNavigator } from "@react-navigation/stack";
-import * as React from "react";
+import React, { useContext } from "react";
+import { ORDINARY, PERSON } from "../../constant";
+import UserContext from "../../context/UserContext";
 import DetailTerms from "../../screen/auth/SignUp/DetailTerms";
 import SignUp from "../../screen/auth/SignUp/SignUp";
 import SignUpStep1 from "../../screen/auth/SignUp/SignUpStep1";
@@ -10,6 +12,7 @@ import TakePhoto from "../../screen/TakePhoto";
 const Stack = createStackNavigator();
 
 export default function SignUpNavigator() {
+  const { info } = useContext(UserContext);
   return (
     <Stack.Navigator
       screenOptions={{
@@ -28,10 +31,26 @@ export default function SignUpNavigator() {
       <Stack.Screen
         name="SignUpStep1"
         component={SignUpStep1}
-        options={{ title: "회원가입", headerTitleAlign: "center" }}
+        options={{
+          title:
+            info.userType === ORDINARY
+              ? "일반회원가입"
+              : info.userDetailType === PERSON
+              ? "기사회원가입"
+              : "기업회원가입",
+          headerTitleAlign: "center",
+        }}
       />
-      <Stack.Screen name="SignUpStep2" component={SignUpStep2} />
-      <Stack.Screen name="SignUpStep3" component={SignUpStep3} />
+      <Stack.Screen
+        name="SignUpStep2"
+        component={SignUpStep2}
+        options={{ title: "작업지역 선택", headerTitleAlign: "center" }}
+      />
+      <Stack.Screen
+        name="SignUpStep3"
+        component={SignUpStep3}
+        options={{ title: "약관동의", headerTitleAlign: "center" }}
+      />
 
       <Stack.Screen name="DetailTerms" component={DetailTerms} />
       <Stack.Screen

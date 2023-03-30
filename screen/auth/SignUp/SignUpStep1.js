@@ -13,8 +13,7 @@ function SignUpStep1() {
   return info.userType === ORDINARY ? (
     <OrdinarySignUp />
   ) : info.userDetailType === PERSON ? (
-    // <PersonalSignUp />
-    <SpecialSignUp />
+    <PersonalSignUp />
   ) : (
     <CompanySignUp />
   );

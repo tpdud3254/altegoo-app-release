@@ -510,6 +510,7 @@ function CompanySignUp() {
                       <View key={index} style={{ alignItems: "center" }}>
                         <SelectWorkTypeBtn
                           onPress={() => setWorkCategory(index)}
+                          style={{ width: "100%" }}
                         >
                           <PlainText>
                             {value}

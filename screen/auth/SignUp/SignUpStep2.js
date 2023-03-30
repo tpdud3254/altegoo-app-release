@@ -5,27 +5,21 @@ import PlainText from "../../../component/text/PlainText";
 import { Image, TouchableOpacity } from "react-native";
 import UserContext from "../../../context/UserContext";
 import DefaultLayout from "../../../component/layout/DefaultLayout";
-import TitleText from "../../../component/text/TitleText";
-import { theme } from "../../../styles";
-import SubmitButton from "../../../component/button/SubmitButton";
+import { color } from "../../../styles";
 import Toast from "react-native-toast-message";
-import { Modal, Portal, Text, Button, Provider } from "react-native-paper";
+import { Modal, Portal, Provider } from "react-native-paper";
 import SubTitleText from "../../../component/text/SubTitleText";
 import { Ionicons } from "@expo/vector-icons";
+import Button from "../../../component/button/Button";
 
 const Container = styled.View`
   flex: 1;
-`;
-
-const Title = styled.View`
-  margin-bottom: 15px;
 `;
 
 const MapContainer = styled.View`
   margin-top: 10px;
   width: 100%;
   min-height: 450px;
-  /* border: 1px solid #dddddd; */
   justify-content: center;
   align-items: center;
 `;
@@ -47,8 +41,6 @@ const GuideTextContainer = styled.View`
   align-items: center;
 `;
 
-const Help = styled.View``;
-const HelpButton = styled.TouchableOpacity``;
 const modalStyle = {
   backgroundColor: "white",
   paddingTop: 10,
@@ -69,8 +61,8 @@ const ModalTitle = styled.View`
   align-items: center;
 `;
 const modalTitleStyle = { marginLeft: 5, marginRight: 5 };
-const modalSubTitleStyle = { fontSize: 22, color: theme.main, marginBottom: 3 };
-const modalTextStyle = { marginBottom: 20 };
+const modalSubTitleStyle = { fontSize: 22, marginBottom: 3 };
+const modalTextStyle = { marginBottom: 20, color: color.darkGrey };
 
 const imageSize = {
   //실제 이미지 크기
@@ -100,6 +92,17 @@ function SignUpStep2() {
   console.log(info);
 
   useEffect(() => {
+    navigation.setOptions({
+      headerRight: () => (
+        <TouchableOpacity onPress={showModal} style={{ marginRight: 10 }}>
+          <Ionicons
+            name="help-circle-outline"
+            size={35}
+            color={color.darkGrey}
+          />
+        </TouchableOpacity>
+      ),
+    });
     const firstImageWidth = 180;
 
     let widthArr = [];
@@ -169,19 +172,16 @@ function SignUpStep2() {
             <Ionicons
               name="alert-circle-outline"
               size={30}
-              color={theme.sub.yellow}
+              color={color.main}
             />
             <SubTitleText style={modalTitleStyle}>작업 지역 안내</SubTitleText>
             <Ionicons
               name="alert-circle-outline"
               size={30}
-              color={theme.sub.yellow}
+              color={color.main}
             />
           </ModalTitle>
-          <TouchableOpacity
-            style={{ marginTop: -10, marginRight: -10 }}
-            onPress={hideModal}
-          >
+          <TouchableOpacity style={{ marginRight: -10 }} onPress={hideModal}>
             <Ionicons name="close" size={30} color="black" />
           </TouchableOpacity>
         </ModalTop>
@@ -210,29 +210,13 @@ function SignUpStep2() {
       <Provider>
         <HelpModal />
         <Container>
-          <Title>
-            <TitleText>작업지역 선택하기</TitleText>
-          </Title>
-          <Help>
-            <HelpButton onPress={showModal}>
-              <PlainText
-                style={{
-                  textDecorationLine: "underline",
-                  textAlign: "right",
-                  color: theme.boxColor,
-                }}
-              >
-                작업지역 도움말
-              </PlainText>
-            </HelpButton>
-          </Help>
           <MapContainer>
             {imageResized ? (
               <Map>
                 <MapButton
                   style={{
-                    top: 245,
-                    left: 103,
+                    top: 238,
+                    left: 100,
                   }}
                   onPress={() => {
                     onPress(0);
@@ -392,7 +376,7 @@ function SignUpStep2() {
             <PlainText
               style={{
                 fontSize: 20,
-                color: theme.darkFontColor,
+                color: color.darkGrey,
               }}
             >
               작업지역은 언제든지 추가, 제거 및 변경이 가능합니다.{"\n"}
@@ -400,7 +384,7 @@ function SignUpStep2() {
             </PlainText>
           </GuideTextContainer>
         </Container>
-        <SubmitButton text="다음으로" onPress={onNextStep} />
+        <Button text="다음으로" onPress={onNextStep} type="accent" />
       </Provider>
     </DefaultLayout>
   );
