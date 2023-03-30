@@ -25,4 +25,7 @@ export const color = {
   inputColor: "#eeeeee88",
   darkGrey: "#555555",
   lightGrey: "#cccccc",
+  skyblue: "#EAF4FE",
+  blue: "#87b3da",
+  beige: "#E9D5C4",
 };

@@ -29,6 +29,29 @@ import { Dialog, Portal, Provider } from "react-native-paper";
 import Button, { BottomButton } from "../../../component/button/Button";
 import { Toast } from "react-native-toast-message/lib/src/Toast";
 import Pressable from "react-native/Libraries/Components/Pressable/Pressable";
+import SubTitleText from "../../../component/text/SubTitleText";
+import HorizontalDivider from "../../../component/divider/HorizontalDivider";
+
+const WorkTypeButton = styled.TouchableOpacity`
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px;
+  margin-top: 10px;
+  border: 1px solid ${(props) => props.color};
+`;
+
+const SelectWorkType = styled.View`
+  background-color: ${color.btnDefaultColor + "77"};
+  margin-top: 5px;
+`;
+
+const SelectWorkTypeBtn = styled.TouchableOpacity`
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  padding: 10px 0px 10px 0px;
+`;
 
 const Password = styled.View`
   flex-direction: row;
@@ -109,8 +132,16 @@ const AddButton = styled.TouchableOpacity`
 `;
 
 const vehicleWeightArr = ["1t", "2.5t", "3.5t", "5t"];
+const workCategoryArr = [
+  "건설 계열",
+  "가구 계열",
+  "가전 계열",
+  "청소 / 인력 계열",
+  "이사 계열",
+  "기타",
+];
 
-function PersonalSignUp() {
+function CompanySignUp() {
   const navigation = useNavigation();
   const { info, setInfo } = useContext(UserContext);
   const { register, handleSubmit, setValue, getValues, watch } = useForm();
@@ -129,6 +160,8 @@ function PersonalSignUp() {
   const [vehicleDialogVisible, setVehicleDialogVisible] = useState(false);
   const [vehicleType, setVehicleType] = useState(-1);
   const [vehicleWeight, setVehicleWeight] = useState(-1);
+  const [workCategoryVisible, setWorkCategoryVisible] = useState(false);
+  const [workCategory, setWorkCategory] = useState(-1);
 
   const passwordRef = useRef();
   const phoneRef = useRef();
@@ -148,6 +181,10 @@ function PersonalSignUp() {
     register("vehicleNum");
   }, [register]);
 
+  useEffect(() => {
+    closeWorkTypeMenu();
+  }, [workCategory]);
+
   const showVehicleDialog = () => {
     setVehicleDialogVisible(true);
   };
@@ -158,6 +195,10 @@ function PersonalSignUp() {
     setVehicleWeight(-1);
     setVehicleDialogVisible(false);
   };
+
+  const openWorkTypeMenu = () => setWorkCategoryVisible(true);
+
+  const closeWorkTypeMenu = () => setWorkCategoryVisible(false);
 
   const checkRecommnedUser = async (phone) => {
     axios
@@ -265,6 +306,16 @@ function PersonalSignUp() {
   };
 
   const onValid = (data) => {
+    if (workCategory < 0) {
+      Toast.show({
+        type: "errorToast",
+        props: "사업 종류를 선택해주세요.",
+      });
+
+      setWorkCategoryVisible(true);
+      return;
+    }
+
     if (data.name.length < 2) {
       Toast.show({
         type: "errorToast",
@@ -309,40 +360,26 @@ function PersonalSignUp() {
       return;
     }
 
-    if (vehicleList.length < 1) {
-      Toast.show({
-        type: "errorToast",
-        props: "차량을 등록해주세요.",
-      });
+    if (isCheckedUser) {
+      if (recommendUserId === 0) {
+        Toast.show({
+          type: "errorToast",
+          props: "올바른 추천 회원을 입력해주세요.",
+        });
 
-      return;
+        return;
+      }
     }
 
-    if (!info.vehiclePermissionUrl || info.vehiclePermissionUrl === "") {
-      Toast.show({
-        type: "errorToast",
-        props: "화물자동차 운송사업 허가증을 등록해주세요.",
-      });
+    if (vehicleList.length > 0) {
+      if (!info.vehiclePermissionUrl || info.vehiclePermissionUrl === "") {
+        Toast.show({
+          type: "errorToast",
+          props: "화물자동차 운송사업 허가증을 등록해주세요.",
+        });
 
-      return;
-    }
-
-    if (!isCheckedUser) {
-      Toast.show({
-        type: "errorToast",
-        props: "추천 회원을 입력해주세요.",
-      });
-
-      return;
-    }
-
-    if (recommendUserId === 0) {
-      Toast.show({
-        type: "errorToast",
-        props: "올바른 추천 회원을 입력해주세요.",
-      });
-
-      return;
+        return;
+      }
     }
 
     onNextStep(data);
@@ -445,6 +482,47 @@ function PersonalSignUp() {
             <>
               <VehicleDialog />
               <View style={{ marginBottom: 10 }}>
+                <WorkTypeButton
+                  onPress={
+                    workCategoryVisible ? closeWorkTypeMenu : openWorkTypeMenu
+                  }
+                  color={workCategory > -1 ? color.main : color.lightGrey}
+                >
+                  <Ionicons
+                    name={"checkmark-circle"}
+                    size={30}
+                    color={"rgba(1,1,1,0.0)"}
+                  />
+                  <SubTitleText style={{ fontSize: 18 }}>
+                    {workCategory < 0
+                      ? "사업 종류 선택"
+                      : `사업 종류 : ${workCategoryArr[workCategory]}`}
+                  </SubTitleText>
+                  <Ionicons
+                    name={"checkmark-circle"}
+                    size={30}
+                    color={workCategory > -1 ? color.main : color.lightGrey}
+                  />
+                </WorkTypeButton>
+                {workCategoryVisible ? (
+                  <SelectWorkType>
+                    {workCategoryArr.map((value, index) => (
+                      <View key={index} style={{ alignItems: "center" }}>
+                        <SelectWorkTypeBtn
+                          onPress={() => setWorkCategory(index)}
+                        >
+                          <PlainText>
+                            {value}
+                            {index === 0 ? " (철거, 인테리어, 샷시 등)" : null}
+                          </PlainText>
+                        </SelectWorkTypeBtn>
+                        {index === workCategoryArr.length - 1 ? null : (
+                          <HorizontalDivider color="#dddddd" width="98%" />
+                        )}
+                      </View>
+                    ))}
+                  </SelectWorkType>
+                ) : null}
                 <TitleInputItem>
                   <TextInput
                     placeholder="이름/상호명"
@@ -533,55 +611,16 @@ function PersonalSignUp() {
                       </TouchableOpacity>
                     </License>
                   </TitleInputItem>
-
-                  <TitleInputItem>
-                    <License>
-                      <PlainText
-                        style={{
-                          fontSize: 20,
-                          padding: 10,
-                          color: isSavedVehiclePermission ? "black" : "#999999",
-                          width: "80%",
-                        }}
-                        numberOfLines={1}
-                      >
-                        <UserConsumer>
-                          {(data) => {
-                            if (data?.info?.vehiclePermissionUrl) {
-                              const uri = data.info.vehiclePermissionUrl;
-
-                              const uriArr = uri.split("/");
-
-                              setIsSavedVehiclePermission(true);
-                              return uriArr[uriArr.length - 1];
-                            }
-                            setIsSavedVehiclePermission(false);
-                            return "화물자동차 운송사업 허가증";
-                          }}
-                        </UserConsumer>
-                      </PlainText>
-                      <TouchableOpacity onPress={() => takePicture("vehicle")}>
-                        {isSavedVehiclePermission ? (
-                          <Ionicons
-                            name={"checkmark-circle"}
-                            size={40}
-                            color={"#33aa11"}
-                          />
-                        ) : (
-                          <PlainText>등록하기</PlainText>
-                        )}
-                      </TouchableOpacity>
-                    </License>
-                  </TitleInputItem>
                   <TitleInputItem>
                     <Row>
                       <TextInput
                         ref={recommendUserRef}
-                        placeholder="추천인 입력"
+                        placeholder="추천인 입력 (선택사항)"
                         returnKeyType="done"
                         onChangeText={(text) => {
                           setValue("recommendUserPhone", text);
                           text.length > 10 ? checkRecommnedUser(text) : null;
+                          text.length === 0 ? setIsCheckedUser(false) : null;
                         }}
                         width="80%"
                         keyboardType="number-pad"
@@ -631,14 +670,25 @@ function PersonalSignUp() {
                       {vehicleList.length === 0 ? (
                         <>
                           <PlainText
-                            style={{ textAlign: "center", fontSize: 22 }}
+                            style={{
+                              textAlign: "center",
+                              fontSize: 22,
+                              marginBottom: 10,
+                            }}
                           >
                             등록된 차량이 없습니다.
                           </PlainText>
-                          <PlainText
-                            style={{ textAlign: "center", marginBottom: 10 }}
-                          >
+                          <PlainText style={{ textAlign: "center" }}>
                             차량추가 버튼을 눌러 등록해주세요.
+                          </PlainText>
+                          <PlainText
+                            style={{
+                              textAlign: "center",
+                              marginBottom: 10,
+                              color: color.darkGrey,
+                            }}
+                          >
+                            (선택사항)
                           </PlainText>
                         </>
                       ) : (
@@ -684,6 +734,51 @@ function PersonalSignUp() {
                       </AddButtonContainer>
                     </VehicleContainer>
                   </Vehicle>
+                  {vehicleList.length === 0 ? null : (
+                    <TitleInputItem>
+                      <License>
+                        <PlainText
+                          style={{
+                            fontSize: 20,
+                            padding: 10,
+                            color: isSavedVehiclePermission
+                              ? "black"
+                              : "#999999",
+                            width: "80%",
+                          }}
+                          numberOfLines={1}
+                        >
+                          <UserConsumer>
+                            {(data) => {
+                              if (data?.info?.vehiclePermissionUrl) {
+                                const uri = data.info.vehiclePermissionUrl;
+
+                                const uriArr = uri.split("/");
+
+                                setIsSavedVehiclePermission(true);
+                                return uriArr[uriArr.length - 1];
+                              }
+                              setIsSavedVehiclePermission(false);
+                              return "화물자동차 운송사업 허가증";
+                            }}
+                          </UserConsumer>
+                        </PlainText>
+                        <TouchableOpacity
+                          onPress={() => takePicture("vehicle")}
+                        >
+                          {isSavedVehiclePermission ? (
+                            <Ionicons
+                              name={"checkmark-circle"}
+                              size={40}
+                              color={"#33aa11"}
+                            />
+                          ) : (
+                            <PlainText>등록하기</PlainText>
+                          )}
+                        </TouchableOpacity>
+                      </License>
+                    </TitleInputItem>
+                  )}
                 </Pressable>
               </View>
             </>
@@ -703,4 +798,4 @@ function PersonalSignUp() {
   );
 }
 
-export default PersonalSignUp;
+export default CompanySignUp;
