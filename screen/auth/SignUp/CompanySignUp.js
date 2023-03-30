@@ -402,8 +402,8 @@ function CompanySignUp() {
       license: info.licenseUrl,
       vehicle: vehicleList,
       vehiclePermission: info.vehiclePermissionUrl || null,
-      recommendUserId,
-      workCategory: null,
+      recommendUserId: recommendUserId === 0 ? null : recommendUserId,
+      workCategory: workCategory + 1,
       ...authData,
     };
 
