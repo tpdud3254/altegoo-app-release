@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useState } from "react";
-import { View } from "react-native";
+import { Image, View } from "react-native";
 import * as SplashScreen from "expo-splash-screen";
 import {
     useFonts,
@@ -24,6 +24,7 @@ import { UserProvider } from "./context/UserContext";
 import { StatusBar } from "expo-status-bar";
 import { RegistProvider } from "./context/RegistContext";
 import { speech } from "./utils";
+import { Asset } from "expo-asset";
 
 SplashScreen.preventAutoHideAsync();
 
@@ -45,8 +46,13 @@ export default function App() {
     useEffect(() => {
         async function prepare() {
             try {
-                //TODO: token preload
-                //TODO: image preload
+                const imageAssets = cacheImages([
+                    require(`./assets/images/intro/img_01.png`),
+                    require(`./assets/images/intro/img_02.png`),
+                    require(`./assets/images/intro/img_03.png`),
+                ]);
+
+                await Promise.all([...imageAssets]);
             } catch (e) {
                 console.warn(e);
             } finally {
@@ -94,6 +100,16 @@ export default function App() {
         createSocket();
         prepare();
     }, []);
+
+    function cacheImages(images) {
+        return images.map((image) => {
+            if (typeof image === "string") {
+                return Image.prefetch(image);
+            } else {
+                return Asset.fromModule(image).downloadAsync();
+            }
+        });
+    }
 
     const onLayoutRootView = useCallback(async () => {
         if (appIsReady && fontsLoaded) {
