@@ -5,7 +5,7 @@ import { useIsFocused } from "@react-navigation/native";
 import { Camera } from "expo-camera";
 import { Ionicons } from "@expo/vector-icons";
 import * as MediaLibrary from "expo-media-library";
-import { theme } from "../styles";
+import { color } from "../styles";
 import SubTitleText from "../component/text/SubTitleText";
 import UserContext from "../context/UserContext";
 
@@ -25,7 +25,7 @@ const TakePhotoBtn = styled.TouchableOpacity`
     width: 90px;
     height: 90px;
     border-radius: 90px;
-    border: 4px solid ${theme.btnPointColor + "55"};
+    border: 4px solid ${color.btnAccent + "55"};
     justify-content: center;
     align-items: center;
 `;
@@ -42,7 +42,7 @@ const PhotoActions = styled(Actions)`
     flex-direction: row;
 `;
 const PhotoAction = styled.TouchableOpacity`
-    background-color: ${theme.btnColor};
+    background-color: ${color.btnDefault};
     padding: 20px 20px;
     border-radius: 10px;
 `;
@@ -148,7 +148,7 @@ function TakePhoto({ navigation, route }) {
                             <Ionicons
                                 name="camera"
                                 size={50}
-                                color={theme.main}
+                                color={color.main}
                             />
                         </TakePhotoBtn>
                     </Actions>
@@ -161,7 +161,7 @@ function TakePhoto({ navigation, route }) {
                         </PhotoAction>
                         <PhotoAction
                             onPress={onUpload}
-                            style={{ backgroundColor: theme.sub.blue }}
+                            style={{ backgroundColor: color.sub.blue }}
                         >
                             <SubTitleText style={{ color: "white" }}>
                                 저장

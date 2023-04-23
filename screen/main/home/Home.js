@@ -2,7 +2,7 @@ import React, { useContext, useEffect, useState } from "react";
 import UserContext from "../../../context/UserContext";
 import { ORDINARY } from "../../../constant";
 import axios from "axios";
-import { SERVER } from "../../../utils";
+import { SERVER } from "../../../constant";
 import {
     getAsyncStorageToken,
     numberWithComma,
@@ -23,7 +23,7 @@ import TitleText from "../../../component/text/TitleText";
 import SubTitleText from "../../../component/text/SubTitleText";
 import MainLayout from "../../../component/layout/MainLayout";
 import { FontAwesome5, MaterialIcons, AntDesign } from "@expo/vector-icons";
-import { theme } from "../../../styles";
+import { color } from "../../../styles";
 import HorizontalDivider from "../../../component/divider/HorizontalDivider";
 
 const Banners = styled.View``;
@@ -56,7 +56,7 @@ const Regist = styled.View`
 
 const RegistButton = styled.TouchableOpacity`
     margin-top: 5px;
-    background-color: ${theme.boxColor};
+    background-color: ${color.border};
     flex-direction: row;
     align-items: center;
     width: 250px;
@@ -72,10 +72,10 @@ const Notification = styled.View`
     border: 1px solid
         ${(props) =>
             props.order
-                ? theme.btnPointColor + "aa"
+                ? color.btnAccent + "aa"
                 : props.event
                 ? "#ef5285" + "aa"
-                : theme.darkFontColor + "aa"};
+                : color.textDark + "aa"};
     background-color: #ffffffaa;
 `;
 const NotiWrapper = styled.View`
@@ -85,10 +85,10 @@ const NotiWrapper = styled.View`
 const NotiIcon = styled.View`
     background-color: ${(props) =>
         props.order
-            ? theme.btnPointColor
+            ? color.btnAccent
             : props.event
             ? "#ef5285" + "aa"
-            : theme.darkFontColor};
+            : color.textDark};
     padding: 3px;
     justify-content: center;
 `;
@@ -216,7 +216,7 @@ function Home({ navigation }) {
                                     size={22}
                                 />
                                 <SubTitleText
-                                    style={{ fontSize: 20, color: theme.main }}
+                                    style={{ fontSize: 20, color: color.main }}
                                 >
                                     {" " + numberWithComma(point || 0)}AP
                                 </SubTitleText>
@@ -254,7 +254,7 @@ function Home({ navigation }) {
                                     </RegistButton>
                                 </Regist>
                                 <HorizontalDivider
-                                    color={theme.boxColor}
+                                    color={color.boxColor}
                                     width="95%"
                                 />
                                 <Regist>
@@ -282,7 +282,7 @@ function Home({ navigation }) {
                                     >
                                         <View
                                             style={{
-                                                backgroundColor: theme.main,
+                                                backgroundColor: color.main,
                                                 paddingTop: 5,
                                                 paddingBottom: 5,
                                                 width: "25%",
@@ -303,8 +303,7 @@ function Home({ navigation }) {
                                         <View
                                             style={{
                                                 flexDirection: "row",
-                                                backgroundColor:
-                                                    theme.darkFontColor,
+                                                backgroundColor: color.textDark,
                                                 paddingTop: 5,
                                                 paddingBottom: 5,
                                                 width: "75%",

@@ -7,12 +7,12 @@ import TitleText from "../../../component/text/TitleText";
 import SubmitButton from "../../../component/button/SubmitButton";
 import Checkbox from "expo-checkbox";
 import PlainText from "../../../component/text/PlainText";
-import { theme } from "../../../styles";
+import { color } from "../../../styles";
 import * as Location from "expo-location";
 import LoadingLayout from "../../../component/layout/LoadingLayout";
 import { COMPANY, ORDINARY, PERSON, SPECIAL, VALID } from "../../../constant";
 import axios from "axios";
-import { SERVER } from "../../../utils";
+import { SERVER } from "../../../constant";
 import { setAsyncStorageToken, showError } from "../../../utils";
 import LoginContext from "../../../context/LoginContext";
 
@@ -421,7 +421,7 @@ function SignUpStep3() {
                                     onValueChange={clickAllCheckButton}
                                     color={
                                         isAllChecked
-                                            ? theme.btnPointColor
+                                            ? color.btnAccent
                                             : undefined
                                     }
                                 />
@@ -443,7 +443,7 @@ function SignUpStep3() {
                                                     index === 0 || index === 4
                                                         ? "none"
                                                         : "underline",
-                                                color: theme.darkFontColor,
+                                                color: color.textDark,
                                             }}
                                         >
                                             {text}
@@ -458,7 +458,7 @@ function SignUpStep3() {
                                         }}
                                         color={
                                             checkArr[index]
-                                                ? theme.btnPointColor
+                                                ? color.btnAccent
                                                 : undefined
                                         }
                                     />
@@ -468,7 +468,7 @@ function SignUpStep3() {
                         <PlainText
                             style={{
                                 fontSize: 18,
-                                color: theme.darkFontColor,
+                                color: color.textDark,
                                 bottom: 10,
                                 position: "absolute",
                             }}

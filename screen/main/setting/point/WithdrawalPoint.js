@@ -7,7 +7,7 @@ import { numberWithComma } from "../../../../utils";
 import SubmitButton from "../../../../component/button/SubmitButton";
 import { TextInput } from "react-native-paper";
 import axios from "axios";
-import { SERVER } from "../../../../utils";
+import { SERVER } from "../../../../constant";
 import { VALID } from "../../../../constant";
 
 function WithdrawalPoint({ route, navigation }) {

@@ -1,33 +1,23 @@
 import React, { useContext, useEffect, useState } from "react";
-import {
-    ScrollView,
-    TextInput,
-    TouchableWithoutFeedback,
-    View,
-} from "react-native";
+import { ScrollView, TouchableWithoutFeedback, View } from "react-native";
 import styled from "styled-components/native";
-import MainLayout from "../../component/layout/MainLayout";
 import PlainText from "../../component/text/PlainText";
 import RegistContext from "../../context/RegistContext";
 import UserContext from "../../context/UserContext";
-import { theme } from "../../styles";
+import { color } from "../../styles";
 import {
     getAsyncStorageToken,
     getWorkTime,
     numberWithComma,
 } from "../../utils";
-import Checkbox from "expo-checkbox";
 import { useForm } from "react-hook-form";
-import { REGIST_NAV, VALID } from "../../constant";
-import LadderIcon from "../../component/icon/LadderIcon";
-import SkyIcon from "../../component/icon/SkyIcon";
+import { VALID } from "../../constant";
 import DefaultLayout from "../../component/layout/DefaultLayout";
 import SubTitleText from "../../component/text/SubTitleText";
 import { Entypo } from "@expo/vector-icons";
 import HorizontalDivider from "../../component/divider/HorizontalDivider";
-import VerticalDivider from "../../component/divider/VerticalDivider";
 import axios from "axios";
-import { SERVER } from "../../utils";
+import { SERVER } from "../../constant";
 
 const Container = styled.View`
     padding-left: 10px;
@@ -56,7 +46,7 @@ const Center = styled.View`
 const CancleButton = styled.TouchableOpacity`
     border-radius: 50px;
     background-color: aliceblue;
-    border: 1px solid ${theme.sub.blue};
+    border: 1px solid ${color.sub.blue};
     align-items: center;
     margin-top: 10px;
     padding: 3px 0px;
@@ -76,7 +66,7 @@ const SContent = styled.View`
     width: 75%;
     border: ${(props) =>
             props.borderLine || props.inputBorderLine ? "0px" : "1px"}
-        solid ${theme.boxColor};
+        solid ${color.border};
     padding: 5px;
     background-color: ${(props) => (props.background ? "white" : "")};
 `;
@@ -90,7 +80,7 @@ const ButtonContainer = styled.View`
     align-items: center;
 `;
 const Button = styled.TouchableOpacity`
-    background-color: ${theme.sub.blue};
+    background-color: ${color.sub.blue};
     width: 100px;
     align-items: center;
     border-radius: 5px;
@@ -113,7 +103,7 @@ const TextProgressBar = styled.View`
     margin-top: 5px;
 `;
 const Indicator = styled.View`
-    background-color: ${(props) => (props.cur ? theme.sub.yellow : "#eee")};
+    background-color: ${(props) => (props.cur ? color.sub.yellow : "#eee")};
     width: 20px;
     height: 20px;
     border-radius: 10px;
@@ -254,7 +244,7 @@ function OrdinaryOrderDetail({ navigation, route }) {
 
     const Divider = () => (
         <Center>
-            <HorizontalDivider color={theme.boxColor} thickness={0.5} />
+            <HorizontalDivider color={color.border} thickness={0.5} />
         </Center>
     );
     return (
@@ -270,7 +260,7 @@ function OrdinaryOrderDetail({ navigation, route }) {
                                             <Entypo
                                                 name="check"
                                                 size={27}
-                                                color={theme.sub.blue}
+                                                color={color.sub.blue}
                                             />
                                             <SubTitleText>
                                                 요청 완료
@@ -359,9 +349,9 @@ function OrdinaryOrderDetail({ navigation, route }) {
                                             paddingLeft: 3,
                                             paddingRight: 3,
                                             borderLeftWidth: 1,
-                                            borderLeftColor: theme.sub.blue,
+                                            borderLeftColor: color.sub.blue,
                                             borderRightWidth: 1,
-                                            borderRightColor: theme.sub.blue,
+                                            borderRightColor: color.sub.blue,
                                             alignItems: "center",
                                             marginTop: 5,
                                         }}
@@ -418,9 +408,9 @@ function OrdinaryOrderDetail({ navigation, route }) {
                                             paddingLeft: 3,
                                             paddingRight: 3,
                                             borderLeftWidth: 1,
-                                            borderLeftColor: theme.sub.blue,
+                                            borderLeftColor: color.sub.blue,
                                             borderRightWidth: 1,
-                                            borderRightColor: theme.sub.blue,
+                                            borderRightColor: color.sub.blue,
                                             alignItems: "center",
                                             marginTop: 5,
                                         }}
@@ -474,12 +464,12 @@ function OrdinaryOrderDetail({ navigation, route }) {
                                 </TextRow>
                                 <TextRow>
                                     <PlainText
-                                        style={{ color: theme.sub.green }}
+                                        style={{ color: color.sub.green }}
                                     >
                                         총 필요 AP
                                     </PlainText>
                                     <PlainText
-                                        style={{ color: theme.sub.green }}
+                                        style={{ color: color.sub.green }}
                                     >
                                         {numberWithComma(order.price - 20000)}{" "}
                                         AP
@@ -491,12 +481,12 @@ function OrdinaryOrderDetail({ navigation, route }) {
                                 <TextRow>
                                     <SubTitleText
                                         style={{
-                                            color: theme.main,
+                                            color: color.main,
                                         }}
                                     >
                                         결제 금액
                                     </SubTitleText>
-                                    <SubTitleText style={{ color: theme.main }}>
+                                    <SubTitleText style={{ color: color.main }}>
                                         {numberWithComma(
                                             order.price -
                                                 20000 +
@@ -532,8 +522,8 @@ function OrdinaryOrderDetail({ navigation, route }) {
                                             fontSize: 18,
                                             color:
                                                 order.orderStatusId === 1
-                                                    ? theme.main
-                                                    : theme.darkFontColor,
+                                                    ? color.main
+                                                    : color.darkFontColor,
                                         }}
                                     >
                                         {" "}
@@ -544,7 +534,7 @@ function OrdinaryOrderDetail({ navigation, route }) {
                                     <PlainText
                                         style={{
                                             fontSize: 18,
-                                            color: theme.darkFontColor,
+                                            color: color.darkFontColor,
                                         }}
                                     >
                                         {" "}
@@ -557,8 +547,8 @@ function OrdinaryOrderDetail({ navigation, route }) {
                                             fontSize: 18,
                                             color:
                                                 order.orderStatusId === 2
-                                                    ? theme.main
-                                                    : theme.darkFontColor,
+                                                    ? color.main
+                                                    : color.darkFontColor,
                                         }}
                                     >
                                         {" "}
@@ -571,8 +561,8 @@ function OrdinaryOrderDetail({ navigation, route }) {
                                             fontSize: 18,
                                             color:
                                                 order.orderStatusId === 3
-                                                    ? theme.main
-                                                    : theme.darkFontColor,
+                                                    ? color.main
+                                                    : color.darkFontColor,
                                         }}
                                     >
                                         완료요청
@@ -590,8 +580,8 @@ function OrdinaryOrderDetail({ navigation, route }) {
                                             color:
                                                 order.orderStatusId === 4 ||
                                                 order.orderStatusId === 5
-                                                    ? theme.main
-                                                    : theme.darkFontColor,
+                                                    ? color.main
+                                                    : color.darkFontColor,
                                         }}
                                     >
                                         작업완료

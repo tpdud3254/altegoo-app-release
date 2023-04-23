@@ -1,7 +1,7 @@
 import React from "react";
 import { Image } from "react-native";
 import styled from "styled-components/native";
-import { theme } from "../../styles";
+import { color } from "../../styles";
 
 export const ButtonContainer = styled.View`
     flex-direction: row;
@@ -11,7 +11,7 @@ export const ButtonContainer = styled.View`
 const KaKaoButton = styled.TouchableOpacity`
     width: 18%;
     height: 55px;
-    background-color: ${theme.btnColor + "77"};
+    background-color: ${color.btnDefault};
     border-radius: 5px;
     justify-content: center;
 `;

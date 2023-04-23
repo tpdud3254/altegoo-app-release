@@ -10,7 +10,7 @@ import {
 import FormLayout from "../../../component/layout/FormLayout";
 import TitleText from "../../../component/text/TitleText";
 import styled from "styled-components/native";
-import { theme } from "../../../styles";
+import { color } from "../../../styles";
 import SubTitleText from "../../../component/text/SubTitleText";
 import VerticalDivider from "../../../component/divider/VerticalDivider";
 import { COMPANY, PERSON, VALID } from "../../../constant";
@@ -30,7 +30,7 @@ import HorizontalDivider from "../../../component/divider/HorizontalDivider";
 import { SegmentedButtons } from "react-native-paper";
 import { Toast } from "react-native-toast-message/lib/src/Toast";
 import axios from "axios";
-import { SERVER } from "../../../utils";
+import { SERVER } from "../../../constant";
 import { checkPassword, getAsyncStorageToken, showError } from "../../../utils";
 
 const UserDetailContainer = styled.View`
@@ -51,7 +51,7 @@ const UserDetailButton = styled.TouchableOpacity`
     width: 48%;
     height: 100%;
     background-color: ${(props) =>
-        props.checked ? theme.btnPointColor + "66" : "white"};
+        props.checked ? color.btnAccent + "66" : "white"};
 `;
 
 const WorkTypeButton = styled.TouchableOpacity`
@@ -64,7 +64,7 @@ const WorkTypeButton = styled.TouchableOpacity`
 `;
 
 const SelectWorkType = styled.View`
-    background-color: ${theme.sub.blue + "33"};
+    background-color: ${color.sub.blue + "33"};
     margin-top: 5px;
 `;
 
@@ -114,7 +114,7 @@ const Icon = styled.View`
 `;
 
 const VehicleContainer = styled.View`
-    background-color: ${theme.sub.blue + "33"};
+    background-color: ${color.sub.blue + "33"};
     margin: 10px 5px;
     /* padding-bottom: 15px; */
     border-radius: 10px;
@@ -133,7 +133,7 @@ const VehicleType = styled.View`
     margin-bottom: -10px;
 `;
 const VehicleWeight = styled.TouchableOpacity`
-    background-color: ${(props) => (props.selected ? theme.sub.blue : "white")};
+    background-color: ${(props) => (props.selected ? color.sub.blue : "white")};
     width: 80px;
     align-items: center;
     border-radius: 12px;
@@ -157,7 +157,7 @@ const AddButtonContainer = styled.View`
 const AddButton = styled.TouchableOpacity`
     flex-direction: row;
     align-items: center;
-    border: 2px solid ${theme.btnPointColor + "77"};
+    border: 2px solid ${color.btnAccent + "77"};
     border-radius: 50px;
     padding: 7px 13px 7px 10px;
     justify-content: space-between;
@@ -516,8 +516,8 @@ function SpecialSignUp({ route }) {
                         }
                         color={
                             workCategory > 0
-                                ? theme.btnPointColor
-                                : theme.textBoxColor
+                                ? color.btnAccent
+                                : color.textBoxColor
                         }
                     >
                         <Ionicons
@@ -535,8 +535,8 @@ function SpecialSignUp({ route }) {
                             size={30}
                             color={
                                 workCategory > 0
-                                    ? theme.btnPointColor
-                                    : theme.textBoxColor
+                                    ? color.btnAccent
+                                    : color.textBoxColor
                             }
                         />
                     </WorkTypeButton>
@@ -556,7 +556,7 @@ function SpecialSignUp({ route }) {
                                         <Ionicons
                                             name="checkmark"
                                             size={30}
-                                            color={theme.sub.blue}
+                                            color={color.sub.blue}
                                             style={{
                                                 opacity:
                                                     index === workCategory
@@ -615,7 +615,7 @@ function SpecialSignUp({ route }) {
                 text={phoneAuth ? "본인인증완료" : "본인인증하기"}
                 onPress={handleSubmit(getPhoneAuth)}
                 style={{
-                    ...(phoneAuth ? { backgroundColor: theme.sub.blue } : null),
+                    ...(phoneAuth ? { backgroundColor: color.sub.blue } : null),
                 }}
             />
             <LicenseContainer>
@@ -744,14 +744,14 @@ function SpecialSignUp({ route }) {
                                         <Radio>
                                             <RadioButton
                                                 value={1}
-                                                color={theme.sub.blue}
+                                                color={color.sub.blue}
                                             />
                                             <PlainText>사다리</PlainText>
                                         </Radio>
                                         <Radio>
                                             <RadioButton
                                                 value={2}
-                                                color={theme.sub.blue}
+                                                color={color.sub.blue}
                                             />
                                             <PlainText>스카이</PlainText>
                                         </Radio>
@@ -818,7 +818,7 @@ function SpecialSignUp({ route }) {
                         <Ionicons
                             name="add"
                             size={35}
-                            color={theme.btnPointColor}
+                            color={color.btnAccent}
                         />
 
                         <PlainText>차량추가</PlainText>

@@ -11,7 +11,7 @@ import {
     AntDesign,
 } from "@expo/vector-icons";
 import styled from "styled-components/native";
-import { theme } from "../../styles";
+import { color } from "../../styles";
 import {
     getAsyncStorageToken,
     getWorkTime,
@@ -25,7 +25,7 @@ import KakaoButton, {
     ButtonContainer,
 } from "../../component/button/KakaoButton";
 import axios from "axios";
-import { SERVER } from "../../utils";
+import { SERVER } from "../../constant";
 import { VALID } from "../../constant";
 
 const Order = styled.TouchableOpacity`
@@ -223,7 +223,7 @@ function CompleteOrder({ route, navigation }) {
                     <OrderContent>
                         <FontAwesome5
                             name="coins"
-                            color={theme.main}
+                            color={color.main}
                             size={24}
                         />
                         <PlainText
@@ -252,7 +252,7 @@ function CompleteOrder({ route, navigation }) {
                     <PlainText
                         style={{
                             fontSize: 22,
-                            color: theme.darkFontColor,
+                            color: color.textDark,
                             textAlign: "center",
                             fontWeight: "400",
                         }}
@@ -266,7 +266,7 @@ function CompleteOrder({ route, navigation }) {
                         <Octicons
                             name="megaphone"
                             size={40}
-                            color={theme.sub.blue}
+                            color={color.sub.blue}
                         />
                     </NotiIcon>
                     <NotiText>
@@ -275,7 +275,7 @@ function CompleteOrder({ route, navigation }) {
                                 fontSize: 21,
                                 lineHeight: 28,
                                 textAlign: "center",
-                                color: theme.darkFontColor,
+                                color: color.textDark,
                             }}
                         >
                             작업 내역을 확인하시고{"\n"}작업 내역에 이상이 없을
@@ -287,7 +287,7 @@ function CompleteOrder({ route, navigation }) {
                                 fontSize: 21,
                                 lineHeight: 28,
                                 textAlign: "center",
-                                color: theme.main,
+                                color: color.main,
                             }}
                         >
                             작업이 정상적이지 않을 경우엔{"\n"}

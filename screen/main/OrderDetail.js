@@ -10,12 +10,12 @@ import styled from "styled-components/native";
 import MainLayout from "../../component/layout/MainLayout";
 import PlainText from "../../component/text/PlainText";
 import UserContext from "../../context/UserContext";
-import { theme } from "../../styles";
+import { color } from "../../styles";
 import { getAsyncStorageToken, numberWithComma } from "../../utils";
 import Checkbox from "expo-checkbox";
 import { useForm } from "react-hook-form";
 import axios from "axios";
-import { SERVER } from "../../utils";
+import { SERVER } from "../../constant";
 import { VALID } from "../../constant";
 import WebView from "react-native-webview";
 
@@ -34,7 +34,7 @@ const SContent = styled.View`
     width: 75%;
     border: ${(props) =>
             props.borderLine || props.inputBorderLine ? "0px" : "1px"}
-        solid ${theme.boxColor};
+        solid ${color.border};
     padding: 5px;
     background-color: ${(props) => (props.background ? "white" : "")};
 `;
@@ -43,7 +43,7 @@ const ButtonContainer = styled.View`
     align-items: center;
 `;
 const Button = styled.TouchableOpacity`
-    background-color: ${theme.sub.blue};
+    background-color: ${color.sub.blue};
     width: 120px;
     align-items: center;
     border-radius: 5px;
@@ -301,10 +301,7 @@ function OrderDetail({ route, navigation }) {
     };
 
     const AcceptButton = ({ orderId }) => (
-        <Button
-            color={theme.btnPointColor}
-            onPress={() => setAcceptOrder(orderId)}
-        >
+        <Button color={color.btnAccent} onPress={() => setAcceptOrder(orderId)}>
             <PlainText style={{ fontSize: 19, color: "white" }}>
                 예약하기
             </PlainText>
@@ -312,7 +309,7 @@ function OrderDetail({ route, navigation }) {
     );
 
     const ReserveButton = ({ orderId }) => (
-        <Button color={theme.sub.blue} onPress={() => setReserveOrder(orderId)}>
+        <Button color={color.sub.blue} onPress={() => setReserveOrder(orderId)}>
             <PlainText style={{ fontSize: 19, color: "white" }}>
                 예약대기
             </PlainText>
@@ -329,7 +326,7 @@ function OrderDetail({ route, navigation }) {
 
     const CancleReserveButton = ({ orderId }) => (
         <Button
-            color={theme.sub.green}
+            color={color.sub.green}
             onPress={() => setCancleReservation(orderId)}
         >
             <PlainText style={{ fontSize: 19, color: "white" }}>
@@ -587,7 +584,7 @@ function OrderDetail({ route, navigation }) {
                                 <Checkbox
                                     style={{ width: 28, height: 28 }}
                                     value={order.emergency}
-                                    color={theme.btnPointColor}
+                                    color={color.btnAccent}
                                 />
                             </SRow>
                             <Row

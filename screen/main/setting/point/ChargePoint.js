@@ -4,7 +4,7 @@ import PropTypes from "prop-types";
 import { Text, TouchableOpacity, View } from "react-native";
 import PlainButton from "../../../../component/button/PlainButton";
 import PlainText from "../../../../component/text/PlainText";
-import { theme } from "../../../../styles";
+import { color } from "../../../../styles";
 import SubTitleText from "../../../../component/text/SubTitleText";
 import UserContext from "../../../../context/UserContext";
 import { PAYMENT_APP_ID } from "@env";
@@ -38,7 +38,7 @@ function ChargePoint({ route, navigation }) {
             <View style={{ height: 300, justifyContent: "space-between" }}>
                 <TouchableOpacity
                     style={{
-                        backgroundColor: theme.lightFontColor,
+                        backgroundColor: color.textLight,
                         padding: 10,
                     }}
                     onPress={() => onPay(99000)}
@@ -48,7 +48,7 @@ function ChargePoint({ route, navigation }) {
                 </TouchableOpacity>
                 <TouchableOpacity
                     style={{
-                        backgroundColor: theme.lightFontColor,
+                        backgroundColor: color.textLight,
                         padding: 10,
                     }}
                     onPress={() => onPay(33000)}
@@ -58,7 +58,7 @@ function ChargePoint({ route, navigation }) {
                 </TouchableOpacity>
                 <TouchableOpacity
                     style={{
-                        backgroundColor: theme.lightFontColor,
+                        backgroundColor: color.textLight,
                         padding: 10,
                     }}
                     onPress={() => onPay(55000)}

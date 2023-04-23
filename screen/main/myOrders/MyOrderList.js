@@ -10,9 +10,9 @@ import {
 } from "react-native";
 import PlainText from "../../../component/text/PlainText";
 import styled from "styled-components/native";
-import { theme } from "../../../styles";
+import { color } from "../../../styles";
 import axios from "axios";
-import { SERVER } from "../../../utils";
+import { SERVER } from "../../../constant";
 import {
     getAsyncStorageToken,
     getWorkTime,
@@ -40,7 +40,7 @@ const TopContainer = styled.View`
     margin: -10px -10px 0px -10px;
     background-color: white;
     border-top-width: 0.5px;
-    border-top-color: ${theme.boxColor};
+    border-top-color: ${color.boxColor};
     flex-direction: row;
     align-items: center;
     justify-content: space-between;
@@ -128,10 +128,10 @@ const Notification = styled.View`
     border: 1px solid
         ${(props) =>
             props.order
-                ? theme.btnPointColor + "aa"
+                ? color.btnAccent + "aa"
                 : props.event
                 ? "#ef5285" + "aa"
-                : theme.darkFontColor + "aa"};
+                : color.textDark + "aa"};
 `;
 const NotiWrapper = styled.View`
     padding-left: 10px;
@@ -140,10 +140,10 @@ const NotiWrapper = styled.View`
 const NotiIcon = styled.View`
     background-color: ${(props) =>
         props.order
-            ? theme.btnPointColor
+            ? color.btnAccent
             : props.event
             ? "#ef5285" + "aa"
-            : theme.darkFontColor};
+            : color.textDark};
     padding: 3px;
     justify-content: center;
 `;
@@ -153,27 +153,27 @@ const NotiText = styled.View``;
 const statusArr = [
     {
         text: "작업 요청",
-        color: theme.btnPointColor + "44",
+        color: color.btnAccent + "44",
         textColor: "black",
     },
     {
         text: "예약 완료",
-        color: theme.sub.blue + "44",
+        color: color.sub.blue + "44",
         textColor: "black",
     },
     {
         text: "작업 중",
-        color: theme.sub.yellow + "77",
+        color: color.sub.yellow + "77",
         textColor: "#777",
     },
     {
         text: "완료",
-        color: theme.btnColor,
+        color: color.btnDefault,
         textColor: "white",
     },
     {
         text: "완료",
-        color: theme.btnColor,
+        color: color.btnDefault,
         textColor: "white",
     },
 ];
@@ -467,7 +467,7 @@ function MyOrderList({ navigation }) {
 
     const AcceptButton = ({ orderId }) => (
         <OrderButton
-            color={theme.btnPointColor}
+            color={color.btnAccent}
             onPress={() => setAcceptOrder(orderId)}
         >
             <PlainText style={{ fontSize: 19, color: "white" }}>
@@ -478,7 +478,7 @@ function MyOrderList({ navigation }) {
 
     const ReserveButton = ({ orderId }) => (
         <OrderButton
-            color={theme.sub.blue}
+            color={color.sub.blue}
             onPress={() => setReserveOrder(orderId)}
         >
             <PlainText style={{ fontSize: 19, color: "white" }}>
@@ -497,7 +497,7 @@ function MyOrderList({ navigation }) {
 
     const CancleReserveButton = ({ orderId }) => (
         <OrderButton
-            color={theme.sub.green}
+            color={color.sub.green}
             onPress={() => setCancleReservation(orderId)}
         >
             <PlainText style={{ fontSize: 19, color: "white" }}>
@@ -566,7 +566,7 @@ function MyOrderList({ navigation }) {
                             <MaterialCommunityIcons
                                 name="progress-alert"
                                 size={26}
-                                color={theme.sub.yellow}
+                                color={color.sub.yellow}
                             />
                             <PlainText style={{ marginLeft: 5 }}>
                                 {totalCount}건 (예정)
@@ -777,7 +777,7 @@ function MyOrderList({ navigation }) {
                                                                 <FontAwesome5
                                                                     name="coins"
                                                                     color={
-                                                                        theme.main
+                                                                        color.main
                                                                     }
                                                                     size={24}
                                                                 />

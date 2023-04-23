@@ -5,7 +5,7 @@ import { useNavigation } from "@react-navigation/native";
 import DefaultLayout from "../../../component/layout/DefaultLayout";
 import SubTitleText from "../../../component/text/SubTitleText";
 import PlainText from "../../../component/text/PlainText";
-import { theme } from "../../../styles";
+import { color } from "../../../styles";
 import { ORDINARY, SPECIAL } from "../../../constant";
 
 const Container = styled.View`
@@ -14,7 +14,7 @@ const Container = styled.View`
 `;
 const Wrapper = styled.View``;
 const Button = styled.TouchableOpacity`
-    background-color: ${theme.btnPointColor};
+    background-color: ${color.btnAccent};
     align-items: center;
     padding: 20px;
     border-radius: 5px;
@@ -38,7 +38,7 @@ function SignUp() {
                     <Button onPress={() => onPress(ORDINARY)}>
                         <SubTitleText
                             style={{
-                                color: theme.lightFontColor,
+                                color: color.textLight,
                                 fontSize: 25,
                             }}
                         >
@@ -58,7 +58,7 @@ function SignUp() {
                     <Button onPress={() => onPress(SPECIAL)}>
                         <SubTitleText
                             style={{
-                                color: theme.lightFontColor,
+                                color: color.textLight,
                                 fontSize: 25,
                             }}
                         >

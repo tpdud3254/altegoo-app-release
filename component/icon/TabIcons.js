@@ -1,7 +1,7 @@
 import React from "react";
 import { Ionicons } from "@expo/vector-icons";
 import PropTypes from "prop-types";
-import { theme } from "../../styles";
+import { color } from "../../styles";
 import SubTitleText from "../text/SubTitleText";
 
 export default function TabIcon({ iconName, focused, size, color, iconText }) {
@@ -15,7 +15,7 @@ export default function TabIcon({ iconName, focused, size, color, iconText }) {
                     color
                         ? color
                         : focused
-                        ? theme.btnPointColor
+                        ? color.btnAccent
                         : "rgba(1,1,1,0.5)"
                 }
             />

@@ -9,7 +9,7 @@ import MainLayout from "../../../component/layout/MainLayout";
 import PlainText from "../../../component/text/PlainText";
 import RegistContext from "../../../context/RegistContext";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
-import { theme } from "../../../styles";
+import { color } from "../../../styles";
 import { Toast } from "react-native-toast-message/lib/src/Toast";
 import { REGIST_NAV } from "../../../constant";
 
@@ -34,11 +34,11 @@ const InputAddWrapper = styled.View`
     margin-top: 10px;
 `;
 const Search = styled.TouchableOpacity`
-    border: 1px solid ${theme.boxColor};
+    border: 1px solid ${color.border};
     padding: 8px 5px;
 `;
 const DetailAddress = styled.TextInput`
-    border: 1px solid ${theme.boxColor};
+    border: 1px solid ${color.border};
     padding: 8px 5px;
     font-size: 20px;
     font-weight: 300;

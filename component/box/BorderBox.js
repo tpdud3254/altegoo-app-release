@@ -3,7 +3,7 @@ import styled from "styled-components/native";
 import { color } from "../../styles";
 
 const Box = styled.View`
-    background-color: ${color.inputColor};
+    background-color: ${color.inputBackground};
     border-radius: 2px;
 `;
 

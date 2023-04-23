@@ -11,7 +11,7 @@ import MainLayout from "../../../component/layout/MainLayout";
 import PlainText from "../../../component/text/PlainText";
 import RegistContext from "../../../context/RegistContext";
 import UserContext from "../../../context/UserContext";
-import { theme } from "../../../styles";
+import { color } from "../../../styles";
 import { numberWithComma } from "../../../utils";
 import Checkbox from "expo-checkbox";
 import { useForm } from "react-hook-form";
@@ -32,7 +32,7 @@ const SContent = styled.View`
     width: 75%;
     border: ${(props) =>
             props.borderLine || props.inputBorderLine ? "0px" : "1px"}
-        solid ${theme.boxColor};
+        solid ${color.border};
     padding: 5px;
     background-color: ${(props) => (props.background ? "white" : "")};
 `;
@@ -46,7 +46,7 @@ const ButtonContainer = styled.View`
     align-items: center;
 `;
 const Button = styled.TouchableOpacity`
-    background-color: ${theme.sub.blue};
+    background-color: ${color.sub.blue};
     width: 100px;
     align-items: center;
     border-radius: 5px;
@@ -345,7 +345,7 @@ function AddOtherData({ navigation }) {
                                     style={{ width: 28, height: 28 }}
                                     value={emergencyOrder}
                                     onValueChange={setEmergencyOrder}
-                                    color={theme.btnPointColor}
+                                    color={color.btnAccent}
                                 />
                             </SRow>
                             {emergencyOrder ? (
@@ -353,7 +353,7 @@ function AddOtherData({ navigation }) {
                                     <PlainText
                                         style={{
                                             fontSize: 18,
-                                            color: theme.main,
+                                            color: color.main,
                                             marginBottom: 5,
                                         }}
                                     >

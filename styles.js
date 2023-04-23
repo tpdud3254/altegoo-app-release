@@ -1,27 +1,16 @@
-export const theme = {
+export const color = {
     main: "#CD6A41",
-    main_disbaled: "rgba(205, 106, 65, 0.4)",
     sub: {
         green: "#6cc653",
         yellow: "#ffd13f",
         blue: "#87b3da",
     },
-    fontColor: "black",
-    darkFontColor: "#555555",
-    lightFontColor: "white",
-    backgroundColor: "white",
-    boxColor: "#00000055",
-    textBoxColor: "#00000055",
-    btnPointColor: "#e58c50",
-    btnColor: "#bbbbbb",
-    btnColor2: "#EAF4FE",
-};
-
-export const color = {
-    main: "#CD6A41",
-    btnAccentColor: "#CD6A41",
-    btnDefaultColor: "#EAF4FE",
-    btnDisableColor: "rgba(205, 106, 65, 0.4)",
-    inputColor: "#eeeeee88",
-    darkGrey: "#555555",
+    btnAccent: "#CD6A41",
+    btnDefault: "#EAF4FE",
+    btnDisable: "rgba(205, 106, 65, 0.4)",
+    inputBackground: "#eeeeee88",
+    border: "#00000055",
+    background: "white",
+    textLight: "white",
+    textDark: "#555555",
 };

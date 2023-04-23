@@ -4,7 +4,7 @@ import PropTypes from "prop-types";
 import { Text, View } from "react-native";
 import PlainText from "../../../component/text/PlainText";
 import Checkbox from "expo-checkbox";
-import { theme } from "../../../styles";
+import { color } from "../../../styles";
 
 function Setting() {
     const [check, setCheck] = useState(true);
@@ -28,7 +28,7 @@ function Setting() {
                     style={{ width: 30, height: 30 }}
                     value={check}
                     onValueChange={setCheck}
-                    color={check ? theme.btnPointColor : undefined}
+                    color={check ? color.btnAccent : undefined}
                 />
             </View>
         </View>

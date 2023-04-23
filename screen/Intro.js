@@ -42,7 +42,7 @@ const Indicators = styled.View`
 const Indicator = styled.TouchableOpacity`
     width: ${(props) => (props.cur ? "35px" : "13px")};
     height: 13px;
-    background-color: ${(props) => props.color || props.theme.main};
+    background-color: ${(props) => props.color || color.main};
     justify-content: center;
     align-items: center;
     border-radius: 100px;
@@ -124,8 +124,8 @@ function Intro() {
                                         }
                                         color={
                                             imageIndex === index
-                                                ? color.btnAccentColor
-                                                : color.btnDisableColor
+                                                ? color.btnAccent
+                                                : color.btnDisable
                                         }
                                         cur={imageIndex === index}
                                     />

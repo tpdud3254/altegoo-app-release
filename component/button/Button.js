@@ -12,9 +12,9 @@ function Button(props) {
                 backgroundColor:
                     props.type === "accent"
                         ? props.disabled
-                            ? color.btnDisableColor
-                            : color.btnAccentColor
-                        : color.btnDefaultColor,
+                            ? color.btnDisable
+                            : color.btnAccent
+                        : color.btnDefault,
                 width: "100%",
                 height: 60,
                 justifyContent: "center",

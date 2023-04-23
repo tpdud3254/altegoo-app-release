@@ -8,7 +8,7 @@ import MainLayout from "../../../component/layout/MainLayout";
 import PlainText from "../../../component/text/PlainText";
 import RegistContext from "../../../context/RegistContext";
 import { MaterialCommunityIcons, Ionicons } from "@expo/vector-icons";
-import { theme } from "../../../styles";
+import { color } from "../../../styles";
 import { Toast } from "react-native-toast-message/lib/src/Toast";
 import { REGIST_NAV } from "../../../constant";
 import VerticalDivider from "../../../component/divider/VerticalDivider";
@@ -56,7 +56,7 @@ const ClassButton = styled.TouchableOpacity`
 const RadioContainer = styled.View`
     padding: 10px 0px;
     margin-top: 10px;
-    border: 1px solid ${theme.boxColor};
+    border: 1px solid ${color.border};
 `;
 const RadioWrapper = styled.View`
     flex-direction: row;
@@ -223,7 +223,7 @@ function SelectFloor({ navigation }) {
 
     const Radio = ({ index, other }) => (
         <SRadio>
-            <RadioButton value={index} color={theme.sub.blue} />
+            <RadioButton value={index} color={color.sub.blue} />
             <PlainText>
                 {other ? otherFloorArr[index] : floorArr[index]}층
             </PlainText>
@@ -243,7 +243,7 @@ function SelectFloor({ navigation }) {
                         <Ionicons
                             name="alert-circle-outline"
                             size={30}
-                            color={theme.sub.yellow}
+                            color={color.sub.yellow}
                         />
                         <SubTitleText style={modalTitleStyle}>
                             가격 안내
@@ -251,7 +251,7 @@ function SelectFloor({ navigation }) {
                         <Ionicons
                             name="alert-circle-outline"
                             size={30}
-                            color={theme.sub.yellow}
+                            color={color.sub.yellow}
                         />
                     </ModalTitle>
                     <TouchableOpacity

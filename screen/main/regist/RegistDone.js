@@ -5,7 +5,7 @@ import MainLayout from "../../../component/layout/MainLayout";
 import PlainText from "../../../component/text/PlainText";
 import RegistContext from "../../../context/RegistContext";
 import UserContext from "../../../context/UserContext";
-import { theme } from "../../../styles";
+import { color } from "../../../styles";
 import {
     getAsyncStorageToken,
     numberWithComma,
@@ -14,7 +14,7 @@ import {
 import { REGIST_NAV, VALID } from "../../../constant";
 import VerticalDivider from "../../../component/divider/VerticalDivider";
 import SubTitleText from "../../../component/text/SubTitleText";
-import { SERVER } from "../../../utils";
+import { SERVER } from "../../../constant";
 import axios from "axios";
 import { PAYMENT_APP_ID } from "@env";
 
@@ -357,7 +357,7 @@ function RegistDone({ navigation }) {
                         작업수정
                     </SubTitleText>
                 </Button>
-                <VerticalDivider color={theme.textBoxColor} />
+                <VerticalDivider color={color.border} />
                 <Button onPress={onPay}>
                     <SubTitleText style={{ fontSize: 20 }}>
                         결제하기

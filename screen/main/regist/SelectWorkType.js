@@ -3,7 +3,7 @@ import { RadioButton } from "react-native-paper";
 import styled from "styled-components/native";
 import MainLayout from "../../../component/layout/MainLayout";
 import PlainText from "../../../component/text/PlainText";
-import { theme } from "../../../styles";
+import { 채ㅣㅐㄱ } from "../../../styles";
 import { MaterialCommunityIcons, Feather } from "@expo/vector-icons";
 import VerticalDivider from "../../../component/divider/VerticalDivider";
 import HorizontalDivider from "../../../component/divider/HorizontalDivider";
@@ -135,7 +135,7 @@ function SelectWorkType({ navigation }) {
             <MaterialCommunityIcons
                 name={`numeric-${number}-circle-outline`}
                 size={30}
-                color={cur ? theme.sub.blue : "#777777"}
+                color={cur ? 채ㅣㅐㄱ.sub.blue : "#777777"}
             />
             <PlainText
                 style={{ marginLeft: 5, color: cur ? "black" : "#777777" }}
@@ -177,11 +177,17 @@ function SelectWorkType({ navigation }) {
                     >
                         <VehicleWrapper>
                             <Radio>
-                                <RadioButton value={1} color={theme.sub.blue} />
+                                <RadioButton
+                                    value={1}
+                                    color={채ㅣㅐㄱ.sub.blue}
+                                />
                                 <PlainText>사다리</PlainText>
                             </Radio>
                             <Radio>
-                                <RadioButton value={2} color={theme.sub.blue} />
+                                <RadioButton
+                                    value={2}
+                                    color={채ㅣㅐㄱ.sub.blue}
+                                />
                                 <PlainText>스카이</PlainText>
                             </Radio>
                         </VehicleWrapper>

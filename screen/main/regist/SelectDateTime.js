@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useState } from "react";
 import { TextInput, TouchableOpacity, View } from "react-native";
 import { Calendar, LocaleConfig } from "react-native-calendars";
-import { theme } from "../../../styles";
+import { color } from "../../../styles";
 import PlainText from "../../../component/text/PlainText";
 import { MaterialCommunityIcons, AntDesign } from "@expo/vector-icons";
 import MainLayout from "../../../component/layout/MainLayout";
@@ -341,7 +341,7 @@ function SelectDateTime({ navigation }) {
                         <Notice>
                             <View
                                 style={{
-                                    backgroundColor: theme.sub.yellow + "44",
+                                    backgroundColor: color.sub.yellow + "44",
                                     borderRadius: 25,
                                     width: 30,
                                     height: 30,
@@ -385,9 +385,9 @@ function SelectDateTime({ navigation }) {
                                     backgroundColor: isSelectedDay(
                                         date.dateString
                                     )
-                                        ? theme.main
+                                        ? color.main
                                         : isHandDay(date.dateString, date.month)
-                                        ? theme.sub.yellow + "44"
+                                        ? color.sub.yellow + "44"
                                         : state === "today"
                                         ? "aliceblue"
                                         : "white",

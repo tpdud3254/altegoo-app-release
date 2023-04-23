@@ -15,9 +15,9 @@ import { checkPassword, getAsyncStorageToken, showError } from "../../../utils";
 import Toast from "react-native-toast-message";
 import PlainButton from "../../../component/button/PlainButton";
 import axios from "axios";
-import { SERVER } from "../../../utils";
+import { SERVER } from "../../../constant";
 import { VALID } from "../../../constant";
-import { theme } from "../../../styles";
+import { color } from "../../../styles";
 
 const Container = styled.View`
     flex: 1;
@@ -199,7 +199,7 @@ function OrdinarySignUp() {
                         onPress={handleSubmit(getPhoneAuth)}
                         style={{
                             ...(phoneAuth
-                                ? { backgroundColor: theme.sub.blue }
+                                ? { backgroundColor: color.sub.blue }
                                 : null),
                         }}
                     />

@@ -6,7 +6,7 @@ import MainNavigator from "./Main/MainNavigator";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import Toast from "react-native-toast-message";
 import axios from "axios";
-import { SERVER } from "../utils";
+import { SERVER } from "../constant";
 import UserContext from "../context/UserContext";
 import LoadingLayout from "../component/layout/LoadingLayout";
 import { VALID } from "../constant";

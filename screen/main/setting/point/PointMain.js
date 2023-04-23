@@ -9,7 +9,7 @@ import UserContext from "../../../../context/UserContext";
 import { getAsyncStorageToken, numberWithComma } from "../../../../utils";
 import PlainButton from "../../../../component/button/PlainButton";
 import axios from "axios";
-import { SERVER } from "../../../../utils";
+import { SERVER } from "../../../../constant";
 import { VALID } from "../../../../constant";
 import { useIsFocused } from "@react-navigation/native";
 

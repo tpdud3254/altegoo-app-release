@@ -1,7 +1,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 import { TouchableOpacity } from "react-native";
-import { theme } from "../../styles";
+import { color } from "../../styles";
 import SubTitleText from "../text/SubTitleText";
 
 function SubmitButton(props) {
@@ -9,7 +9,7 @@ function SubmitButton(props) {
         <TouchableOpacity
             {...props}
             style={{
-                backgroundColor: theme.btnPointColor,
+                backgroundColor: color.btnAccent,
                 borderRadius: 5,
                 alignItems: "center",
                 marginTop: 5,

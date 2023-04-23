@@ -23,14 +23,9 @@ import { toastConfig } from "./component/Toast";
 import { UserProvider } from "./context/UserContext";
 import { StatusBar } from "expo-status-bar";
 import { RegistProvider } from "./context/RegistContext";
+import { speech } from "./utils";
 
 SplashScreen.preventAutoHideAsync();
-
-import { speech, SERVER, PAYMENT_SERVER } from "./utils";
-
-// export const SERVER = "https://cab2-211-59-182-118.jp.ngrok.io";
-
-// export const PAYMENT_SERVER = "https://c031-211-59-182-118.jp.ngrok.io/payment";
 
 export default function App() {
     const [appIsReady, setAppIsReady] = useState(false);

@@ -2,7 +2,7 @@ import React, { useContext, useEffect } from "react";
 import styled from "styled-components/native";
 import DefaultLayout from "../../component/layout/DefaultLayout";
 import { Ionicons } from "@expo/vector-icons";
-import { theme } from "../../styles";
+import { color } from "../../styles";
 import { ORDINARY, PERSON } from "../../constant";
 import PlainText from "../../component/text/PlainText";
 import LoginContext from "../../context/LoginContext";
@@ -32,7 +32,7 @@ const Content = styled.View`
     margin-top: 20px;
     align-items: center;
     padding: 20px 10px;
-    background-color: ${theme.btnColor2};
+    background-color: ${color.btnDefault};
     border-radius: 10px;
 `;
 
@@ -119,7 +119,7 @@ function Welcome({ navigation }) {
                     style={{
                         fontWeight: "500",
                         textAlign: "center",
-                        color: theme.main,
+                        color: color.main,
                         fontSize: 25,
                     }}
                 >
@@ -163,7 +163,7 @@ function Welcome({ navigation }) {
                                     style={{
                                         fontSize: 20,
                                         textAlign: "center",
-                                        color: theme.main,
+                                        color: color.main,
                                         fontWeight: "500",
                                     }}
                                 >
@@ -204,7 +204,7 @@ function Welcome({ navigation }) {
                                     style={{
                                         fontSize: 20,
                                         textAlign: "center",
-                                        color: theme.main,
+                                        color: color.main,
                                         fontWeight: "500",
                                     }}
                                 >
@@ -245,7 +245,7 @@ function Welcome({ navigation }) {
                                     style={{
                                         fontSize: 20,
                                         textAlign: "center",
-                                        color: theme.main,
+                                        color: color.main,
                                         fontWeight: "500",
                                     }}
                                 >

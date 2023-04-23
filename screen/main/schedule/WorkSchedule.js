@@ -10,9 +10,9 @@ import DefaultLayout from "../../../component/layout/DefaultLayout";
 import { Ionicons } from "@expo/vector-icons";
 import PlainText from "../../../component/text/PlainText";
 import TruckLogo from "../../../component/logo/TruckLogo";
-import { theme } from "../../../styles";
+
 import axios from "axios";
-import { SERVER } from "../../../utils";
+import { SERVER } from "../../../constant";
 import { getAsyncStorageToken, showError } from "../../../utils";
 
 function WorkSchedule() {

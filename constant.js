@@ -1,3 +1,8 @@
+export const SERVER = "https://altegoo.shop";
+
+export const PAYMENT_SERVER =
+    "https://master.d1p7wg3e032x9j.amplifyapp.com/payment";
+
 export const VALID = "VALID";
 
 export const ORDINARY = "ORDINARY";

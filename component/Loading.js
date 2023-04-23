@@ -1,7 +1,7 @@
 import React from "react";
 import styled from "styled-components/native";
 import { ActivityIndicator } from "react-native";
-import { theme } from "../styles";
+import { color } from "../styles";
 
 const LoadingContainer = styled.View`
     background-color: #ffffffcc;
@@ -15,7 +15,7 @@ const LoadingContainer = styled.View`
 function Loading() {
     return (
         <LoadingContainer>
-            <ActivityIndicator size={50} color={theme.sub.yellow} />
+            <ActivityIndicator size={50} color={color.sub.yellow} />
         </LoadingContainer>
     );
 }

@@ -10,7 +10,7 @@ import { checkPassword, showError } from "../../utils";
 import axios from "axios";
 import { VALID } from "../../constant";
 import { Toast } from "react-native-toast-message/lib/src/Toast";
-import { SERVER } from "../../utils";
+import { SERVER } from "../../constant";
 import Button from "../../component/button/Button";
 
 const Container = styled.View`

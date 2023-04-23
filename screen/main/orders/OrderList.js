@@ -10,9 +10,9 @@ import {
 } from "react-native";
 import PlainText from "../../../component/text/PlainText";
 import styled from "styled-components/native";
-import { theme } from "../../../styles";
+import { color } from "../../../styles";
 import axios from "axios";
-import { SERVER } from "../../../utils";
+import { SERVER } from "../../../constant";
 import {
     getAsyncStorageToken,
     getWorkTime,
@@ -98,32 +98,32 @@ const OrderButton = styled.TouchableOpacity`
 const statusArr = [
     {
         text: "작업 요청",
-        color: theme.btnPointColor + "44",
+        color: color.btnAccent + "44",
         textColor: "black",
     },
     {
         text: "예약 완료",
-        color: theme.sub.blue + "44",
+        color: color.sub.blue + "44",
         textColor: "black",
     },
     {
         text: "작업 중",
-        color: theme.sub.yellow + "77",
+        color: color.sub.yellow + "77",
         textColor: "#777",
     },
     {
         text: "완료",
-        color: theme.btnColor,
+        color: color.btnDefault,
         textColor: "white",
     },
     {
         text: "완료",
-        color: theme.btnColor,
+        color: color.btnDefault,
         textColor: "white",
     },
     {
         text: "완료",
-        color: theme.btnColor,
+        color: color.btnDefault,
         textColor: "white",
     },
 ];
@@ -376,7 +376,7 @@ function OrderList() {
 
     const AcceptButton = ({ orderId }) => (
         <OrderButton
-            color={theme.btnPointColor}
+            color={color.btnAccent}
             onPress={() => setAcceptOrder(orderId)}
         >
             <PlainText style={{ fontSize: 19, color: "white" }}>
@@ -387,7 +387,7 @@ function OrderList() {
 
     const ReserveButton = ({ orderId }) => (
         <OrderButton
-            color={theme.sub.blue}
+            color={color.sub.blue}
             onPress={() => setReserveOrder(orderId)}
         >
             <PlainText style={{ fontSize: 19, color: "white" }}>
@@ -406,7 +406,7 @@ function OrderList() {
 
     const CancleReserveButton = ({ orderId }) => (
         <OrderButton
-            color={theme.sub.green}
+            color={color.sub.green}
             onPress={() => setCancleReservation(orderId)}
         >
             <PlainText style={{ fontSize: 19, color: "white" }}>
@@ -464,7 +464,7 @@ function OrderList() {
                                             <MaterialCommunityIcons
                                                 name="progress-alert"
                                                 size={26}
-                                                color={theme.sub.yellow}
+                                                color={color.sub.yellow}
                                             />
                                             <PlainText
                                                 style={{ marginLeft: 5 }}
@@ -736,7 +736,7 @@ function OrderList() {
                                                     <OrderContent>
                                                         <FontAwesome5
                                                             name="coins"
-                                                            color={theme.main}
+                                                            color={color.main}
                                                             size={24}
                                                         />
                                                         <PlainText

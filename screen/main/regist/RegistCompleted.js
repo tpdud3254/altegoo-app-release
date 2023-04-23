@@ -1,12 +1,12 @@
 import React, { useContext, useEffect, useState } from "react";
 import styled from "styled-components/native";
 import DefaultLayout from "../../../component/layout/DefaultLayout";
-import { theme } from "../../../styles";
+import { color } from "../../../styles";
 import Logo from "../../../component/logo/Logo";
 import PlainText from "../../../component/text/PlainText";
 import { BackHandler, View } from "react-native";
 import RegistContext from "../../../context/RegistContext";
-import { SERVER } from "../../../utils";
+import { SERVER } from "../../../constant";
 import axios from "axios";
 import { getAsyncStorageToken } from "../../../utils";
 import { VALID } from "../../../constant";
@@ -126,7 +126,7 @@ function RegistCompleted({ navigation, route }) {
                             style={{
                                 fontSize: 22,
                                 fontWeight: "400",
-                                color: theme.main,
+                                color: color.main,
                             }}
                         >
                             {userCount}명

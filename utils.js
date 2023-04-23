@@ -3,11 +3,6 @@ import { Toast } from "react-native-toast-message/lib/src/Toast";
 import { TOKEN } from "./constant";
 import * as Speech from "expo-speech";
 
-export const SERVER = "https://altegoo.shop";
-
-export const PAYMENT_SERVER =
-    "https://master.d1p7wg3e032x9j.amplifyapp.com/payment";
-
 export const checkPassword = (password) => {
     const regExp = /^.*(?=^.{8,}$)(?=.*\d)(?=.*[a-zA-Z]).*$/;
 

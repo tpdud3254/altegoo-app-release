@@ -11,7 +11,7 @@ import {
     AntDesign,
 } from "@expo/vector-icons";
 import styled from "styled-components/native";
-import { theme } from "../../styles";
+import { color } from "../../styles";
 import {
     getAsyncStorageToken,
     getWorkTime,
@@ -26,7 +26,7 @@ import KakaoButton, {
     ButtonContainer,
 } from "../../component/button/KakaoButton";
 import axios from "axios";
-import { SERVER } from "../../utils";
+import { SERVER } from "../../constant";
 import { VALID } from "../../constant";
 
 const Order = styled.TouchableOpacity`
@@ -264,7 +264,7 @@ function OrderProgress({ route, navigation }) {
                     <OrderContent>
                         <FontAwesome5
                             name="coins"
-                            color={theme.main}
+                            color={color.main}
                             size={24}
                         />
                         <PlainText
@@ -296,7 +296,7 @@ function OrderProgress({ route, navigation }) {
                         <PlainText
                             style={{
                                 fontSize: 22,
-                                color: theme.darkFontColor,
+                                color: color.textDark,
                                 textAlign: "center",
                                 fontWeight: "400",
                             }}
@@ -311,7 +311,7 @@ function OrderProgress({ route, navigation }) {
                         <Octicons
                             name="megaphone"
                             size={40}
-                            color={theme.sub.blue}
+                            color={color.sub.blue}
                         />
                     </NotiIcon>
                     {order.orderStatusId === 2 ? (
@@ -321,7 +321,7 @@ function OrderProgress({ route, navigation }) {
                                     fontSize: 21,
                                     lineHeight: 28,
                                     textAlign: "center",
-                                    color: theme.darkFontColor,
+                                    color: color.textDark,
                                 }}
                             >
                                 작업이 시작될 시간입니다.{"\n"}현장에
@@ -333,7 +333,7 @@ function OrderProgress({ route, navigation }) {
                                     fontSize: 21,
                                     lineHeight: 28,
                                     textAlign: "center",
-                                    color: theme.main,
+                                    color: color.main,
                                 }}
                             >
                                 작업 시작 버튼을 누르지 않으면{"\n"}비용이
@@ -350,7 +350,7 @@ function OrderProgress({ route, navigation }) {
                                     lineHeight: 28,
                                     textAlign: "center",
 
-                                    color: theme.main,
+                                    color: color.main,
                                 }}
                             >
                                 작업을 완료하셨으면{"\n"}꼭!! 작업 완료 버튼을
@@ -362,7 +362,7 @@ function OrderProgress({ route, navigation }) {
                                     fontSize: 21,
                                     lineHeight: 28,
                                     textAlign: "center",
-                                    color: theme.darkFontColor,
+                                    color: color.textDark,
                                 }}
                             >
                                 작업 등록자 확인 후 비용이{"\n"}지급될

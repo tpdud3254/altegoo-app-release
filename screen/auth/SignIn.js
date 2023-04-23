@@ -14,7 +14,7 @@ import axios from "axios";
 import { VALID } from "../../constant";
 import UserContext from "../../context/UserContext";
 import LoginContext from "../../context/LoginContext";
-import { SERVER } from "../../utils";
+import { SERVER } from "../../constant";
 import { setAsyncStorageToken, showError } from "../../utils";
 import { color } from "../../styles";
 import Button from "../../component/button/Button";
@@ -101,7 +101,7 @@ function SignIn() {
                     <Title>
                         <TitleText>로그인</TitleText>
                         <SubTitleText
-                            style={{ color: color.darkGrey, marginTop: 10 }}
+                            style={{ color: color.textDark, marginTop: 10 }}
                         >
                             안녕하세요. 환영합니다.
                         </SubTitleText>
@@ -149,7 +149,7 @@ function SignIn() {
                             <TouchableOpacity>
                                 <PlainText
                                     style={{
-                                        color: color.darkGrey,
+                                        color: color.textDark,
                                         textAlign: "center",
                                         marginTop: 15,
                                     }}
