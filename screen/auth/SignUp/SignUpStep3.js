@@ -3,7 +3,6 @@ import styled from "styled-components/native";
 import UserContext from "../../../context/UserContext";
 import { useNavigation } from "@react-navigation/native";
 import DefaultLayout from "../../../component/layout/DefaultLayout";
-import TitleText from "../../../component/text/TitleText";
 import SubmitButton from "../../../component/button/SubmitButton";
 import Checkbox from "expo-checkbox";
 import PlainText from "../../../component/text/PlainText";
@@ -27,10 +26,6 @@ const termsTexts = [
 const Container = styled.View`
     flex: 1;
 `;
-const Title = styled.View`
-    margin-bottom: 15px;
-`;
-
 const Wrapper = styled.View`
     padding: 10px 10px 0px 10px;
 `;
@@ -160,11 +155,7 @@ function SignUpStep3() {
     };
 
     const ValidateVehicleList = () => {
-        return info.vehicle[0].type === -1 ||
-            info.vehicle[0].weight === -1 ||
-            info.vehicle[0].number
-            ? true
-            : false;
+        return info.vehicle.length < 0 ? true : false;
     };
 
     const uploadLicense = (fileName) => {
@@ -407,9 +398,6 @@ function SignUpStep3() {
             ) : (
                 <DefaultLayout>
                     <Container>
-                        <Title>
-                            <TitleText>약관동의</TitleText>
-                        </Title>
                         <Wrapper>
                             <Terms>
                                 <PlainText style={{ fontSize: 22 }}>
@@ -420,9 +408,7 @@ function SignUpStep3() {
                                     value={isAllChecked}
                                     onValueChange={clickAllCheckButton}
                                     color={
-                                        isAllChecked
-                                            ? color.btnAccent
-                                            : undefined
+                                        isAllChecked ? color.main : undefined
                                     }
                                 />
                             </Terms>
@@ -443,7 +429,7 @@ function SignUpStep3() {
                                                     index === 0 || index === 4
                                                         ? "none"
                                                         : "underline",
-                                                color: color.textDark,
+                                                color: color.darkGrey,
                                             }}
                                         >
                                             {text}
@@ -458,7 +444,7 @@ function SignUpStep3() {
                                         }}
                                         color={
                                             checkArr[index]
-                                                ? color.btnAccent
+                                                ? color.main
                                                 : undefined
                                         }
                                     />
@@ -468,7 +454,7 @@ function SignUpStep3() {
                         <PlainText
                             style={{
                                 fontSize: 18,
-                                color: color.textDark,
+                                color: color.darkGrey,
                                 bottom: 10,
                                 position: "absolute",
                             }}

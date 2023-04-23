@@ -26,8 +26,6 @@ const Title = styled.View`
     margin-bottom: 20px;
 `;
 
-const Wrapper = styled.View``;
-
 const Buttons = styled.View`
     margin-top: 15px;
 `;
