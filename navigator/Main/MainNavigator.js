@@ -18,218 +18,213 @@ import TabsNavigator from "./TabsNavigator";
 const Stack = createStackNavigator();
 
 export default function MainNavigator() {
-    const [loading, setLoading] = useState(true);
-    const { firstLogin } = useContext(LoginContext);
-    const [todayWorkList, setTodayWorkList] = useState([]);
-    const [completeList, setCompleteList] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const { firstLogin } = useContext(LoginContext);
+  const [todayWorkList, setTodayWorkList] = useState([]);
+  const [completeList, setCompleteList] = useState([]);
 
-    useEffect(() => {
-        setTodayWorkList([]);
-        setCompleteList([]);
-        setLoading(true);
-        getMyAcceptList();
-    }, []);
+  useEffect(() => {
+    setTodayWorkList([]);
+    setCompleteList([]);
+    setLoading(true);
+    getMyAcceptList();
+  }, []);
 
-    console.log("todayWorkList : ", todayWorkList);
-    const getMyAcceptList = async () => {
-        try {
-            const response = await axios.get(SERVER + "/works/mylist/accept", {
-                headers: {
-                    auth: await getAsyncStorageToken(),
-                },
-            });
+  //TODO: - 기사/기업 회원 예약중인 작업이 있을 시 예약시간 30분 전부터 gps 측정 시작 (5분마다 재 측정) > 거리 500m 이하 일시 (추후 추가)
+  console.log("todayWorkList : ", todayWorkList);
+  const getMyAcceptList = async () => {
+    try {
+      const response = await axios.get(SERVER + "/works/mylist/accept", {
+        headers: {
+          auth: await getAsyncStorageToken(),
+        },
+      });
 
-            // console.log(response.data);
+      // console.log(response.data);
 
-            const {
-                data: { result },
-            } = response;
+      const {
+        data: { result },
+      } = response;
 
-            if (result === VALID) {
-                const {
-                    data: {
-                        data: { list },
-                    },
-                } = response;
+      if (result === VALID) {
+        const {
+          data: {
+            data: { list },
+          },
+        } = response;
 
-                console.log(list);
-                const newList = [];
-                list.map((order, index) => {
-                    if (
-                        order.orderStatusId === 2 ||
-                        order.orderStatusId === 3
-                    ) {
-                        newList.push(order);
-                    }
-                });
+        console.log(list);
+        const newList = [];
+        list.map((order, index) => {
+          if (order.orderStatusId === 2 || order.orderStatusId === 3) {
+            newList.push(order);
+          }
+        });
 
-                setTodayWorkList(newList);
+        setTodayWorkList(newList);
 
-                console.log("todayWorkList : ", newList);
-                if (newList.length < 1) getRegistList();
-                else setLoading(false);
-            } else {
-                const {
-                    data: { msg },
-                } = response;
+        console.log("todayWorkList : ", newList);
+        if (newList.length < 1) getRegistList();
+        else setLoading(false);
+      } else {
+        const {
+          data: { msg },
+        } = response;
 
-                console.log(msg);
-                getRegistList();
-            }
-        } catch (error) {
-            console.log(error);
-            getRegistList();
-        }
-    };
+        console.log(msg);
+        getRegistList();
+      }
+    } catch (error) {
+      console.log(error);
+      getRegistList();
+    }
+  };
 
-    const getRegistList = async () => {
-        try {
-            const response = await axios.get(SERVER + "/works/mylist/regist", {
-                headers: {
-                    auth: await getAsyncStorageToken(),
-                },
-            });
+  const getRegistList = async () => {
+    try {
+      const response = await axios.get(SERVER + "/works/mylist/regist", {
+        headers: {
+          auth: await getAsyncStorageToken(),
+        },
+      });
 
-            // console.log(response.data);
+      // console.log(response.data);
 
-            const {
-                data: { result },
-            } = response;
+      const {
+        data: { result },
+      } = response;
 
-            if (result === VALID) {
-                const {
-                    data: {
-                        data: { list },
-                    },
-                } = response;
+      if (result === VALID) {
+        const {
+          data: {
+            data: { list },
+          },
+        } = response;
 
-                console.log("registlist:", list);
+        console.log("registlist:", list);
 
-                setCompleteList(list);
-                setLoading(false);
-            } else {
-                const {
-                    data: { msg },
-                } = response;
+        setCompleteList(list);
+        setLoading(false);
+      } else {
+        const {
+          data: { msg },
+        } = response;
 
-                console.log(msg);
-                setLoading(false);
-            }
-        } catch (error) {
-            console.log(error);
-            setLoading(false);
-        }
-    };
-    return (
-        <>
-            {loading ? (
-                <LoadingLayout />
-            ) : (
-                <Stack.Navigator
-                    screenOptions={{
-                        presentation: "modal",
-                        headerShown: false,
-                    }}
-                >
-                    {firstLogin ? (
-                        <Stack.Screen
-                            name="Welcome"
-                            component={Welcome}
-                            options={{
-                                headerShown: false,
-                                headerTitleAlign: "center",
-                            }}
-                        />
-                    ) : null}
+        console.log(msg);
+        setLoading(false);
+      }
+    } catch (error) {
+      console.log(error);
+      setLoading(false);
+    }
+  };
+  return (
+    <>
+      {loading ? (
+        <LoadingLayout />
+      ) : (
+        <Stack.Navigator
+          screenOptions={{
+            presentation: "modal",
+            headerShown: false,
+          }}
+        >
+          {firstLogin ? (
+            <Stack.Screen
+              name="Welcome"
+              component={Welcome}
+              options={{
+                headerShown: false,
+                headerTitleAlign: "center",
+              }}
+            />
+          ) : null}
 
-                    {todayWorkList.length > 0 ? (
-                        <Stack.Screen
-                            name="IntroOrderProgress"
-                            component={OrderProgress}
-                            options={{
-                                headerShown: true,
-                                headerTitleAlign: "center",
-                            }}
-                            initialParams={{
-                                orderData: { ...todayWorkList[0] },
-                            }}
-                        />
-                    ) : null}
+          {todayWorkList.length > 0 ? (
+            <Stack.Screen
+              name="IntroOrderProgress"
+              component={OrderProgress}
+              options={{
+                headerShown: true,
+                headerTitleAlign: "center",
+              }}
+              initialParams={{
+                orderData: { ...todayWorkList[0] },
+              }}
+            />
+          ) : null}
 
-                    {completeList.length > 0 ? (
-                        <Stack.Screen
-                            name="IntroCompleteOrder"
-                            component={CompleteOrder}
-                            options={{
-                                title: "작업 완료 요청",
-                                headerShown: true,
-                                headerTitleAlign: "center",
-                            }}
-                            initialParams={{
-                                orderData: { ...completeList[0] },
-                            }}
-                        />
-                    ) : null}
-                    <Stack.Screen
-                        name="TabsNavigator"
-                        component={TabsNavigator}
-                    />
-                    <Stack.Screen
-                        name="OrderDetail"
-                        component={OrderDetail}
-                        options={{
-                            headerShown: true,
-                            headerTitleAlign: "center",
-                            headerTitle: "작업 상세 보기",
-                            headerBackTitleVisible: false,
-                        }}
-                    />
-                    <Stack.Screen
-                        name="OrderProgress"
-                        component={OrderProgress}
-                        options={{
-                            headerShown: true,
-                            headerTitleAlign: "center",
-                        }}
-                    />
-                    <Stack.Screen
-                        name="CompleteOrder"
-                        component={CompleteOrder}
-                        options={{
-                            title: "작업 완료 요청",
-                            headerShown: true,
-                            headerTitleAlign: "center",
-                        }}
-                    />
-                    <Stack.Screen
-                        name="OrdinaryOrderDetail"
-                        component={OrdinaryOrderDetail}
-                        options={{
-                            title: "상세 보기",
-                            headerShown: true,
-                            headerTitleAlign: "center",
-                        }}
-                    />
-                    <Stack.Screen
-                        name="Payment"
-                        component={Payment}
-                        options={{
-                            title: "결제하기",
-                            headerShown: false,
-                            headerTitleAlign: "center",
-                        }}
-                    />
-                    <Stack.Screen
-                        name="Charge"
-                        component={Charge}
-                        options={{
-                            title: "결제하기",
-                            headerShown: false,
-                            headerTitleAlign: "center",
-                        }}
-                    />
-                </Stack.Navigator>
-            )}
-        </>
-    );
+          {completeList.length > 0 ? (
+            <Stack.Screen
+              name="IntroCompleteOrder"
+              component={CompleteOrder}
+              options={{
+                title: "작업 완료 요청",
+                headerShown: true,
+                headerTitleAlign: "center",
+              }}
+              initialParams={{
+                orderData: { ...completeList[0] },
+              }}
+            />
+          ) : null}
+          <Stack.Screen name="TabsNavigator" component={TabsNavigator} />
+          <Stack.Screen
+            name="OrderDetail"
+            component={OrderDetail}
+            options={{
+              headerShown: true,
+              headerTitleAlign: "center",
+              headerTitle: "작업 상세 보기",
+              headerBackTitleVisible: false,
+            }}
+          />
+          <Stack.Screen
+            name="OrderProgress"
+            component={OrderProgress}
+            options={{
+              headerShown: true,
+              headerTitleAlign: "center",
+            }}
+          />
+          <Stack.Screen
+            name="CompleteOrder"
+            component={CompleteOrder}
+            options={{
+              title: "작업 완료 요청",
+              headerShown: true,
+              headerTitleAlign: "center",
+            }}
+          />
+          <Stack.Screen
+            name="OrdinaryOrderDetail"
+            component={OrdinaryOrderDetail}
+            options={{
+              title: "상세 보기",
+              headerShown: true,
+              headerTitleAlign: "center",
+            }}
+          />
+          <Stack.Screen
+            name="Payment"
+            component={Payment}
+            options={{
+              title: "결제하기",
+              headerShown: false,
+              headerTitleAlign: "center",
+            }}
+          />
+          <Stack.Screen
+            name="Charge"
+            component={Charge}
+            options={{
+              title: "결제하기",
+              headerShown: false,
+              headerTitleAlign: "center",
+            }}
+          />
+        </Stack.Navigator>
+      )}
+    </>
+  );
 }
