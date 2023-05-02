@@ -13,15 +13,10 @@ import FormLayout from "../../../component/layout/FormLayout";
 import Rule from "../../../component/Rule";
 import PlainText from "../../../component/text/PlainText";
 import UserContext, { UserConsumer } from "../../../context/UserContext";
-import {
-  checkPassword,
-  getAsyncStorageToken,
-  onNext,
-  SERVER,
-} from "../../../utils";
+import { checkPassword, getAsyncStorageToken, onNext } from "../../../utils";
 import { Ionicons, MaterialIcons } from "@expo/vector-icons";
 import axios from "axios";
-import { VALID } from "../../../constant";
+import { SERVER, VALID } from "../../../constant";
 import { useNavigation } from "@react-navigation/native";
 import { RadioButton } from "react-native-paper";
 import { color } from "../../../styles";
