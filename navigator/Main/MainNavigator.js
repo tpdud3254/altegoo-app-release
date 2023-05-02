@@ -20,19 +20,22 @@ const Stack = createStackNavigator();
 export default function MainNavigator() {
   const [loading, setLoading] = useState(true);
   const { firstLogin } = useContext(LoginContext);
-  const [todayWorkList, setTodayWorkList] = useState([]);
-  const [completeList, setCompleteList] = useState([]);
+  const [acceptOrderList, setAcceptOrderList] = useState([]);
+  const [registOrderList, setRegistOrderList] = useState([]);
 
   useEffect(() => {
-    setTodayWorkList([]);
-    setCompleteList([]);
+    //init
+    setAcceptOrderList([]);
+    setRegistOrderList([]);
     setLoading(true);
-    getMyAcceptList();
+
+    //작업 예약 중인 리스트 먼저 받아오기
+    getAcceptOrderList();
   }, []);
 
   //TODO: - 기사/기업 회원 예약중인 작업이 있을 시 예약시간 30분 전부터 gps 측정 시작 (5분마다 재 측정) > 거리 500m 이하 일시 (추후 추가)
-  console.log("todayWorkList : ", todayWorkList);
-  const getMyAcceptList = async () => {
+  console.log("acceptOrderList : ", acceptOrderList);
+  const getAcceptOrderList = async () => {
     try {
       const response = await axios.get(SERVER + "/works/mylist/accept", {
         headers: {
@@ -56,15 +59,19 @@ export default function MainNavigator() {
         console.log(list);
         const newList = [];
         list.map((order, index) => {
-          if (order.orderStatusId === 2 || order.orderStatusId === 3) {
+          if (
+            order.orderStatusId === 2 ||
+            order.orderStatusId === 3 ||
+            order.orderStatusId === 4
+          ) {
             newList.push(order);
           }
         });
 
-        setTodayWorkList(newList);
+        setAcceptOrderList(newList);
 
-        console.log("todayWorkList : ", newList);
-        if (newList.length < 1) getRegistList();
+        console.log("acceptOrderList : ", newList);
+        if (newList.length < 1) getRegistOrderList();
         else setLoading(false);
       } else {
         const {
@@ -72,15 +79,15 @@ export default function MainNavigator() {
         } = response;
 
         console.log(msg);
-        getRegistList();
+        getRegistOrderList();
       }
     } catch (error) {
       console.log(error);
-      getRegistList();
+      getRegistOrderList();
     }
   };
 
-  const getRegistList = async () => {
+  const getRegistOrderList = async () => {
     try {
       const response = await axios.get(SERVER + "/works/mylist/regist", {
         headers: {
@@ -103,7 +110,7 @@ export default function MainNavigator() {
 
         console.log("registlist:", list);
 
-        setCompleteList(list);
+        setRegistOrderList(list);
         setLoading(false);
       } else {
         const {
@@ -140,7 +147,7 @@ export default function MainNavigator() {
             />
           ) : null}
 
-          {todayWorkList.length > 0 ? (
+          {acceptOrderList.length > 0 ? (
             <Stack.Screen
               name="IntroOrderProgress"
               component={OrderProgress}
@@ -149,12 +156,12 @@ export default function MainNavigator() {
                 headerTitleAlign: "center",
               }}
               initialParams={{
-                orderData: { ...todayWorkList[0] },
+                orderData: { ...acceptOrderList[0] },
               }}
             />
           ) : null}
 
-          {completeList.length > 0 ? (
+          {registOrderList.length > 0 ? (
             <Stack.Screen
               name="IntroCompleteOrder"
               component={CompleteOrder}
@@ -164,7 +171,7 @@ export default function MainNavigator() {
                 headerTitleAlign: "center",
               }}
               initialParams={{
-                orderData: { ...completeList[0] },
+                orderData: { ...registOrderList[0] },
               }}
             />
           ) : null}

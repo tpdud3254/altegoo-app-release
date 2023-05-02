@@ -78,7 +78,10 @@ function OrderProgress({ route, navigation }) {
   useEffect(() => {
     setOrder(route?.params?.orderData);
     navigation.setOptions({
-      title: order.orderStatusId === 2 ? "작업 시작" : "작업 진행",
+      title:
+        order.orderStatusId === 2 || order.orderStatusId === 3
+          ? "작업 시작"
+          : "작업 진행",
     });
   }, []);
 
@@ -302,7 +305,7 @@ function OrderProgress({ route, navigation }) {
             text="출발하기"
             onPress={() => onStartMoving(order.id)}
           />
-        ) : (
+        ) : order.orderStatusId === 3 ? null : (
           <InProgress>
             <MaterialCommunityIcons
               name="progress-wrench"
@@ -326,7 +329,7 @@ function OrderProgress({ route, navigation }) {
           <NotiIcon>
             <Octicons name="megaphone" size={40} color={color.sub.blue} />
           </NotiIcon>
-          {order.orderStatusId === 2 ? (
+          {order.orderStatusId === 2 || order.orderStatusId === 3 ? (
             <NotiText>
               <SubTitleText
                 style={{
@@ -336,8 +339,10 @@ function OrderProgress({ route, navigation }) {
                   color: color.textDark,
                 }}
               >
-                작업이 시작될 시간입니다.{"\n"}현장에 도착하셨나요?
-                {"\n"}
+                {order.orderStatusId === 2
+                  ? `작업이 시작될 시간입니다.${"\n"}현장에 도착하셨나요?
+                ${"\n"}`
+                  : null}
               </SubTitleText>
               <SubTitleText
                 style={{
@@ -381,8 +386,16 @@ function OrderProgress({ route, navigation }) {
           )}
         </Noti>
         <SubmitButton
-          text={order.orderStatusId === 2 ? "작업 시작" : "작업 완료"}
-          onPress={order.orderStatusId === 2 ? onStartOrder : onOrderDone}
+          text={
+            order.orderStatusId === 2 || order.orderStatusId === 3
+              ? "작업 시작"
+              : "작업 완료"
+          }
+          onPress={
+            order.orderStatusId === 2 || order.orderStatusId === 3
+              ? onStartOrder
+              : onOrderDone
+          }
         />
       </Container>
     </MainLayout>
