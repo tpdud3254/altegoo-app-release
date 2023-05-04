@@ -1,6 +1,6 @@
 import { createStackNavigator } from "@react-navigation/stack";
 import axios from "axios";
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import LoadingLayout from "../../component/layout/LoadingLayout";
 import { VALID } from "../../constant";
 import LoginContext from "../../context/LoginContext";
@@ -14,16 +14,61 @@ import Welcome from "../../screen/main/Welcome";
 import { SERVER } from "../../constant";
 import { getAsyncStorageToken } from "../../utils";
 import TabsNavigator from "./TabsNavigator";
+import * as Device from "expo-device";
+import * as Notifications from "expo-notifications";
+import { Platform } from "react-native";
 
 const Stack = createStackNavigator();
+
+Notifications.setNotificationHandler({
+  handleNotification: async () => ({
+    shouldShowAlert: true,
+    shouldPlaySound: true,
+    shouldSetBadge: true,
+  }),
+});
 
 export default function MainNavigator() {
   const [loading, setLoading] = useState(true);
   const { firstLogin } = useContext(LoginContext);
   const [acceptOrderList, setAcceptOrderList] = useState([]);
   const [registOrderList, setRegistOrderList] = useState([]);
+  const [notification, setNotification] = useState(false);
+  const notificationListener = useRef();
+  const responseListener = useRef();
 
   useEffect(() => {
+    registerForPushNotificationsAsync().then(async (token) => {
+      try {
+        const response = await axios.post(
+          SERVER + "/push/token",
+          {
+            token,
+          },
+          {
+            headers: {
+              auth: await getAsyncStorageToken(),
+            },
+          }
+        );
+
+        console.log(response.data);
+      } catch (error) {
+        console.log("error : ", error);
+      }
+    });
+
+    notificationListener.current =
+      Notifications.addNotificationReceivedListener((notification) => {
+        console.log(notification);
+        setNotification(notification);
+      });
+
+    responseListener.current =
+      Notifications.addNotificationResponseReceivedListener((response) => {
+        console.log(response);
+      });
+
     //init
     setAcceptOrderList([]);
     setRegistOrderList([]);
@@ -31,10 +76,50 @@ export default function MainNavigator() {
 
     //작업 예약 중인 리스트 먼저 받아오기
     getAcceptOrderList();
+
+    return () => {
+      if (
+        typeof notificationListener.current !== "undefined" &&
+        typeof responseListener.current !== "undefined"
+      ) {
+        Notifications.removeNotificationSubscription(
+          notificationListener.current
+        );
+        Notifications.removeNotificationSubscription(responseListener.current);
+      }
+    };
   }, []);
 
   //TODO: - 기사/기업 회원 예약중인 작업이 있을 시 예약시간 30분 전부터 gps 측정 시작 (5분마다 재 측정) > 거리 500m 이하 일시 (추후 추가)
   console.log("acceptOrderList : ", acceptOrderList);
+
+  console.log("notification : ", notification);
+
+  const registerForPushNotificationsAsync = async () => {
+    let token;
+
+    if (Device.isDevice) {
+      token = (
+        await Notifications.getExpoPushTokenAsync({
+          projectId: "0d74eebd-b11d-421e-bce6-587423f34de3",
+        })
+      ).data;
+      console.log(token);
+    } else {
+      alert("Must use physical device for Push Notifications");
+    }
+
+    if (Platform.OS === "android") {
+      Notifications.setNotificationChannelAsync("default", {
+        name: "default",
+        importance: Notifications.AndroidImportance.MAX,
+        vibrationPattern: [0, 250, 250, 250],
+        lightColor: "#FF231F7C",
+      });
+    }
+
+    return token;
+  };
   const getAcceptOrderList = async () => {
     try {
       const response = await axios.get(SERVER + "/works/mylist/accept", {

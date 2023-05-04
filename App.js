@@ -25,7 +25,9 @@ import { StatusBar } from "expo-status-bar";
 import { RegistProvider } from "./context/RegistContext";
 import { speech } from "./utils";
 import { Asset } from "expo-asset";
+import * as Device from "expo-device";
 import * as Location from "expo-location";
+import * as Notifications from "expo-notifications";
 
 SplashScreen.preventAutoHideAsync();
 
@@ -58,19 +60,13 @@ export default function App() {
         await Promise.all([...imageAssets]);
 
         askLocationPermission();
+        askPushPermission();
       } catch (e) {
         console.warn(e);
       } finally {
         setAppIsReady(true);
       }
     }
-
-    const askLocationPermission = async () => {
-      const { granted } = await Location.requestForegroundPermissionsAsync();
-      if (!granted) {
-        setLocationGranted(false);
-      }
-    };
 
     function createSocket() {
       const ws = new WebSocket(`wss://altegoo.shop`);
@@ -113,6 +109,31 @@ export default function App() {
     createSocket();
     prepare();
   }, []);
+
+  const askLocationPermission = async () => {
+    const { granted } = await Location.requestForegroundPermissionsAsync();
+    if (!granted) {
+      setLocationGranted(false);
+    }
+  };
+
+  const askPushPermission = async () => {
+    if (Device.isDevice) {
+      const { status: existingStatus } =
+        await Notifications.getPermissionsAsync();
+
+      let finalStatus = existingStatus;
+      if (existingStatus !== "granted") {
+        const { status } = await Notifications.requestPermissionsAsync();
+        finalStatus = status;
+      }
+      if (finalStatus !== "granted") {
+        alert("Failed to get push token for push notification!");
+        setPushGranted(false);
+        return;
+      }
+    }
+  };
 
   function cacheImages(images) {
     return images.map((image) => {
