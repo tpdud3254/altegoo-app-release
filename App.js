@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useState } from "react";
-import { Image, View } from "react-native";
+import { AppState, Image, View } from "react-native";
 import * as SplashScreen from "expo-splash-screen";
 import {
     useFonts,
@@ -27,10 +27,93 @@ import { speech } from "./utils";
 import { Asset } from "expo-asset";
 import * as Device from "expo-device";
 import * as Location from "expo-location";
+import { AndroidNotificationPriority } from "expo-notifications";
 import * as Notifications from "expo-notifications";
+import * as BackgroundFetch from "expo-background-fetch";
+import * as TaskManager from "expo-task-manager";
 import { WSS_SERVER } from "./constant";
 
 SplashScreen.preventAutoHideAsync();
+
+//TODO: 백그라운드에서 실행되어야할 것들 셋팅
+// location, notification(push알림 누른 후 동작 추가), websocket(테스트 해보기)
+
+let ws = null;
+
+function createSocket() {
+    ws = new WebSocket(WSS_SERVER);
+
+    ws.onopen = (e) => {
+        console.log("webSocket connected");
+    };
+
+    ws.onmessage = (e) => {
+        console.log("message : ", e.data);
+        const parsed = JSON.parse(e.data);
+
+        if (parsed.type === "REGIST") {
+            speech(parsed.tts_msg, parsed.exceptionUserId);
+        }
+    };
+
+    ws.onerror = (e) => {
+        console.log("ws.onerror:", e.message);
+    };
+
+    ws.onclose = (e) => {
+        console.log("ws.onclose:", e);
+        if (e.reason !== "background") {
+            setTimeout(() => createSocket(), 1000);
+        }
+    };
+}
+
+const LOCATION_TASK = "LOCATION_TASK";
+const WEB_SOCKET_TASK = "WEB_SOCKET_TASK";
+
+Notifications.setNotificationHandler({
+    handleNotification: async () => ({
+        shouldShowAlert: true,
+        shouldPlaySound: true,
+        shouldSetBadge: true,
+        priority: AndroidNotificationPriority.MAX,
+    }),
+});
+
+const myTask = () => {
+    try {
+        const backendData = "Simulated fetch " + Math.random();
+        console.log("myTask() ", backendData);
+        console.log("ws.readyState : ", ws.readyState);
+        if (ws.readyState === 2 || ws.readyState === 3) {
+            console.log("mytask");
+            createSocket("background task");
+        }
+        //   setStateFn(backendData);
+        return backendData
+            ? BackgroundFetch.BackgroundFetchResult.NewData
+            : BackgroundFetch.BackgroundFetchResult.NoData;
+    } catch (err) {
+        return BackgroundFetch.BackgroundFetchResult.Failed;
+    }
+};
+
+const initBackgroundFetch = async (taskName, taskFn, interval = 60 * 15) => {
+    try {
+        if (!TaskManager.isTaskDefined(taskName)) {
+            //
+            TaskManager.defineTask(taskName, taskFn);
+        }
+        const options = {
+            minimumInterval: interval,
+        };
+        await BackgroundFetch.registerTaskAsync(taskName, options);
+    } catch (err) {
+        console.log("registerTaskAsync() failed:", err);
+    }
+};
+
+initBackgroundFetch(WEB_SOCKET_TASK, myTask, 5);
 
 export default function App() {
     const [appIsReady, setAppIsReady] = useState(false);
@@ -69,43 +152,33 @@ export default function App() {
             }
         }
 
-        function createSocket() {
-            const ws = new WebSocket(WSS_SERVER);
-            // const ws = new WebSocket(`wss://cab2-211-59-182-118.jp.ngrok.io`);
-
-            ws.onopen = (e) => {
-                // connection opened
-                console.log("connected");
-            };
-
-            ws.onmessage = (e) => {
-                console.log("message : ", e.data);
-                const parsed = JSON.parse(e.data);
-
-                if (parsed.type === "REGIST") {
-                    speech(parsed.tts_msg, parsed.exceptionUserId);
+        AppState.addEventListener("change", (state) => {
+            console.log("state : ", state);
+            console.log("addEventlistner");
+            if (state === "background") {
+                if (ws) {
+                    ws.close(1000, "background");
                 }
-            };
-
-            ws.onerror = (e) => {
-                console.log("ws.onerror:", e.message);
-            };
-
-            ws.onclose = (e) => {
-                console.log("ws.onclose:", e);
-                setTimeout(function () {
-                    createSocket();
-                }, 1000);
-            };
-        }
+                createSocket();
+            } else if (state === "active") {
+                if (ws) {
+                    ws.close();
+                }
+            }
+        });
 
         createSocket();
+
         prepare();
     }, []);
 
     const askLocationPermission = async () => {
-        const { granted } = await Location.requestForegroundPermissionsAsync();
-        if (!granted) {
+        const { granted: foregroundGranted } =
+            await Location.requestForegroundPermissionsAsync();
+        const { granted: backgroundGranted } =
+            await Location.requestBackgroundPermissionsAsync();
+
+        if (!foregroundGranted || !backgroundGranted) {
             setLocationGranted(false);
         }
     };

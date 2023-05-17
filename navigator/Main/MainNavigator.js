@@ -12,7 +12,7 @@ import OrdinaryOrderDetail from "../../screen/main/OrdinaryOrderDetail";
 import Payment from "../../screen/main/Payment";
 import Welcome from "../../screen/main/Welcome";
 import { SERVER } from "../../constant";
-import { getAsyncStorageToken } from "../../utils";
+import { getAsyncStorageToken, speech } from "../../utils";
 import TabsNavigator from "./TabsNavigator";
 import * as Device from "expo-device";
 import * as Notifications from "expo-notifications";
@@ -26,33 +26,11 @@ import { color } from "../../styles";
 
 const Stack = createStackNavigator();
 
-Notifications.setNotificationHandler({
-    handleNotification: async () => ({
-        shouldShowAlert: true,
-        shouldPlaySound: true,
-        shouldSetBadge: true,
-        priority: AndroidNotificationPriority.MAX,
-    }),
-});
-
-const BACKGROUND_NOTIFICATION_TASK = "BACKGROUND-NOTIFICATION-TASK";
-
-TaskManager.defineTask(
-    BACKGROUND_NOTIFICATION_TASK,
-    ({ data, error, executionInfo }) => {
-        console.log("Received a notification in the background!");
-        // Do something with the notification data
-    }
-);
-
-Notifications.registerTaskAsync(BACKGROUND_NOTIFICATION_TASK);
-
 export default function MainNavigator() {
     const [loading, setLoading] = useState(true);
     const { firstLogin } = useContext(LoginContext);
     const [acceptOrderList, setAcceptOrderList] = useState([]);
     const [registOrderList, setRegistOrderList] = useState([]);
-    const [notification, setNotification] = useState(false);
     const notificationListener = useRef();
     const responseListener = useRef();
 
@@ -79,16 +57,23 @@ export default function MainNavigator() {
 
         notificationListener.current =
             Notifications.addNotificationReceivedListener((notification) => {
-                console.log(notification);
-                setNotification(notification);
+                console.log(
+                    "addNotificationReceivedListener notification : ",
+                    notification
+                );
             });
 
         responseListener.current =
             Notifications.addNotificationResponseReceivedListener(
                 (response) => {
-                    console.log(response);
+                    console.log(
+                        "addNotificationResponseReceivedListener response : ",
+                        response
+                    );
+                    // console.log(response.notification.request.content.data); //TODO: 화면이동
                 }
             );
+        //TODO: wake lock 추가 (https://www.npmjs.com/package/react-native-android-wake-lock?activeTab=readme)
 
         //init
         setAcceptOrderList([]);
@@ -112,11 +97,6 @@ export default function MainNavigator() {
             }
         };
     }, []);
-
-    //TODO: - 기사/기업 회원 예약중인 작업이 있을 시 예약시간 30분 전부터 gps 측정 시작 (5분마다 재 측정) > 거리 500m 이하 일시 (추후 추가)
-    console.log("acceptOrderList : ", acceptOrderList);
-
-    console.log("notification : ", notification);
 
     const registerForPushNotificationsAsync = async () => {
         let token;
@@ -144,6 +124,7 @@ export default function MainNavigator() {
 
         return token;
     };
+
     const getAcceptOrderList = async () => {
         try {
             const response = await axios.get(SERVER + "/works/mylist/accept", {
