@@ -12,17 +12,14 @@ import OrdinaryOrderDetail from "../../screen/main/OrdinaryOrderDetail";
 import Payment from "../../screen/main/Payment";
 import Welcome from "../../screen/main/Welcome";
 import { SERVER } from "../../constant";
-import { getAsyncStorageToken, speech } from "../../utils";
+import { getAsyncStorageToken } from "../../utils";
 import TabsNavigator from "./TabsNavigator";
 import * as Device from "expo-device";
 import * as Notifications from "expo-notifications";
-import * as TaskManager from "expo-task-manager";
 import { Platform } from "react-native";
-import {
-    AndroidNotificationPriority,
-    AndroidNotificationVisibility,
-} from "expo-notifications";
+import { AndroidNotificationVisibility } from "expo-notifications";
 import { color } from "../../styles";
+import { useNavigation } from "@react-navigation/native";
 
 const Stack = createStackNavigator();
 
@@ -33,6 +30,7 @@ export default function MainNavigator() {
     const [registOrderList, setRegistOrderList] = useState([]);
     const notificationListener = useRef();
     const responseListener = useRef();
+    const navigation = useNavigation();
 
     useEffect(() => {
         registerForPushNotificationsAsync().then(async (token) => {
@@ -70,7 +68,29 @@ export default function MainNavigator() {
                         "addNotificationResponseReceivedListener response : ",
                         response
                     );
-                    // console.log(response.notification.request.content.data); //TODO: 화면이동
+
+                    if (response?.notification?.request?.content?.data) {
+                        const pushData =
+                            response.notification.request.content.data;
+
+                        if (pushData.screen === "NoticeDetail") {
+                            //TODO: 공지 추가
+                            console.log(pushData.noticeId);
+                            // navigation.navigate("NoticeDetail");
+                        } else if (pushData.screen === "Home") {
+                            navigation.navigate("TabsNavigator");
+                        } else if (
+                            pushData.screen === "OrderProgress" ||
+                            pushData.screen === "OrderDetail" ||
+                            pushData.screen === "CompleteOrder"
+                        ) {
+                            navigation.navigate(pushData.screen, {
+                                orderData: pushData.order,
+                            });
+                        } else {
+                            navigation.navigate("TabsNavigator");
+                        }
+                    }
                 }
             );
         //TODO: wake lock 추가 (https://www.npmjs.com/package/react-native-android-wake-lock?activeTab=readme)

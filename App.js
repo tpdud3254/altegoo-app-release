@@ -36,7 +36,7 @@ import { WSS_SERVER } from "./constant";
 SplashScreen.preventAutoHideAsync();
 
 //TODO: 백그라운드에서 실행되어야할 것들 셋팅
-// location, notification(push알림 누른 후 동작 추가), websocket(테스트 해보기)
+// location, notification(테스트), websocket(테스트)
 
 let ws = null;
 
@@ -62,10 +62,12 @@ function createSocket() {
 
     ws.onclose = (e) => {
         console.log("ws.onclose:", e);
-        if (e.reason !== "background") {
+        if (e.reason !== "background" && e.reason !== "terminated") {
             setTimeout(() => createSocket(), 1000);
         }
     };
+
+    //TODO: 서버 쪽 연결 끊기고 다시 연결 되었을 때 여러개 연결되는거 fix (tts메세지에 인덱스를 붙여서 해당 인덱스가 이미 실행되었으면 실행안하게?)
 }
 
 const LOCATION_TASK = "LOCATION_TASK";
@@ -80,16 +82,11 @@ Notifications.setNotificationHandler({
     }),
 });
 
-const myTask = () => {
+const createSocketOnBackground = () => {
     try {
-        const backendData = "Simulated fetch " + Math.random();
-        console.log("myTask() ", backendData);
-        console.log("ws.readyState : ", ws.readyState);
         if (ws.readyState === 2 || ws.readyState === 3) {
-            console.log("mytask");
-            createSocket("background task");
+            createSocket();
         }
-        //   setStateFn(backendData);
         return backendData
             ? BackgroundFetch.BackgroundFetchResult.NewData
             : BackgroundFetch.BackgroundFetchResult.NoData;
@@ -101,7 +98,6 @@ const myTask = () => {
 const initBackgroundFetch = async (taskName, taskFn, interval = 60 * 15) => {
     try {
         if (!TaskManager.isTaskDefined(taskName)) {
-            //
             TaskManager.defineTask(taskName, taskFn);
         }
         const options = {
@@ -113,7 +109,7 @@ const initBackgroundFetch = async (taskName, taskFn, interval = 60 * 15) => {
     }
 };
 
-initBackgroundFetch(WEB_SOCKET_TASK, myTask, 5);
+initBackgroundFetch(WEB_SOCKET_TASK, createSocketOnBackground, 5);
 
 export default function App() {
     const [appIsReady, setAppIsReady] = useState(false);
@@ -168,8 +164,11 @@ export default function App() {
         });
 
         createSocket();
-
         prepare();
+
+        return () => {
+            ws.close(1000, "terminated");
+        };
     }, []);
 
     const askLocationPermission = async () => {
