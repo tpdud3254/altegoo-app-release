@@ -23,7 +23,7 @@ import { toastConfig } from "./component/Toast";
 import { UserProvider } from "./context/UserContext";
 import { StatusBar } from "expo-status-bar";
 import { RegistProvider } from "./context/RegistContext";
-import { speech } from "./utils";
+import { checkPosition, speech } from "./utils";
 import { Asset } from "expo-asset";
 import * as Device from "expo-device";
 import * as Location from "expo-location";
@@ -36,7 +36,7 @@ import { WSS_SERVER } from "./constant";
 SplashScreen.preventAutoHideAsync();
 
 //TODO: 백그라운드에서 실행되어야할 것들 셋팅
-// location, notification(테스트), websocket(테스트)
+// location(테스트), notification(테스트), websocket(테스트)
 
 let ws = null;
 
@@ -70,8 +70,8 @@ function createSocket() {
     //TODO: 서버 쪽 연결 끊기고 다시 연결 되었을 때 여러개 연결되는거 fix (tts메세지에 인덱스를 붙여서 해당 인덱스가 이미 실행되었으면 실행안하게?)
 }
 
-const LOCATION_TASK = "LOCATION_TASK";
 const WEB_SOCKET_TASK = "WEB_SOCKET_TASK";
+const LOCATION_TASK = "LOCATION_TASK";
 
 Notifications.setNotificationHandler({
     handleNotification: async () => ({
@@ -104,12 +104,24 @@ const initBackgroundFetch = async (taskName, taskFn, interval = 60 * 15) => {
             minimumInterval: interval,
         };
         await BackgroundFetch.registerTaskAsync(taskName, options);
+        console.log(taskName, "is registred.");
     } catch (err) {
         console.log("registerTaskAsync() failed:", err);
     }
 };
 
+const getCurrentLocation = async () => {
+    const location = await Location.getCurrentPositionAsync();
+    console.log("get location on background : ", location);
+    const {
+        coords: { latitude, longitude },
+    } = location;
+
+    checkPosition({ latitude, longitude });
+};
+
 initBackgroundFetch(WEB_SOCKET_TASK, createSocketOnBackground, 5);
+initBackgroundFetch(LOCATION_TASK, getCurrentLocation, 5);
 
 export default function App() {
     const [appIsReady, setAppIsReady] = useState(false);

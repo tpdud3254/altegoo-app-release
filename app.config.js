@@ -27,6 +27,14 @@ export default {
         android: {
             package: "com.gng.altegoo",
         },
+        plugins: [
+            [
+                "expo-location",
+                {
+                    isAndroidBackgroundLocationEnabled: true,
+                },
+            ],
+        ],
     },
     android: {
         package: "com.gng.altegoo",

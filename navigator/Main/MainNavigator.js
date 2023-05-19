@@ -12,7 +12,7 @@ import OrdinaryOrderDetail from "../../screen/main/OrdinaryOrderDetail";
 import Payment from "../../screen/main/Payment";
 import Welcome from "../../screen/main/Welcome";
 import { SERVER } from "../../constant";
-import { getAsyncStorageToken } from "../../utils";
+import { checkPosition, getAsyncStorageToken } from "../../utils";
 import TabsNavigator from "./TabsNavigator";
 import * as Device from "expo-device";
 import * as Notifications from "expo-notifications";
@@ -20,6 +20,23 @@ import { Platform } from "react-native";
 import { AndroidNotificationVisibility } from "expo-notifications";
 import { color } from "../../styles";
 import { useNavigation } from "@react-navigation/native";
+import * as Location from "expo-location";
+
+Location.watchPositionAsync(
+    {
+        accuracy: Location.Accuracy.High,
+        timeInterval: 1000 * 10, //TODO: 나중에 수치 변경
+        distanceInterval: 1, //TODO: 나중에 수치 변경
+    },
+    async (position) => {
+        const {
+            coords: { latitude, longitude },
+        } = position;
+
+        console.log("watchPositionAsync : ", latitude, longitude);
+        checkPosition({ latitude, longitude });
+    }
+);
 
 const Stack = createStackNavigator();
 

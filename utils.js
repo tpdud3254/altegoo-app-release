@@ -1,7 +1,8 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Toast } from "react-native-toast-message/lib/src/Toast";
-import { TOKEN } from "./constant";
+import { SERVER, TOKEN, VALID } from "./constant";
 import * as Speech from "expo-speech";
+import axios from "axios";
 
 export const checkPassword = (password) => {
     const regExp = /^.*(?=^.{8,}$)(?=.*\d)(?=.*[a-zA-Z]).*$/;
@@ -123,4 +124,195 @@ export const speech = (msg, exceptionUserId) => {
 
 export const onNext = (nextOne) => {
     nextOne?.current?.focus();
+};
+
+export const getDistance = (lat1, lng1, lat2, lng2) => {
+    if (lat1 == lat2 && lng1 == lng2) return 0;
+
+    var radLat1 = (Math.PI * lat1) / 180;
+    var radLat2 = (Math.PI * lat2) / 180;
+    var theta = lng1 - lng2;
+    var radTheta = (Math.PI * theta) / 180;
+    var dist =
+        Math.sin(radLat1) * Math.sin(radLat2) +
+        Math.cos(radLat1) * Math.cos(radLat2) * Math.cos(radTheta);
+    if (dist > 1) dist = 1;
+
+    dist = Math.acos(dist);
+    dist = (dist * 180) / Math.PI;
+    dist = dist * 60 * 1.1515 * 1.609344 * 1000;
+    if (dist < 100) dist = Math.round(dist / 10) * 10;
+    else dist = Math.round(dist / 100) * 100;
+
+    return dist; //dist가 2,000 --> 2km를 의미
+};
+
+export const checkPosition = async (location) => {
+    const auth = await getAsyncStorageToken();
+
+    if (!auth) {
+        return;
+    }
+
+    try {
+        const response = await axios.get(SERVER + "/works/mylist/accept", {
+            headers: {
+                auth,
+            },
+        });
+
+        const {
+            data: { result },
+        } = response;
+
+        if (result === VALID) {
+            const {
+                data: {
+                    data: { list },
+                },
+            } = response;
+
+            let order1 = null; //1시간 미만 남은 예약 중 작업 (orderStatusId === 2)
+            let order2 = null; //출발한 작업 (orderStatusId === 3)
+
+            if (list.length > 0) {
+                list.map((order) => {
+                    const now = new Date();
+                    const compareDate = new Date(order.workDateTime);
+                    if (now > compareDate) {
+                        return;
+                    }
+
+                    if (!order1) {
+                        compareDate.setHours(compareDate.getHours() - 1); //작업시간이 한 시간 이하로 남았을 경우
+
+                        if (order.orderStatusId === 2 && now > compareDate) {
+                            order1 = order;
+                        }
+                    }
+
+                    if (!order2) {
+                        if (order.orderStatusId === 3) {
+                            order2 = order;
+                        }
+                    }
+                });
+            }
+
+            console.log("check location position / order1 : ", order1);
+            console.log("check location position / order2 : ", order2);
+
+            if (order1) {
+                try {
+                    const res = await axios.get(
+                        `https://dapi.kakao.com/v2/local/search/address.json?query=${order1.address1}`,
+                        {
+                            headers: {
+                                Authorization:
+                                    "KakaoAK 86e0df46fbae745bb4c658276b280088",
+                            },
+                        }
+                    );
+
+                    const {
+                        data: { documents },
+                    } = res;
+
+                    const current = {
+                        latitude: location.latitude,
+                        longitude: location.longitude,
+                    };
+
+                    const destination = {
+                        latitude: documents[0].y,
+                        longitude: documents[0].x,
+                    };
+
+                    const distance = getDistance(
+                        current.latitude,
+                        current.longitude,
+                        destination.latitude,
+                        destination.longitude
+                    );
+
+                    if (distance < 2000) {
+                        try {
+                            const res = await axios.patch(
+                                SERVER + "/works/order/move",
+                                { id: order1.id },
+                                {
+                                    headers: {
+                                        auth: await getAsyncStorageToken(),
+                                    },
+                                }
+                            );
+
+                            console.log(res);
+                        } catch (error) {
+                            console.log(error);
+                        }
+                    }
+                } catch (error) {
+                    console.log(error);
+                }
+            }
+
+            if (order2) {
+                try {
+                    const res = await axios.get(
+                        `https://dapi.kakao.com/v2/local/search/address.json?query=${order2.address1}`,
+                        {
+                            headers: {
+                                Authorization:
+                                    "KakaoAK 86e0df46fbae745bb4c658276b280088",
+                            },
+                        }
+                    );
+
+                    const {
+                        data: { documents },
+                    } = res;
+
+                    const current = {
+                        latitude: location.latitude,
+                        longitude: location.longitude,
+                    };
+
+                    const destination = {
+                        latitude: documents[0].y,
+                        longitude: documents[0].x,
+                    };
+
+                    const distance = getDistance(
+                        current.latitude,
+                        current.longitude,
+                        destination.latitude,
+                        destination.longitude
+                    );
+
+                    if (distance < 500) {
+                        try {
+                            const res = await axios.patch(
+                                SERVER + "/works/order/move",
+                                { id: order2.id },
+                                {
+                                    headers: {
+                                        auth,
+                                    },
+                                }
+                            );
+
+                            console.log(res);
+                        } catch (error) {
+                            console.log(error);
+                        }
+                    }
+                } catch (error) {
+                    console.log(error);
+                }
+            }
+        }
+    } catch (error) {
+        console.log(error);
+    }
 };
