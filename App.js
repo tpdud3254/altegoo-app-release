@@ -36,7 +36,7 @@ import { WSS_SERVER } from "./constant";
 SplashScreen.preventAutoHideAsync();
 
 //TODO: 백그라운드에서 실행되어야할 것들 셋팅
-// location(테스트), notification(테스트), websocket(테스트)
+// location(테스트)
 
 let ws = null;
 
@@ -84,6 +84,7 @@ Notifications.setNotificationHandler({
 
 const createSocketOnBackground = () => {
     try {
+        console.log("ws.readyState on background : ", ws.readyState);
         if (ws.readyState === 2 || ws.readyState === 3) {
             createSocket();
         }

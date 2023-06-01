@@ -99,7 +99,7 @@ function RegistPointAccount({ route, navigation }) {
     return (
         <FormLayout>
             <View>
-                <Picker //TODO: Picker style
+                <Picker
                     selectedValue={bank[selectedBank]}
                     onValueChange={(itemValue, itemIndex) =>
                         setSelectedBank(itemIndex)

@@ -96,6 +96,7 @@ export default function MainNavigator() {
                             // navigation.navigate("NoticeDetail");
                         } else if (pushData.screen === "Home") {
                             navigation.navigate("TabsNavigator");
+                            //TODO: 리프레쉬
                         } else if (
                             pushData.screen === "OrderProgress" ||
                             pushData.screen === "OrderDetail" ||

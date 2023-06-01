@@ -20,10 +20,11 @@ import MyOrdinaryOrderList from "../../screen/main/myOrders/MyOrdinaryOrderList"
 const Tabs = createBottomTabNavigator();
 const Stack = createStackNavigator();
 
-export default function TabsNavigator() {
+export default function TabsNavigator({ route }) {
     const { info, setInfo } = useContext(UserContext);
 
     console.log(info);
+    console.log("route.params.refresh : ", route?.params?.refresh);
     const navigation = useNavigation();
 
     const onPress = () => {
@@ -137,6 +138,7 @@ export default function TabsNavigator() {
                             ),
                         }}
                         component={Home}
+                        initialParams={{ refresh: route?.params?.refresh }}
                     />
                     <Tabs.Screen
                         name="MyOrderList"

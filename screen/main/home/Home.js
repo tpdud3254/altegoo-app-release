@@ -101,6 +101,7 @@ const Notifications = styled(RegistButtons)`
 function Home({ navigation }) {
     const { info } = useContext(UserContext);
     const [point, setPoint] = useState(0);
+    const [refresh, setRefresh] = useState(false);
 
     useEffect(() => {
         if (info.userType !== ORDINARY) {

@@ -78,17 +78,6 @@ function Intro() {
         navigation.navigate("SignUpNavigator");
     };
 
-    //TODO: testcode
-    const testOnClick = async () => {
-        await Notifications.scheduleNotificationAsync({
-            content: {
-                title: "You've got mail! 📬",
-                body: "Here is the notification body",
-                data: { data: "goes here" },
-            },
-            trigger: null,
-        });
-    };
     return (
         <Container>
             <Wrapper>
@@ -128,9 +117,6 @@ function Intro() {
                 <Buttons>
                     <Button
                         onPress={goToSignIn}
-                        // onPress={async () => {
-                        //     await testOnClick();
-                        // }} //TODO: testcode
                         type="accent"
                         style={{ width: 185 }}
                         text="로그인"
