@@ -6,7 +6,7 @@ function PlainText(props) {
         <Text
             {...props}
             style={{
-                fontSize: 20,
+                fontSize: 18,
                 fontWeight: "300",
                 fontFamily: "SpoqaHanSansNeo-Medium",
                 ...props.style,

@@ -40,13 +40,13 @@ const Indicators = styled.View`
 `;
 
 const Indicator = styled.TouchableOpacity`
-    width: ${(props) => (props.cur ? "35px" : "13px")};
-    height: 13px;
+    width: ${(props) => (props.cur ? "25px" : "8px")};
+    height: 8px;
     background-color: ${(props) => props.color || color.main};
     justify-content: center;
     align-items: center;
     border-radius: 100px;
-    margin: 0px 5px 0px 5px;
+    margin: 0px 3px 0px 3px;
 `;
 
 const Buttons = styled.View`
