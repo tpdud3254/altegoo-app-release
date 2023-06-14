@@ -8,6 +8,7 @@ function PlainText(props) {
             style={{
                 fontSize: 20,
                 fontWeight: "300",
+                fontFamily: "SpoqaHanSansNeo-Medium",
                 ...props.style,
             }}
         >
