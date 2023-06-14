@@ -8,7 +8,7 @@ import {
     TouchableWithoutFeedback,
     RefreshControl,
 } from "react-native";
-import PlainText from "../../../component/text/PlainText";
+import MediumText from "../../../component/text/MediumText";
 import styled from "styled-components/native";
 import { color } from "../../../styles";
 import axios from "axios";
@@ -470,9 +470,9 @@ function MyOrderList({ navigation }) {
             color={color.btnAccent}
             onPress={() => setAcceptOrder(orderId)}
         >
-            <PlainText style={{ fontSize: 19, color: "white" }}>
+            <MediumText style={{ fontSize: 19, color: "white" }}>
                 예약하기
-            </PlainText>
+            </MediumText>
         </OrderButton>
     );
 
@@ -481,17 +481,17 @@ function MyOrderList({ navigation }) {
             color={color.sub.blue}
             onPress={() => setReserveOrder(orderId)}
         >
-            <PlainText style={{ fontSize: 19, color: "white" }}>
+            <MediumText style={{ fontSize: 19, color: "white" }}>
                 예약대기
-            </PlainText>
+            </MediumText>
         </OrderButton>
     );
 
     const CancleButton = ({ orderId }) => (
         <OrderButton color="#777" onPress={() => setCancleOrder(orderId)}>
-            <PlainText style={{ fontSize: 19, color: "white" }}>
+            <MediumText style={{ fontSize: 19, color: "white" }}>
                 예약취소
-            </PlainText>
+            </MediumText>
         </OrderButton>
     );
 
@@ -500,9 +500,9 @@ function MyOrderList({ navigation }) {
             color={color.sub.green}
             onPress={() => setCancleReservation(orderId)}
         >
-            <PlainText style={{ fontSize: 19, color: "white" }}>
+            <MediumText style={{ fontSize: 19, color: "white" }}>
                 예약대기 취소
-            </PlainText>
+            </MediumText>
         </OrderButton>
     );
 
@@ -551,11 +551,11 @@ function MyOrderList({ navigation }) {
                                 size={37}
                                 color="#777"
                             />
-                            <PlainText
+                            <MediumText
                                 style={{ marginLeft: 5, marginRight: 5 }}
                             >
                                 1월 1주차
-                            </PlainText>
+                            </MediumText>
                             <Ionicons
                                 name="caret-forward-circle-outline"
                                 size={37}
@@ -568,9 +568,9 @@ function MyOrderList({ navigation }) {
                                 size={26}
                                 color={color.sub.yellow}
                             />
-                            <PlainText style={{ marginLeft: 5 }}>
+                            <MediumText style={{ marginLeft: 5 }}>
                                 {totalCount}건 (예정)
-                            </PlainText>
+                            </MediumText>
                         </OrderCount>
                     </TopContainer>
                     <View style={{ flex: 2.3 }}>
@@ -601,7 +601,7 @@ function MyOrderList({ navigation }) {
                                                                 openStatusFilter
                                                             }
                                                         >
-                                                            <PlainText
+                                                            <MediumText
                                                                 style={{
                                                                     textAlign:
                                                                         "center",
@@ -611,7 +611,7 @@ function MyOrderList({ navigation }) {
                                                                 "all"
                                                                     ? "전체 작업"
                                                                     : "요청 중 작업"}
-                                                            </PlainText>
+                                                            </MediumText>
                                                             <Ionicons
                                                                 name="caret-down-circle-outline"
                                                                 size={24}
@@ -680,7 +680,7 @@ function MyOrderList({ navigation }) {
                                                                 order.orderStatusId
                                                             }
                                                         >
-                                                            <PlainText
+                                                            <MediumText
                                                                 style={{
                                                                     color: statusArr[
                                                                         order.orderStatusId -
@@ -695,7 +695,7 @@ function MyOrderList({ navigation }) {
                                                                             1
                                                                     ].text
                                                                 }
-                                                            </PlainText>
+                                                            </MediumText>
                                                         </Status>
                                                         <OrderWrapper>
                                                             <OrderContent>
@@ -705,7 +705,7 @@ function MyOrderList({ navigation }) {
                                                                 ) : (
                                                                     <SkyIcon />
                                                                 )}
-                                                                <PlainText
+                                                                <MediumText
                                                                     style={{
                                                                         marginLeft: 5,
                                                                         fontSize: 19,
@@ -728,7 +728,7 @@ function MyOrderList({ navigation }) {
                                                                     "time"
                                                                         ? order.time
                                                                         : order.quantity}
-                                                                </PlainText>
+                                                                </MediumText>
                                                             </OrderContent>
                                                             <OrderContent>
                                                                 <Ionicons
@@ -736,7 +736,7 @@ function MyOrderList({ navigation }) {
                                                                     color="#777"
                                                                     size={24}
                                                                 />
-                                                                <PlainText
+                                                                <MediumText
                                                                     style={{
                                                                         marginLeft: 5,
                                                                         fontSize: 19,
@@ -751,7 +751,7 @@ function MyOrderList({ navigation }) {
                                                                         : order.address1 +
                                                                           " " +
                                                                           order.detailAddress1}
-                                                                </PlainText>
+                                                                </MediumText>
                                                             </OrderContent>
                                                             <OrderContent>
                                                                 <Ionicons
@@ -759,7 +759,7 @@ function MyOrderList({ navigation }) {
                                                                     color="#777"
                                                                     size={24}
                                                                 />
-                                                                <PlainText
+                                                                <MediumText
                                                                     style={{
                                                                         marginLeft: 5,
                                                                         fontSize: 19,
@@ -771,7 +771,7 @@ function MyOrderList({ navigation }) {
                                                                     {getWorkTime(
                                                                         order.workDateTime
                                                                     )}
-                                                                </PlainText>
+                                                                </MediumText>
                                                             </OrderContent>
                                                             <OrderContent>
                                                                 <FontAwesome5
@@ -781,7 +781,7 @@ function MyOrderList({ navigation }) {
                                                                     }
                                                                     size={24}
                                                                 />
-                                                                <PlainText
+                                                                <MediumText
                                                                     style={{
                                                                         marginLeft: 5,
                                                                         fontSize: 19,
@@ -801,7 +801,7 @@ function MyOrderList({ navigation }) {
                                                                         order.point
                                                                     )}
                                                                     AP
-                                                                </PlainText>
+                                                                </MediumText>
                                                             </OrderContent>
                                                         </OrderWrapper>
                                                         <OrderButtonContainer>
@@ -849,24 +849,24 @@ function MyOrderList({ navigation }) {
                                         </NotiIcon>
                                         <NotiWrapper order>
                                             <NotiTitle>
-                                                <PlainText
+                                                <MediumText
                                                     numberOfLines={1}
                                                     style={{ color: "#777" }}
                                                 >
                                                     스카이 / 올림(4층) / 추가
                                                     1시간 당
-                                                </PlainText>
+                                                </MediumText>
                                             </NotiTitle>
 
                                             <NotiText>
-                                                <PlainText
+                                                <MediumText
                                                     style={{
                                                         fontSize: 21,
                                                     }}
                                                     numberOfLines={1}
                                                 >
                                                     작업 예약이 완료 되었습니다.
-                                                </PlainText>
+                                                </MediumText>
                                             </NotiText>
                                         </NotiWrapper>
                                     </Notification>
@@ -883,24 +883,24 @@ function MyOrderList({ navigation }) {
                                         </NotiIcon>
                                         <NotiWrapper>
                                             <NotiTitle>
-                                                <PlainText
+                                                <MediumText
                                                     numberOfLines={1}
                                                     style={{ color: "#777" }}
                                                 >
                                                     스카이 / 올림(4층) / 추가
                                                     1시간 당
-                                                </PlainText>
+                                                </MediumText>
                                             </NotiTitle>
 
                                             <NotiText>
-                                                <PlainText
+                                                <MediumText
                                                     style={{
                                                         fontSize: 21,
                                                     }}
                                                     numberOfLines={1}
                                                 >
                                                     작업 예약이 완료 되었습니다.
-                                                </PlainText>
+                                                </MediumText>
                                             </NotiText>
                                         </NotiWrapper>
                                     </Notification>
@@ -917,24 +917,24 @@ function MyOrderList({ navigation }) {
                                         </NotiIcon>
                                         <NotiWrapper>
                                             <NotiTitle>
-                                                <PlainText
+                                                <MediumText
                                                     numberOfLines={1}
                                                     style={{ color: "#777" }}
                                                 >
                                                     스카이 / 올림(4층) / 추가
                                                     1시간 당
-                                                </PlainText>
+                                                </MediumText>
                                             </NotiTitle>
 
                                             <NotiText>
-                                                <PlainText
+                                                <MediumText
                                                     style={{
                                                         fontSize: 21,
                                                     }}
                                                     numberOfLines={1}
                                                 >
                                                     작업 예약이 완료 되었습니다.
-                                                </PlainText>
+                                                </MediumText>
                                             </NotiText>
                                         </NotiWrapper>
                                     </Notification>

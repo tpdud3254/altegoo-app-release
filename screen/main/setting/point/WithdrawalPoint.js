@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import styled from "styled-components/native";
 import PropTypes, { number } from "prop-types";
 import { Text, View } from "react-native";
-import PlainText from "../../../../component/text/PlainText";
+import MediumText from "../../../../component/text/MediumText";
 import { numberWithComma } from "../../../../utils";
 import SubmitButton from "../../../../component/button/SubmitButton";
 import { TextInput } from "react-native-paper";
@@ -61,20 +61,20 @@ function WithdrawalPoint({ route, navigation }) {
         <View
             style={{ flex: 1, alignItems: "center", justifyContent: "center" }}
         >
-            <PlainText>은행명 : {account.bank}</PlainText>
-            <PlainText>계좌번호 : {account.accountNumber}</PlainText>
-            <PlainText>예금주 : {account.accountName}</PlainText>
-            <PlainText>
+            <MediumText>은행명 : {account.bank}</MediumText>
+            <MediumText>계좌번호 : {account.accountNumber}</MediumText>
+            <MediumText>예금주 : {account.accountName}</MediumText>
+            <MediumText>
                 총 포인트 : {numberWithComma(account.curPoint || 0)}AP
-            </PlainText>
-            <PlainText>출금 포인트 : </PlainText>
+            </MediumText>
+            <MediumText>출금 포인트 : </MediumText>
             <TextInput
                 placeholder="금액을 적어주세요."
                 keyboardType="number-pad"
                 onChangeText={(text) => setWithdrawalPoint(text)}
                 style={{ backgroundColor: "white" }}
             />
-            <PlainText>출금 수수료 : 1,000AP</PlainText>
+            <MediumText>출금 수수료 : 1,000AP</MediumText>
             <SubmitButton text="포인트 출금" onPress={onWithdrawal} />
         </View>
     );

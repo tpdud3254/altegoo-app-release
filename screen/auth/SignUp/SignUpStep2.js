@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useState } from "react";
 import styled from "styled-components/native";
 import { useNavigation } from "@react-navigation/native";
-import PlainText from "../../../component/text/PlainText";
+import MediumText from "../../../component/text/MediumText";
 import { Image, TouchableOpacity } from "react-native";
 import UserContext from "../../../context/UserContext";
 import DefaultLayout from "../../../component/layout/DefaultLayout";
@@ -197,24 +197,32 @@ function SignUpStep2() {
                         <Ionicons name="close" size={30} color="black" />
                     </TouchableOpacity>
                 </ModalTop>
-                <PlainText style={modalSubTitleStyle}>[경기 북서부]</PlainText>
-                <PlainText style={modalTextStyle}>
+                <MediumText style={modalSubTitleStyle}>
+                    [경기 북서부]
+                </MediumText>
+                <MediumText style={modalTextStyle}>
                     김포시 / 부천시 / 파주시 / 고양시 / 동두천시 / 연천군
-                </PlainText>
-                <PlainText style={modalSubTitleStyle}>[경기 북동부]</PlainText>
-                <PlainText style={modalTextStyle}>
+                </MediumText>
+                <MediumText style={modalSubTitleStyle}>
+                    [경기 북동부]
+                </MediumText>
+                <MediumText style={modalTextStyle}>
                     의정부시 / 양주시 / 구리시 / 남양주시 / 포천시 / 가평군
-                </PlainText>
-                <PlainText style={modalSubTitleStyle}>[경기 남서부]</PlainText>
-                <PlainText style={modalTextStyle}>
+                </MediumText>
+                <MediumText style={modalSubTitleStyle}>
+                    [경기 남서부]
+                </MediumText>
+                <MediumText style={modalTextStyle}>
                     광명시 / 시흥시 / 안산시 / 안양시 / 과천시 / 의왕시 / 군포시
                     / 수원시 / 오산시 / 화성시 / 평택시
-                </PlainText>
-                <PlainText style={modalSubTitleStyle}>[경기 남동부]</PlainText>
-                <PlainText style={modalTextStyle}>
+                </MediumText>
+                <MediumText style={modalSubTitleStyle}>
+                    [경기 남동부]
+                </MediumText>
+                <MediumText style={modalTextStyle}>
                     성남시 / 하남시 / 광주시 / 용인시 / 안성시 / 이천시 / 여주시
                     / 양평군
-                </PlainText>
+                </MediumText>
             </Modal>
         </Portal>
     );
@@ -235,9 +243,9 @@ function SignUpStep2() {
                                         onPress(0);
                                     }}
                                 >
-                                    <PlainText style={{ fontSize: 20 }}>
+                                    <MediumText style={{ fontSize: 20 }}>
                                         서울시
-                                    </PlainText>
+                                    </MediumText>
                                 </MapButton>
                                 <Image //서울
                                     style={{
@@ -263,9 +271,9 @@ function SignUpStep2() {
                                         onPress(1);
                                     }}
                                 >
-                                    <PlainText style={{ fontSize: 20 }}>
+                                    <MediumText style={{ fontSize: 20 }}>
                                         인천시
-                                    </PlainText>
+                                    </MediumText>
                                 </MapButton>
                                 <Image //인천
                                     style={{
@@ -291,9 +299,9 @@ function SignUpStep2() {
                                         onPress(2);
                                     }}
                                 >
-                                    <PlainText style={{ fontSize: 20 }}>
+                                    <MediumText style={{ fontSize: 20 }}>
                                         경기 북서부
-                                    </PlainText>
+                                    </MediumText>
                                 </MapButton>
                                 <Image //북서부
                                     style={{
@@ -319,9 +327,9 @@ function SignUpStep2() {
                                         onPress(3);
                                     }}
                                 >
-                                    <PlainText style={{ fontSize: 20 }}>
+                                    <MediumText style={{ fontSize: 20 }}>
                                         경기 북동부
-                                    </PlainText>
+                                    </MediumText>
                                 </MapButton>
                                 <Image //북동부
                                     style={{
@@ -347,9 +355,9 @@ function SignUpStep2() {
                                         onPress(4);
                                     }}
                                 >
-                                    <PlainText style={{ fontSize: 20 }}>
+                                    <MediumText style={{ fontSize: 20 }}>
                                         경기 남서부
-                                    </PlainText>
+                                    </MediumText>
                                 </MapButton>
                                 <Image //남서부
                                     style={{
@@ -375,9 +383,9 @@ function SignUpStep2() {
                                         onPress(5);
                                     }}
                                 >
-                                    <PlainText style={{ fontSize: 20 }}>
+                                    <MediumText style={{ fontSize: 20 }}>
                                         경기 남동부
-                                    </PlainText>
+                                    </MediumText>
                                 </MapButton>
                                 <Image //남동부
                                     style={{
@@ -398,7 +406,7 @@ function SignUpStep2() {
                         ) : null}
                     </MapContainer>
                     <GuideTextContainer>
-                        <PlainText
+                        <MediumText
                             style={{
                                 fontSize: 20,
                                 color: color.darkGrey,
@@ -407,7 +415,7 @@ function SignUpStep2() {
                             작업지역은 언제든지 추가, 제거 및 변경이 가능합니다.
                             {"\n"}
                             작업을 희망하시는 위치를 선택해 주세요.
-                        </PlainText>
+                        </MediumText>
                     </GuideTextContainer>
                 </Container>
                 <Button text="다음으로" onPress={onNextStep} type="accent" />

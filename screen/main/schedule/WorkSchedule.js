@@ -8,7 +8,7 @@ import UserContext from "../../../context/UserContext";
 import { useNavigation } from "@react-navigation/native";
 import DefaultLayout from "../../../component/layout/DefaultLayout";
 import { Ionicons } from "@expo/vector-icons";
-import PlainText from "../../../component/text/PlainText";
+import MediumText from "../../../component/text/MediumText";
 import TruckLogo from "../../../component/logo/TruckLogo";
 
 import axios from "axios";
@@ -51,29 +51,29 @@ function WorkSchedule() {
                 }}
             >
                 <View style={{ flex: 2 }}>
-                    <PlainText>홍길동 / 양사-저층</PlainText>
+                    <MediumText>홍길동 / 양사-저층</MediumText>
                     <View
                         style={{ flexDirection: "row", alignItems: "center" }}
                     >
                         <Ionicons name="location" color="black" size={25} />
-                        <PlainText>서울시 구로구 구로동 243-2</PlainText>
+                        <MediumText>서울시 구로구 구로동 243-2</MediumText>
                     </View>
                     <View
                         style={{ flexDirection: "row", alignItems: "center" }}
                     >
                         <Ionicons name="time" color="black" size={25} />
-                        <PlainText>23년 1월 2일 17:00</PlainText>
+                        <MediumText>23년 1월 2일 17:00</MediumText>
                     </View>
                     <View
                         style={{ flexDirection: "row", alignItems: "center" }}
                     >
                         <Ionicons name="heart" color="black" size={25} />
-                        <PlainText>16,000P</PlainText>
+                        <MediumText>16,000P</MediumText>
                     </View>
                 </View>
                 <View style={{ flex: 1, alignItems: "center" }}>
                     <View>
-                        <PlainText>요청</PlainText>
+                        <MediumText>요청</MediumText>
                     </View>
                     <View>
                         <TruckLogo />
@@ -89,11 +89,11 @@ function WorkSchedule() {
                     }}
                 >
                     <Ionicons name="arrow-up-circle" color="black" size={25} />
-                    <PlainText>165,000</PlainText>
+                    <MediumText>165,000</MediumText>
                 </View>
                 <View style={{ flex: 1, alignItems: "center" }}>
                     <TouchableOpacity>
-                        <PlainText>작업 완료</PlainText>
+                        <MediumText>작업 완료</MediumText>
                     </TouchableOpacity>
                 </View>
             </View>
@@ -127,7 +127,7 @@ function WorkSchedule() {
                     <TouchableOpacity>
                         <Ionicons name="arrow-back" color="black" size={25} />
                     </TouchableOpacity>
-                    <PlainText>1월 1주차</PlainText>
+                    <MediumText>1월 1주차</MediumText>
                     <TouchableOpacity>
                         <Ionicons
                             name="arrow-forward"
@@ -138,7 +138,7 @@ function WorkSchedule() {
                 </View>
                 <View style={{ flexDirection: "row", alignItems: "center" }}>
                     <Ionicons name="person" color="black" size={25} />
-                    <PlainText>6건 예정</PlainText>
+                    <MediumText>6건 예정</MediumText>
                 </View>
             </View>
             <ScrollView>
@@ -156,7 +156,7 @@ function WorkSchedule() {
                                 alignItems: "center",
                             }}
                         >
-                            <PlainText>서울 작업 3개</PlainText>
+                            <MediumText>서울 작업 3개</MediumText>
                             <Ionicons
                                 name="checkmark-circle"
                                 color="black"
@@ -166,7 +166,7 @@ function WorkSchedule() {
                         {/* <TouchableOpacity
               style={{ flexDirection: "row", alignItems: "center" }}
             >
-              <PlainText>모든 작업 보기</PlainText>
+              <MediumText>모든 작업 보기</MediumText>
               <Ionicons
                 name="checkmark-circle-outline"
                 color="black"
@@ -195,7 +195,7 @@ function WorkSchedule() {
                                 alignItems: "center",
                             }}
                         >
-                            <PlainText>경기 북서부 작업 3개</PlainText>
+                            <MediumText>경기 북서부 작업 3개</MediumText>
                             <Ionicons
                                 name="checkmark-circle"
                                 color="black"
@@ -205,7 +205,7 @@ function WorkSchedule() {
                         {/* <TouchableOpacity
               style={{ flexDirection: "row", alignItems: "center" }}
             >
-              <PlainText>모든 작업 보기</PlainText>
+              <MediumText>모든 작업 보기</MediumText>
               <Ionicons
                 name="checkmark-circle-outline"
                 color="black"

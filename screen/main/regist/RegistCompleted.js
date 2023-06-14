@@ -3,7 +3,7 @@ import styled from "styled-components/native";
 import DefaultLayout from "../../../component/layout/DefaultLayout";
 import { color } from "../../../styles";
 import Logo from "../../../component/logo/Logo";
-import PlainText from "../../../component/text/PlainText";
+import MediumText from "../../../component/text/MediumText";
 import { BackHandler, View } from "react-native";
 import RegistContext from "../../../context/RegistContext";
 import { SERVER } from "../../../constant";
@@ -104,7 +104,7 @@ function RegistCompleted({ navigation, route }) {
             <Container>
                 <Logo />
                 <Header>
-                    <PlainText
+                    <MediumText
                         style={{
                             fontWeight: "600",
                             fontSize: 30,
@@ -113,16 +113,16 @@ function RegistCompleted({ navigation, route }) {
                         }}
                     >
                         작업 등록이{"\n"}완료되었습니다.
-                    </PlainText>
+                    </MediumText>
 
-                    <PlainText
+                    <MediumText
                         style={{
                             fontSize: 22,
                             textAlign: "center",
                         }}
                     >
                         현재 등록되어 있는{"\n"}
-                        <PlainText
+                        <MediumText
                             style={{
                                 fontSize: 22,
                                 fontWeight: "400",
@@ -130,9 +130,9 @@ function RegistCompleted({ navigation, route }) {
                             }}
                         >
                             {userCount}명
-                        </PlainText>
+                        </MediumText>
                         의 기사님께{"\n"}작업 알림이 전송되었습니다.
-                    </PlainText>
+                    </MediumText>
                 </Header>
                 {/* <HorizontalDivider color={"#dedede"} /> */}
 
@@ -142,19 +142,19 @@ function RegistCompleted({ navigation, route }) {
                             accent
                             onPress={() => goToPage("TabRegistWork")}
                         >
-                            <PlainText
+                            <MediumText
                                 style={{
                                     fontWeight: "500",
                                     color: "white",
                                 }}
                             >
                                 작업등록하러 하기
-                            </PlainText>
+                            </MediumText>
                         </AccentButton>
                         <Button onPress={() => goToPage("Home")}>
-                            <PlainText style={{ fontWeight: "500" }}>
+                            <MediumText style={{ fontWeight: "500" }}>
                                 홈
-                            </PlainText>
+                            </MediumText>
                         </Button>
                     </BottomButtonWrapper>
                 </Bottom>

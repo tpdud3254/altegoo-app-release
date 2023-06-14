@@ -8,7 +8,7 @@ import {
     TouchableWithoutFeedback,
     RefreshControl,
 } from "react-native";
-import PlainText from "../../../component/text/PlainText";
+import MediumText from "../../../component/text/MediumText";
 import styled from "styled-components/native";
 import { color } from "../../../styles";
 import axios from "axios";
@@ -468,9 +468,9 @@ function MyOrdinaryOrderList({ navigation }) {
             color={color.btnAccent}
             onPress={() => setAcceptOrder(orderId)}
         >
-            <PlainText style={{ fontSize: 19, color: "white" }}>
+            <MediumText style={{ fontSize: 19, color: "white" }}>
                 예약하기
-            </PlainText>
+            </MediumText>
         </OrderButton>
     );
 
@@ -479,17 +479,17 @@ function MyOrdinaryOrderList({ navigation }) {
             color={color.sub.blue}
             onPress={() => setReserveOrder(orderId)}
         >
-            <PlainText style={{ fontSize: 19, color: "white" }}>
+            <MediumText style={{ fontSize: 19, color: "white" }}>
                 예약대기
-            </PlainText>
+            </MediumText>
         </OrderButton>
     );
 
     const CancleButton = ({ orderId }) => (
         <OrderButton color="#777" onPress={() => setCancleOrder(orderId)}>
-            <PlainText style={{ fontSize: 19, color: "white" }}>
+            <MediumText style={{ fontSize: 19, color: "white" }}>
                 예약취소
-            </PlainText>
+            </MediumText>
         </OrderButton>
     );
 
@@ -498,9 +498,9 @@ function MyOrdinaryOrderList({ navigation }) {
             color={color.sub.green}
             onPress={() => setCancleReservation(orderId)}
         >
-            <PlainText style={{ fontSize: 19, color: "white" }}>
+            <MediumText style={{ fontSize: 19, color: "white" }}>
                 예약대기 취소
-            </PlainText>
+            </MediumText>
         </OrderButton>
     );
 
@@ -549,11 +549,11 @@ function MyOrdinaryOrderList({ navigation }) {
                                 size={37}
                                 color="#777"
                             />
-                            <PlainText
+                            <MediumText
                                 style={{ marginLeft: 5, marginRight: 5 }}
                             >
                                 1월 1주차
-                            </PlainText>
+                            </MediumText>
                             <Ionicons
                                 name="caret-forward-circle-outline"
                                 size={37}
@@ -566,9 +566,9 @@ function MyOrdinaryOrderList({ navigation }) {
                                 size={26}
                                 color={color.sub.yellow}
                             />
-                            <PlainText style={{ marginLeft: 5 }}>
+                            <MediumText style={{ marginLeft: 5 }}>
                                 {orderInProgressCount}건 (예정)
-                            </PlainText>
+                            </MediumText>
                         </OrderCount>
                     </TopContainer>
                     <ScrollView
@@ -599,7 +599,7 @@ function MyOrdinaryOrderList({ navigation }) {
                                                 <Status
                                                     status={order.orderStatusId}
                                                 >
-                                                    <PlainText
+                                                    <MediumText
                                                         style={{
                                                             color: statusArr[
                                                                 order.orderStatusId -
@@ -614,7 +614,7 @@ function MyOrdinaryOrderList({ navigation }) {
                                                                     1
                                                             ].text
                                                         }
-                                                    </PlainText>
+                                                    </MediumText>
                                                 </Status>
                                                 <OrderWrapper>
                                                     <OrderContent>
@@ -624,7 +624,7 @@ function MyOrdinaryOrderList({ navigation }) {
                                                         ) : (
                                                             <SkyIcon />
                                                         )}
-                                                        <PlainText
+                                                        <MediumText
                                                             style={{
                                                                 marginLeft: 5,
                                                                 fontSize: 19,
@@ -639,7 +639,7 @@ function MyOrdinaryOrderList({ navigation }) {
                                                             "time"
                                                                 ? order.time
                                                                 : order.quantity}
-                                                        </PlainText>
+                                                        </MediumText>
                                                     </OrderContent>
                                                     <OrderContent>
                                                         <Ionicons
@@ -647,7 +647,7 @@ function MyOrdinaryOrderList({ navigation }) {
                                                             color="#777"
                                                             size={24}
                                                         />
-                                                        <PlainText
+                                                        <MediumText
                                                             style={{
                                                                 marginLeft: 5,
                                                                 fontSize: 19,
@@ -660,7 +660,7 @@ function MyOrdinaryOrderList({ navigation }) {
                                                                 : order.address1 +
                                                                   " " +
                                                                   order.detailAddress1}
-                                                        </PlainText>
+                                                        </MediumText>
                                                     </OrderContent>
                                                     <OrderContent>
                                                         <Ionicons
@@ -668,7 +668,7 @@ function MyOrdinaryOrderList({ navigation }) {
                                                             color="#777"
                                                             size={24}
                                                         />
-                                                        <PlainText
+                                                        <MediumText
                                                             style={{
                                                                 marginLeft: 5,
                                                                 fontSize: 19,
@@ -678,7 +678,7 @@ function MyOrdinaryOrderList({ navigation }) {
                                                             {getWorkTime(
                                                                 order.workDateTime
                                                             )}
-                                                        </PlainText>
+                                                        </MediumText>
                                                     </OrderContent>
                                                     <OrderContent>
                                                         <FontAwesome5
@@ -686,7 +686,7 @@ function MyOrdinaryOrderList({ navigation }) {
                                                             color={color.main}
                                                             size={24}
                                                         />
-                                                        <PlainText
+                                                        <MediumText
                                                             style={{
                                                                 marginLeft: 5,
                                                                 fontSize: 19,
@@ -703,7 +703,7 @@ function MyOrdinaryOrderList({ navigation }) {
                                                                 order.point
                                                             )}
                                                             AP
-                                                        </PlainText>
+                                                        </MediumText>
                                                     </OrderContent>
                                                 </OrderWrapper>
                                             </Order>

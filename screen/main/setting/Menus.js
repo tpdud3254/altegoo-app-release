@@ -2,7 +2,7 @@ import React, { useContext } from "react";
 import styled from "styled-components/native";
 import PropTypes from "prop-types";
 import { TouchableOpacity, View } from "react-native";
-import PlainText from "../../../component/text/PlainText";
+import MediumText from "../../../component/text/MediumText";
 import UserContext from "../../../context/UserContext";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import LoginContext from "../../../context/LoginContext";
@@ -18,7 +18,7 @@ function Menus({ navigation }) {
                 await AsyncStorage.removeItem("token");
             }}
         >
-            <PlainText>로그아웃</PlainText>
+            <MediumText>로그아웃</MediumText>
         </TouchableOpacity>
     );
 
@@ -31,39 +31,39 @@ function Menus({ navigation }) {
                     navigation.navigate("ModifyUserInfo");
                 }}
             >
-                {/* <PlainText>회원정보수정</PlainText> ㅅTODO: 추후변경 */}
-                <PlainText>회원정보</PlainText>
+                {/* <MediumText>회원정보수정</MediumText> ㅅTODO: 추후변경 */}
+                <MediumText>회원정보</MediumText>
             </TouchableOpacity>
             <TouchableOpacity
                 onPress={() => {
                     navigation.navigate("PointNavigator");
                 }}
             >
-                <PlainText>포인트</PlainText>
+                <MediumText>포인트</MediumText>
             </TouchableOpacity>
             <TouchableOpacity>
-                <PlainText>보험</PlainText>
+                <MediumText>보험</MediumText>
             </TouchableOpacity>
             <TouchableOpacity
             // onPress={() => {
             //     navigation.navigate("Events");
             // }}
             >
-                <PlainText>이벤트</PlainText>
+                <MediumText>이벤트</MediumText>
             </TouchableOpacity>
             <TouchableOpacity
                 onPress={() => {
                     navigation.navigate("Setting");
                 }}
             >
-                <PlainText>설정</PlainText>
+                <MediumText>설정</MediumText>
             </TouchableOpacity>
             <TouchableOpacity
             // onPress={() => {
             //     navigation.navigate("BlockUser");
             // }}
             >
-                <PlainText>부정당회원</PlainText>
+                <MediumText>부정당회원</MediumText>
             </TouchableOpacity>
             <Logout />
         </View>

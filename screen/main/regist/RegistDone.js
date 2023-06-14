@@ -2,7 +2,7 @@ import React, { useContext, useEffect, useState } from "react";
 import { ScrollView, TouchableWithoutFeedback, View } from "react-native";
 import styled from "styled-components/native";
 import MainLayout from "../../../component/layout/MainLayout";
-import PlainText from "../../../component/text/PlainText";
+import MediumText from "../../../component/text/MediumText";
 import RegistContext from "../../../context/RegistContext";
 import UserContext from "../../../context/UserContext";
 import { color } from "../../../styles";
@@ -272,9 +272,9 @@ function RegistDone({ navigation }) {
 
     const Row = ({ title, content }) => (
         <SRow>
-            <PlainText style={{ marginBottom: 3, fontSize: 20 }}>
+            <MediumText style={{ marginBottom: 3, fontSize: 20 }}>
                 {title} : {content}
-            </PlainText>
+            </MediumText>
         </SRow>
     );
 

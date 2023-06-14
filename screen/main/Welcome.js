@@ -4,7 +4,7 @@ import DefaultLayout from "../../component/layout/DefaultLayout";
 import { Ionicons } from "@expo/vector-icons";
 import { color } from "../../styles";
 import { ORDINARY, PERSON } from "../../constant";
-import PlainText from "../../component/text/PlainText";
+import MediumText from "../../component/text/MediumText";
 import LoginContext from "../../context/LoginContext";
 import { BackHandler } from "react-native";
 import UserContext from "../../context/UserContext";
@@ -112,10 +112,10 @@ function Welcome({ navigation }) {
                     }}
                     source={require(`../../assets/images/img_welcome.png`)}
                 />
-                <PlainText style={{ fontWeight: "500", textAlign: "center" }}>
+                <MediumText style={{ fontWeight: "500", textAlign: "center" }}>
                     회원님의 아이디는
-                </PlainText>
-                <PlainText
+                </MediumText>
+                <MediumText
                     style={{
                         fontWeight: "500",
                         textAlign: "center",
@@ -125,15 +125,15 @@ function Welcome({ navigation }) {
                 >
                     {info.phone.substring(0, 3)}-{info.phone.substring(3, 7)}-
                     {info.phone.substring(7, info.phone.length)}
-                </PlainText>
-                <PlainText style={{ fontWeight: "500", textAlign: "center" }}>
+                </MediumText>
+                <MediumText style={{ fontWeight: "500", textAlign: "center" }}>
                     입니다.
-                </PlainText>
+                </MediumText>
 
                 <Content>
                     {info.userType === ORDINARY ? (
                         <>
-                            <PlainText
+                            <MediumText
                                 style={{
                                     fontSize: 20,
                                     textAlign: "center",
@@ -141,8 +141,8 @@ function Welcome({ navigation }) {
                                 }}
                             >
                                 지금부터 알테구 작업 리스트 보기 및
-                            </PlainText>
-                            <PlainText
+                            </MediumText>
+                            <MediumText
                                 style={{
                                     fontSize: 20,
                                     textAlign: "center",
@@ -150,8 +150,8 @@ function Welcome({ navigation }) {
                                 }}
                             >
                                 작업 등록이 가능합니다.
-                            </PlainText>
-                            <PlainText
+                            </MediumText>
+                            <MediumText
                                 style={{
                                     fontSize: 20,
                                     textAlign: "center",
@@ -159,7 +159,7 @@ function Welcome({ navigation }) {
                                 }}
                             >
                                 최초 작업 등록 시{" "}
-                                <PlainText
+                                <MediumText
                                     style={{
                                         fontSize: 20,
                                         textAlign: "center",
@@ -168,13 +168,13 @@ function Welcome({ navigation }) {
                                     }}
                                 >
                                     10,000P
-                                </PlainText>
+                                </MediumText>
                                 가 적립됩니다.
-                            </PlainText>
+                            </MediumText>
                         </>
                     ) : info.userDetailType === PERSON ? (
                         <>
-                            <PlainText
+                            <MediumText
                                 style={{
                                     fontSize: 20,
                                     textAlign: "center",
@@ -182,8 +182,8 @@ function Welcome({ navigation }) {
                                 }}
                             >
                                 지금부터 알테구 작업 리스트 보기,
-                            </PlainText>
-                            <PlainText
+                            </MediumText>
+                            <MediumText
                                 style={{
                                     fontSize: 20,
                                     textAlign: "center",
@@ -191,8 +191,8 @@ function Welcome({ navigation }) {
                                 }}
                             >
                                 작업 등록 및 작업예약이 가능합니다.
-                            </PlainText>
-                            <PlainText
+                            </MediumText>
+                            <MediumText
                                 style={{
                                     fontSize: 20,
                                     textAlign: "center",
@@ -200,7 +200,7 @@ function Welcome({ navigation }) {
                                 }}
                             >
                                 최초 작업 등록 시{" "}
-                                <PlainText
+                                <MediumText
                                     style={{
                                         fontSize: 20,
                                         textAlign: "center",
@@ -209,13 +209,13 @@ function Welcome({ navigation }) {
                                     }}
                                 >
                                     10,000P
-                                </PlainText>
+                                </MediumText>
                                 가 적립됩니다.
-                            </PlainText>
+                            </MediumText>
                         </>
                     ) : (
                         <>
-                            <PlainText
+                            <MediumText
                                 style={{
                                     fontSize: 20,
                                     textAlign: "center",
@@ -223,8 +223,8 @@ function Welcome({ navigation }) {
                                 }}
                             >
                                 지금부터 알테구 작업 리스트 보기 및
-                            </PlainText>
-                            <PlainText
+                            </MediumText>
+                            <MediumText
                                 style={{
                                     fontSize: 20,
                                     textAlign: "center",
@@ -232,8 +232,8 @@ function Welcome({ navigation }) {
                                 }}
                             >
                                 작업 등록이 가능합니다.
-                            </PlainText>
-                            <PlainText
+                            </MediumText>
+                            <MediumText
                                 style={{
                                     fontSize: 20,
                                     textAlign: "center",
@@ -241,7 +241,7 @@ function Welcome({ navigation }) {
                                 }}
                             >
                                 최초 작업 등록 시{" "}
-                                <PlainText
+                                <MediumText
                                     style={{
                                         fontSize: 20,
                                         textAlign: "center",
@@ -250,9 +250,9 @@ function Welcome({ navigation }) {
                                     }}
                                 >
                                     10,000P
-                                </PlainText>
+                                </MediumText>
                                 가 적립됩니다.
-                            </PlainText>
+                            </MediumText>
                         </>
                     )}
                 </Content>
@@ -263,14 +263,14 @@ function Welcome({ navigation }) {
                             onPress={() => goToPage("registWork")}
                             accent
                         >
-                            <PlainText
+                            <MediumText
                                 style={{
                                     fontWeight: "500",
                                     color: "white",
                                 }}
                             >
                                 작업등록하러 하기
-                            </PlainText>
+                            </MediumText>
                         </AccentButton>
                         <Button
                             onPress={() =>
@@ -281,13 +281,13 @@ function Welcome({ navigation }) {
                                     : goToPage("Setting")
                             }
                         >
-                            <PlainText style={{ fontWeight: "500" }}>
+                            <MediumText style={{ fontWeight: "500" }}>
                                 {info.userType === ORDINARY
                                     ? "내정보"
                                     : info.userDetailType === PERSON
                                     ? "홈"
                                     : "내정보"}
-                            </PlainText>
+                            </MediumText>
                         </Button>
                     </BottomButtonWrapper>
                 </Bottom>

@@ -5,7 +5,7 @@ import KakaoButton, {
 } from "../../../component/button/KakaoButton";
 import PlainButton from "../../../component/button/PlainButton";
 import MainLayout from "../../../component/layout/MainLayout";
-import PlainText from "../../../component/text/PlainText";
+import MediumText from "../../../component/text/MediumText";
 import RegistContext from "../../../context/RegistContext";
 import { MaterialCommunityIcons, Ionicons } from "@expo/vector-icons";
 import { color } from "../../../styles";
@@ -215,18 +215,18 @@ function SelectFloor({ navigation }) {
                 size={30}
                 color="#777777"
             />
-            <PlainText style={{ marginLeft: 5, color: "#777777" }}>
+            <MediumText style={{ marginLeft: 5, color: "#777777" }}>
                 {text}
-            </PlainText>
+            </MediumText>
         </HelpWrapper>
     );
 
     const Radio = ({ index, other }) => (
         <SRadio>
             <RadioButton value={index} color={color.sub.blue} />
-            <PlainText>
+            <MediumText>
                 {other ? otherFloorArr[index] : floorArr[index]}층
-            </PlainText>
+            </MediumText>
         </SRadio>
     );
 
@@ -261,7 +261,7 @@ function SelectFloor({ navigation }) {
                         <Ionicons name="close" size={30} color="black" />
                     </TouchableOpacity>
                 </ModalTop>
-                <PlainText>가격안내</PlainText>
+                <MediumText>가격안내</MediumText>
             </Modal>
         </Portal>
     );
@@ -273,7 +273,7 @@ function SelectFloor({ navigation }) {
                 <Container>
                     <Price>
                         <PriceButton onPress={showModal}>
-                            <PlainText
+                            <MediumText
                                 style={{
                                     fontSize: 18,
                                     textDecorationLine: "underline",
@@ -281,7 +281,7 @@ function SelectFloor({ navigation }) {
                                 }}
                             >
                                 가격보기
-                            </PlainText>
+                            </MediumText>
                         </PriceButton>
                     </Price>
                     <FloorContainer>
@@ -297,21 +297,21 @@ function SelectFloor({ navigation }) {
                                     onPress={() => setFloorClass("row")}
                                     selected={floorClass === "row"}
                                 >
-                                    <PlainText>저층</PlainText>
+                                    <MediumText>저층</MediumText>
                                 </ClassButton>
                                 <VerticalDivider color="#777777" />
                                 <ClassButton
                                     onPress={() => setFloorClass("middle")}
                                     selected={floorClass === "middle"}
                                 >
-                                    <PlainText>중층</PlainText>
+                                    <MediumText>중층</MediumText>
                                 </ClassButton>
                                 <VerticalDivider color="#777777" />
                                 <ClassButton
                                     onPress={() => setFloorClass("high")}
                                     selected={floorClass === "high"}
                                 >
-                                    <PlainText>고층</PlainText>
+                                    <MediumText>고층</MediumText>
                                 </ClassButton>
                             </Class>
                             {floorClass ? (
@@ -356,7 +356,7 @@ function SelectFloor({ navigation }) {
                                         }
                                         selected={floorOtherClass === "row"}
                                     >
-                                        <PlainText>저층</PlainText>
+                                        <MediumText>저층</MediumText>
                                     </ClassButton>
                                     <VerticalDivider color="#777777" />
                                     <ClassButton
@@ -365,7 +365,7 @@ function SelectFloor({ navigation }) {
                                         }
                                         selected={floorOtherClass === "middle"}
                                     >
-                                        <PlainText>중층</PlainText>
+                                        <MediumText>중층</MediumText>
                                     </ClassButton>
                                     <VerticalDivider color="#777777" />
                                     <ClassButton
@@ -374,7 +374,7 @@ function SelectFloor({ navigation }) {
                                         }
                                         selected={floorOtherClass === "high"}
                                     >
-                                        <PlainText>고층</PlainText>
+                                        <MediumText>고층</MediumText>
                                     </ClassButton>
                                 </Class>
                                 {floorOtherClass ? (

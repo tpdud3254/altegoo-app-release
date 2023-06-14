@@ -18,7 +18,7 @@ import {
     View,
 } from "react-native";
 import styled from "styled-components/native";
-import PlainText from "../../../component/text/PlainText";
+import MediumText from "../../../component/text/MediumText";
 import TitleText from "../../../component/text/TitleText";
 import SubTitleText from "../../../component/text/SubTitleText";
 import MainLayout from "../../../component/layout/MainLayout";
@@ -194,9 +194,9 @@ function Home({ navigation }) {
                 <View style={{ flex: 1 }}>
                     <Banners>
                         <Banner>
-                            <PlainText style={{ color: "white" }}>
+                            <MediumText style={{ color: "white" }}>
                                 배너
-                            </PlainText>
+                            </MediumText>
                         </Banner>
                     </Banners>
                     <View
@@ -206,9 +206,9 @@ function Home({ navigation }) {
                     >
                         <Container>
                             <Greeting>
-                                <PlainText style={{ fontSize: 25 }}>
+                                <MediumText style={{ fontSize: 25 }}>
                                     안녕하세요! {info.name}님.
-                                </PlainText>
+                                </MediumText>
                             </Greeting>
                             <Point>
                                 <FontAwesome5
@@ -239,14 +239,14 @@ function Home({ navigation }) {
                                             navigation.navigate("TabRegistWork")
                                         }
                                     >
-                                        <PlainText
+                                        <MediumText
                                             style={{
                                                 color: "white",
                                                 fontSize: 22,
                                             }}
                                         >
                                             작업등록 하러가기
-                                        </PlainText>
+                                        </MediumText>
                                         <MaterialIcons
                                             name="keyboard-arrow-right"
                                             size={30}
@@ -292,14 +292,14 @@ function Home({ navigation }) {
                                                 alignItems: "center",
                                             }}
                                         >
-                                            <PlainText
+                                            <MediumText
                                                 style={{
                                                     color: "white",
                                                     fontSize: 22,
                                                 }}
                                             >
                                                 긴급
-                                            </PlainText>
+                                            </MediumText>
                                         </View>
                                         <View
                                             style={{
@@ -314,14 +314,14 @@ function Home({ navigation }) {
                                                 justifyContent: "center",
                                             }}
                                         >
-                                            <PlainText
+                                            <MediumText
                                                 style={{
                                                     color: "white",
                                                     fontSize: 22,
                                                 }}
                                             >
                                                 119 작업등록
-                                            </PlainText>
+                                            </MediumText>
                                             <MaterialIcons
                                                 name="keyboard-arrow-right"
                                                 size={30}
@@ -362,7 +362,7 @@ function Home({ navigation }) {
                                             </NotiIcon>
                                             <NotiWrapper order>
                                                 <NotiTitle>
-                                                    <PlainText
+                                                    <MediumText
                                                         numberOfLines={1}
                                                         style={{
                                                             color: "#777",
@@ -370,11 +370,11 @@ function Home({ navigation }) {
                                                     >
                                                         스카이 / 올림(4층) /
                                                         추가 1시간 당
-                                                    </PlainText>
+                                                    </MediumText>
                                                 </NotiTitle>
 
                                                 <NotiText>
-                                                    <PlainText
+                                                    <MediumText
                                                         style={{
                                                             fontSize: 21,
                                                         }}
@@ -382,7 +382,7 @@ function Home({ navigation }) {
                                                     >
                                                         작업 예약이 완료
                                                         되었습니다.
-                                                    </PlainText>
+                                                    </MediumText>
                                                 </NotiText>
                                             </NotiWrapper>
                                         </Notification>
@@ -399,7 +399,7 @@ function Home({ navigation }) {
                                             </NotiIcon>
                                             <NotiWrapper>
                                                 <NotiTitle>
-                                                    <PlainText
+                                                    <MediumText
                                                         numberOfLines={1}
                                                         style={{
                                                             color: "#777",
@@ -407,11 +407,11 @@ function Home({ navigation }) {
                                                     >
                                                         스카이 / 올림(4층) /
                                                         추가 1시간 당
-                                                    </PlainText>
+                                                    </MediumText>
                                                 </NotiTitle>
 
                                                 <NotiText>
-                                                    <PlainText
+                                                    <MediumText
                                                         style={{
                                                             fontSize: 21,
                                                         }}
@@ -419,7 +419,7 @@ function Home({ navigation }) {
                                                     >
                                                         작업 예약이 완료
                                                         되었습니다.
-                                                    </PlainText>
+                                                    </MediumText>
                                                 </NotiText>
                                             </NotiWrapper>
                                         </Notification>
@@ -436,7 +436,7 @@ function Home({ navigation }) {
                                             </NotiIcon>
                                             <NotiWrapper>
                                                 <NotiTitle>
-                                                    <PlainText
+                                                    <MediumText
                                                         numberOfLines={1}
                                                         style={{
                                                             color: "#777",
@@ -444,11 +444,11 @@ function Home({ navigation }) {
                                                     >
                                                         스카이 / 올림(4층) /
                                                         추가 1시간 당
-                                                    </PlainText>
+                                                    </MediumText>
                                                 </NotiTitle>
 
                                                 <NotiText>
-                                                    <PlainText
+                                                    <MediumText
                                                         style={{
                                                             fontSize: 21,
                                                         }}
@@ -456,7 +456,7 @@ function Home({ navigation }) {
                                                     >
                                                         작업 예약이 완료
                                                         되었습니다.
-                                                    </PlainText>
+                                                    </MediumText>
                                                 </NotiText>
                                             </NotiWrapper>
                                         </Notification>
@@ -478,7 +478,7 @@ function Home({ navigation }) {
                                     color="#777"
                                     style={{ marginBottom: 5 }}
                                 />
-                                <PlainText>새로운 알림이 없습니다.</PlainText>
+                                <MediumText>새로운 알림이 없습니다.</MediumText>
                             </View>
                         )}
                     </View>

@@ -1,6 +1,6 @@
 import styled from "styled-components/native";
 import { color } from "../styles";
-import PlainText from "./text/PlainText";
+import MediumText from "./text/MediumText";
 import { Ionicons } from "@expo/vector-icons";
 
 const ToastBox = styled.View`
@@ -17,9 +17,9 @@ export const toastConfig = {
     errorToast: ({ props }) => (
         <ToastBox>
             <Ionicons name="warning" size={30} color={color.sub.yellow} />
-            <PlainText style={{ color: "white", marginTop: 5 }}>
+            <MediumText style={{ color: "white", marginTop: 5 }}>
                 {props}
-            </PlainText>
+            </MediumText>
         </ToastBox>
     ),
 };

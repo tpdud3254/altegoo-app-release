@@ -2,7 +2,7 @@ import React from "react";
 import { TouchableOpacity, View } from "react-native";
 import { color } from "../styles";
 import { numberWithComma } from "../utils";
-import PlainText from "./text/PlainText";
+import MediumText from "./text/MediumText";
 import PropType from "prop-types";
 
 function HeaderLeft({ onPress, name, point }) {
@@ -11,16 +11,16 @@ function HeaderLeft({ onPress, name, point }) {
             <View style={{ flexDirection: "row" }}>
                 <View style={{ alignItems: "center" }}>
                     <View style={{ flexDirection: "row" }}>
-                        <PlainText
+                        <MediumText
                             style={{
                                 fontWeight: "500",
                             }}
                         >
                             {name}
-                        </PlainText>
-                        <PlainText style={{ color: "#777" }}>님</PlainText>
+                        </MediumText>
+                        <MediumText style={{ color: "#777" }}>님</MediumText>
                     </View>
-                    <PlainText
+                    <MediumText
                         style={{
                             color: color.main,
                             marginTop: -5,
@@ -28,7 +28,7 @@ function HeaderLeft({ onPress, name, point }) {
                         }}
                     >
                         {numberWithComma(point)}AP
-                    </PlainText>
+                    </MediumText>
                 </View>
             </View>
         </TouchableOpacity>

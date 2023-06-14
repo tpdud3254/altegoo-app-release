@@ -2,7 +2,7 @@ import React from "react";
 import { TouchableOpacity } from "react-native";
 import styled from "styled-components";
 import { color } from "../../styles";
-import PlainText from "../text/PlainText";
+import MediumText from "../text/MediumText";
 
 export const BottomButton = styled.View`
     background-color: white;
@@ -28,7 +28,7 @@ function Button(props) {
                 ...props.style,
             }}
         >
-            <PlainText
+            <MediumText
                 style={{
                     fontWeight: "500",
                     color: props.type === "accent" ? "white" : "black",
@@ -36,7 +36,7 @@ function Button(props) {
                 }}
             >
                 {props.text}
-            </PlainText>
+            </MediumText>
         </TouchableOpacity>
     );
 }

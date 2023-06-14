@@ -5,7 +5,7 @@ import KakaoButton, {
 } from "../../../component/button/KakaoButton";
 import PlainButton from "../../../component/button/PlainButton";
 import MainLayout from "../../../component/layout/MainLayout";
-import PlainText from "../../../component/text/PlainText";
+import MediumText from "../../../component/text/MediumText";
 import RegistContext from "../../../context/RegistContext";
 import { MaterialCommunityIcons, Ionicons } from "@expo/vector-icons";
 import { color } from "../../../styles";
@@ -185,18 +185,18 @@ function SelectVolume({ navigation }) {
                 size={30}
                 color="#777777"
             />
-            <PlainText style={{ marginLeft: 5, color: "#777777" }}>
+            <MediumText style={{ marginLeft: 5, color: "#777777" }}>
                 {text}
-            </PlainText>
+            </MediumText>
         </HelpWrapper>
     );
 
     const Radio = ({ index }) => (
         <SRadio>
             <RadioButton value={index} color={color.sub.blue} />
-            <PlainText>
+            <MediumText>
                 {type === "time" ? timeArr[index] : quantityArr[index]}
-            </PlainText>
+            </MediumText>
         </SRadio>
     );
 
@@ -231,7 +231,7 @@ function SelectVolume({ navigation }) {
                         <Ionicons name="close" size={30} color="black" />
                     </TouchableOpacity>
                 </ModalTop>
-                <PlainText>가격안내</PlainText>
+                <MediumText>가격안내</MediumText>
             </Modal>
         </Portal>
     );
@@ -243,7 +243,7 @@ function SelectVolume({ navigation }) {
                 <Container>
                     <Price>
                         <PriceButton onPress={showModal}>
-                            <PlainText
+                            <MediumText
                                 style={{
                                     fontSize: 18,
                                     textDecorationLine: "underline",
@@ -251,7 +251,7 @@ function SelectVolume({ navigation }) {
                                 }}
                             >
                                 가격보기
-                            </PlainText>
+                            </MediumText>
                         </PriceButton>
                     </Price>
                     <TypeContainer>
@@ -270,14 +270,14 @@ function SelectVolume({ navigation }) {
                                         onPress={() => setType("quantity")}
                                         selected={type === "quantity"}
                                     >
-                                        <PlainText>물량</PlainText>
+                                        <MediumText>물량</MediumText>
                                     </TypeButton>
                                     <VerticalDivider color="#777777" />
                                     <TypeButton
                                         onPress={() => setType("time")}
                                         selected={type === "time"}
                                     >
-                                        <PlainText>시간</PlainText>
+                                        <MediumText>시간</MediumText>
                                     </TypeButton>
                                 </Type>
                                 {type ? (

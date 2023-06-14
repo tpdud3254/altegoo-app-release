@@ -3,7 +3,7 @@ import styled from "styled-components/native";
 import PropTypes from "prop-types";
 import { Text, View } from "react-native";
 import SubTitleText from "../../../../component/text/SubTitleText";
-import PlainText from "../../../../component/text/PlainText";
+import MediumText from "../../../../component/text/MediumText";
 import SubmitButton from "../../../../component/button/SubmitButton";
 import UserContext from "../../../../context/UserContext";
 import { getAsyncStorageToken, numberWithComma } from "../../../../utils";
@@ -95,10 +95,10 @@ function PointMain({ navigation }) {
                         본인 명의의 계좌정보를 등록해 주시기 바랍니다.
                     </SubTitleText>
 
-                    <PlainText>
+                    <MediumText>
                         본인 및 예금주 성명이 일치하여야{"\n"}계좌등록이
                         가능합니다.
-                    </PlainText>
+                    </MediumText>
 
                     <SubmitButton
                         text="계좌등록 하러가기"
@@ -113,13 +113,13 @@ function PointMain({ navigation }) {
                     <SubTitleText>
                         {numberWithComma(account.curPoint || 0)} AP
                     </SubTitleText>
-                    <PlainText>
+                    <MediumText>
                         포인트 출금을 위해 정확한 계좌번호를 입력해주세요.
-                    </PlainText>
-                    <PlainText>
+                    </MediumText>
+                    <MediumText>
                         잘못된 계좌입력으로 정상출금이 되지 않을 경우 책임을
                         지지 않습니다.
-                    </PlainText>
+                    </MediumText>
                     <PlainButton
                         text="계좌수정하기"
                         onPress={() =>

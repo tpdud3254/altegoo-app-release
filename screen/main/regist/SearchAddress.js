@@ -6,7 +6,7 @@ import KakaoButton, {
 } from "../../../component/button/KakaoButton";
 import PlainButton from "../../../component/button/PlainButton";
 import MainLayout from "../../../component/layout/MainLayout";
-import PlainText from "../../../component/text/PlainText";
+import MediumText from "../../../component/text/MediumText";
 import RegistContext from "../../../context/RegistContext";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { color } from "../../../styles";
@@ -203,9 +203,9 @@ function SearchAddress({ route, navigation }) {
                 size={30}
                 color="#777777"
             />
-            <PlainText style={{ marginLeft: 5, color: "#777777" }}>
+            <MediumText style={{ marginLeft: 5, color: "#777777" }}>
                 {text}
-            </PlainText>
+            </MediumText>
         </HelpWrapper>
     );
     // TODO: 경기도, 인천, 서울 이외에는 막기
@@ -223,16 +223,16 @@ function SearchAddress({ route, navigation }) {
                         <Search onPress={() => searchAddress(0)}>
                             {route?.params?.selectAddress1?.address &&
                             route?.params?.selectAddress1?.address !== "" ? (
-                                <PlainText>
+                                <MediumText>
                                     {route?.params?.selectAddress1?.address}
-                                </PlainText>
+                                </MediumText>
                             ) : (
-                                <PlainText style={{ color: "#777777" }}>
+                                <MediumText style={{ color: "#777777" }}>
                                     주소 입력하기
                                     {/* {registInfo.address1
                                         ? registInfo.address1
                                         : "주소 입력하기"} */}
-                                </PlainText>
+                                </MediumText>
                             )}
                         </Search>
                         <DetailAddress
@@ -260,16 +260,16 @@ function SearchAddress({ route, navigation }) {
                                 {route?.params?.selectAddress2?.address &&
                                 route?.params?.selectAddress2?.address !==
                                     "" ? (
-                                    <PlainText>
+                                    <MediumText>
                                         {route?.params?.selectAddress2?.address}
-                                    </PlainText>
+                                    </MediumText>
                                 ) : (
-                                    <PlainText style={{ color: "#777777" }}>
+                                    <MediumText style={{ color: "#777777" }}>
                                         주소 입력하기
                                         {/* {registInfo.address2
                                             ? registInfo.address2
                                             : "주소 입력하기"} */}
-                                    </PlainText>
+                                    </MediumText>
                                 )}
                             </Search>
                             <DetailAddress

@@ -16,7 +16,7 @@ import VerticalDivider from "../../../component/divider/VerticalDivider";
 import { COMPANY, PERSON, VALID } from "../../../constant";
 import TitleInputItem from "../../../component/item/TitleInputItem";
 import { TextInput } from "../../../component/input/TextInput";
-import PlainText from "../../../component/text/PlainText";
+import MediumText from "../../../component/text/MediumText";
 import PlainButton from "../../../component/button/PlainButton";
 import { useNavigation } from "@react-navigation/native";
 import UserContext, { UserConsumer } from "../../../context/UserContext";
@@ -547,12 +547,12 @@ function SpecialSignUp({ route }) {
                                     <SelectWorkTypeBtn
                                         onPress={() => setWorkCategory(index)}
                                     >
-                                        <PlainText>
+                                        <MediumText>
                                             {value}
                                             {index === 0
                                                 ? " (철거, 인테리어, 샷시 등)"
                                                 : null}
-                                        </PlainText>
+                                        </MediumText>
                                         <Ionicons
                                             name="checkmark"
                                             size={30}
@@ -597,7 +597,7 @@ function SpecialSignUp({ route }) {
                     <TouchableOpacity
                         onPress={() => setTextSecure((prev) => !prev)}
                     >
-                        <PlainText>보기</PlainText>
+                        <MediumText>보기</MediumText>
                     </TouchableOpacity>
                 </Password>
             </TitleInputItem>
@@ -621,7 +621,7 @@ function SpecialSignUp({ route }) {
             <LicenseContainer>
                 <LicenseWrapper>
                     <TitleInputItem title="사업자 등록증">
-                        <PlainText
+                        <MediumText
                             style={{
                                 fontSize: 20,
                                 padding: 10,
@@ -640,7 +640,7 @@ function SpecialSignUp({ route }) {
                                     return "사진을 등록해주세요.";
                                 }}
                             </UserConsumer>
-                        </PlainText>
+                        </MediumText>
                     </TitleInputItem>
                     <PlainButton
                         text="촬영"
@@ -658,7 +658,7 @@ function SpecialSignUp({ route }) {
                         }}
                         source={require(`../../../assets/images/license.png`)}
                     />
-                    <PlainText style={{ fontSize: 15 }}>예시</PlainText>
+                    <MediumText style={{ fontSize: 15 }}>예시</MediumText>
                 </LicenseExample>
             </LicenseContainer>
             <TitleInputItem title="추천회원님 정보">
@@ -746,14 +746,14 @@ function SpecialSignUp({ route }) {
                                                 value={1}
                                                 color={color.sub.blue}
                                             />
-                                            <PlainText>사다리</PlainText>
+                                            <MediumText>사다리</MediumText>
                                         </Radio>
                                         <Radio>
                                             <RadioButton
                                                 value={2}
                                                 color={color.sub.blue}
                                             />
-                                            <PlainText>스카이</PlainText>
+                                            <MediumText>스카이</MediumText>
                                         </Radio>
                                     </RadioContainer>
                                 </RadioButton.Group>
@@ -771,18 +771,18 @@ function SpecialSignUp({ route }) {
                                         weightIndex
                                     }
                                 >
-                                    <PlainText>{value}</PlainText>
+                                    <MediumText>{value}</MediumText>
                                 </VehicleWeight>
                             ))}
                         </VehicleWrapper>
                         <VehicleWrapper center={true}>
-                            <PlainText
+                            <MediumText
                                 style={{
                                     marginRight: 10,
                                 }}
                             >
                                 차량번호
-                            </PlainText>
+                            </MediumText>
                             <BorderBox>
                                 <TextInput
                                     placeholder="123아 0124"
@@ -821,14 +821,14 @@ function SpecialSignUp({ route }) {
                             color={color.btnAccent}
                         />
 
-                        <PlainText>차량추가</PlainText>
+                        <MediumText>차량추가</MediumText>
                     </AddButton>
                 </AddButtonContainer>
             </View>
             <LicenseContainer>
                 <LicenseWrapper>
                     <TitleInputItem title="화물자동차 운송사업 허가증">
-                        <PlainText
+                        <MediumText
                             style={{
                                 fontSize: 20,
                                 padding: 10,
@@ -848,7 +848,7 @@ function SpecialSignUp({ route }) {
                                     return "사진을 등록해주세요.";
                                 }}
                             </UserConsumer>
-                        </PlainText>
+                        </MediumText>
                     </TitleInputItem>
                     <PlainButton
                         text="촬영"
@@ -866,7 +866,7 @@ function SpecialSignUp({ route }) {
                         }}
                         source={require(`../../../assets/images/vehiclePermission.jpg`)}
                     />
-                    <PlainText style={{ fontSize: 15 }}>예시</PlainText>
+                    <MediumText style={{ fontSize: 15 }}>예시</MediumText>
                 </LicenseExample>
             </LicenseContainer>
             <SubmitButton

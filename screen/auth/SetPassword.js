@@ -3,7 +3,7 @@ import styled from "styled-components/native";
 import DefaultLayout from "../../component/layout/DefaultLayout";
 import TitleInputItem from "../../component/item/TitleInputItem";
 import { TextInput } from "../../component/input/TextInput";
-import PlainText from "../../component/text/PlainText";
+import MediumText from "../../component/text/MediumText";
 import { useForm } from "react-hook-form";
 import { useNavigation } from "@react-navigation/native";
 import { checkPassword, showError } from "../../utils";
@@ -121,9 +121,9 @@ function SetPassword() {
                             placeholder="새 비밀번호 확인"
                         />
                     </TitleInputItem>
-                    <PlainText style={{ fontSize: 18 }}>
+                    <MediumText style={{ fontSize: 18 }}>
                         * 영문, 숫자를 포함한 8자 이상의 문자열
-                    </PlainText>
+                    </MediumText>
                 </Wrapper>
             </Container>
             <Button

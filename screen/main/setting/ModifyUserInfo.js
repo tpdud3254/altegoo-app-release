@@ -6,7 +6,7 @@ import axios from "axios";
 import { SERVER } from "../../../constant";
 import { getAsyncStorageToken } from "../../../utils";
 import { VALID } from "../../../constant";
-import PlainText from "../../../component/text/PlainText";
+import MediumText from "../../../component/text/MediumText";
 import SubTitleText from "../../../component/text/SubTitleText";
 
 function ModifyUserInfo() {
@@ -58,11 +58,11 @@ function ModifyUserInfo() {
                 {userList.length > 0 ? (
                     userList.map((user, index) => (
                         <View>
-                            <PlainText>{user.userName}</PlainText>
+                            <MediumText>{user.userName}</MediumText>
                         </View>
                     ))
                 ) : (
-                    <PlainText>추천인 없음</PlainText>
+                    <MediumText>추천인 없음</MediumText>
                 )}
             </View>
         </View>

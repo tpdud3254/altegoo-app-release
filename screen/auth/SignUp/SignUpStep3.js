@@ -5,7 +5,7 @@ import { useNavigation } from "@react-navigation/native";
 import DefaultLayout from "../../../component/layout/DefaultLayout";
 import SubmitButton from "../../../component/button/SubmitButton";
 import Checkbox from "expo-checkbox";
-import PlainText from "../../../component/text/PlainText";
+import MediumText from "../../../component/text/MediumText";
 import { color } from "../../../styles";
 import * as Location from "expo-location";
 import LoadingLayout from "../../../component/layout/LoadingLayout";
@@ -400,9 +400,9 @@ function SignUpStep3() {
                     <Container>
                         <Wrapper>
                             <Terms>
-                                <PlainText style={{ fontSize: 22 }}>
+                                <MediumText style={{ fontSize: 22 }}>
                                     전체 동의합니다.
-                                </PlainText>
+                                </MediumText>
                                 <Checkbox
                                     style={{ width: 30, height: 30 }}
                                     value={isAllChecked}
@@ -422,7 +422,7 @@ function SignUpStep3() {
                                         }
                                         onPress={() => ShowDetailTerms(index)}
                                     >
-                                        <PlainText
+                                        <MediumText
                                             style={{
                                                 fontSIze: 20,
                                                 textDecorationLine:
@@ -434,7 +434,7 @@ function SignUpStep3() {
                                         >
                                             {text}
                                             {index < 4 ? " (필수)" : ""}
-                                        </PlainText>
+                                        </MediumText>
                                     </TermsButton>
                                     <Checkbox
                                         style={{ width: 30, height: 30 }}
@@ -451,7 +451,7 @@ function SignUpStep3() {
                                 </Terms>
                             ))}
                         </Wrapper>
-                        <PlainText
+                        <MediumText
                             style={{
                                 fontSize: 18,
                                 color: color.darkGrey,
@@ -460,7 +460,7 @@ function SignUpStep3() {
                             }}
                         >
                             각 항목 클릭 시 상세 내용을 보실 수 있습니다.
-                        </PlainText>
+                        </MediumText>
                     </Container>
                     <ButtonContainer>
                         <SubmitButton

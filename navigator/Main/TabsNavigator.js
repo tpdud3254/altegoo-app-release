@@ -5,7 +5,7 @@ import { TouchableOpacity } from "react-native-gesture-handler";
 import Home from "../../screen/main/home/Home";
 import { Ionicons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
-import PlainText from "../../component/text/PlainText";
+import MediumText from "../../component/text/MediumText";
 import { Image, View } from "react-native";
 import WorkSchedule from "../../screen/main/schedule/WorkSchedule";
 import RegistDone from "../../screen/main/regist/RegistDone";

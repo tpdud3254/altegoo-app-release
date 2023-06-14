@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import styled from "styled-components/native";
 import PropTypes from "prop-types";
 import { Text, View } from "react-native";
-import PlainText from "../../../component/text/PlainText";
+import MediumText from "../../../component/text/MediumText";
 import Checkbox from "expo-checkbox";
 import { color } from "../../../styles";
 
@@ -23,7 +23,7 @@ function Setting() {
                     paddingRight: 30,
                 }}
             >
-                <PlainText>작업알림 설정</PlainText>
+                <MediumText>작업알림 설정</MediumText>
                 <Checkbox
                     style={{ width: 30, height: 30 }}
                     value={check}

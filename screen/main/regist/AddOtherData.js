@@ -8,7 +8,7 @@ import {
 } from "react-native";
 import styled from "styled-components/native";
 import MainLayout from "../../../component/layout/MainLayout";
-import PlainText from "../../../component/text/PlainText";
+import MediumText from "../../../component/text/MediumText";
 import RegistContext from "../../../context/RegistContext";
 import UserContext from "../../../context/UserContext";
 import { color } from "../../../styles";
@@ -188,13 +188,13 @@ function AddOtherData({ navigation }) {
     const Row = ({ title, content, view }) => (
         <SRow>
             <STitle>
-                <PlainText style={{ fontSize: 18 }}>{title}</PlainText>
+                <MediumText style={{ fontSize: 18 }}>{title}</MediumText>
             </STitle>
             {view ? (
                 view
             ) : (
                 <SContent>
-                    <PlainText style={{ fontSize: 18 }}>{content}</PlainText>
+                    <MediumText style={{ fontSize: 18 }}>{content}</MediumText>
                 </SContent>
             )}
         </SRow>
@@ -203,7 +203,7 @@ function AddOtherData({ navigation }) {
     const InputRow = ({ title, placeholder, checkBox, defaultValue, type }) => (
         <SRow>
             <STitle>
-                <PlainText style={{ fontSize: 18 }}>{title}</PlainText>
+                <MediumText style={{ fontSize: 18 }}>{title}</MediumText>
             </STitle>
             <SContent
                 inputBorderLine={!checkBox}
@@ -229,9 +229,9 @@ function AddOtherData({ navigation }) {
                             onValueChange={setIsDirectPhone}
                             color="#777"
                         />
-                        <PlainText style={{ fontSize: 18 }}>
+                        <MediumText style={{ fontSize: 18 }}>
                             핸드폰 번호 동일
-                        </PlainText>
+                        </MediumText>
                     </View>
                 ) : (
                     <TextInput
@@ -261,7 +261,7 @@ function AddOtherData({ navigation }) {
                     setPrice(price - 10000 <= 0 ? price : price - 10000)
                 }
             >
-                <PlainText>-10,000</PlainText>
+                <MediumText>-10,000</MediumText>
             </TouchableOpacity>
             <TouchableOpacity
                 style={{
@@ -272,7 +272,7 @@ function AddOtherData({ navigation }) {
                 }}
                 onPress={() => setPrice(price + 10000)}
             >
-                <PlainText>+10,000</PlainText>
+                <MediumText>+10,000</MediumText>
             </TouchableOpacity>
         </View>
     );
@@ -337,9 +337,9 @@ function AddOtherData({ navigation }) {
                             <Row title="적립 포인트" content={getPoint()} />
                             <SRow>
                                 <STitle>
-                                    <PlainText style={{ fontSize: 18 }}>
+                                    <MediumText style={{ fontSize: 18 }}>
                                         긴급 오더
-                                    </PlainText>
+                                    </MediumText>
                                 </STitle>
                                 <Checkbox
                                     style={{ width: 28, height: 28 }}
@@ -350,7 +350,7 @@ function AddOtherData({ navigation }) {
                             </SRow>
                             {emergencyOrder ? (
                                 <Emergency>
-                                    <PlainText
+                                    <MediumText
                                         style={{
                                             fontSize: 18,
                                             color: color.main,
@@ -361,7 +361,7 @@ function AddOtherData({ navigation }) {
                                         증가하며
                                         {"\n"}
                                         모든 기사님에게 알림이 전송됩니다.
-                                    </PlainText>
+                                    </MediumText>
                                 </Emergency>
                             ) : null}
                             <InputRow
@@ -372,7 +372,7 @@ function AddOtherData({ navigation }) {
                         </Container>
                         <ButtonContainer>
                             <Button onPress={handleSubmit(onNextStep)}>
-                                <PlainText>확인</PlainText>
+                                <MediumText>확인</MediumText>
                             </Button>
                         </ButtonContainer>
                     </View>

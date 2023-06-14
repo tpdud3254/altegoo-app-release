@@ -3,7 +3,7 @@ import styled from "styled-components/native";
 import PropTypes from "prop-types";
 import { Text, TouchableOpacity, View } from "react-native";
 import PlainButton from "../../../../component/button/PlainButton";
-import PlainText from "../../../../component/text/PlainText";
+import MediumText from "../../../../component/text/MediumText";
 import { color } from "../../../../styles";
 import SubTitleText from "../../../../component/text/SubTitleText";
 import UserContext from "../../../../context/UserContext";
@@ -43,8 +43,8 @@ function ChargePoint({ route, navigation }) {
                     }}
                     onPress={() => onPay(99000)}
                 >
-                    <PlainText>99,000 충전</PlainText>
-                    <PlainText>(VAT 포함)</PlainText>
+                    <MediumText>99,000 충전</MediumText>
+                    <MediumText>(VAT 포함)</MediumText>
                 </TouchableOpacity>
                 <TouchableOpacity
                     style={{
@@ -53,8 +53,8 @@ function ChargePoint({ route, navigation }) {
                     }}
                     onPress={() => onPay(33000)}
                 >
-                    <PlainText>33,000 충전</PlainText>
-                    <PlainText>(VAT 포함)</PlainText>
+                    <MediumText>33,000 충전</MediumText>
+                    <MediumText>(VAT 포함)</MediumText>
                 </TouchableOpacity>
                 <TouchableOpacity
                     style={{
@@ -63,8 +63,8 @@ function ChargePoint({ route, navigation }) {
                     }}
                     onPress={() => onPay(55000)}
                 >
-                    <PlainText>55,000 충전</PlainText>
-                    <PlainText>(VAT 포함)</PlainText>
+                    <MediumText>55,000 충전</MediumText>
+                    <MediumText>(VAT 포함)</MediumText>
                 </TouchableOpacity>
             </View>
         </View>

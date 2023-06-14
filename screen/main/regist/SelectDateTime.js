@@ -2,7 +2,7 @@ import React, { useContext, useEffect, useState } from "react";
 import { TextInput, TouchableOpacity, View } from "react-native";
 import { Calendar, LocaleConfig } from "react-native-calendars";
 import { color } from "../../../styles";
-import PlainText from "../../../component/text/PlainText";
+import MediumText from "../../../component/text/MediumText";
 import { MaterialCommunityIcons, AntDesign } from "@expo/vector-icons";
 import MainLayout from "../../../component/layout/MainLayout";
 import styled from "styled-components/native";
@@ -326,9 +326,9 @@ function SelectDateTime({ navigation }) {
                 size={30}
                 color="#777777"
             />
-            <PlainText style={{ marginLeft: 5, color: "#777777" }}>
+            <MediumText style={{ marginLeft: 5, color: "#777777" }}>
                 {text}
-            </PlainText>
+            </MediumText>
         </HelpWrapper>
     );
 
@@ -355,9 +355,9 @@ function SelectDateTime({ navigation }) {
                                 color="#777777"
                                 style={{ marginLeft: 5, marginRight: 5 }}
                             />
-                            <PlainText style={{ color: "#777777" }}>
+                            <MediumText style={{ color: "#777777" }}>
                                 손 없는 날
-                            </PlainText>
+                            </MediumText>
                         </Notice>
                     </HelpContainer>
                     <Calendar
@@ -367,9 +367,9 @@ function SelectDateTime({ navigation }) {
                         }}
                         renderHeader={(date) => (
                             <View>
-                                <PlainText>
+                                <MediumText>
                                     {date.getFullYear()}년 {getMonth(date)}월
-                                </PlainText>
+                                </MediumText>
                             </View>
                         )}
                         renderArrow={(direction) =>
@@ -403,7 +403,7 @@ function SelectDateTime({ navigation }) {
                                         : () => setSelectedDay(date.dateString)
                                 }
                             >
-                                <PlainText
+                                <MediumText
                                     style={{
                                         color: isSelectedDay(date.dateString)
                                             ? "white"
@@ -414,7 +414,7 @@ function SelectDateTime({ navigation }) {
                                     }}
                                 >
                                     {date.day < 10 ? "0" + date.day : date.day}
-                                </PlainText>
+                                </MediumText>
                             </TouchableOpacity>
                         )}
                         theme={{
@@ -434,13 +434,13 @@ function SelectDateTime({ navigation }) {
                                 onPress={() => setAmpm("am")}
                                 selected={ampm === "am"}
                             >
-                                <PlainText>오전</PlainText>
+                                <MediumText>오전</MediumText>
                             </Am>
                             <Pm
                                 onPress={() => setAmpm("pm")}
                                 selected={ampm === "pm"}
                             >
-                                <PlainText>오후</PlainText>
+                                <MediumText>오후</MediumText>
                             </Pm>
                         </Ampm>
                         <InputTime>
@@ -450,7 +450,7 @@ function SelectDateTime({ navigation }) {
                                 defaultValue={getValues("hour")}
                             />
 
-                            <PlainText>시</PlainText>
+                            <MediumText>시</MediumText>
                             <Input
                                 keyboardType="number-pad"
                                 onChangeText={(text) => setValue("min", text)}
@@ -458,7 +458,7 @@ function SelectDateTime({ navigation }) {
                                     getValues("min");
                                 }}
                             />
-                            <PlainText>분</PlainText>
+                            <MediumText>분</MediumText>
                         </InputTime>
                     </SelectTimeWrapper>
                 </SelectTime>
