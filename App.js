@@ -1,21 +1,7 @@
 import React, { useCallback, useEffect, useState } from "react";
 import { AppState, Image, View } from "react-native";
 import * as SplashScreen from "expo-splash-screen";
-import {
-    useFonts,
-    IBMPlexSansKR_100Thin,
-    IBMPlexSansKR_200ExtraLight,
-    IBMPlexSansKR_300Light,
-    IBMPlexSansKR_400Regular,
-    IBMPlexSansKR_500Medium,
-    IBMPlexSansKR_600SemiBold,
-    IBMPlexSansKR_700Bold,
-} from "@expo-google-fonts/ibm-plex-sans-kr";
-import {
-    NanumGothic_400Regular,
-    NanumGothic_700Bold,
-    NanumGothic_800ExtraBold,
-} from "@expo-google-fonts/nanum-gothic";
+import { useFonts } from "expo-font";
 import Toast from "react-native-toast-message";
 import { LoginProvider } from "./context/LoginContext";
 import RootNavigator from "./navigator/RootNavigator";
@@ -129,17 +115,13 @@ export default function App() {
     const [locationGranted, setLocationGranted] = useState(true);
     const [pushGranted, setPushGranted] = useState(true);
     const [fontsLoaded] = useFonts({
-        IBMPlexSansKR_100Thin,
-        IBMPlexSansKR_200ExtraLight,
-        IBMPlexSansKR_300Light,
-        IBMPlexSansKR_400Regular,
-        IBMPlexSansKR_500Medium,
-        IBMPlexSansKR_600SemiBold,
-        IBMPlexSansKR_700Bold,
-        NanumGothic_400Regular,
-        NanumGothic_700Bold,
-        NanumGothic_800ExtraBold,
+        "SpoqaHanSansNeo-Bold": require("./assets/fonts/SpoqaHanSansNeo-Bold.otf"),
+        "SpoqaHanSansNeo-Light": require("./assets/fonts/SpoqaHanSansNeo-Light.otf"),
+        "SpoqaHanSansNeo-Medium": require("./assets/fonts/SpoqaHanSansNeo-Medium.otf"),
+        "SpoqaHanSansNeo-Regular": require("./assets/fonts/SpoqaHanSansNeo-Regular.otf"),
+        "SpoqaHanSansNeo-Thin": require("./assets/fonts/SpoqaHanSansNeo-Thin.otf"),
     });
+    //TODO: font 수정
 
     useEffect(() => {
         async function prepare() {
