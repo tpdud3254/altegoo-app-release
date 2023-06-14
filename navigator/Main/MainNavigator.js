@@ -26,7 +26,7 @@ Location.watchPositionAsync(
     {
         accuracy: Location.Accuracy.High,
         timeInterval: 1000 * 10, //TODO: 나중에 수치 변경
-        distanceInterval: 1, //TODO: 나중에 수치 변경
+        distanceInterval: 1000, //TODO: 나중에 수치 변경
     },
     async (position) => {
         const {
