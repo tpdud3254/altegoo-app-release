@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useState } from "react";
 import styled from "styled-components/native";
 import UserContext from "../../../context/UserContext";
 import { useNavigation } from "@react-navigation/native";
@@ -8,6 +8,7 @@ import { COMPANY, DRIVER, NORMAL } from "../../../constant";
 import AuthLayout from "../../../component/layout/AuthLayout";
 import RegularText from "../../../component/text/RegularText";
 import BoldText from "../../../component/text/BoldText";
+import { Toast } from "react-native-toast-message/lib/src/Toast";
 
 const explainText = {
     NORMAL: "일반회원은 작업 등록만 가능하며\n등록된 작업을 예약할 수 없습니다.\n일반회원 가입 후 언제든지 기사 및\n기업회원 전환이 가능합니다.",
@@ -15,29 +16,6 @@ const explainText = {
     COMPANY:
         "기업회원의 경우 작업 등록 뿐만 아니라\n차량 번호 입력시 등록된 작업의\n진행 또한 가능합니다.\n제휴 기업의 경우 별도의 작업등록 시스템이 제공됩니다.",
 };
-
-const Container = styled.View`
-    justify-content: space-evenly;
-    flex: 1;
-    padding: 0px 20px;
-`;
-
-const Wrapper = styled.TouchableOpacity`
-    background-color: white;
-    border-radius: 5px;
-    padding: 10px;
-`;
-
-const Title = styled.View`
-    flex-direction: row;
-    align-items: center;
-    justify-content: space-between;
-    margin-bottom: 8px;
-`;
-
-const Content = styled.View`
-    margin-top: 8px;
-`;
 
 const Options = styled.View`
     height: 350px;
@@ -92,27 +70,24 @@ const NecessityWrapper = styled.View`
 `;
 
 function SignUp() {
-    const { setInfo } = useContext(UserContext);
     const navigation = useNavigation();
+    const { setInfo } = useContext(UserContext);
+    const [type, setType] = useState("");
 
-    const onPress = (userType, userDetailType) => {
+    const onNext = () => {
+        if (type === "") {
+            Toast.show({
+                type: "errorToast",
+                props: "회원 유형을 선택해 주세요.",
+            });
+            return;
+        }
         const data = {
-            userType: userType,
-            ...(userDetailType && { userDetailType }),
+            userType: type,
         };
 
         setInfo(data);
-        navigation.navigate("SignUpStep1");
-    };
-
-    const Text = ({ text }) => {
-        return (
-            <MediumText
-                style={{ color: color["page-dark-text"], marginBottom: 3 }}
-            >
-                {text}
-            </MediumText>
-        );
+        // navigation.navigate("SignUpStep1");
     };
 
     const Option = ({ type, selected }) => {
@@ -149,7 +124,7 @@ function SignUp() {
             radio = require(`../../../assets/images/icons/Radio_OFF.png`);
 
         return (
-            <OptionContainer selected={selected}>
+            <OptionContainer selected={selected} onPress={() => setType(type)}>
                 <OptionIcon source={icon} resizeMode="contain" type={type} />
                 <OptionTitle>
                     <MediumText
@@ -171,14 +146,14 @@ function SignUp() {
         <AuthLayout
             bottomButtonProps={{
                 title: "다음으로",
-                onPress: () => console.log("click"),
+                onPress: onNext,
             }}
         >
             <Options>
                 <>
-                    <Option type={NORMAL} selected={true} />
-                    <Option type={DRIVER} selected={false} />
-                    <Option type={COMPANY} selected={false} />
+                    <Option type={NORMAL} selected={type === NORMAL} />
+                    <Option type={DRIVER} selected={type === DRIVER} />
+                    <Option type={COMPANY} selected={type === COMPANY} />
                 </>
             </Options>
             <Explain>
@@ -190,85 +165,36 @@ function SignUp() {
                         fontSize: 19,
                     }}
                 >
-                    {explainText[NORMAL]}
+                    {explainText[type]}
                 </RegularText>
-                <Necessity>
-                    <BoldText
-                        style={{
-                            fontSize: 16,
-                            color: color["page-color-text"],
-                        }}
-                    >
-                        필요 준비물
-                    </BoldText>
-                    <NecessityWrapper>
-                        <RegularText
+                {type === NORMAL ? null : (
+                    <Necessity>
+                        <BoldText
                             style={{
-                                color: color["page-dark-text"],
-                                lineHeight: 30,
-                                textAlign: "center",
-                                fontSize: 20,
+                                fontSize: 16,
+                                color: color["page-color-text"],
                             }}
                         >
-                            사업자 등록증{"\n"}화물운송허가증
-                        </RegularText>
-                    </NecessityWrapper>
-                </Necessity>
+                            필요 준비물
+                        </BoldText>
+                        <NecessityWrapper>
+                            <RegularText
+                                style={{
+                                    color: color["page-dark-text"],
+                                    lineHeight: 30,
+                                    textAlign: "center",
+                                    fontSize: 20,
+                                }}
+                            >
+                                {type === DRIVER
+                                    ? "사업자 등록증\n화물운송허가증"
+                                    : "사업자 등록증"}
+                            </RegularText>
+                        </NecessityWrapper>
+                    </Necessity>
+                )}
             </Explain>
         </AuthLayout>
-        // <Container>
-        //     <Wrapper onPress={() => onPress(ORDINARY)}>
-        //         <Title>
-        //             <MediumText style={{ fontWeight: "400" }}>
-        //                 일반 회원가입
-        //             </MediumText>
-        //             <Entypo
-        //                 name="chevron-small-right"
-        //                 size={30}
-        //                 color={color.main}
-        //             />
-        //         </Title>
-        //         <HorizontalDivider thickness={0.5} color={color.lightGrey} />
-        //         <Content>
-        //             <Text text="일반회원은 작업 등록만 가능하며 등록된 작업을 예약할 수 없습니다." />
-        //             <Text text="일반회원 가입 후 언제든지 자유롭게 기사/기업회원 전환이 가능합니다." />
-        //         </Content>
-        //     </Wrapper>
-        //     <Wrapper onPress={() => onPress(SPECIAL, PERSON)}>
-        //         <Title>
-        //             <MediumText style={{ fontWeight: "400" }}>
-        //                 기사 회원가입
-        //             </MediumText>
-        //             <Entypo
-        //                 name="chevron-small-right"
-        //                 size={30}
-        //                 color={color.main}
-        //             />
-        //         </Title>
-        //         <HorizontalDivider thickness={0.5} color={color.lightGrey} />
-        //         <Content>
-        //             <Text text="기사회원은 작업 등록 뿐만 아니라 등록된 작업을 예약하여 진행하실 수 있습니다." />
-        //             <Text text="제휴 기업의 경우 별도의 작업 등록 시스템이 제공됩니다." />
-        //         </Content>
-        //     </Wrapper>
-        //     <Wrapper onPress={() => onPress(SPECIAL, COMPANY)}>
-        //         <Title>
-        //             <MediumText style={{ fontWeight: "400" }}>
-        //                 기업 회원가입
-        //             </MediumText>
-        //             <Entypo
-        //                 name="chevron-small-right"
-        //                 size={30}
-        //                 color={color.main}
-        //             />
-        //         </Title>
-        //         <HorizontalDivider thickness={0.5} color={color.lightGrey} />
-        //         <Content>
-        //             <Text text="기업회원은 작업 등록 뿐만 아니라 등록된 작업을 예약하여 진행하실 수 있습니다." />
-        //             <Text text="제휴 기업의 경우 별도의 작업 등록 시스템이 제공됩니다." />
-        //         </Content>
-        //     </Wrapper>
-        // </Container>
     );
 }
 
