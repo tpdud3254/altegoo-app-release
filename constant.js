@@ -18,6 +18,30 @@ export const COMPANY = "COMPANY";
 
 export const TOKEN = "token";
 
+export const SIGNUP_NAV = {
+    NORMAL: ["Agreements", "Identification", "EnterPassword", "SignUpComplete"],
+    DRIVER: [
+        "Agreements",
+        "Identification",
+        "EnterPassword",
+        "BusinessLicense",
+        "RegisterVehicle",
+        "VehicleLicense",
+        "WorkingArea",
+        "RecomendedMember",
+        "SignUpComplete",
+    ],
+    COMPANY: [
+        "Agreements",
+        "Identification",
+        "CompanyInfomation",
+        "EnterPassword",
+        "BusinessLicense",
+        "RecomendedMember",
+        "SignUpComplete",
+    ],
+};
+
 export const REGIST_NAV = [
     "SelectWorkType",
     "SelectDateTime",

@@ -10,6 +10,17 @@ import SignUpStep3 from "../../screen/auth/SignUp/SignUpStep3";
 import TakePhoto from "../../screen/TakePhoto";
 import { color } from "../../styles";
 import { Image } from "react-native";
+import Agreements from "../../screen/auth/SignUp/Agreements";
+import AgreementDetail from "../../screen/auth/SignUp/AgreementDetail";
+import Identification from "../../screen/auth/SignUp/Identification";
+import CompanyInfomation from "../../screen/auth/SignUp/CompanyInfomation";
+import EnterPassword from "../../screen/auth/SignUp/EnterPassword";
+import BusinessLicense from "../../screen/auth/SignUp/BusinessLicense";
+import RegisterVehicle from "../../screen/auth/SignUp/RegisterVehicle";
+import VehicleLicense from "../../screen/auth/SignUp/VehicleLicense";
+import WorkingArea from "../../screen/auth/SignUp/WorkingArea";
+import RecomendedMember from "../../screen/auth/SignUp/RecomendedMember";
+import SignUpComplete from "../../screen/auth/SignUp/SignUpComplete";
 
 const Stack = createStackNavigator();
 
@@ -49,6 +60,89 @@ export default function SignUpNavigator() {
                 }}
             />
             <Stack.Screen
+                name="Agreements"
+                component={Agreements}
+                options={{
+                    title: "",
+                }}
+            />
+            <Stack.Screen
+                name="AgreementDetail"
+                component={AgreementDetail}
+                options={{
+                    title: "",
+                }}
+            />
+            <Stack.Screen
+                name="Identification"
+                component={Identification}
+                options={{
+                    title: "",
+                }}
+            />
+            <Stack.Screen
+                name="CompanyInfomation"
+                component={CompanyInfomation}
+                options={{
+                    title: "",
+                }}
+            />
+            <Stack.Screen
+                name="EnterPassword"
+                component={EnterPassword}
+                options={{
+                    title: "",
+                }}
+            />
+            <Stack.Screen
+                name="BusinessLicense"
+                component={BusinessLicense}
+                options={{
+                    title: "",
+                }}
+            />
+            <Stack.Screen
+                name="RegisterVehicle"
+                component={RegisterVehicle}
+                options={{
+                    title: "",
+                }}
+            />
+            <Stack.Screen
+                name="VehicleLicense"
+                component={VehicleLicense}
+                options={{
+                    title: "",
+                }}
+            />
+            <Stack.Screen
+                name="WorkingArea"
+                component={WorkingArea}
+                options={{
+                    title: "",
+                }}
+            />
+            <Stack.Screen
+                name="RecomendedMember"
+                component={RecomendedMember}
+                options={{
+                    title: "",
+                }}
+            />
+            <Stack.Screen
+                name="SignUpComplete"
+                component={SignUpComplete}
+                options={{
+                    title: "",
+                }}
+            />
+            <Stack.Screen
+                name="TakePhoto"
+                component={TakePhoto}
+                options={{ headerShown: false }}
+            />
+            {/*
+            <Stack.Screen
                 name="SignUpStep1"
                 component={SignUpStep1}
                 options={{
@@ -60,7 +154,7 @@ export default function SignUpNavigator() {
                             : "기업회원가입",
                 }}
             />
-            <Stack.Screen
+             <Stack.Screen
                 name="SignUpStep2"
                 component={SignUpStep2}
                 options={{ title: "작업지역 선택" }}
@@ -72,11 +166,7 @@ export default function SignUpNavigator() {
             />
 
             <Stack.Screen name="DetailTerms" component={DetailTerms} />
-            <Stack.Screen
-                name="TakePhoto"
-                component={TakePhoto}
-                options={{ headerShown: false }}
-            />
+             */}
         </Stack.Navigator>
     );
 }

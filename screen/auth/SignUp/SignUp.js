@@ -4,7 +4,7 @@ import UserContext from "../../../context/UserContext";
 import { useNavigation } from "@react-navigation/native";
 import MediumText from "../../../component/text/MediumText";
 import { color } from "../../../styles";
-import { COMPANY, DRIVER, NORMAL } from "../../../constant";
+import { COMPANY, DRIVER, NORMAL, SIGNUP_NAV } from "../../../constant";
 import AuthLayout from "../../../component/layout/AuthLayout";
 import RegularText from "../../../component/text/RegularText";
 import BoldText from "../../../component/text/BoldText";
@@ -87,7 +87,7 @@ function SignUp() {
         };
 
         setInfo(data);
-        // navigation.navigate("SignUpStep1");
+        navigation.navigate(SIGNUP_NAV[type][0]);
     };
 
     const Option = ({ type, selected }) => {
@@ -167,7 +167,7 @@ function SignUp() {
                 >
                     {explainText[type]}
                 </RegularText>
-                {type === NORMAL ? null : (
+                {type === "" || type === NORMAL ? null : (
                     <Necessity>
                         <BoldText
                             style={{
