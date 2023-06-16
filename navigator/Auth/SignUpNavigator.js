@@ -69,9 +69,7 @@ export default function SignUpNavigator() {
             <Stack.Screen
                 name="AgreementDetail"
                 component={AgreementDetail}
-                options={{
-                    title: "",
-                }}
+                options={{ headerLeft: null }}
             />
             <Stack.Screen
                 name="Identification"

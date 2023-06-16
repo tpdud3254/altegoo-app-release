@@ -29,14 +29,16 @@ export default function AuthLayout({ children, bottomButtonProps }) {
                     <Wrapper>{children}</Wrapper>
                 </TouchableWithoutFeedback>
             </ScrollView>
-            <BottomButton
-                onPress={bottomButtonProps.onPress}
-                disabled={bottomButtonProps.disabled}
-            >
-                <MediumText style={{ color: "white" }}>
-                    {bottomButtonProps.title}
-                </MediumText>
-            </BottomButton>
+            {bottomButtonProps ? (
+                <BottomButton
+                    onPress={bottomButtonProps.onPress}
+                    disabled={bottomButtonProps.disabled}
+                >
+                    <MediumText style={{ color: "white" }}>
+                        {bottomButtonProps.title}
+                    </MediumText>
+                </BottomButton>
+            ) : null}
         </Container>
     );
 }
