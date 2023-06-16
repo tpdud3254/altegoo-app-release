@@ -63,7 +63,7 @@ export default function SignUpNavigator() {
                 name="Agreements"
                 component={Agreements}
                 options={{
-                    title: "",
+                    title: "약관 동의",
                 }}
             />
             <Stack.Screen

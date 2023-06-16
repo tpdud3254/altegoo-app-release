@@ -15,7 +15,10 @@ export const color = {
     textDark: "#555555",
     "page-background": "#FBFCFF",
     "page-dark-text": "#333333",
+    "page-lightgrey-text": "#BABABA",
+    "page-grey-text": "#696969",
     "page-color-text": "#FC5F00",
+    "page-black-text": "#08252E",
     "header-title-text": "#333439",
     "option-selected-background": "#FFF3EB",
     "option-selected-border": "#FC5F00",
@@ -24,4 +27,6 @@ export const color = {
     "option-unselected-border": "#BABABA",
     "option-unselected-text": "#BABABA",
     "box-color-background": "#FFF3EB",
+    "box-border": "#BABABA",
+    "divider-border": "#E8F1FF",
 };
