@@ -14,13 +14,14 @@ const Container = styled.View``;
 function TextInput(props) {
     const input = useRef();
     const [isFocused, setIsFocused] = useState(false);
+    const [textSecure, setTextSecure] = useState(false);
 
     useEffect(() => {
-        if (isFocused) input?.current?.focus();
-    }, [isFocused]);
+        if (props.type === "password") setTextSecure(true);
+    }, []);
 
-    const clickReset = () => {
-        props.onReset();
+    const toggleTextSecure = () => {
+        setTextSecure((prev) => !prev);
     };
 
     return (
@@ -62,31 +63,64 @@ function TextInput(props) {
                     }}
                     onFocus={() => setIsFocused(true)}
                     onBlur={() => setIsFocused(false)}
+                    secureTextEntry={textSecure}
                 />
-
-                <TouchableOpacity
-                    onPress={clickReset}
-                    style={{
-                        width: "10%",
-                        alignItems: "flex-end",
-                        paddingTop: 8,
-                        paddingRight: 2,
-                        paddingBottom: 16,
-                        display:
-                            props.value && props.value.length > 0
-                                ? null
-                                : "none",
-                    }}
-                >
-                    <Image
-                        source={require(`../../assets/images/icons/btn_del_s.png`)}
-                        resizeMode="contain"
+                {props.type === "password" ? (
+                    <TouchableOpacity
+                        onPress={toggleTextSecure}
                         style={{
-                            width: 25,
-                            height: 25,
+                            width: "10%",
+                            alignItems: "flex-end",
+                            paddingTop: 8,
+                            paddingRight: 2,
+                            paddingBottom: 16,
                         }}
-                    />
-                </TouchableOpacity>
+                    >
+                        {textSecure ? (
+                            <Image
+                                source={require(`../../assets/images/icons/icon_view_OFF.png`)}
+                                resizeMode="contain"
+                                style={{
+                                    width: 25,
+                                    height: 25,
+                                }}
+                            />
+                        ) : (
+                            <Image
+                                source={require(`../../assets/images/icons/icon_view_ON.png`)}
+                                resizeMode="contain"
+                                style={{
+                                    width: 25,
+                                    height: 25,
+                                }}
+                            />
+                        )}
+                    </TouchableOpacity>
+                ) : (
+                    <TouchableOpacity
+                        onPress={props.onReset}
+                        style={{
+                            width: "10%",
+                            alignItems: "flex-end",
+                            paddingTop: 8,
+                            paddingRight: 2,
+                            paddingBottom: 16,
+                            display:
+                                props.value && props.value.length > 0
+                                    ? null
+                                    : "none",
+                        }}
+                    >
+                        <Image
+                            source={require(`../../assets/images/icons/btn_del_s.png`)}
+                            resizeMode="contain"
+                            style={{
+                                width: 25,
+                                height: 25,
+                            }}
+                        />
+                    </TouchableOpacity>
+                )}
             </View>
         </Container>
     );

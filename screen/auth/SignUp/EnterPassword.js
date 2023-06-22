@@ -1,17 +1,28 @@
-import React, { useContext } from "react";
+import React, { useContext, useState } from "react";
 import styled from "styled-components/native";
 import UserContext from "../../../context/UserContext";
 import { useNavigation } from "@react-navigation/native";
 import { color } from "../../../styles";
-import { COMPANY, DRIVER, NORMAL, SIGNUP_NAV } from "../../../constant";
+import { NORMAL, SIGNUP_NAV } from "../../../constant";
 import AuthLayout from "../../../component/layout/AuthLayout";
 import RegularText from "../../../component/text/RegularText";
 import { Toast } from "react-native-toast-message/lib/src/Toast";
-import MediumText from "../../../component/text/MediumText";
+
+import TextInput from "../../../component/input/TextInput";
+
+const InputContainer = styled.View`
+    margin-top: 30px;
+    margin-bottom: 10px;
+`;
+
+const InputWrapper = styled.View`
+    margin-bottom: 30px;
+`;
 
 function EnterPassword() {
     const navigation = useNavigation();
     const { info, setInfo } = useContext(UserContext);
+    const [test, setTest] = useState("");
 
     const onNext = () => {
         // if (type === "") {
@@ -33,11 +44,50 @@ function EnterPassword() {
     return (
         <AuthLayout
             bottomButtonProps={{
-                title: "다음으로",
+                title: info.userType === NORMAL ? "회원가입 완료" : "다음으로",
                 onPress: onNext,
+                disabled: true,
             }}
         >
-            <MediumText>EnterPassword</MediumText>
+            <InputContainer>
+                <InputWrapper>
+                    <TextInput
+                        type="password"
+                        title="비밀번호 입력"
+                        placeholder="비밀번호 (8자리 이상)"
+                        returnKeyType="next"
+                        // onSubmitEditing={() => onNext(passwordRef)}
+                        onChangeText={(text) =>
+                            // setValue("phone", text)
+                            setTest(text)
+                        }
+                        value={test}
+                    />
+                    <RegularText
+                        style={{
+                            fontSize: 16,
+                            color: color["page-grey-text"],
+                            marginTop: 8,
+                        }}
+                    >
+                        영문, 숫자를 포함한 8자 이상의 문자를 입력하세요.
+                    </RegularText>
+                </InputWrapper>
+                <InputWrapper>
+                    <TextInput
+                        type="password"
+                        title="비밀번호 확인"
+                        placeholder="비밀번호 (8자리 이상)"
+                        returnKeyType="next"
+                        // onSubmitEditing={() => onNext(passwordRef)}
+                        onChangeText={(text) =>
+                            // setValue("phone", text)
+                            setTest(text)
+                        }
+                        value={test}
+                    />
+                </InputWrapper>
+            </InputContainer>
         </AuthLayout>
     );
 }
