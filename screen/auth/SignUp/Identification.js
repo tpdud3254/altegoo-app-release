@@ -1,19 +1,27 @@
-import React, { useContext } from "react";
+import React, { useContext, useState } from "react";
 import styled from "styled-components/native";
 import UserContext from "../../../context/UserContext";
 import { useNavigation } from "@react-navigation/native";
-import { color } from "../../../styles";
-import { COMPANY, DRIVER, NORMAL, SIGNUP_NAV } from "../../../constant";
+import { SIGNUP_NAV } from "../../../constant";
 import AuthLayout from "../../../component/layout/AuthLayout";
-import RegularText from "../../../component/text/RegularText";
 import { Toast } from "react-native-toast-message/lib/src/Toast";
-import MediumText from "../../../component/text/MediumText";
+import TextInput from "../../../component/input/TextInput";
+import Button from "../../../component/button/Button";
+
+const InputContainer = styled.View`
+    margin-top: 30px;
+    margin-bottom: 10px;
+`;
+const InputWrapper = styled.View`
+    margin-bottom: 30px;
+`;
 
 function Identification() {
     const navigation = useNavigation();
     const { info, setInfo } = useContext(UserContext);
+    const [test, setTest] = useState("");
 
-    const onNext = () => {
+    const Authenticating = () => {
         // if (type === "") {
         //     Toast.show({
         //         type: "errorToast",
@@ -30,14 +38,42 @@ function Identification() {
         navigation.navigate(SIGNUP_NAV[info.userType][curNavIndex + 1]);
     };
 
+    const reset = () => {
+        setTest("");
+    };
+
+    console.log("test : ", test);
+
     return (
-        <AuthLayout
-            bottomButtonProps={{
-                title: "다음으로",
-                onPress: onNext,
-            }}
-        >
-            <MediumText>Identification</MediumText>
+        <AuthLayout>
+            <InputContainer>
+                <InputWrapper>
+                    <TextInput
+                        title="이름"
+                        placeholder="실명입력"
+                        returnKeyType="next"
+                        // onSubmitEditing={() => onNext(passwordRef)}
+                        onChangeText={(text) =>
+                            // setValue("phone", text)
+                            setTest(text)
+                        }
+                        onReset={reset}
+                        value={test}
+                    />
+                </InputWrapper>
+                <InputWrapper>
+                    <TextInput
+                        title="휴대폰 번호"
+                        placeholder="- 없이 숫자만 입력해주세요."
+                    />
+                </InputWrapper>
+            </InputContainer>
+            <Button
+                onPress={Authenticating}
+                type="accent"
+                text="본인 인증하기"
+                disabled={false}
+            />
         </AuthLayout>
     );
 }

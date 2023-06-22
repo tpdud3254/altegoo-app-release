@@ -11,14 +11,14 @@ export const BottomButton = styled.View`
 function Button(props) {
     return (
         <TouchableOpacity
-            onPress={props.onPress}
+            onPress={props.disabled ? undefined : props.onPress}
             accent
             style={{
                 backgroundColor:
                     props.type === "accent"
                         ? props.disabled
-                            ? color.btnDisable
-                            : color.btnAccent
+                            ? color["button-accent-disabled-background"]
+                            : color["button-accent-background"]
                         : color.btnDefault,
                 width: "100%",
                 height: 60,

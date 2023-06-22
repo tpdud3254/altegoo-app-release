@@ -29,4 +29,8 @@ export const color = {
     "box-color-background": "#FFF3EB",
     "box-border": "#BABABA",
     "divider-border": "#E8F1FF",
+    "input-border": "#EFE3DE",
+    "input-focus-border": "#FC5F00",
+    "button-accent-background": "#FC5F00",
+    "button-accent-disabled-background": "#FFC19B",
 };
