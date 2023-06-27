@@ -33,4 +33,5 @@ export const color = {
     "input-focus-border": "#FC5F00",
     "button-accent-background": "#FC5F00",
     "button-accent-disabled-background": "#FFC19B",
+    "image-area-background": "#E6E6E6",
 };
