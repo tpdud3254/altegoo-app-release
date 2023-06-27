@@ -26,16 +26,19 @@ function TextInput(props) {
 
     return (
         <Container>
-            <MediumText
-                {...props.titleProps}
-                style={{
-                    fontSize: 17,
-                    color: color["page-grey-text"],
-                    ...props.titleProps?.style,
-                }}
-            >
-                {props.title}
-            </MediumText>
+            {props.title ? (
+                <MediumText
+                    {...props.titleProps}
+                    style={{
+                        fontSize: 17,
+                        color: color["page-grey-text"],
+                        ...props.titleProps?.style,
+                    }}
+                >
+                    {props.title}
+                </MediumText>
+            ) : null}
+
             <View
                 style={{
                     width: "100%",
