@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useState } from "react";
 import styled from "styled-components/native";
 import UserContext from "../../../context/UserContext";
 import { useNavigation } from "@react-navigation/native";
@@ -28,6 +28,13 @@ const CameraButton = styled.TouchableOpacity`
     background-color: ${color["image-area-background"]};
 `;
 
+// TODO: cancle -> cancel로 바꾸기;;;
+const License = styled(CameraButton)``;
+const CancelButton = styled.TouchableOpacity`
+    position: absolute;
+    right: -8px;
+    top: -8px;
+`;
 const SkipButton = styled.TouchableOpacity`
     align-items: center;
 `;
@@ -35,6 +42,7 @@ function BusinessLicense() {
     const navigation = useNavigation();
     const { info, setInfo } = useContext(UserContext);
     const { height: windowHeight } = useWindowDimensions();
+    const [imageStatus, setImageStatus] = useState(false);
 
     const onNext = () => {
         // if (type === "") {
@@ -64,12 +72,25 @@ function BusinessLicense() {
         >
             <Container height={windowHeight}>
                 <Wrapper>
-                    <CameraButton>
-                        <Image
-                            style={{ width: 60, height: 60 }}
-                            source={require("../../../assets/images/icons/btn_camera.png")}
-                        />
-                    </CameraButton>
+                    {!imageStatus ? (
+                        <CameraButton>
+                            <Image
+                                style={{ width: 60, height: 60 }}
+                                source={require("../../../assets/images/icons/btn_camera.png")}
+                            />
+                        </CameraButton>
+                    ) : (
+                        <License>
+                            <CancelButton>
+                                <Image
+                                    style={{ width: 25, height: 25 }}
+                                    source={require("../../../assets/images/icons/btn_del_s.png")}
+                                />
+                            </CancelButton>
+                            {/* 사업자 이미지 */}
+                        </License>
+                    )}
+
                     <MediumText
                         style={{
                             color: color["page-grey-text"],
