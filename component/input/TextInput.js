@@ -51,6 +51,7 @@ function TextInput(props) {
                 <Input
                     ref={input}
                     {...props}
+                    placeholderTextColor={color["page-lightgrey-text"]}
                     cursorColor={color["page-lightgrey-text"]}
                     style={{
                         width: "90%",
