@@ -43,7 +43,7 @@ const SkipButton = styled.TouchableOpacity`
 
 const PopupContainer = styled.View`
     width: 200px;
-    height: 250px;
+    height: 230px;
     justify-content: center;
 `;
 

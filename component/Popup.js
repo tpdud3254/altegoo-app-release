@@ -5,7 +5,8 @@ import Dialog, { DialogContent } from "react-native-popup-dialog";
 import BoldText from "./text/BoldText";
 
 const Container = styled.View`
-    padding-top: 10px;
+    padding-top: 20px;
+    margin-bottom: -10px;
 `;
 
 export const Popup = ({ children, visible, onTouchOutside, onClick }) => {
