@@ -12,6 +12,7 @@ import { Fragment, useState } from "react";
 import RegularText from "../text/RegularText";
 
 import HorizontalDivider from "../divider/HorizontalDivider";
+import { shadowProps } from "../Shadow";
 
 const Container = styled.View`
     z-index: 100;
@@ -119,18 +120,7 @@ function SelectBox({ title, titleProps, onSelect, data }) {
                 </TouchableOpacity>
                 {showOptions ? (
                     <OptionsContainer height={windowHeight}>
-                        <Options
-                            style={{
-                                shadowColor: "#00000044",
-                                shadowOffset: {
-                                    width: 1,
-                                    height: 2,
-                                },
-                                shadowOpacity: 0.25,
-                                shadowRadius: 3.84,
-                                elevation: 20,
-                            }}
-                        >
+                        <Options style={shadowProps}>
                             {data.map((value, index) => (
                                 <Fragment key={index}>
                                     <Option onPress={() => clickOption(index)}>
