@@ -75,65 +75,64 @@ export default function SignUpNavigator() {
                 name="Identification"
                 component={Identification}
                 options={{
-                    title: "",
+                    title: "본인 인증",
                 }}
             />
             <Stack.Screen
                 name="CompanyInfomation"
                 component={CompanyInfomation}
                 options={{
-                    title: "",
+                    title: "기업 정보 입력",
                 }}
             />
             <Stack.Screen
                 name="EnterPassword"
                 component={EnterPassword}
                 options={{
-                    title: "",
+                    title: "비밀번호 입력",
                 }}
             />
             <Stack.Screen
                 name="BusinessLicense"
                 component={BusinessLicense}
                 options={{
-                    title: "",
+                    title: "사업자 등록증 첨부",
                 }}
             />
             <Stack.Screen
                 name="RegisterVehicle"
                 component={RegisterVehicle}
                 options={{
-                    title: "",
+                    title: "내 차 등록",
                 }}
             />
             <Stack.Screen
                 name="VehicleLicense"
                 component={VehicleLicense}
                 options={{
-                    title: "",
+                    title: "화물자동차 운송사업 허가증 첨부",
                 }}
             />
             <Stack.Screen
                 name="WorkingArea"
                 component={WorkingArea}
                 options={{
-                    title: "",
+                    title: "작업 지역 선택",
                 }}
             />
             <Stack.Screen
                 name="RecomendedMember"
                 component={RecomendedMember}
                 options={{
-                    title: "",
+                    title: "추천 회원 입력",
                 }}
             />
             <Stack.Screen
                 name="SignUpComplete"
                 component={SignUpComplete}
-                options={{
-                    title: "",
-                }}
+                options={{ headerShown: false }}
             />
+            {/* TODO: 나중에 Welcome 컴포넌트 있는 위치로 옮기기 */}
             <Stack.Screen
                 name="TakePhoto"
                 component={TakePhoto}
