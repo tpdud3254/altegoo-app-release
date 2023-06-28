@@ -52,7 +52,7 @@ function BusinessLicense() {
     const { info, setInfo } = useContext(UserContext);
     const { height: windowHeight } = useWindowDimensions();
     const [imageStatus, setImageStatus] = useState(false);
-    const [popupVisible, setPopupVisible] = useState(true);
+    const [popupVisible, setPopupVisible] = useState(false);
 
     const onNext = () => {
         // if (type === "") {
