@@ -14,6 +14,8 @@ export const Popup = ({ children, visible, onTouchOutside, onClick }) => {
         <Dialog
             visible={visible}
             onTouchOutside={onTouchOutside}
+            onHardwareBackPress={onTouchOutside}
+            overlayBackgroundColor="#00000044"
             footer={
                 <TouchableOpacity
                     onPress={onClick}
