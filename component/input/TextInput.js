@@ -9,7 +9,9 @@ import MediumText from "../text/MediumText";
 import { color } from "../../styles";
 import { useEffect, useRef, useState } from "react";
 
-const Container = styled.View``;
+const Container = styled.View`
+    width: ${(props) => (props.width ? props.width : "100%")};
+`;
 
 function TextInput(props) {
     const input = useRef();
@@ -18,14 +20,14 @@ function TextInput(props) {
 
     useEffect(() => {
         if (props.type === "password") setTextSecure(true);
-    }, []);
+    }, [props.type]);
 
     const toggleTextSecure = () => {
         setTextSecure((prev) => !prev);
     };
 
     return (
-        <Container>
+        <Container width={props.width}>
             {props.title ? (
                 <MediumText
                     {...props.titleProps}
@@ -67,7 +69,9 @@ function TextInput(props) {
                     }}
                     onFocus={() => setIsFocused(true)}
                     onBlur={() => setIsFocused(false)}
-                    secureTextEntry={textSecure}
+                    secureTextEntry={
+                        props.type === "password" ? textSecure : false
+                    }
                 />
                 {props.type === "password" ? (
                     <TouchableOpacity

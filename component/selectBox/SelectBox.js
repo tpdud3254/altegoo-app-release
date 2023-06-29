@@ -2,7 +2,6 @@ import {
     View,
     Image,
     TouchableOpacity,
-    useWindowDimensions,
     TouchableWithoutFeedback,
 } from "react-native";
 import styled from "styled-components/native";
@@ -10,20 +9,17 @@ import MediumText from "../text/MediumText";
 import { color } from "../../styles";
 import { Fragment, useState } from "react";
 import RegularText from "../text/RegularText";
-
 import HorizontalDivider from "../divider/HorizontalDivider";
 import { shadowProps } from "../Shadow";
+import { SelectPopup } from "./SelectPopup";
 
 const Container = styled.View`
-    z-index: 100;
+    width: ${(props) => (props.width ? props.width : "100%")};
 `;
+
 const OptionsContainer = styled.View`
-    z-index: 100;
     width: 100%;
-    height: ${(props) => props.height - 200}px;
-    position: absolute;
     align-items: center;
-    justify-content: center;
 `;
 const Options = styled.View`
     width: 90%;
@@ -42,8 +38,7 @@ const Option = styled.TouchableOpacity`
     padding-bottom: 20px;
 `;
 
-function SelectBox({ title, titleProps, onSelect, data }) {
-    const { height: windowHeight } = useWindowDimensions();
+function SelectBox({ title, titleProps, onSelect, data, width, placeholder }) {
     const [showOptions, setShowOptions] = useState(false);
     const [selected, setSelected] = useState(-1);
 
@@ -63,7 +58,7 @@ function SelectBox({ title, titleProps, onSelect, data }) {
 
     return (
         <TouchableWithoutFeedback onPress={hide}>
-            <Container>
+            <Container width={width}>
                 <MediumText
                     {...titleProps}
                     style={{
@@ -83,6 +78,7 @@ function SelectBox({ title, titleProps, onSelect, data }) {
                         justifyContent: "space-between",
                         borderBottomWidth: 2,
                         borderBottomColor: color["input-border"],
+                        marginTop: 2,
                     }}
                 >
                     <RegularText
@@ -97,7 +93,11 @@ function SelectBox({ title, titleProps, onSelect, data }) {
                                     : color["page-black-text"],
                         }}
                     >
-                        {selected < 0 ? "선택하세요." : data[selected]}
+                        {selected < 0
+                            ? placeholder
+                                ? placeholder
+                                : "선택하세요."
+                            : data[selected]}
                     </RegularText>
                     <View
                         style={{
@@ -118,8 +118,12 @@ function SelectBox({ title, titleProps, onSelect, data }) {
                         />
                     </View>
                 </TouchableOpacity>
-                {showOptions ? (
-                    <OptionsContainer height={windowHeight}>
+                <SelectPopup
+                    visible={showOptions}
+                    onTouchOutside={hide}
+                    onClick={hide}
+                >
+                    <OptionsContainer>
                         <Options style={shadowProps}>
                             {data.map((value, index) => (
                                 <Fragment key={index}>
@@ -142,7 +146,7 @@ function SelectBox({ title, titleProps, onSelect, data }) {
                             ))}
                         </Options>
                     </OptionsContainer>
-                ) : null}
+                </SelectPopup>
             </Container>
         </TouchableWithoutFeedback>
     );
