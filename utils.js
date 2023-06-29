@@ -4,6 +4,19 @@ import { SERVER, TOKEN, VALID } from "./constant";
 import * as Speech from "expo-speech";
 import axios from "axios";
 
+export const reset = (setValue, value) => {
+    setValue(value, "");
+};
+export const checkValidation = (data) => {
+    let valid = true;
+    Object.keys(data).map((value) => {
+        if (!data[value]) {
+            valid = false;
+        }
+    });
+
+    return valid;
+};
 export const checkPassword = (password) => {
     const regExp = /^.*(?=^.{8,}$)(?=.*\d)(?=.*[a-zA-Z]).*$/;
 

@@ -22,8 +22,18 @@ function TextInput(props) {
         if (props.type === "password") setTextSecure(true);
     }, [props.type]);
 
+    useEffect(() => {
+        if (props.focus) {
+            setFocus();
+        }
+    }, [props.focus]);
+
     const toggleTextSecure = () => {
         setTextSecure((prev) => !prev);
+    };
+
+    const setFocus = () => {
+        input?.current?.focus();
     };
 
     return (
