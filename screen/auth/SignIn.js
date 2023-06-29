@@ -3,7 +3,7 @@ import styled from "styled-components/native";
 import FormLayout from "../../component/layout/FormLayout";
 import TitleText from "../../component/text/TitleText";
 import SubTitleText from "../../component/text/SubTitleText";
-import { TextInput } from "../../component/input/TextInput";
+
 import TitleInputItem from "../../component/item/TitleInputItem";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import MediumText from "../../component/text/MediumText";
@@ -18,6 +18,9 @@ import { SERVER } from "../../constant";
 import { setAsyncStorageToken, showError } from "../../utils";
 import { color } from "../../styles";
 import Button from "../../component/button/Button";
+import AuthLayout from "../../component/layout/AuthLayout";
+import TextInput from "../../component/input/TextInput";
+import RegularText from "../../component/text/RegularText";
 
 const Container = styled.View`
     flex: 1;
@@ -25,8 +28,6 @@ const Container = styled.View`
 const Title = styled.View`
     margin-bottom: 20px;
 `;
-
-const Wrapper = styled.View``;
 
 const Buttons = styled.View`
     margin-top: 15px;
@@ -37,9 +38,20 @@ const Password = styled.View`
     align-items: center;
 `;
 
+const InputContainer = styled.View`
+    /* margin-top: 30px; */
+    /* margin-bottom: 10px; */
+`;
+const InputWrapper = styled.View`
+    margin-bottom: 30px;
+`;
+
+const FindPassword = styled.View`
+    align-items: center;
+`;
 function SignIn() {
     const [textSecure, setTextSecure] = useState(true);
-    const { register, handleSubmit, setValue, watch } = useForm();
+    const { register, handleSubmit, setValue, watch, getValues } = useForm();
     const navigation = useNavigation();
     const { setIsLoggedIn } = useContext(LoginContext);
     const { setInfo } = useContext(UserContext);
@@ -94,74 +106,129 @@ function SignIn() {
             .finally(() => {});
     };
 
+    const reset = () => {
+        setValue("phone", "");
+    };
+
     return (
         <>
-            <FormLayout>
-                <Container>
-                    <Title>
-                        <TitleText>로그인</TitleText>
-                        <SubTitleText
-                            style={{ color: color.textDark, marginTop: 10 }}
+            <AuthLayout
+                bottomButtonProps={{
+                    title: "로그인",
+                    // onPress: onNext,
+                    disabled: true,
+                }}
+            >
+                <MediumText
+                    style={{
+                        fontSize: 16,
+                        textAlign: "center",
+                        color: color["page-grey-text"],
+                        marginTop: 15,
+                        marginBottom: 25,
+                    }}
+                >
+                    안녕하세요. 환영합니다.
+                </MediumText>
+                <InputContainer>
+                    <InputWrapper>
+                        <TextInput
+                            title="휴대폰 번호"
+                            placeholder="- 제외하고 번호만 입력해주세요."
+                            returnKeyType="next"
+                            // onSubmitEditing={() => onNext(passwordRef)}
+                            onChangeText={(text) => setValue("phone", text)}
+                            onReset={reset}
+                            // value={getValues("phone")}
+                        />
+                    </InputWrapper>
+                    <InputWrapper>
+                        <TextInput
+                            type="password"
+                            title="비밀번호"
+                            placeholder="비밀번호 (8자리 이상)"
+                            returnKeyType="next"
+                            // onSubmitEditing={() => onNext(passwordRef)}
+                            // onChangeText={(text) =>
+                            // setValue("phone", text)
+                            // setTest(text)
+                            // }
+                            // value={test}
+                        />
+                    </InputWrapper>
+                </InputContainer>
+                <FindPassword>
+                    <TouchableOpacity>
+                        <RegularText
+                            style={{
+                                fontSize: 16,
+                                color: color["page-color-text"],
+                                textDecorationLine: "underline",
+                            }}
                         >
-                            안녕하세요. 환영합니다.
-                        </SubTitleText>
-                    </Title>
-                    <Wrapper>
-                        <View>
-                            <TitleInputItem>
-                                <TextInput
-                                    placeholder="휴대폰번호"
-                                    keyboardType="number-pad"
-                                    returnKeyType="next"
-                                    onSubmitEditing={() => onNext(passwordRef)}
-                                    onChangeText={(text) =>
-                                        setValue("phone", text)
-                                    }
-                                />
-                            </TitleInputItem>
-                            <TitleInputItem>
-                                <Password>
-                                    <TextInput
-                                        ref={passwordRef}
-                                        placeholder="비밀번호"
-                                        secureTextEntry={textSecure}
-                                        returnKeyType="done"
-                                        onChangeText={(text) =>
-                                            setValue("password", text)
-                                        }
-                                        width="87%"
-                                    />
-                                    <TouchableOpacity onPress={ShowPassword}>
-                                        <MediumText>보기</MediumText>
-                                    </TouchableOpacity>
-                                </Password>
-                            </TitleInputItem>
-                        </View>
-                        <Buttons>
-                            <Button
-                                text="로그인"
-                                type="accent"
-                                onPress={handleSubmit(onValid)}
-                                disabled={
-                                    !(watch("phone") && watch("password"))
-                                }
+                            비밀번호 찾기
+                        </RegularText>
+                    </TouchableOpacity>
+                </FindPassword>
+                {/* <Title>
+                    <TitleText>로그인</TitleText>
+                    <SubTitleText
+                        style={{ color: color.textDark, marginTop: 10 }}
+                    >
+                        안녕하세요. 환영합니다.
+                    </SubTitleText>
+                </Title>
+                <Wrapper>
+                    <View>
+                        <TitleInputItem>
+                            <TextInput
+                                placeholder="휴대폰번호"
+                                keyboardType="number-pad"
+                                returnKeyType="next"
+                                onSubmitEditing={() => onNext(passwordRef)}
+                                onChangeText={(text) => setValue("phone", text)}
                             />
-                            <TouchableOpacity>
-                                <MediumText
-                                    style={{
-                                        color: color.textDark,
-                                        textAlign: "center",
-                                        marginTop: 15,
-                                    }}
-                                    onPress={ResetPassword}
-                                >
-                                    비밀번호 재설정
-                                </MediumText>
-                            </TouchableOpacity>
-                        </Buttons>
-                    </Wrapper>
-                </Container>
-            </FormLayout>
+                        </TitleInputItem>
+                        <TitleInputItem>
+                            <Password>
+                                <TextInput
+                                    ref={passwordRef}
+                                    placeholder="비밀번호"
+                                    secureTextEntry={textSecure}
+                                    returnKeyType="done"
+                                    onChangeText={(text) =>
+                                        setValue("password", text)
+                                    }
+                                    width="87%"
+                                />
+                                <TouchableOpacity onPress={ShowPassword}>
+                                    <MediumText>보기</MediumText>
+                                </TouchableOpacity>
+                            </Password>
+                        </TitleInputItem>
+                    </View>
+                    <Buttons>
+                        <Button
+                            text="로그인"
+                            type="accent"
+                            onPress={handleSubmit(onValid)}
+                            disabled={!(watch("phone") && watch("password"))}
+                        />
+                        <TouchableOpacity>
+                            <MediumText
+                                style={{
+                                    color: color.textDark,
+                                    textAlign: "center",
+                                    marginTop: 15,
+                                }}
+                                onPress={ResetPassword}
+                            >
+                                비밀번호 재설정
+                            </MediumText>
+                        </TouchableOpacity>
+                    </Buttons>
+                </Wrapper> */}
+            </AuthLayout>
         </>
     );
 }

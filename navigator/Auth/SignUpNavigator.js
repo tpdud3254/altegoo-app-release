@@ -48,7 +48,7 @@ export default function SignUpNavigator() {
                             width: 25,
                             marginLeft: 5,
                         }}
-                    ></Image>
+                    />
                 ),
             }}
         >
