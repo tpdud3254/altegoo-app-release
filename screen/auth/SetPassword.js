@@ -1,20 +1,22 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components/native";
-import DefaultLayout from "../../component/layout/DefaultLayout";
-import TitleInputItem from "../../component/item/TitleInputItem";
 import TextInput from "../../component/input/TextInput";
-import MediumText from "../../component/text/MediumText";
 import { useForm } from "react-hook-form";
 import { useNavigation } from "@react-navigation/native";
-import { checkPassword, showError } from "../../utils";
+import {
+    checkPassword,
+    checkValidation,
+    reset,
+    showError,
+    showErrorMessage,
+    showMessage,
+} from "../../utils";
 import axios from "axios";
 import { VALID } from "../../constant";
-import { Toast } from "react-native-toast-message/lib/src/Toast";
 import { SERVER } from "../../constant";
 import Button from "../../component/button/Button";
 import AuthLayout from "../../component/layout/AuthLayout";
 import SelectBox from "../../component/selectBox/SelectBox";
-import { useWindowDimensions } from "react-native";
 import RegularText from "../../component/text/RegularText";
 import { color } from "../../styles";
 
@@ -34,76 +36,104 @@ const RowInputWrapper = styled(InputWrapper)`
     flex-direction: row;
     justify-content: space-between;
 `;
+
+const carrierArr = ["SKT", "KT", "LG"];
+
 function SetPassword() {
-    const { register, handleSubmit, setValue, watch } = useForm();
-    const [phone, setPhone] = useState("01090665452"); //TODO: test code
-    const password1Ref = useRef();
-    const password2Ref = useRef();
     const navigation = useNavigation();
-    const { height: windowHeight } = useWindowDimensions();
-    const [auth, setAuth] = useState(false);
+    const { register, setValue, watch, getValues } = useForm();
+
+    const [focus, setFocus] = useState("name");
+    const [validation, setValidation] = useState(false);
+    const [authCompleted, setAuthCompleted] = useState(false);
 
     useEffect(() => {
-        register("phone", {
-            required: true,
-        });
-        register("newPassword", {
-            required: true,
-        });
-        register("newPasswordCheck", {
-            required: true,
-        });
+        register("name");
+        register("phone");
+        register("carrier");
+        register("password");
+        register("verifyPassword");
     }, [register]);
 
-    const onNext = (nextOne) => {
-        nextOne?.current?.focus();
+    useEffect(() => {
+        if (!authCompleted) {
+            setValidation(
+                checkValidation({
+                    name: watch("name"),
+                    phone: watch("phone"),
+                    carrier: watch("carrier"),
+                })
+            );
+        } else {
+            setValidation(
+                checkValidation({
+                    password: watch("password"),
+                    verifyPassword: watch("verifyPassword"),
+                })
+            );
+        }
+    }, [watch()]);
+
+    useEffect(() => {
+        if (authCompleted) setFocus("password");
+        else setFocus("name");
+    }, [authCompleted]);
+
+    const onNext = (value) => {
+        setFocus(value);
     };
 
-    const onValid = ({ newPassword, newPasswordCheck }) => {
-        console.log(newPassword, newPasswordCheck);
+    const onAuthenticate = () => {
+        const { name, phone, carrier } = getValues();
 
-        if (newPassword === newPasswordCheck) {
-            if (checkPassword(newPassword)) {
-                axios
-                    .post(SERVER + "/users/password", {
-                        phone,
-                        password: newPassword,
-                    })
-                    .then(({ data }) => {
-                        const { result, msg } = data;
+        //TODO: 휴대폰 본인인증 처리
 
-                        if (result === VALID) {
-                            Toast.show({
-                                type: "errorToast",
-                                props: "비밀번호가 변경 되었습니다.",
-                            });
-                            navigation.navigate("SignIn", {
-                                reset: true,
-                            });
-                        }
-                    })
-                    .catch((error) => {
-                        showError(error);
-                    })
-                    .finally(() => {});
-            } else {
-                Toast.show({
-                    type: "errorToast",
-                    props: "비밀번호가 조건에 맞지 않습니다.",
-                });
-            }
-        } else {
-            Toast.show({
-                type: "errorToast",
-                props: "비밀번호가 일치하지 않습니다.",
-            });
+        setAuthCompleted(true);
+    };
+
+    const onChangePassword = async () => {
+        const { phone, password, verifyPassword } = getValues();
+
+        if (password !== verifyPassword) {
+            showErrorMessage("입력하신 비밀번호가 일치하지 않습니다.");
+            return;
         }
+
+        if (!checkPassword(password)) {
+            showErrorMessage("비밀번호가 조건에 맞지 않습니다.");
+            return;
+        }
+
+        try {
+            const response = await axios.post(SERVER + "/users/password", {
+                phone,
+                password,
+            });
+
+            const {
+                data: { result },
+            } = response;
+
+            if (result === VALID) {
+                showMessage("비밀번호가 변경 되었습니다.");
+                goToSignIn();
+            }
+        } catch (error) {
+            console.log(error);
+            showError(error);
+        }
+    };
+
+    const goToSignIn = () => {
+        navigation.navigate("SignIn", {
+            reset: true,
+        });
     };
 
     return (
         <AuthLayout>
             <Container>
-                {!auth ? (
+                {!authCompleted ? (
                     <>
                         <InputContainer>
                             <InputWrapper>
@@ -111,63 +141,43 @@ function SetPassword() {
                                     title="이름"
                                     placeholder="실명입력"
                                     returnKeyType="next"
-                                    // onSubmitEditing={() => onNext(passwordRef)}
-                                    // onChangeText={(text) => setValue("phone", text)}
-                                    // onReset={reset}
-                                    // value={getValues("phone")}
+                                    value={watch("name")}
+                                    onSubmitEditing={() => onNext("phone")}
+                                    onReset={() => reset(setValue, "name")}
+                                    onChangeText={(text) =>
+                                        setValue("name", text)
+                                    }
                                 />
                             </InputWrapper>
                             <RowInputWrapper>
                                 <SelectBox
-                                    title="통신사"
-                                    data={["SKT", "KT", "LG"]}
                                     width="25%"
+                                    title="통신사"
+                                    data={carrierArr}
                                     placeholder="선택"
-                                    // onSelect={(index) => setSelected(index)}
+                                    onSelect={(index) =>
+                                        setValue("carrier", carrierArr[index])
+                                    }
                                 />
                                 <TextInput
+                                    width="68%"
                                     title="휴대폰 번호"
                                     placeholder="- 없이 숫자만 입력해주세요."
-                                    returnKeyType="next"
-                                    width="68%"
-                                    // onSubmitEditing={() => onNext(passwordRef)}
-                                    // onChangeText={(text) => setValue("phone", text)}
-                                    // onReset={reset}
-                                    // value={getValues("phone")}
+                                    returnKeyType="done"
+                                    keyboardType="number-pad"
+                                    value={watch("phone")}
+                                    onReset={() => reset(setValue, "phone")}
+                                    onChangeText={(text) =>
+                                        setValue("phone", text)
+                                    }
                                 />
                             </RowInputWrapper>
-                            {/* <TextInput
-                            returnKeyType="next"
-                            onSubmitEditing={() => onNext(password1Ref)}
-                            secureTextEntry={true}
-                            onChangeText={(text) => setValue("phone", text)}
-                            placeholder="휴대폰번호"
-                        /> */}
-                            {/* <TextInput
-                            ref={password1Ref}
-                            returnKeyType="next"
-                            onSubmitEditing={() => onNext(password2Ref)}
-                            secureTextEntry={true}
-                            onChangeText={(text) =>
-                                setValue("newPassword", text)
-                            }
-                            placeholder="새 비밀번호"
-                        /> */}
-                            {/* <TextInput
-                            ref={password2Ref}
-                            returnKeyType="done"
-                            secureTextEntry={true}
-                            onChangeText={(text) =>
-                                setValue("newPasswordCheck", text)
-                            }
-                            placeholder="새 비밀번호 확인"
-                        /> */}
                         </InputContainer>
                         <Button
-                            onPress={() => setAuth(true)}
+                            onPress={onAuthenticate}
                             type="accent"
                             text="본인 인증하기"
-                            disabled={false}
+                            disabled={!validation}
                         />
                     </>
                 ) : (
@@ -179,12 +189,13 @@ function SetPassword() {
                                     title="비밀번호 입력"
                                     placeholder="비밀번호 (8자리 이상)"
                                     returnKeyType="next"
-                                    // onSubmitEditing={() => onNext(passwordRef)}
-                                    // onChangeText={(text) =>
-                                    //     // setValue("phone", text)
-                                    //     setTest(text)
-                                    // }
-                                    // value={test}
+                                    value={watch("password")}
+                                    onSubmitEditing={() =>
+                                        onNext("verifyPassword")
+                                    }
+                                    onChangeText={(text) =>
+                                        setValue("password", text)
+                                    }
                                 />
                                 <RegularText
                                     style={{
@@ -202,37 +213,24 @@ function SetPassword() {
                                     type="password"
                                     title="비밀번호 확인"
                                     placeholder="비밀번호 (8자리 이상)"
-                                    returnKeyType="next"
-                                    // onSubmitEditing={() => onNext(passwordRef)}
-                                    // onChangeText={(text) =>
-                                    //     // setValue("phone", text)
-                                    //     setTest(text)
-                                    // }
-                                    // value={test}
+                                    returnKeyType="done"
+                                    value={watch("verifyPassword")}
+                                    onChangeText={(text) =>
+                                        setValue("verifyPassword", text)
+                                    }
+                                    focus={focus === "verifyPassword"}
                                 />
                             </InputWrapper>
                         </InputContainer>
                         <Button
-                            onPress={() => setAuth(false)}
+                            onPress={onChangePassword}
                             type="accent"
                             text="비밀번호 재설정"
-                            disabled={false}
+                            disabled={!validation}
                         />
                     </>
                 )}
             </Container>
-            {/* <Button
-                text="본인인증 후 재설정"
-                type="accent"
-                onPress={handleSubmit(onValid)}
-                disabled={
-                    !(
-                        watch("newPassword") &&
-                        watch("newPasswordCheck") &&
-                        watch("phone")
-                    )
-                }
-            /> */}
         </AuthLayout>
     );
 }

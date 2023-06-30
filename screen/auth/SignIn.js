@@ -39,12 +39,8 @@ function SignIn() {
     const [validation, setValidation] = useState(false);
 
     useEffect(() => {
-        register("phone", {
-            required: true,
-        });
-        register("password", {
-            required: true,
-        });
+        register("phone");
+        register("password");
     }, [register]);
 
     useEffect(() => {

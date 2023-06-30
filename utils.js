@@ -122,6 +122,20 @@ export const showError = (error) => {
     // console.log("error: ", error.response.data.result);
 };
 
+export const showErrorMessage = (msg) => {
+    Toast.show({
+        type: "errorToast",
+        props: msg,
+    });
+};
+
+export const showMessage = (msg) => {
+    Toast.show({
+        type: "normalToast",
+        props: msg,
+    });
+};
+
 export const speech = (msg, exceptionUserId) => {
     // const { info } = useContext(UserContext);
 
