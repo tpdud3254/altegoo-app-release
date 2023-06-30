@@ -20,7 +20,8 @@ const termsTexts = [
 
 const Container = styled.View`
     width: 100%;
-    padding: 10px 15px;
+    margin-top: 30px;
+    padding: 23px 15px;
     border-radius: 12px;
     background-color: white;
     border: 1px ${color["box-border"]};
@@ -28,22 +29,25 @@ const Container = styled.View`
 
 const AllAgree = styled.View`
     align-items: center;
-    margin-bottom: 12px;
+    margin-bottom: 18px;
 `;
 const AllCheckWrapper = styled.View`
+    width: 100%;
     flex-direction: row;
     align-items: center;
     justify-content: flex-start;
-    width: 100%;
+    margin-bottom: 15px;
 `;
 const TermsContainer = styled.View`
     width: 100%;
+    padding-top: 30px;
 `;
 const Terms = styled.View`
     width: 100%;
     flex-direction: row;
     align-items: center;
     justify-content: space-between;
+    margin-bottom: ${(props) => (props.lastChild ? 0 : 30)}px;
 `;
 const TermsWrapper = styled.View`
     flex-direction: row;
@@ -132,17 +136,15 @@ function Agreements() {
 
     const Checkbox = ({ checked, onPress }) => {
         return (
-            <TouchableOpacity onPress={onPress}>
-                <Image
-                    source={
-                        checked
-                            ? require("../../../assets/images/icons/Check_ON.png")
-                            : require("../../../assets/images/icons/Check_OFF.png")
-                    }
-                    resizeMode="contain"
-                    style={{ width: 24, marginRight: 10 }}
-                />
-            </TouchableOpacity>
+            <Image
+                source={
+                    checked
+                        ? require("../../../assets/images/icons/Check_ON.png")
+                        : require("../../../assets/images/icons/Check_OFF.png")
+                }
+                resizeMode="contain"
+                style={{ width: 24, height: 24, marginRight: 10 }}
+            />
         );
     };
 
@@ -183,31 +185,32 @@ function Agreements() {
                 </AllAgree>
                 <HorizontalDivider
                     thickness={1}
-                    width="90%"
+                    width="100%"
                     color={color["divider-border"]}
                 />
                 <TermsContainer>
                     {termsTexts.map((text, index) => (
-                        <Terms key={index}>
-                            <TermsWrapper>
-                                <Checkbox
-                                    checked={checkArr[index]}
-                                    onPress={() =>
-                                        clickCheckButton(
-                                            !checkArr[index],
-                                            index
-                                        )
-                                    }
-                                />
-                                <RegularText
-                                    style={{
-                                        color: color["page-black-text"],
-                                    }}
-                                >
-                                    {text}
-                                    {index < 4 ? " (필수)" : "(선택)"}
-                                </RegularText>
-                            </TermsWrapper>
+                        <Terms
+                            key={index}
+                            lastChild={index === termsTexts.length - 1}
+                        >
+                            <TouchableOpacity
+                                onPress={() =>
+                                    clickCheckButton(!checkArr[index], index)
+                                }
+                            >
+                                <TermsWrapper>
+                                    <Checkbox checked={checkArr[index]} />
+                                    <RegularText
+                                        style={{
+                                            color: color["page-black-text"],
+                                        }}
+                                    >
+                                        {text}
+                                        {index < 4 ? " (필수)" : "(선택)"}
+                                    </RegularText>
+                                </TermsWrapper>
+                            </TouchableOpacity>
                             {index === 0 || index === 4 ? null : (
                                 <TouchableOpacity
                                     onPress={() => ShowDetailTerms(index)}
