@@ -12,6 +12,8 @@ import SettingNavigator from "./SettingNavigator";
 import TabIcon from "../../component/icon/TabIcons";
 import MyOrderList from "../../screen/main/myOrders/MyOrderList";
 import MyOrdinaryOrderList from "../../screen/main/myOrders/MyOrdinaryOrderList";
+import BoldText from "../../component/text/BoldText";
+import OrderList from "../../screen/main/orders/OrderList";
 
 const Tabs = createBottomTabNavigator();
 const Stack = createStackNavigator();
@@ -154,9 +156,9 @@ export default function TabsNavigator({ route }) {
                             component={Home}
                         />
                         <Tabs.Screen
-                            name="MyOrdinaryOrderList"
+                            name="OrderList"
                             options={{
-                                headerTitle: "내 작업",
+                                headerShown: true,
                                 tabBarIcon: ({ focused }) => (
                                     <TabIcon
                                         tabName="list"
@@ -165,7 +167,7 @@ export default function TabsNavigator({ route }) {
                                     />
                                 ),
                             }}
-                            component={MyOrdinaryOrderList}
+                            component={OrderList}
                         />
                         <Tabs.Screen
                             name="SettingNavigator"
