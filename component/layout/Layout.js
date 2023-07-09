@@ -1,8 +1,9 @@
 import React from "react";
 import styled from "styled-components/native";
 import { color } from "../../styles";
-import { ScrollView, TouchableWithoutFeedback } from "react-native";
+import { ScrollView } from "react-native";
 import useWindowDimensions from "react-native/Libraries/Utilities/useWindowDimensions";
+import RegistButton from "../button/RegistButton";
 
 export const LAYOUT_PADDING_X = 16;
 const Container = styled.View`
@@ -23,6 +24,7 @@ export default function Layout({ children }) {
             <ScrollView>
                 <Wrapper windowHeight={height}>{children}</Wrapper>
             </ScrollView>
+            <RegistButton />
         </Container>
     );
 }

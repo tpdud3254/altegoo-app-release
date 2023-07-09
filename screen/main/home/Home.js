@@ -10,13 +10,7 @@ import {
 } from "../../../utils";
 import HeaderLeft from "../../../component/HeaderLeft";
 import HeaderRight from "../../../component/HeaderRight";
-import {
-    FlatList,
-    Image,
-    TouchableOpacity,
-    View,
-    useWindowDimensions,
-} from "react-native";
+import { FlatList, Image, View, useWindowDimensions } from "react-native";
 import styled from "styled-components/native";
 import MediumText from "../../../component/text/MediumText";
 import { color } from "../../../styles";
@@ -24,7 +18,9 @@ import Layout, { LAYOUT_PADDING_X } from "../../../component/layout/Layout";
 import BoldText from "../../../component/text/BoldText";
 import { shadowProps } from "../../../component/Shadow";
 import RegularText from "../../../component/text/RegularText";
-import RegistButton from "../../../component/button/RegistButton";
+
+import { Order } from "../../../component/order/OrderList";
+import { Notification } from "../../../component/Notification";
 
 const Item = styled.View`
     width: 100%;
@@ -65,12 +61,119 @@ const Select = styled.TouchableOpacity`
     border-radius: 10px;
     width: 110px;
 `;
-const Orders = styled.View``;
+const Orders = styled.View`
+    margin-top: 25px;
+`;
 const NoOrder = styled.View`
     align-items: center;
     padding: 40px;
     margin-bottom: 10px;
 `;
+
+const orderData = [
+    {
+        acceptUser: 55,
+        address: "",
+        address1: "서울 관악구 신림동 1623-3",
+        address2: null,
+        bothType: null,
+        createdAt: "2023-05-12T07:56:39.900Z",
+        detailAddress1: null,
+        detailAddress2: null,
+        directPhone: "01032655452",
+        emergency: false,
+        floor: 8,
+        id: 119,
+        memo: null,
+        orderReservation: [],
+        orderStatusId: 3,
+        otherAddress: null,
+        otherFloor: null,
+        phone: "01032655452",
+        point: 9000,
+        price: 60000,
+        pushStatus: null,
+        quantity: null,
+        regionId: 1,
+        registUser: { id: 56 },
+        simpleAddress1: "서울 관악구",
+        simpleAddress2: null,
+        time: "하루",
+        type: "올림",
+        userId: 56,
+        vehicleType: "스카이",
+        volumeType: "time",
+        workDateTime: "2023-05-13T08:00:00.000Z",
+    },
+    {
+        acceptUser: 55,
+        address: "",
+        address1: "서울 관악구 신림동 1623-3",
+        address2: null,
+        bothType: null,
+        createdAt: "2023-05-12T07:56:39.900Z",
+        detailAddress1: null,
+        detailAddress2: null,
+        directPhone: "01032655452",
+        emergency: false,
+        floor: 8,
+        id: 119,
+        memo: null,
+        orderReservation: [],
+        orderStatusId: 5,
+        otherAddress: null,
+        otherFloor: null,
+        phone: "01032655452",
+        point: 9000,
+        price: 60000,
+        pushStatus: null,
+        quantity: null,
+        regionId: 1,
+        registUser: { id: 56 },
+        simpleAddress1: "서울 관악구",
+        simpleAddress2: null,
+        time: "하루",
+        type: "올림",
+        userId: 56,
+        vehicleType: "스카이",
+        volumeType: "time",
+        workDateTime: "2023-05-13T08:00:00.000Z",
+    },
+    {
+        acceptUser: 55,
+        address: "",
+        address1: "서울 관악구 신림동 1623-3",
+        address2: null,
+        bothType: null,
+        createdAt: "2023-05-12T07:56:39.900Z",
+        detailAddress1: null,
+        detailAddress2: null,
+        directPhone: "01032655452",
+        emergency: false,
+        floor: 8,
+        id: 119,
+        memo: null,
+        orderReservation: [],
+        orderStatusId: 1,
+        otherAddress: null,
+        otherFloor: null,
+        phone: "01032655452",
+        point: 9000,
+        price: 60000,
+        pushStatus: null,
+        quantity: null,
+        regionId: 1,
+        registUser: { id: 56 },
+        simpleAddress1: "서울 관악구",
+        simpleAddress2: null,
+        time: "하루",
+        type: "올림",
+        userId: 56,
+        vehicleType: "스카이",
+        volumeType: "time",
+        workDateTime: "2023-05-13T08:00:00.000Z",
+    },
+];
 
 function Home({ navigation }) {
     const { width } = useWindowDimensions();
@@ -79,7 +182,7 @@ function Home({ navigation }) {
     const [refresh, setRefresh] = useState(false);
     const bannerRef = useRef();
 
-    const orders = 0;
+    const orders = 1;
     useEffect(() => {
         if (info.userType !== ORDINARY) {
             navigation.setOptions({
@@ -187,7 +290,7 @@ function Home({ navigation }) {
             style={{
                 width: width - LAYOUT_PADDING_X * 2,
                 height: 120,
-                backgroundColor: "#E8F1FF",
+                backgroundColor: color.lightblue,
                 alignItems: "center",
                 justifyContent: "center",
                 borderRadius: 12,
@@ -202,17 +305,11 @@ function Home({ navigation }) {
                 <BoldText
                     style={{
                         fontSize: 23,
-                        color: color["page-black-text"],
                     }}
                 >
                     안녕하세요! {info.name}님.
                 </BoldText>
-                <TouchableOpacity>
-                    <Image
-                        source={require("../../../assets/images/icons/btn_notifcation.png")}
-                        style={{ width: 30, height: 30 }}
-                    />
-                </TouchableOpacity>
+                <Notification />
             </ItemRow>
             <Item>
                 <PointButton>
@@ -255,7 +352,6 @@ function Home({ navigation }) {
                         <MediumText
                             style={{
                                 fontSize: 18,
-                                color: color["page-black-text"],
                             }}
                         >
                             최근 등록한 작업
@@ -264,7 +360,6 @@ function Home({ navigation }) {
                             <MediumText
                                 style={{
                                     fontSize: 15,
-                                    color: color["page-black-text"],
                                 }}
                             >
                                 3개월
@@ -287,11 +382,16 @@ function Home({ navigation }) {
                             </RegularText>
                         </NoOrder>
                     ) : (
-                        <Orders></Orders>
+                        <Orders>
+                            <Order.Items>
+                                {orderData.map((order, index) => (
+                                    <Order.Item key={index} data={order} />
+                                ))}
+                            </Order.Items>
+                        </Orders>
                     )}
                 </OrderWrapper>
             </Item>
-            <RegistButton />
         </Layout>
     );
 }

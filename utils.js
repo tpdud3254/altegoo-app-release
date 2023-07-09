@@ -39,6 +39,42 @@ export const numberWithComma = (cost) => {
     return cost.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 };
 
+export const numberWithZero = (num) => {
+    return num < 10 ? "0" + num : num;
+};
+
+export const GetDate = (dateTime, mode = "short") => {
+    const workDateTime = new Date(dateTime);
+
+    if (mode === "short")
+        return `${workDateTime
+            .getFullYear()
+            .toString()
+            .substring(2, 4)}.${numberWithZero(
+            workDateTime.getMonth() + 1
+        )}.${numberWithZero(workDateTime.getDate())}`;
+};
+
+export const GetTime = (dateTime, mode = "short") => {
+    const workDateTime = new Date(dateTime);
+
+    const hours =
+        workDateTime.getHours() === 0
+            ? 12
+            : workDateTime.getHours() > 12
+            ? workDateTime.getHours() - 12
+            : workDateTime.getHours();
+
+    if (mode === "short")
+        return `${GetAmpm(workDateTime.getHours())} ${numberWithZero(
+            hours
+        )}:${numberWithZero(workDateTime.getMinutes())}`;
+};
+
+export const GetAmpm = (hours) => {
+    return hours === 0 ? "오전" : hours > 12 ? "오후" : "오전";
+};
+
 export const getWorkTime = (dateTime, mode) => {
     const getDay = (index) => {
         switch (index) {

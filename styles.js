@@ -13,6 +13,8 @@ export const color = {
     background: "white",
     textLight: "white",
     textDark: "#555555",
+    lightblue: "#E8F1FF",
+    blue: "#0561FC",
     "page-background": "#FBFCFF",
     "page-dark-text": "#333333",
     "page-bluegrey-text": "#ABA9BC",

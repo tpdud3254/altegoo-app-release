@@ -14,8 +14,8 @@ export const ButtonContainer = styled.View`
 
 const Container = styled.TouchableOpacity`
     position: absolute;
-    bottom: 50px;
-    right: -30px;
+    bottom: 0px;
+    right: 0px;
 `;
 
 function RegistButton() {
