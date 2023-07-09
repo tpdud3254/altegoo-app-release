@@ -155,7 +155,6 @@ function BusinessLicense() {
                             fontSize: 19,
                             lineHeight: 30,
                             textAlign: "center",
-                            color: color["page-black-text"],
                         }}
                     >
                         사업자 등록증은{"\n"}

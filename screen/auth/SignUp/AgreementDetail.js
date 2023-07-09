@@ -32,9 +32,7 @@ function AgreementDetail({ route, navigation }) {
     return (
         <AuthLayout>
             <Container>
-                <RegularText
-                    style={{ lineHeight: 28, color: color["page-black-text"] }}
-                >
+                <RegularText style={{ lineHeight: 28 }}>
                     {terms[route?.params?.index]}
                 </RegularText>
             </Container>

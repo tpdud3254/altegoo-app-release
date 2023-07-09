@@ -117,16 +117,8 @@ function RecomendedMember() {
                 {show ? (
                     <SelectPopup style={shadowProps}>
                         <SelectPopupText>
-                            <MediumText
-                                style={{ color: color["page-black-text"] }}
-                            >
-                                01012345678
-                            </MediumText>
-                            <MediumText
-                                style={{ color: color["page-black-text"] }}
-                            >
-                                홍길동
-                            </MediumText>
+                            <MediumText>01012345678</MediumText>
+                            <MediumText>홍길동</MediumText>
                         </SelectPopupText>
                         <PopupButton>
                             <MediumText
@@ -149,7 +141,6 @@ function RecomendedMember() {
                         />
                         <RegularText
                             style={{
-                                color: color["page-black-text"],
                                 marginLeft: 5,
                             }}
                         >

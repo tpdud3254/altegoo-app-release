@@ -1,5 +1,6 @@
 import React from "react";
 import { Text } from "react-native";
+import { color } from "../../styles";
 
 function BoldText(props) {
     return (
@@ -8,6 +9,7 @@ function BoldText(props) {
             style={{
                 fontSize: 18,
                 fontFamily: "SpoqaHanSansNeo-Bold",
+                color: color["page-black-text"],
                 ...props.style,
             }}
         >

@@ -62,7 +62,7 @@ function RegisterVehicle() {
         <RegularText
             style={{
                 fontSize: 17,
-                color: color["page-black-text"],
+
                 marginBottom: 5,
             }}
         >

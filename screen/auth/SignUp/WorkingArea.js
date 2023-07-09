@@ -127,9 +127,7 @@ function WorkingArea() {
             }}
         >
             <Container>
-                <RegularText style={{ color: color["page-black-text"] }}>
-                    지역을 선택하세요.
-                </RegularText>
+                <RegularText>지역을 선택하세요.</RegularText>
                 <Table>
                     {Object.keys(areaObj).map((area, areaIndex) => (
                         <Row key={areaIndex}>
@@ -139,11 +137,7 @@ function WorkingArea() {
                                     Object.keys(areaObj).length - 1
                                 }
                             >
-                                <RegularText
-                                    style={{ color: color["page-black-text"] }}
-                                >
-                                    {area}
-                                </RegularText>
+                                <RegularText>{area}</RegularText>
                             </Area>
                             <Space />
                             <AreaDetail

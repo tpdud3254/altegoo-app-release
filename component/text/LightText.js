@@ -2,13 +2,13 @@ import React from "react";
 import { Text } from "react-native";
 import { color } from "../../styles";
 
-function MediumText(props) {
+function LightText(props) {
     return (
         <Text
             {...props}
             style={{
                 fontSize: 18,
-                fontFamily: "SpoqaHanSansNeo-Medium",
+                fontFamily: "SpoqaHanSansNeo-Light",
                 color: color["page-black-text"],
                 ...props.style,
             }}
@@ -18,4 +18,4 @@ function MediumText(props) {
     );
 }
 
-export default MediumText;
+export default LightText;

@@ -166,7 +166,6 @@ function Agreements() {
                         <MediumText
                             style={{
                                 fontSize: 20,
-                                color: color["page-black-text"],
                             }}
                         >
                             전체 동의합니다.
@@ -201,11 +200,7 @@ function Agreements() {
                             >
                                 <TermsWrapper>
                                     <Checkbox checked={checkArr[index]} />
-                                    <RegularText
-                                        style={{
-                                            color: color["page-black-text"],
-                                        }}
-                                    >
+                                    <RegularText>
                                         {text}
                                         {index < 4 ? " (필수)" : "(선택)"}
                                     </RegularText>
