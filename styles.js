@@ -15,6 +15,7 @@ export const color = {
     textDark: "#555555",
     "page-background": "#FBFCFF",
     "page-dark-text": "#333333",
+    "page-bluegrey-text": "#ABA9BC",
     "page-lightgrey-text": "#BABABA",
     "page-grey-text": "#696969",
     "page-color-text": "#FC5F00",

@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import UserContext from "../../../context/UserContext";
 import { ORDINARY } from "../../../constant";
 import axios from "axios";
@@ -10,99 +10,76 @@ import {
 } from "../../../utils";
 import HeaderLeft from "../../../component/HeaderLeft";
 import HeaderRight from "../../../component/HeaderRight";
-import OrderList from "../orders/OrderList";
 import {
-    ScrollView,
+    FlatList,
+    Image,
     TouchableOpacity,
-    TouchableWithoutFeedback,
     View,
+    useWindowDimensions,
 } from "react-native";
 import styled from "styled-components/native";
 import MediumText from "../../../component/text/MediumText";
-import TitleText from "../../../component/text/TitleText";
-import SubTitleText from "../../../component/text/SubTitleText";
-import MainLayout from "../../../component/layout/MainLayout";
-import { FontAwesome5, MaterialIcons, AntDesign } from "@expo/vector-icons";
 import { color } from "../../../styles";
-import HorizontalDivider from "../../../component/divider/HorizontalDivider";
+import Layout, { LAYOUT_PADDING_X } from "../../../component/layout/Layout";
+import BoldText from "../../../component/text/BoldText";
+import { shadowProps } from "../../../component/Shadow";
+import RegularText from "../../../component/text/RegularText";
+import RegistButton from "../../../component/button/RegistButton";
 
-const Banners = styled.View``;
-const Banner = styled.View`
+const Item = styled.View`
+    width: 100%;
+    margin-bottom: 30px;
+`;
+const ItemRow = styled(Item)`
+    flex-direction: row;
+    justify-content: space-between;
     align-items: center;
-    justify-content: center;
-    background-color: grey;
-    height: 70px;
 `;
 
-const Container = styled(MainLayout)``;
-const Greeting = styled.View`
-    margin-bottom: 5px;
-`;
-const Point = styled.View`
+const PointButton = styled.TouchableOpacity`
+    background-color: ${color["button-accent-background"]};
     flex-direction: row;
     align-items: center;
-`;
-const RegistButtons = styled.View`
-    margin-top: 15px;
-    background-color: #ffffffaa;
-    border-radius: 5px;
-    align-items: center;
-`;
-const Regist = styled.View`
-    align-items: center;
-    margin-top: 13px;
-    margin-bottom: 13px;
+    align-self: flex-start;
+    padding: 8px 13px;
+    border-radius: 12px;
+    margin-top: -20px;
 `;
 
-const RegistButton = styled.TouchableOpacity`
-    margin-top: 5px;
-    background-color: ${color.border};
+const OrderWrapper = styled.View`
+    background-color: white;
+    padding: 16px 16px;
+    border-radius: 14px;
+`;
+const OrderHeader = styled.View`
     flex-direction: row;
     align-items: center;
-    width: 250px;
-    justify-content: center;
-    padding: 5px 0px;
-    border-radius: 3px;
+    justify-content: space-between;
 `;
-
-const Notification = styled.View`
+const Select = styled.TouchableOpacity`
+    background-color: #f4f4f4;
     flex-direction: row;
-    margin-bottom: 8px;
-    width: 380px;
-    border: 1px solid
-        ${(props) =>
-            props.order
-                ? color.btnAccent + "aa"
-                : props.event
-                ? "#ef5285" + "aa"
-                : color.textDark + "aa"};
-    background-color: #ffffffaa;
+    align-items: center;
+    justify-content: space-between;
+    padding: 9px 10px 9px 17px;
+    border-radius: 10px;
+    width: 110px;
 `;
-const NotiWrapper = styled.View`
-    padding-left: 10px;
-    border-left-width: 0px;
+const Orders = styled.View``;
+const NoOrder = styled.View`
+    align-items: center;
+    padding: 40px;
+    margin-bottom: 10px;
 `;
-const NotiIcon = styled.View`
-    background-color: ${(props) =>
-        props.order
-            ? color.btnAccent
-            : props.event
-            ? "#ef5285" + "aa"
-            : color.textDark};
-    padding: 3px;
-    justify-content: center;
-`;
-const NotiTitle = styled.View``;
-const NotiText = styled.View``;
 
-const Notifications = styled(RegistButtons)`
-    background-color: transparent;
-`;
 function Home({ navigation }) {
+    const { width } = useWindowDimensions();
     const { info } = useContext(UserContext);
     const [point, setPoint] = useState(0);
     const [refresh, setRefresh] = useState(false);
+    const bannerRef = useRef();
 
+    const orders = 0;
     useEffect(() => {
         if (info.userType !== ORDINARY) {
             navigation.setOptions({
@@ -188,305 +165,134 @@ function Home({ navigation }) {
         navigation.navigate("SettingNavigator", { screen: "PointNavigator" });
     };
 
+    const imagePath = [
+        require(`../../../assets/images/intro/img_01.png`),
+        require(`../../../assets/images/intro/img_02.png`),
+        require(`../../../assets/images/intro/img_03.png`),
+    ];
+
+    const bannerData = [
+        {
+            title: "banner1",
+        },
+        {
+            title: "banner2",
+        },
+        {
+            title: "banner3",
+        },
+    ];
+    const renderIntro = ({ item }) => (
+        <View
+            style={{
+                width: width - LAYOUT_PADDING_X * 2,
+                height: 120,
+                backgroundColor: "#E8F1FF",
+                alignItems: "center",
+                justifyContent: "center",
+                borderRadius: 12,
+            }}
+        >
+            <BoldText style={{ color: "#0561FC" }}>{item.title}</BoldText>
+        </View>
+    );
     return (
-        <>
-            {info.userType === ORDINARY ? (
-                <View style={{ flex: 1 }}>
-                    <Banners>
-                        <Banner>
-                            <MediumText style={{ color: "white" }}>
-                                배너
-                            </MediumText>
-                        </Banner>
-                    </Banners>
-                    <View
+        <Layout>
+            <ItemRow>
+                <BoldText
+                    style={{
+                        fontSize: 23,
+                        color: color["page-black-text"],
+                    }}
+                >
+                    안녕하세요! {info.name}님.
+                </BoldText>
+                <TouchableOpacity>
+                    <Image
+                        source={require("../../../assets/images/icons/btn_notifcation.png")}
+                        style={{ width: 30, height: 30 }}
+                    />
+                </TouchableOpacity>
+            </ItemRow>
+            <Item>
+                <PointButton>
+                    <Image
+                        source={require("../../../assets/images/icons/icon_point.png")}
+                        style={{ width: 27, height: 27 }}
+                    />
+                    <BoldText
                         style={{
-                            flex: 1.7,
+                            fontSize: 15,
+                            color: "white",
                         }}
                     >
-                        <Container>
-                            <Greeting>
-                                <MediumText style={{ fontSize: 25 }}>
-                                    안녕하세요! {info.name}님.
-                                </MediumText>
-                            </Greeting>
-                            <Point>
-                                <FontAwesome5
-                                    name="coins"
-                                    color="#777"
-                                    size={22}
-                                />
-                                <SubTitleText
-                                    style={{ fontSize: 20, color: color.main }}
-                                >
-                                    {" " + numberWithComma(point || 0)}AP
-                                </SubTitleText>
-                            </Point>
-                            <RegistButtons>
-                                <Regist>
-                                    <SubTitleText
-                                        style={{
-                                            textAlign: "center",
-                                            lineHeight: 25,
-                                            fontSize: 21,
-                                        }}
-                                    >
-                                        작업 등록만 진행하셔도{"\n"}포인트가
-                                        지급됩니다.
-                                    </SubTitleText>
-                                    <RegistButton
-                                        onPress={() =>
-                                            navigation.navigate("TabRegistWork")
-                                        }
-                                    >
-                                        <MediumText
-                                            style={{
-                                                color: "white",
-                                                fontSize: 22,
-                                            }}
-                                        >
-                                            작업등록 하러가기
-                                        </MediumText>
-                                        <MaterialIcons
-                                            name="keyboard-arrow-right"
-                                            size={30}
-                                            color="white"
-                                        />
-                                    </RegistButton>
-                                </Regist>
-                                <HorizontalDivider
-                                    color={color.boxColor}
-                                    width="95%"
-                                />
-                                <Regist>
-                                    <SubTitleText
-                                        style={{
-                                            textAlign: "center",
-                                            lineHeight: 25,
-                                            fontSize: 21,
-                                        }}
-                                    >
-                                        긴급!! 긴급!! 전체 기사님들께{"\n"}
-                                        요청이 바로 전송됩니다!!
-                                    </SubTitleText>
-
-                                    <TouchableOpacity
-                                        style={{
-                                            marginTop: 5,
-                                            flexDirection: "row",
-                                            alignItems: "center",
-                                            width: 250,
-                                        }}
-                                        onPress={() =>
-                                            navigation.navigate("TabRegistWork")
-                                        }
-                                    >
-                                        <View
-                                            style={{
-                                                backgroundColor: color.main,
-                                                paddingTop: 5,
-                                                paddingBottom: 5,
-                                                width: "25%",
-                                                borderBottomLeftRadius: 3,
-                                                borderTopLeftRadius: 3,
-                                                alignItems: "center",
-                                            }}
-                                        >
-                                            <MediumText
-                                                style={{
-                                                    color: "white",
-                                                    fontSize: 22,
-                                                }}
-                                            >
-                                                긴급
-                                            </MediumText>
-                                        </View>
-                                        <View
-                                            style={{
-                                                flexDirection: "row",
-                                                backgroundColor: color.textDark,
-                                                paddingTop: 5,
-                                                paddingBottom: 5,
-                                                width: "75%",
-                                                borderBottomRightRadius: 3,
-                                                borderTopRightRadius: 3,
-                                                alignItems: "center",
-                                                justifyContent: "center",
-                                            }}
-                                        >
-                                            <MediumText
-                                                style={{
-                                                    color: "white",
-                                                    fontSize: 22,
-                                                }}
-                                            >
-                                                119 작업등록
-                                            </MediumText>
-                                            <MaterialIcons
-                                                name="keyboard-arrow-right"
-                                                size={30}
-                                                color="white"
-                                            />
-                                        </View>
-                                    </TouchableOpacity>
-                                </Regist>
-                            </RegistButtons>
-                        </Container>
-                    </View>
-                    <View
-                        style={{
-                            flex: 1,
-                        }}
-                    >
-                        {false ? (
-                            <ScrollView
-                            // refreshControl={
-                            //     <RefreshControl
-                            //         refreshing={refreshing}
-                            //         onRefresh={onRefresh}
-                            //     />
-                            // }
-                            >
-                                <TouchableWithoutFeedback>
-                                    <Notifications>
-                                        <Notification order>
-                                            <NotiIcon order>
-                                                <SubTitleText
-                                                    style={{
-                                                        fontSize: 18,
-                                                        color: "white",
-                                                    }}
-                                                >
-                                                    알림
-                                                </SubTitleText>
-                                            </NotiIcon>
-                                            <NotiWrapper order>
-                                                <NotiTitle>
-                                                    <MediumText
-                                                        numberOfLines={1}
-                                                        style={{
-                                                            color: "#777",
-                                                        }}
-                                                    >
-                                                        스카이 / 올림(4층) /
-                                                        추가 1시간 당
-                                                    </MediumText>
-                                                </NotiTitle>
-
-                                                <NotiText>
-                                                    <MediumText
-                                                        style={{
-                                                            fontSize: 21,
-                                                        }}
-                                                        numberOfLines={1}
-                                                    >
-                                                        작업 예약이 완료
-                                                        되었습니다.
-                                                    </MediumText>
-                                                </NotiText>
-                                            </NotiWrapper>
-                                        </Notification>
-                                        <Notification>
-                                            <NotiIcon>
-                                                <SubTitleText
-                                                    style={{
-                                                        fontSize: 18,
-                                                        color: "white",
-                                                    }}
-                                                >
-                                                    공지
-                                                </SubTitleText>
-                                            </NotiIcon>
-                                            <NotiWrapper>
-                                                <NotiTitle>
-                                                    <MediumText
-                                                        numberOfLines={1}
-                                                        style={{
-                                                            color: "#777",
-                                                        }}
-                                                    >
-                                                        스카이 / 올림(4층) /
-                                                        추가 1시간 당
-                                                    </MediumText>
-                                                </NotiTitle>
-
-                                                <NotiText>
-                                                    <MediumText
-                                                        style={{
-                                                            fontSize: 21,
-                                                        }}
-                                                        numberOfLines={1}
-                                                    >
-                                                        작업 예약이 완료
-                                                        되었습니다.
-                                                    </MediumText>
-                                                </NotiText>
-                                            </NotiWrapper>
-                                        </Notification>
-                                        <Notification event>
-                                            <NotiIcon event>
-                                                <SubTitleText
-                                                    style={{
-                                                        fontSize: 18,
-                                                        color: "white",
-                                                    }}
-                                                >
-                                                    이벤트
-                                                </SubTitleText>
-                                            </NotiIcon>
-                                            <NotiWrapper>
-                                                <NotiTitle>
-                                                    <MediumText
-                                                        numberOfLines={1}
-                                                        style={{
-                                                            color: "#777",
-                                                        }}
-                                                    >
-                                                        스카이 / 올림(4층) /
-                                                        추가 1시간 당
-                                                    </MediumText>
-                                                </NotiTitle>
-
-                                                <NotiText>
-                                                    <MediumText
-                                                        style={{
-                                                            fontSize: 21,
-                                                        }}
-                                                        numberOfLines={1}
-                                                    >
-                                                        작업 예약이 완료
-                                                        되었습니다.
-                                                    </MediumText>
-                                                </NotiText>
-                                            </NotiWrapper>
-                                        </Notification>
-                                    </Notifications>
-                                </TouchableWithoutFeedback>
-                            </ScrollView>
-                        ) : (
-                            <View
+                        {" " + numberWithComma(point || 0)}
+                        <BoldText
+                            style={{
+                                fontSize: 12,
+                                color: "white",
+                            }}
+                        >
+                            {" "}
+                            AP
+                        </BoldText>
+                    </BoldText>
+                </PointButton>
+            </Item>
+            <Item>
+                <FlatList
+                    horizontal
+                    pagingEnabled
+                    showsHorizontalScrollIndicator={false}
+                    data={bannerData}
+                    renderItem={renderIntro}
+                    ref={bannerRef}
+                />
+            </Item>
+            <Item>
+                <OrderWrapper style={shadowProps}>
+                    <OrderHeader>
+                        <MediumText
+                            style={{
+                                fontSize: 18,
+                                color: color["page-black-text"],
+                            }}
+                        >
+                            최근 등록한 작업
+                        </MediumText>
+                        <Select>
+                            <MediumText
                                 style={{
-                                    flex: 1,
-                                    alignItems: "center",
-                                    justifyContent: "center",
-                                    marginTop: -20,
+                                    fontSize: 15,
+                                    color: color["page-black-text"],
                                 }}
                             >
-                                <AntDesign
-                                    name="closecircle"
-                                    size={30}
-                                    color="#777"
-                                    style={{ marginBottom: 5 }}
-                                />
-                                <MediumText>새로운 알림이 없습니다.</MediumText>
-                            </View>
-                        )}
-                    </View>
-                </View>
-            ) : (
-                <OrderList />
-            )}
-        </>
+                                3개월
+                            </MediumText>
+                            <Image
+                                source={require("../../../assets/images/icons/allow_down.png")}
+                                style={{ width: 21, height: 12 }}
+                            />
+                        </Select>
+                    </OrderHeader>
+                    {orders === 0 ? (
+                        <NoOrder>
+                            <RegularText
+                                style={{
+                                    fontSize: 18,
+                                    color: color["page-bluegrey-text"],
+                                }}
+                            >
+                                최근 등록한 작업이 없습니다.
+                            </RegularText>
+                        </NoOrder>
+                    ) : (
+                        <Orders></Orders>
+                    )}
+                </OrderWrapper>
+            </Item>
+            <RegistButton />
+        </Layout>
     );
 }
 

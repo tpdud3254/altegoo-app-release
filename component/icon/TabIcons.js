@@ -1,38 +1,51 @@
 import React from "react";
-import { Ionicons } from "@expo/vector-icons";
 import PropTypes from "prop-types";
-import { color as colorStyle } from "../../styles";
-import SubTitleText from "../text/SubTitleText";
+import { color } from "../../styles";
+import { Image } from "react-native";
+import MediumText from "../text/MediumText";
 
-export default function TabIcon({ iconName, focused, size, color, iconText }) {
-  return (
-    <>
-      <Ionicons
-        // name={focused ? iconName : `${iconName}-outline`}
-        name={iconName}
-        size={size ? size : 10}
-        color={
-          color ? color : focused ? colorStyle.btnAccent : "rgba(1,1,1,0.5)"
-        }
-      />
-      <SubTitleText
-        style={{
-          fontSize: 16,
-          fontWeight: "600",
-          marginTop: 5,
-          color: focused ? "black" : "rgba(1,1,1,0.5)",
-        }}
-      >
-        {iconText}
-      </SubTitleText>
-    </>
-  );
+export default function TabIcon({ tabName, focused, iconText }) {
+    const focusImage =
+        tabName === "home"
+            ? require("../../assets/images/icons/GNB_01_ON.png")
+            : tabName === "list"
+            ? require("../../assets/images/icons/GNB_02_ON.png")
+            : tabName === "setting"
+            ? require("../../assets/images/icons/GNB_03_ON.png")
+            : require("../../assets/images/icons/GNB_driver_02_on.png");
+
+    const blurImage =
+        tabName === "home"
+            ? require("../../assets/images/icons/GNB_01_OFF.png")
+            : tabName === "list"
+            ? require("../../assets/images/icons/GNB_02_OFF.png")
+            : tabName === "setting"
+            ? require("../../assets/images/icons/GNB_03_OFF.png")
+            : require("../../assets/images/icons/GNB_driver_02_off.png");
+    return (
+        <>
+            <Image
+                source={focused ? focusImage : blurImage}
+                style={{ width: 27, height: 27 }}
+                resizeMode="contain"
+            />
+            <MediumText
+                style={{
+                    fontSize: 15,
+                    color: focused
+                        ? color["page-color-text"]
+                        : color["page-bluegrey-text"],
+                    marginTop: 6,
+                }}
+            >
+                {iconText}
+            </MediumText>
+        </>
+    );
 }
 
 TabIcon.propTypes = {
-  iconName: PropTypes.string.isRequired,
-  focused: PropTypes.bool,
-  size: PropTypes.number,
-  color: PropTypes.string,
-  iconText: PropTypes.string.isRequired,
+    tabName: PropTypes.string.isRequired,
+    focused: PropTypes.bool,
+    iconText: PropTypes.string.isRequired,
 };
