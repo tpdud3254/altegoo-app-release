@@ -17,6 +17,17 @@ export const checkValidation = (data) => {
 
     return valid;
 };
+
+export const CheckValidation = (data) => {
+    let result = true;
+
+    Object.keys(data).map((value) => {
+        result = data[value] && data[value].length > 0 ? true : false;
+    });
+
+    return result;
+};
+
 export const checkPassword = (password) => {
     const regExp = /^.*(?=^.{8,}$)(?=.*\d)(?=.*[a-zA-Z]).*$/;
 

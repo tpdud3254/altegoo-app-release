@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import styled from "styled-components/native";
 import UserContext from "../../../context/UserContext";
 import { useNavigation } from "@react-navigation/native";
@@ -7,6 +7,8 @@ import AuthLayout from "../../../component/layout/AuthLayout";
 import { Toast } from "react-native-toast-message/lib/src/Toast";
 import TextInput from "../../../component/input/TextInput";
 import Button from "../../../component/button/Button";
+import { useForm } from "react-hook-form";
+import { CheckValidation, onNext } from "../../../utils";
 
 const InputContainer = styled.View`
     margin-top: 30px;
@@ -19,9 +21,27 @@ const InputWrapper = styled.View`
 function Identification() {
     const navigation = useNavigation();
     const { info, setInfo } = useContext(UserContext);
-    const [test, setTest] = useState("");
+    const { register, setValue, watch, getValues, handleSubmit } = useForm();
 
-    const Authenticating = () => {
+    const [validation, setValidation] = useState(false);
+    const [focus, setFocus] = useState("name");
+
+    const phoneRef = useRef();
+
+    useEffect(() => {
+        console.log("info : ", info);
+        register("name");
+        register("phone");
+    }, []);
+
+    useEffect(() => {
+        if (CheckValidation(getValues())) {
+            setValidation(true);
+        }
+    }, [getValues()]);
+
+    const Authenticating = (data) => {
+        console.log(data);
         // if (type === "") {
         //     Toast.show({
         //         type: "errorToast",
@@ -34,15 +54,10 @@ function Identification() {
         // };
         // setInfo(data);
         // navigation.navigate("SignUpStep1");
-        const curNavIndex = SIGNUP_NAV[info.userType].indexOf("Identification");
-        navigation.navigate(SIGNUP_NAV[info.userType][curNavIndex + 1]);
-    };
 
-    const reset = () => {
-        setTest("");
+        // const curNavIndex = SIGNUP_NAV[info.userType].indexOf("Identification");
+        // navigation.navigate(SIGNUP_NAV[info.userType][curNavIndex + 1]);
     };
-
-    console.log("test : ", test);
 
     return (
         <AuthLayout>
@@ -51,28 +66,27 @@ function Identification() {
                     <TextInput
                         title="이름"
                         placeholder="실명입력"
-                        returnKeyType="next"
-                        // onSubmitEditing={() => onNext(passwordRef)}
-                        onChangeText={(text) =>
-                            // setValue("phone", text)
-                            setTest(text)
-                        }
-                        onReset={reset}
-                        value={test}
+                        value={watch("name")}
+                        onChangeText={(text) => setValue("name", text)}
+                        onReset={() => setValue("name", "")}
                     />
                 </InputWrapper>
                 <InputWrapper>
                     <TextInput
                         title="휴대폰 번호"
                         placeholder="- 없이 숫자만 입력해주세요."
+                        keyboardType="number-pad"
+                        value={watch("phone")}
+                        onChangeText={(text) => setValue("phone", text)}
+                        onReset={() => setValue("phone", "")}
                     />
                 </InputWrapper>
             </InputContainer>
             <Button
-                onPress={Authenticating}
+                onPress={handleSubmit(Authenticating)}
                 type="accent"
                 text="본인 인증하기"
-                disabled={false}
+                disabled={!validation}
             />
         </AuthLayout>
     );
