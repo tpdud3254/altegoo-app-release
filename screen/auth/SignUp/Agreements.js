@@ -31,7 +31,7 @@ const AllAgree = styled.View`
     align-items: center;
     margin-bottom: 18px;
 `;
-const AllCheckWrapper = styled.View`
+const AllCheckWrapper = styled.TouchableOpacity`
     width: 100%;
     flex-direction: row;
     align-items: center;
@@ -158,11 +158,8 @@ function Agreements() {
         >
             <Container>
                 <AllAgree>
-                    <AllCheckWrapper>
-                        <Checkbox
-                            checked={isAllChecked}
-                            onPress={clickAllCheckButton}
-                        />
+                    <AllCheckWrapper onPress={clickAllCheckButton}>
+                        <Checkbox checked={isAllChecked} />
                         <MediumText
                             style={{
                                 fontSize: 20,
