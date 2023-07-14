@@ -134,7 +134,7 @@ function Agreements() {
         navigation.navigate(SIGNUP_NAV[info.userType][curNavIndex + 1]);
     };
 
-    const Checkbox = ({ checked, onPress }) => {
+    const Checkbox = ({ checked }) => {
         return (
             <Image
                 source={
