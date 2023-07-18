@@ -24,6 +24,7 @@ function EnterPassword() {
     const { info, setInfo } = useContext(UserContext);
     const [test, setTest] = useState("");
 
+    console.log(info);
     const onNext = () => {
         // if (type === "") {
         //     Toast.show({

@@ -7,16 +7,24 @@ import {
 import styled from "styled-components/native";
 import MediumText from "../text/MediumText";
 import { color } from "../../styles";
-import { useEffect, useRef, useState } from "react";
+import {
+    forwardRef,
+    useEffect,
+    useImperativeHandle,
+    useRef,
+    useState,
+} from "react";
 
 const Container = styled.View`
     width: ${(props) => (props.width ? props.width : "100%")};
 `;
 
-function TextInput(props) {
+const TextInput = forwardRef((props, ref) => {
     const input = useRef();
     const [isFocused, setIsFocused] = useState(false);
     const [textSecure, setTextSecure] = useState(false);
+
+    useImperativeHandle(ref, () => ({ setFocus }));
 
     useEffect(() => {
         if (props.type === "password") setTextSecure(true);
@@ -142,6 +150,6 @@ function TextInput(props) {
             </View>
         </Container>
     );
-}
+});
 
 export default TextInput;
