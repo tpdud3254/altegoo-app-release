@@ -1,14 +1,13 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import styled from "styled-components/native";
 import UserContext from "../../../context/UserContext";
 import { useNavigation } from "@react-navigation/native";
 import { color } from "../../../styles";
-import { COMPANY, DRIVER, NORMAL, SIGNUP_NAV } from "../../../constant";
+import { SIGNUP_NAV } from "../../../constant";
 import AuthLayout from "../../../component/layout/AuthLayout";
 import RegularText from "../../../component/text/RegularText";
-import { Toast } from "react-native-toast-message/lib/src/Toast";
 import MediumText from "../../../component/text/MediumText";
-import { Image, View, useWindowDimensions } from "react-native";
+import { Image, useWindowDimensions } from "react-native";
 import { Popup } from "../../../component/Popup";
 import BoldText from "../../../component/text/BoldText";
 
@@ -31,11 +30,17 @@ const CameraButton = styled.TouchableOpacity`
 `;
 
 // TODO: cancle -> cancel로 바꾸기;;;
-const License = styled(CameraButton)``;
+const License = styled.View`
+    width: 250px;
+    height: 333px;
+    align-items: center;
+    justify-content: center;
+    border-radius: 15px;
+`;
 const CancelButton = styled.TouchableOpacity`
     position: absolute;
-    right: -8px;
-    top: -8px;
+    right: -12px;
+    top: -14px;
 `;
 const SkipButton = styled.TouchableOpacity`
     align-items: center;
@@ -49,24 +54,26 @@ const PopupContainer = styled.View`
 
 function BusinessLicense() {
     const navigation = useNavigation();
-    const { info, setInfo } = useContext(UserContext);
     const { height: windowHeight } = useWindowDimensions();
+
+    const { info, setInfo } = useContext(UserContext);
     const [imageStatus, setImageStatus] = useState(false);
     const [popupVisible, setPopupVisible] = useState(false);
 
-    const onNext = () => {
-        // if (type === "") {
-        //     Toast.show({
-        //         type: "errorToast",
-        //         props: "회원 유형을 선택해 주세요.",
-        //     });
-        //     return;
-        // }
-        // const data = {
-        //     userType: type,
-        // };
-        // setInfo(data);
-        // navigation.navigate("SignUpStep1");
+    useEffect(() => {
+        console.log(info);
+        if (info?.licenseUrl && info?.licenseUrl.length > 0) {
+            setImageStatus(true);
+        } else {
+            setImageStatus(false);
+        }
+    }, [info]);
+
+    const onNext = ({ skip = false }) => {
+        if (skip) {
+            deleteLicense();
+            hidePopup();
+        }
         const curNavIndex =
             SIGNUP_NAV[info.userType].indexOf("BusinessLicense");
         navigation.navigate(SIGNUP_NAV[info.userType][curNavIndex + 1]);
@@ -79,6 +86,20 @@ function BusinessLicense() {
     const hidePopup = () => {
         setPopupVisible(false);
     };
+
+    const takePicture = () => {
+        navigation.navigate("TakePhoto", { type: "license" });
+    };
+
+    const deleteLicense = () => {
+        const newInfo = info;
+
+        delete newInfo.licenseUrl;
+        setImageStatus(false);
+
+        setInfo(newInfo);
+    };
+
     const PointText = ({ children }) => (
         <BoldText
             style={{
@@ -95,13 +116,13 @@ function BusinessLicense() {
             bottomButtonProps={{
                 title: "다음으로",
                 onPress: onNext,
-                disabled: true,
+                disabled: !imageStatus,
             }}
         >
             <Container height={windowHeight}>
                 <Wrapper>
                     {!imageStatus ? (
-                        <CameraButton>
+                        <CameraButton onPress={takePicture}>
                             <Image
                                 style={{ width: 60, height: 60 }}
                                 source={require("../../../assets/images/icons/btn_camera.png")}
@@ -109,13 +130,17 @@ function BusinessLicense() {
                         </CameraButton>
                     ) : (
                         <License>
-                            <CancelButton>
+                            <Image
+                                style={{ width: "100%", height: "100%" }}
+                                source={{ uri: info.licenseUrl }}
+                                resizeMode="contain"
+                            />
+                            <CancelButton onPress={deleteLicense}>
                                 <Image
-                                    style={{ width: 25, height: 25 }}
+                                    style={{ width: 30, height: 30 }}
                                     source={require("../../../assets/images/icons/btn_del_s.png")}
                                 />
                             </CancelButton>
-                            {/* 사업자 이미지 */}
                         </License>
                     )}
 
@@ -147,7 +172,7 @@ function BusinessLicense() {
             <Popup
                 visible={popupVisible}
                 onTouchOutside={hidePopup}
-                onClick={hidePopup}
+                onClick={() => onNext({ skip: true })}
             >
                 <PopupContainer>
                     <RegularText

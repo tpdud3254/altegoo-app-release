@@ -1,15 +1,17 @@
 import React, { useContext, useEffect, useRef, useState } from "react";
 import styled from "styled-components/native";
-import { Image, StatusBar, TouchableOpacity } from "react-native";
+import { Image, StatusBar } from "react-native";
 import { useIsFocused } from "@react-navigation/native";
 import { Camera } from "expo-camera";
 import { Ionicons } from "@expo/vector-icons";
 import * as MediaLibrary from "expo-media-library";
 import { color } from "../styles";
-import SubTitleText from "../component/text/SubTitleText";
 import UserContext from "../context/UserContext";
-import { Modal, Portal, Provider } from "react-native-paper";
 import MediumText from "../component/text/MediumText";
+import InfoIcon from "../assets/images/icons/icon_info2.png";
+import { Popup } from "../component/Popup";
+import RegularText from "../component/text/RegularText";
+import Button from "../component/button/Button";
 
 const Container = styled.View`
     flex: 1;
@@ -43,37 +45,17 @@ const CloseBtn = styled.TouchableOpacity`
 const PhotoActions = styled(Actions)`
     flex-direction: row;
 `;
-const PhotoAction = styled.TouchableOpacity`
-    background-color: ${color.btnDefault};
-    padding: 20px 20px;
-    border-radius: 10px;
-`;
 
-const modalStyle = {
-    backgroundColor: "white",
-    paddingTop: 10,
-    paddingLeft: 20,
-    paddingRight: 20,
-    paddingBottom: 10,
-    alignItems: "center",
-};
-
-const ModalTop = styled.View`
-    width: 100%;
-    flex-direction: row;
-    margin-top: 10px;
-    margin-bottom: 20px;
-    justify-content: space-between;
-`;
-const ModalTitle = styled.View`
+const PopupTitle = styled.View`
     flex-direction: row;
     align-items: center;
+    justify-content: center;
+    margin-bottom: 5px;
 `;
-const modalTitleStyle = { marginLeft: 5, marginRight: 5, fontSize: 20 };
 
 const LicenseExample = styled.View`
     align-items: center;
-    margin: 10px 0px;
+    margin: 15px 0px;
 `;
 
 function TakePhoto({ navigation, route }) {
@@ -117,7 +99,8 @@ function TakePhoto({ navigation, route }) {
         if (camera.current && cameraReady) {
             const { uri } = await camera.current.takePictureAsync({
                 quality: 0.5,
-                exif: true,
+                exif: false,
+                skipProcessing: true,
             });
 
             setTakenPhoto(uri);
@@ -135,44 +118,106 @@ function TakePhoto({ navigation, route }) {
                 : { licenseUrl: takenPhoto };
         setInfo({ ...newData, ...info });
 
-        navigation.navigate("SignUpStep1");
+        navigation.navigate(
+            route?.params?.type === "vehicle" ? "" : "BusinessLicense"
+        );
     };
 
     const isFocusd = useIsFocused();
 
-    const PriceModal = () => (
-        <Portal>
-            <Modal
-                visible={showExample}
-                onDismiss={hideModal}
-                contentContainerStyle={modalStyle}
-            >
-                <ModalTop>
-                    <Ionicons name="close" size={30} color="white" />
-                    <ModalTitle>
-                        <Ionicons
-                            name="alert-circle-outline"
-                            size={20}
-                            color={color.sub.yellow}
+    return (
+        <Container>
+            {isFocusd ? <StatusBar hidden={true} /> : null}
+            {isFocusd ? (
+                granted && mediaLibraryGranted ? (
+                    takenPhoto === "" ? (
+                        <Camera
+                            style={{ flex: 1 }}
+                            type={cameraType}
+                            ref={camera}
+                            onCameraReady={onCameraReady}
+                            autoFocus="on"
+                        >
+                            <CloseBtn
+                                onPress={() =>
+                                    navigation.navigate(
+                                        route?.params?.type === "vehicle"
+                                            ? ""
+                                            : "BusinessLicense"
+                                    )
+                                }
+                            >
+                                <Ionicons
+                                    name="close"
+                                    color="white"
+                                    size={40}
+                                />
+                            </CloseBtn>
+                        </Camera>
+                    ) : (
+                        <Image
+                            source={{ uri: takenPhoto }}
+                            style={{ flex: 1 }}
                         />
-                        <SubTitleText style={modalTitleStyle}>
-                            사진 예시
-                        </SubTitleText>
-                        <Ionicons
-                            name="alert-circle-outline"
-                            size={20}
-                            color={color.sub.yellow}
-                        />
-                    </ModalTitle>
-                    <TouchableOpacity
-                        style={{ marginTop: -10, marginRight: -10 }}
-                        onPress={hideModal}
-                    >
-                        <Ionicons name="close" size={30} color="black" />
-                    </TouchableOpacity>
-                </ModalTop>
-                <MediumText>다음과 같이 촬영해주세요.</MediumText>
+                    )
+                ) : null
+            ) : null}
 
+            {granted ? (
+                takenPhoto === "" ? (
+                    <Actions>
+                        <TakePhotoBtn onPress={takePhoto}>
+                            <Ionicons
+                                name="camera"
+                                size={50}
+                                color={color.main}
+                            />
+                        </TakePhotoBtn>
+                    </Actions>
+                ) : (
+                    <PhotoActions>
+                        <Button
+                            onPress={onDismiss}
+                            style={{ width: 140 }}
+                            text="재촬영"
+                        />
+                        <Button
+                            onPress={onUpload}
+                            type="accent"
+                            style={{ width: 140 }}
+                            text="저장"
+                        />
+                    </PhotoActions>
+                )
+            ) : null}
+            <Popup
+                visible={showExample}
+                onTouchOutside={hideModal}
+                onClick={hideModal}
+            >
+                <PopupTitle>
+                    <Image
+                        source={InfoIcon}
+                        style={{ width: 20, height: 20 }}
+                    />
+                    <RegularText
+                        style={{ marginLeft: 5, marginRight: 5, fontSize: 20 }}
+                    >
+                        사진 예시
+                    </RegularText>
+                    <Image
+                        source={InfoIcon}
+                        style={{ width: 20, height: 20 }}
+                    />
+                </PopupTitle>
+                <MediumText
+                    style={{
+                        color: color["page-grey-text"],
+                        textAlign: "center",
+                    }}
+                >
+                    다음과 같이 촬영해주세요.
+                </MediumText>
                 <LicenseExample>
                     <Image
                         style={{
@@ -185,76 +230,7 @@ function TakePhoto({ navigation, route }) {
                         source={require(`../assets/images/license.png`)}
                     />
                 </LicenseExample>
-            </Modal>
-        </Portal>
-    );
-
-    return (
-        <Container>
-            <Provider>
-                <PriceModal />
-                {isFocusd ? <StatusBar hidden={true} /> : null}
-                {isFocusd ? (
-                    granted && mediaLibraryGranted ? (
-                        takenPhoto === "" ? (
-                            <Camera
-                                style={{ flex: 1 }}
-                                type={cameraType}
-                                ref={camera}
-                                onCameraReady={onCameraReady}
-                                autoFocus="on"
-                            >
-                                <CloseBtn
-                                    onPress={() =>
-                                        navigation.navigate("SignUpStep1")
-                                    }
-                                >
-                                    <Ionicons
-                                        name="close"
-                                        color="white"
-                                        size={40}
-                                    />
-                                </CloseBtn>
-                            </Camera>
-                        ) : (
-                            <Image
-                                source={{ uri: takenPhoto }}
-                                style={{ flex: 1 }}
-                            />
-                        )
-                    ) : null
-                ) : null}
-
-                {granted ? (
-                    takenPhoto === "" ? (
-                        <Actions>
-                            <TakePhotoBtn onPress={takePhoto}>
-                                <Ionicons
-                                    name="camera"
-                                    size={50}
-                                    color={color.main}
-                                />
-                            </TakePhotoBtn>
-                        </Actions>
-                    ) : (
-                        <PhotoActions>
-                            <PhotoAction onPress={onDismiss}>
-                                <SubTitleText style={{ color: "white" }}>
-                                    재촬영
-                                </SubTitleText>
-                            </PhotoAction>
-                            <PhotoAction
-                                onPress={onUpload}
-                                style={{ backgroundColor: color.sub.blue }}
-                            >
-                                <SubTitleText style={{ color: "white" }}>
-                                    저장
-                                </SubTitleText>
-                            </PhotoAction>
-                        </PhotoActions>
-                    )
-                ) : null}
-            </Provider>
+            </Popup>
         </Container>
     );
 }
