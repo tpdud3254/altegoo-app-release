@@ -36,6 +36,8 @@ function Identification() {
     useEffect(() => {
         if (CheckValidation(getValues())) {
             setValidation(true);
+        } else {
+            setValidation(false);
         }
     }, [getValues()]);
 
@@ -86,10 +88,10 @@ function Identification() {
                     <TextInput
                         title="이름"
                         placeholder="실명입력"
+                        returnKeyType="next"
                         value={watch("name")}
                         onChangeText={(text) => setValue("name", text)}
                         onReset={() => setValue("name", "")}
-                        returnKeyType="next"
                         onSubmitEditing={() => phoneRef.current.setFocus()}
                     />
                 </InputWrapper>
@@ -99,10 +101,10 @@ function Identification() {
                         title="휴대폰 번호"
                         placeholder="- 없이 숫자만 입력해주세요."
                         keyboardType="number-pad"
+                        returnKeyType="done"
                         value={watch("phone")}
                         onChangeText={(text) => setValue("phone", text)}
                         onReset={() => setValue("phone", "")}
-                        returnKeyType="done"
                     />
                 </InputWrapper>
             </InputContainer>

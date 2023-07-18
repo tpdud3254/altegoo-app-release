@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import styled from "styled-components/native";
 import UserContext from "../../../context/UserContext";
 import { useNavigation } from "@react-navigation/native";
@@ -6,9 +6,13 @@ import { color } from "../../../styles";
 import { NORMAL, SIGNUP_NAV } from "../../../constant";
 import AuthLayout from "../../../component/layout/AuthLayout";
 import RegularText from "../../../component/text/RegularText";
-import { Toast } from "react-native-toast-message/lib/src/Toast";
-
 import TextInput from "../../../component/input/TextInput";
+import { useForm } from "react-hook-form";
+import {
+    CheckValidation,
+    checkPassword,
+    showErrorMessage,
+} from "../../../utils";
 
 const InputContainer = styled.View`
     margin-top: 30px;
@@ -22,22 +26,45 @@ const InputWrapper = styled.View`
 function EnterPassword() {
     const navigation = useNavigation();
     const { info, setInfo } = useContext(UserContext);
-    const [test, setTest] = useState("");
+    const { register, setValue, watch, getValues, handleSubmit } = useForm();
 
-    console.log(info);
-    const onNext = () => {
-        // if (type === "") {
-        //     Toast.show({
-        //         type: "errorToast",
-        //         props: "회원 유형을 선택해 주세요.",
-        //     });
-        //     return;
-        // }
-        // const data = {
-        //     userType: type,
-        // };
-        // setInfo(data);
-        // navigation.navigate("SignUpStep1");
+    const [validation, setValidation] = useState(false);
+
+    const verifyPasswordRef = useRef();
+
+    useEffect(() => {
+        console.log(info);
+        register("password");
+        register("verifyPassword");
+    }, []);
+
+    useEffect(() => {
+        if (CheckValidation(getValues())) {
+            setValidation(true);
+        } else {
+            setValidation(false);
+        }
+    }, [getValues()]);
+
+    const onNext = (data) => {
+        const { password, verifyPassword } = data;
+
+        if (password !== verifyPassword) {
+            showErrorMessage("입력하신 비밀번호가 일치하지 않습니다.");
+            return;
+        }
+
+        if (!checkPassword(password)) {
+            showErrorMessage("비밀번호가 조건에 맞지 않습니다.");
+            return;
+        }
+
+        const infoData = {
+            password,
+        };
+
+        setInfo({ ...info, ...infoData });
+
         const curNavIndex = SIGNUP_NAV[info.userType].indexOf("EnterPassword");
         navigation.navigate(SIGNUP_NAV[info.userType][curNavIndex + 1]);
     };
@@ -46,8 +73,8 @@ function EnterPassword() {
         <AuthLayout
             bottomButtonProps={{
                 title: info.userType === NORMAL ? "회원가입 완료" : "다음으로",
-                onPress: onNext,
-                disabled: true,
+                onPress: handleSubmit(onNext),
+                disabled: !validation,
             }}
         >
             <InputContainer>
@@ -57,12 +84,12 @@ function EnterPassword() {
                         title="비밀번호 입력"
                         placeholder="비밀번호 (8자리 이상)"
                         returnKeyType="next"
-                        // onSubmitEditing={() => onNext(passwordRef)}
-                        onChangeText={(text) =>
-                            // setValue("phone", text)
-                            setTest(text)
+                        value={watch("password")}
+                        onChangeText={(text) => setValue("password", text)}
+                        onReset={() => setValue("password", "")}
+                        onSubmitEditing={() =>
+                            verifyPasswordRef.current.setFocus()
                         }
-                        value={test}
                     />
                     <RegularText
                         style={{
@@ -76,16 +103,16 @@ function EnterPassword() {
                 </InputWrapper>
                 <InputWrapper>
                     <TextInput
+                        ref={verifyPasswordRef}
                         type="password"
                         title="비밀번호 확인"
                         placeholder="비밀번호 (8자리 이상)"
-                        returnKeyType="next"
-                        // onSubmitEditing={() => onNext(passwordRef)}
+                        returnKeyType="done"
+                        value={watch("verifyPassword")}
                         onChangeText={(text) =>
-                            // setValue("phone", text)
-                            setTest(text)
+                            setValue("verifyPassword", text)
                         }
-                        value={test}
+                        onReset={() => setValue("verifyPassword", "")}
                     />
                 </InputWrapper>
             </InputContainer>
