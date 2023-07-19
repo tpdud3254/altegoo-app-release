@@ -19,7 +19,7 @@ import BusinessLicense from "../../screen/auth/SignUp/BusinessLicense";
 import RegisterVehicle from "../../screen/auth/SignUp/RegisterVehicle";
 import VehicleLicense from "../../screen/auth/SignUp/VehicleLicense";
 import WorkingArea from "../../screen/auth/SignUp/WorkingArea";
-import RecomendedMember from "../../screen/auth/SignUp/RecomendedMember";
+import RecommendedMember from "../../screen/auth/SignUp/RecommendedMember";
 import SignUpComplete from "../../screen/auth/SignUp/SignUpComplete";
 
 const Stack = createStackNavigator();
@@ -121,8 +121,8 @@ export default function SignUpNavigator() {
                 }}
             />
             <Stack.Screen
-                name="RecomendedMember"
-                component={RecomendedMember}
+                name="RecommendedMember"
+                component={RecommendedMember}
                 options={{
                     title: "추천 회원 입력",
                 }}
