@@ -72,6 +72,11 @@ function BusinessLicense() {
     const onNext = ({ skip = false }) => {
         if (skip) {
             deleteLicense();
+            const data = {
+                licenseUrl: "",
+            };
+
+            setInfo({ ...info, ...data });
             hidePopup();
         }
         const curNavIndex =
