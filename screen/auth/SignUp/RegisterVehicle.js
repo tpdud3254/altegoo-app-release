@@ -1,17 +1,17 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import styled from "styled-components/native";
 import UserContext from "../../../context/UserContext";
 import { useNavigation } from "@react-navigation/native";
 import { color } from "../../../styles";
-import { COMPANY, DRIVER, NORMAL, SIGNUP_NAV } from "../../../constant";
+import { SIGNUP_NAV } from "../../../constant";
 import AuthLayout from "../../../component/layout/AuthLayout";
 import RegularText from "../../../component/text/RegularText";
-import { Toast } from "react-native-toast-message/lib/src/Toast";
-import MediumText from "../../../component/text/MediumText";
-import { View, useWindowDimensions } from "react-native";
+import { useWindowDimensions } from "react-native";
 import { Radio } from "../../../component/radio/Radio";
 import { RadioContainer } from "../../../component/radio/RadioContainer";
 import TextInput from "../../../component/input/TextInput";
+import { useForm } from "react-hook-form";
+import { CheckValidation } from "../../../utils";
 
 const Container = styled.View`
     justify-content: space-between;
@@ -32,27 +32,48 @@ const SkipButton = styled.TouchableOpacity`
 `;
 
 const vehicleType = ["사다리차", "스카이차"];
-const floor = ["1층", "10층", "50층", "100층"];
+const floor = ["1층", "10층", "50층", "100층"]; //TODO: 정책 정하기
+
 function RegisterVehicle() {
     const navigation = useNavigation();
-    const { info, setInfo } = useContext(UserContext);
     const { height: windowHeight } = useWindowDimensions();
-    const [selectedVehicleType, setSelectedVehicleType] = useState(0);
-    const [selectedFloor, setSelectedFloor] = useState(0);
+    const { info, setInfo } = useContext(UserContext);
+    const { register, setValue, watch, getValues, handleSubmit } = useForm();
 
-    const onNext = () => {
-        // if (type === "") {
-        //     Toast.show({
-        //         type: "errorToast",
-        //         props: "회원 유형을 선택해 주세요.",
-        //     });
-        //     return;
-        // }
-        // const data = {
-        //     userType: type,
-        // };
-        // setInfo(data);
-        // navigation.navigate("SignUpStep1");
+    const [validation, setValidation] = useState(false);
+
+    useEffect(() => {
+        console.log(info);
+        register("vehicleType");
+        register("vehicleNumber");
+        register("floor");
+    }, []);
+
+    useEffect(() => {
+        if (CheckValidation(getValues())) {
+            setValidation(true);
+        } else {
+            setValidation(false);
+        }
+    }, [getValues()]);
+
+    const onNext = (data) => {
+        const { vehicleType, vehicleNumber, floor } = data;
+
+        const vehicle = {};
+
+        if (data.skip) {
+            vehicle.type = "";
+            vehicle.number = "";
+            vehicle.floor = "";
+        } else {
+            vehicle.type = vehicleType;
+            vehicle.number = vehicleNumber;
+            vehicle.floor = floor;
+        }
+
+        setInfo({ ...info, vehicle });
+
         const curNavIndex =
             SIGNUP_NAV[info.userType].indexOf("RegisterVehicle");
         navigation.navigate(SIGNUP_NAV[info.userType][curNavIndex + 1]);
@@ -62,7 +83,6 @@ function RegisterVehicle() {
         <RegularText
             style={{
                 fontSize: 17,
-
                 marginBottom: 5,
             }}
         >
@@ -73,8 +93,8 @@ function RegisterVehicle() {
         <AuthLayout
             bottomButtonProps={{
                 title: "다음으로",
-                onPress: onNext,
-                disabled: true,
+                onPress: handleSubmit(onNext),
+                disabled: !validation,
             }}
         >
             <Container height={windowHeight}>
@@ -85,9 +105,11 @@ function RegisterVehicle() {
                             {vehicleType.map((value, index) => (
                                 <Radio
                                     value={value}
-                                    selected={selectedVehicleType === index}
+                                    selected={
+                                        watch("vehicleType") === index + 1
+                                    }
                                     onSelect={() =>
-                                        setSelectedVehicleType(index)
+                                        setValue("vehicleType", index + 1)
                                     }
                                 />
                             ))}
@@ -99,18 +121,28 @@ function RegisterVehicle() {
                             {floor.map((value, index) => (
                                 <Radio
                                     value={value}
-                                    selected={selectedFloor === index}
-                                    onSelect={() => setSelectedFloor(index)}
+                                    selected={watch("floor") === index + 1}
+                                    onSelect={() =>
+                                        setValue("floor", index + 1)
+                                    }
                                 />
                             ))}
                         </RadioContainer>
                     </Item>
                     <Item>
                         <Title>차량번호</Title>
-                        <TextInput placeholder="12가1234" />
+                        <TextInput
+                            placeholder="12가1234"
+                            returnKeyType="done"
+                            value={watch("vehicleNumber")}
+                            onChangeText={(text) =>
+                                setValue("vehicleNumber", text)
+                            }
+                            onReset={() => setValue("vehicleNumber", "")}
+                        />
                     </Item>
                 </Wrapper>
-                <SkipButton>
+                <SkipButton onPress={() => onNext({ skip: true })}>
                     <RegularText
                         style={{
                             fontSize: 16,
