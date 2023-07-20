@@ -19,13 +19,18 @@ export const checkValidation = (data) => {
 };
 
 export const CheckValidation = (data) => {
-    let result = true;
+    let result = [];
 
     Object.keys(data).map((value) => {
-        result = data[value] && data[value].length > 0 ? true : false;
+        if (typeof data[value] === "number")
+            result.push(data[value] > 0 ? true : false);
+        else result.push(data[value] && data[value].length > 0 ? true : false);
     });
 
-    return result;
+    for (let i = 0; i < result.length; i++)
+        if (result[i] === false) return false;
+
+    return true;
 };
 
 export const checkPassword = (password) => {
