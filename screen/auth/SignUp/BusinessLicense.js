@@ -37,11 +37,13 @@ const License = styled.View`
     justify-content: center;
     border-radius: 15px;
 `;
+
 const CancelButton = styled.TouchableOpacity`
     position: absolute;
     right: -12px;
     top: -14px;
 `;
+
 const SkipButton = styled.TouchableOpacity`
     align-items: center;
 `;

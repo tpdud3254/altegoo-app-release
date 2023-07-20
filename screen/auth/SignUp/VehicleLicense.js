@@ -1,14 +1,15 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import styled from "styled-components/native";
 import UserContext from "../../../context/UserContext";
 import { useNavigation } from "@react-navigation/native";
 import { color } from "../../../styles";
-import { COMPANY, DRIVER, NORMAL, SIGNUP_NAV } from "../../../constant";
+import { SIGNUP_NAV } from "../../../constant";
 import AuthLayout from "../../../component/layout/AuthLayout";
 import RegularText from "../../../component/text/RegularText";
-import { Toast } from "react-native-toast-message/lib/src/Toast";
 import MediumText from "../../../component/text/MediumText";
 import { Image, useWindowDimensions } from "react-native";
+import BoldText from "../../../component/text/BoldText";
+import { Popup } from "../../../component/Popup";
 
 const Container = styled.View`
     justify-content: space-between;
@@ -28,7 +29,13 @@ const CameraButton = styled.TouchableOpacity`
     background-color: ${color["image-area-background"]};
 `;
 
-const License = styled(CameraButton)``;
+const License = styled.View`
+    width: 250px;
+    height: 333px;
+    align-items: center;
+    justify-content: center;
+    border-radius: 15px;
+`;
 const CancelButton = styled.TouchableOpacity`
     position: absolute;
     right: -8px;
@@ -38,40 +45,92 @@ const SkipButton = styled.TouchableOpacity`
     align-items: center;
 `;
 
+const PopupContainer = styled.View`
+    width: 200px;
+    height: 230px;
+    justify-content: center;
+`;
+
 function VehicleLicense() {
     const navigation = useNavigation();
-    const { info, setInfo } = useContext(UserContext);
     const { height: windowHeight } = useWindowDimensions();
-    const [imageStatus, setImageStatus] = useState(false);
 
-    const onNext = () => {
-        // if (type === "") {
-        //     Toast.show({
-        //         type: "errorToast",
-        //         props: "회원 유형을 선택해 주세요.",
-        //     });
-        //     return;
-        // }
-        // const data = {
-        //     userType: type,
-        // };
-        // setInfo(data);
-        // navigation.navigate("SignUpStep1");
+    const { info, setInfo } = useContext(UserContext);
+    const [imageStatus, setImageStatus] = useState(false);
+    const [popupVisible, setPopupVisible] = useState(false);
+
+    useEffect(() => {
+        console.log(info);
+        if (
+            info?.vehiclePermissionUrl &&
+            info?.vehiclePermissionUrl.length > 0
+        ) {
+            setImageStatus(true);
+        } else {
+            setImageStatus(false);
+        }
+    }, [info]);
+
+    const onNext = ({ skip = false }) => {
+        if (skip) {
+            deleteLicense();
+            const data = {
+                vehiclePermissionUrl: "",
+            };
+
+            setInfo({ ...info, ...data });
+            hidePopup();
+        }
+
         const curNavIndex = SIGNUP_NAV[info.userType].indexOf("VehicleLicense");
         navigation.navigate(SIGNUP_NAV[info.userType][curNavIndex + 1]);
     };
+
+    const showPopup = () => {
+        setPopupVisible(true);
+    };
+
+    const hidePopup = () => {
+        setPopupVisible(false);
+    };
+
+    const takePicture = () => {
+        navigation.navigate("TakePhoto", { type: "vehicle" });
+    };
+
+    const deleteLicense = () => {
+        const newInfo = info;
+
+        delete newInfo.vehiclePermissionUrl;
+        setImageStatus(false);
+
+        setInfo(newInfo);
+    };
+
+    const PointText = ({ children }) => (
+        <BoldText
+            style={{
+                fontSize: 19,
+                color: color["page-color-text"],
+                textDecorationLine: "underline",
+            }}
+        >
+            {children}
+        </BoldText>
+    );
+
     return (
         <AuthLayout
             bottomButtonProps={{
                 title: "다음으로",
                 onPress: onNext,
-                disabled: true,
+                disabled: !imageStatus,
             }}
         >
             <Container height={windowHeight}>
                 <Wrapper>
                     {!imageStatus ? (
-                        <CameraButton>
+                        <CameraButton onPress={takePicture}>
                             <Image
                                 style={{ width: 60, height: 60 }}
                                 source={require("../../../assets/images/icons/btn_camera.png")}
@@ -79,13 +138,17 @@ function VehicleLicense() {
                         </CameraButton>
                     ) : (
                         <License>
-                            <CancelButton>
+                            <Image
+                                style={{ width: "100%", height: "100%" }}
+                                source={{ uri: info.vehiclePermissionUrl }}
+                                resizeMode="contain"
+                            />
+                            <CancelButton onPress={deleteLicense}>
                                 <Image
-                                    style={{ width: 25, height: 25 }}
+                                    style={{ width: 30, height: 30 }}
                                     source={require("../../../assets/images/icons/btn_del_s.png")}
                                 />
                             </CancelButton>
-                            {/* 사업자 이미지 */}
                         </License>
                     )}
 
@@ -102,7 +165,7 @@ function VehicleLicense() {
                         촬영하거나 사진첩에서{"\n"}불러와주세요.
                     </MediumText>
                 </Wrapper>
-                <SkipButton onPress={() => console.log("skip")}>
+                <SkipButton onPress={showPopup}>
                     <RegularText
                         style={{
                             fontSize: 16,
@@ -114,6 +177,29 @@ function VehicleLicense() {
                     </RegularText>
                 </SkipButton>
             </Container>
+            <Popup
+                visible={popupVisible}
+                onTouchOutside={hidePopup}
+                onClick={() => onNext({ skip: true })}
+            >
+                <PopupContainer>
+                    <RegularText
+                        style={{
+                            fontSize: 19,
+                            lineHeight: 30,
+                            textAlign: "center",
+                        }}
+                    >
+                        {/* TODO: 문구 */}
+                        화물자동차{"\n"}운송사업 허가증은{"\n"}
+                        <PointText>작업 등록</PointText>및{" "}
+                        <PointText>작업 승인</PointText>을{"\n"}
+                        위해서 반드시 필요합니다.{"\n"}
+                        {"\n"}준비가 되는대로{"\n"}첨부해주시면 검토후{"\n"}
+                        승인해드립니다.
+                    </RegularText>
+                </PopupContainer>
+            </Popup>
         </AuthLayout>
     );
 }

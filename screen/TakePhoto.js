@@ -118,11 +118,16 @@ function TakePhoto({ navigation, route }) {
                 : { licenseUrl: takenPhoto };
         setInfo({ ...newData, ...info });
 
-        navigation.navigate(
-            route?.params?.type === "vehicle" ? "" : "BusinessLicense"
-        );
+        goBack();
     };
 
+    const goBack = () => {
+        navigation.navigate(
+            route?.params?.type === "vehicle"
+                ? "VehicleLicense"
+                : "BusinessLicense"
+        );
+    };
     const isFocusd = useIsFocused();
 
     return (
@@ -138,15 +143,7 @@ function TakePhoto({ navigation, route }) {
                             onCameraReady={onCameraReady}
                             autoFocus="on"
                         >
-                            <CloseBtn
-                                onPress={() =>
-                                    navigation.navigate(
-                                        route?.params?.type === "vehicle"
-                                            ? ""
-                                            : "BusinessLicense"
-                                    )
-                                }
-                            >
+                            <CloseBtn onPress={goBack}>
                                 <Ionicons
                                     name="close"
                                     color="white"
