@@ -61,7 +61,51 @@ function SignUpComplete() {
     const { setFirstLogin } = useContext(LoginContext);
     const { height: windowHeight } = useWindowDimensions();
 
+    console.log(info);
     const onNext = () => {
+        //userType === NORMAL
+        // data = {
+        //     birth: "580820",
+        //     gender: "남",
+        //     name: "냥양",
+        //     password: "qqqq1111",
+        //     phone: "0109066545",
+        //     sms: true,
+        //     userType: "NORMAL",
+        // };
+
+        //useType === COMPANY
+        // data = {
+        //     birth: "580820",
+        //     companyName: "딩딩딩",
+        //     companyPersonName: "딩딩",
+        //     gender: "남",
+        //     licenseUrl: "",
+        //     name: "승아",
+        //     password: "qqqq1111",
+        //     phone: "01075325452",
+        //     recommendUserId: 55,
+        //     sms: true,
+        //     userType: "COMPANY",
+        //     workCategory: 3,
+        // };
+
+        //userType === DRIVER
+        // data = {
+        //     birth: "580820",
+        //     gender: "남",
+        //     licenseUrl: "",
+        //     name: "ㄱㅅㅇ",
+        //     password: "qqqq1111",
+        //     phone: "0109066545",
+        //     recommendUserId: 1,
+        //     sms: true,
+        //     userType: "DRIVER",
+        //     vehicle: { floor: 1, number: "ㅈㄴㅈ", type: 1 },
+        //     vehiclePermissionUrl: "",
+        //     workRegion: [1, 2, 4],
+        // };
+
         // if (type === "") {
         //     Toast.show({
         //         type: "errorToast",
