@@ -1,13 +1,13 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import styled from "styled-components/native";
 import UserContext from "../../../context/UserContext";
 import { useNavigation } from "@react-navigation/native";
 import { color } from "../../../styles";
-import { COMPANY, DRIVER, NORMAL, SIGNUP_NAV } from "../../../constant";
+import { SIGNUP_NAV } from "../../../constant";
 import AuthLayout from "../../../component/layout/AuthLayout";
 import RegularText from "../../../component/text/RegularText";
-import { Toast } from "react-native-toast-message/lib/src/Toast";
 import { Image, View } from "react-native";
+import { showErrorMessage } from "../../../utils";
 
 const Container = styled.View``;
 const Table = styled.View`
@@ -79,19 +79,42 @@ function WorkingArea() {
     const { info, setInfo } = useContext(UserContext);
     const [selected, setSelected] = useState([]);
 
+    useEffect(() => {
+        console.log(info);
+    }, []);
+
     const onNext = () => {
-        // if (type === "") {
-        //     Toast.show({
-        //         type: "errorToast",
-        //         props: "회원 유형을 선택해 주세요.",
-        //     });
-        //     return;
-        // }
-        // const data = {
-        //     userType: type,
-        // };
-        // setInfo(data);
-        // navigation.navigate("SignUpStep1");
+        if (selected.length < 1) {
+            showErrorMessage("작업 지역을 선택해주세요.");
+            return;
+        }
+        /* 
+        서울시 => 1 => [0, 0]
+        인천시 => 2 => [2, 0]
+        경기 북서부 => 3 => [1, 1]
+        경기 북동부 => 4 => [1, 2]
+        경기 남서부 => 5 => [1, 3]
+        경기 남동부 => 6 => [1, 4]
+        */
+
+        const workRegion = [];
+
+        selected.map((element) => {
+            if (element[0] === 0 && element[1] === 0) {
+                workRegion.push(1);
+            } else if (element[0] === 1) {
+                if (element[1] === 0) {
+                    workRegion.push(3, 4, 5, 6);
+                } else {
+                    workRegion.push(element[1] + 2);
+                }
+            } else if (element[0] === 2 && element[1] === 0) {
+                workRegion.push(2);
+            }
+        });
+
+        setInfo({ ...info, workRegion });
+
         const curNavIndex = SIGNUP_NAV[info.userType].indexOf("WorkingArea");
         navigation.navigate(SIGNUP_NAV[info.userType][curNavIndex + 1]);
     };
@@ -108,11 +131,72 @@ function WorkingArea() {
             const remove = selected.filter(
                 (element) => !(element[0] === cur[0] && element[1] === cur[1])
             );
+
+            //경기 전체 > 리스트에서 없앨 경우 나머지 경기 지역들 없애기
+            if (areaIndex === 1 && detailIndex === 0) {
+                const result = remove.filter(
+                    (element) =>
+                        !(
+                            element[0] === areaIndex &&
+                            (element[1] === 1 ||
+                                element[1] === 2 ||
+                                element[1] === 3 ||
+                                element[1] === 4)
+                        )
+                );
+                setSelected(result);
+                return;
+            }
+
+            //경기 전체 선택 상황에서 나머지 경기 지역을 리스트에서 없앨 경우 경제 전체 체크 해제
+            if (areaIndex === 1 && detailIndex !== 0) {
+                const result = remove.filter(
+                    (element) => !(element[0] === 1 && element[1] === 0)
+                );
+                setSelected(result);
+                return;
+            }
+
             setSelected(remove);
             return;
         }
 
         const prev = selected;
+
+        //경기 전체 > 리스트에서 추가할 경우 나머지 경기 지역들 추가하기
+        if (areaIndex === 1 && detailIndex === 0) {
+            const result = [
+                [1, 1],
+                [1, 2],
+                [1, 3],
+                [1, 4],
+            ];
+            setSelected([...prev, cur, ...result]);
+            return;
+        }
+
+        //경기 지역들 모두 선택 시 경기 전체도 추가하기
+        if (areaIndex === 1 && detailIndex !== 0) {
+            const tempSelected = [...prev, cur];
+            const check = [];
+            tempSelected.map((element) => {
+                if (
+                    element[0] === 1 &&
+                    (element[1] === 1 ||
+                        element[1] === 2 ||
+                        element[1] === 3 ||
+                        element[1] === 4)
+                )
+                    check.push(true);
+            });
+
+            if (check.length === 4) {
+                const result = [1, 0];
+
+                setSelected([...tempSelected, result]);
+                return;
+            }
+        }
 
         setSelected([...prev, cur]);
     };
