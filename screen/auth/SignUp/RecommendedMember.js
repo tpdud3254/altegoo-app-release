@@ -11,7 +11,7 @@ import TextInput from "../../../component/input/TextInput";
 import { Image, Keyboard } from "react-native";
 import { shadowProps } from "../../../component/Shadow";
 import { useForm } from "react-hook-form";
-import { showError } from "../../../utils";
+import { CreateAccount, showError } from "../../../utils";
 import axios from "axios";
 
 const Container = styled.View`
@@ -147,9 +147,14 @@ function RecommendedMember() {
 
         setInfo({ ...info, ...data });
 
-        const curNavIndex =
-            SIGNUP_NAV[info.userType].indexOf("RecommendedMember");
-        navigation.navigate(SIGNUP_NAV[info.userType][curNavIndex + 1]);
+        CreateAccount(info);
+
+        return;
+
+        // const curNavIndex =
+        // SIGNUP_NAV[info.userType].indexOf("RecommendedMember");
+
+        // navigation.navigate(SIGNUP_NAV[info.userType][curNavIndex + 1]);
     };
 
     return (
