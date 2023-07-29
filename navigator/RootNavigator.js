@@ -3,8 +3,6 @@ import { NavigationContainer } from "@react-navigation/native";
 import LoginContext from "../context/LoginContext";
 import IntroNavigator from "./Auth/IntroNavigator";
 import MainNavigator from "./Main/MainNavigator";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import Toast from "react-native-toast-message";
 import axios from "axios";
 import { SERVER } from "../constant";
 import UserContext from "../context/UserContext";
@@ -47,6 +45,15 @@ export default function RootNavigator() {
         }
 
         getStorage();
+
+        //로그아웃 테스트 코드
+        const logout = async () => {
+            setLoading(true);
+            setIsLoggedIn(false);
+            setInfo({});
+            await AsyncStorage.removeItem("token");
+        };
+        // logout();
     }, []);
 
     return (

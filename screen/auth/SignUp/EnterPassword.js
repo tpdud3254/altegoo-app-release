@@ -10,7 +10,6 @@ import TextInput from "../../../component/input/TextInput";
 import { useForm } from "react-hook-form";
 import {
     CheckValidation,
-    CreateAccount,
     checkPassword,
     showErrorMessage,
 } from "../../../utils";
@@ -67,11 +66,6 @@ function EnterPassword() {
         setInfo({ ...info, ...infoData });
 
         const curNavIndex = SIGNUP_NAV[info.userType].indexOf("EnterPassword");
-        if (info.userType === NORMAL) {
-            CreateAccount(info);
-            return;
-        }
-
         navigation.navigate(SIGNUP_NAV[info.userType][curNavIndex + 1]);
     };
 
