@@ -7,13 +7,18 @@ import MediumText from "../../../component/text/MediumText";
 import { Notification } from "../../../component/Notification";
 import { color } from "../../../styles";
 import Layout from "../../../component/layout/Layout";
+import { shadowProps } from "../../../component/Shadow";
+import { Order } from "../../../component/order/OrderList";
 
 const HeaderContainer = styled.View`
     background-color: white;
     flex-direction: row;
     align-items: center;
     justify-content: space-between;
-    padding: 40px 20px 20px 20px;
+    padding-top: 48px;
+    padding-bottom: 15px;
+    padding-left: 15px;
+    padding-right: 15px;
     border-bottom-color: ${color["image-area-background"]};
     border-bottom-width: 1px;
 `;
@@ -33,7 +38,129 @@ const Select = styled.TouchableOpacity`
     border-radius: 10px;
     width: 110px;
 `;
+
+const Item = styled.View`
+    width: 100%;
+    margin-bottom: 30px;
+`;
+
+const Wrapper = styled.View`
+    background-color: white;
+    padding: 10px 16px;
+    border-radius: 14px;
+`;
+const Orders = styled.View`
+    margin-top: 15px;
+`;
+
+const orderData = [
+    {
+        acceptUser: 55,
+        address: "",
+        address1: "서울 관악구 신림동 1623-3",
+        address2: null,
+        bothType: null,
+        createdAt: "2023-05-12T07:56:39.900Z",
+        detailAddress1: null,
+        detailAddress2: null,
+        directPhone: "01032655452",
+        emergency: false,
+        floor: 8,
+        id: 119,
+        memo: null,
+        orderReservation: [],
+        orderStatusId: 3,
+        otherAddress: null,
+        otherFloor: null,
+        phone: "01032655452",
+        point: 9000,
+        price: 60000,
+        pushStatus: null,
+        quantity: null,
+        regionId: 1,
+        registUser: { id: 56 },
+        simpleAddress1: "서울 관악구",
+        simpleAddress2: null,
+        time: "하루",
+        type: "올림",
+        userId: 56,
+        vehicleType: "스카이",
+        volumeType: "time",
+        workDateTime: "2023-05-13T08:00:00.000Z",
+    },
+    {
+        acceptUser: 55,
+        address: "",
+        address1: "서울 관악구 신림동 1623-3",
+        address2: null,
+        bothType: null,
+        createdAt: "2023-05-12T07:56:39.900Z",
+        detailAddress1: null,
+        detailAddress2: null,
+        directPhone: "01032655452",
+        emergency: false,
+        floor: 8,
+        id: 119,
+        memo: null,
+        orderReservation: [],
+        orderStatusId: 5,
+        otherAddress: null,
+        otherFloor: null,
+        phone: "01032655452",
+        point: 9000,
+        price: 60000,
+        pushStatus: null,
+        quantity: null,
+        regionId: 1,
+        registUser: { id: 56 },
+        simpleAddress1: "서울 관악구",
+        simpleAddress2: null,
+        time: "하루",
+        type: "올림",
+        userId: 56,
+        vehicleType: "스카이",
+        volumeType: "time",
+        workDateTime: "2023-05-13T08:00:00.000Z",
+    },
+    {
+        acceptUser: 55,
+        address: "",
+        address1: "서울 관악구 신림동 1623-3",
+        address2: null,
+        bothType: null,
+        createdAt: "2023-05-12T07:56:39.900Z",
+        detailAddress1: null,
+        detailAddress2: null,
+        directPhone: "01032655452",
+        emergency: false,
+        floor: 8,
+        id: 119,
+        memo: null,
+        orderReservation: [],
+        orderStatusId: 1,
+        otherAddress: null,
+        otherFloor: null,
+        phone: "01032655452",
+        point: 9000,
+        price: 60000,
+        pushStatus: null,
+        quantity: null,
+        regionId: 1,
+        registUser: { id: 56 },
+        simpleAddress1: "서울 관악구",
+        simpleAddress2: null,
+        time: "하루",
+        type: "올림",
+        userId: 56,
+        vehicleType: "스카이",
+        volumeType: "time",
+        workDateTime: "2023-05-13T08:00:00.000Z",
+    },
+];
+
 function OrderList({ navigation }) {
+    const orders = 1;
+
     useEffect(() => {
         navigation.setOptions({
             header: () => <Header />,
@@ -78,7 +205,54 @@ function OrderList({ navigation }) {
         );
     };
 
-    return <Layout></Layout>;
+    return (
+        <Layout>
+            {orders === 0 ? null : (
+                <>
+                    <Item>
+                        <MediumText
+                            style={{
+                                textAlign: "center",
+                                paddingBottom: 17,
+                                marginTop: 20,
+                            }}
+                        >
+                            23년 6월
+                        </MediumText>
+                        <Wrapper style={shadowProps}>
+                            <Orders>
+                                <Order.Items>
+                                    {orderData.map((order, index) => (
+                                        <Order.Item key={index} data={order} />
+                                    ))}
+                                </Order.Items>
+                            </Orders>
+                        </Wrapper>
+                    </Item>
+                    <Item>
+                        <MediumText
+                            style={{
+                                textAlign: "center",
+                                paddingBottom: 17,
+                                marginTop: 20,
+                            }}
+                        >
+                            23년 6월
+                        </MediumText>
+                        <Wrapper style={shadowProps}>
+                            <Orders>
+                                <Order.Items>
+                                    {orderData.map((order, index) => (
+                                        <Order.Item key={index} data={order} />
+                                    ))}
+                                </Order.Items>
+                            </Orders>
+                        </Wrapper>
+                    </Item>
+                </>
+            )}
+        </Layout>
+    );
 }
 
 OrderList.propTypes = {};

@@ -9,7 +9,7 @@ export const LAYOUT_PADDING_X = 16;
 const Container = styled.View`
     flex: 1;
     background-color: ${color["page-background"]};
-    padding-top: 40px;
+    padding-top: ${(props) => (props.headerShown ? 0 : 40)}px;
 `;
 const Wrapper = styled.View`
     flex: 1;
@@ -17,10 +17,10 @@ const Wrapper = styled.View`
     min-height: ${(props) => props.windowHeight - 120}px;
 `;
 
-export default function Layout({ children }) {
+export default function Layout({ children, headerShown = true }) {
     const { height } = useWindowDimensions();
     return (
-        <Container>
+        <Container headerShown={headerShown}>
             <ScrollView>
                 <Wrapper windowHeight={height}>{children}</Wrapper>
             </ScrollView>
