@@ -6,7 +6,6 @@ import { COMPANY, DRIVER, NORMAL } from "../../constant";
 import AuthLayout from "../../component/layout/AuthLayout";
 import RegularText from "../../component/text/RegularText";
 import MediumText from "../../component/text/MediumText";
-import LoginContext from "../../context/LoginContext";
 import { BackHandler, useWindowDimensions } from "react-native";
 import BoldText from "../../component/text/BoldText";
 import UserContext from "../../context/UserContext";
@@ -55,8 +54,7 @@ const AccentButton = styled(Button)`
 
 function Welcome() {
     const navigation = useNavigation();
-    const { info, setInfo } = useContext(UserContext);
-    const { setFirstLogin } = useContext(LoginContext);
+    const { info } = useContext(UserContext);
     const { height: windowHeight } = useWindowDimensions();
 
     useEffect(() => {
@@ -77,13 +75,10 @@ function Welcome() {
         } else {
             navigation.navigate("TabsNavigator");
         }
-
-        setFirstLogin(false);
     };
 
     const onNextStep = () => {
         navigation.navigate("TabsNavigator");
-        setFirstLogin(false);
         return true;
     };
 
