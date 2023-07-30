@@ -1,6 +1,6 @@
-// export const SERVER = "https://altegoo.shop";
-export const SERVER = "https://2346-211-59-182-118.ngrok-free.app";
-export const WSS_SERVER = "wss://2346-211-59-182-118.ngrok-free.app";
+export const SERVER = "https://altegoo.shop";
+// export const SERVER = "https://2346-211-59-182-118.ngrok-free.app";
+export const WSS_SERVER = "wss://altegoo.shop";
 
 export const PAYMENT_SERVER =
     "https://master.d1p7wg3e032x9j.amplifyapp.com/payment";
@@ -43,7 +43,7 @@ export const SIGNUP_NAV = {
 };
 
 export const REGIST_NAV = [
-    "SelectWorkType",
+    "RegistOrder",
     "SelectDateTime",
     "SearchAddress",
     "SelectFloor",

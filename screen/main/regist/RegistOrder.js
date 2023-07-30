@@ -21,6 +21,8 @@ import { Image, View } from "react-native";
 import RegularText from "../../../component/text/RegularText";
 import SelectBox from "../../../component/selectBox/SelectBox";
 import { showErrorMessage } from "../../../utils";
+import { PAYMENT_APP_ID } from "@env";
+import UserContext from "../../../context/UserContext";
 
 const LastOrder = styled.View`
     flex-direction: row;
@@ -139,7 +141,9 @@ const VOLUME = {
     물량: ["1톤 이하 (단품)", "1톤 ~ 5톤", "5톤", "6톤", "7.5톤", "10톤"],
     시간: ["1시간", "추가 1시간 당", "반나절", "하루"],
 };
+
 function RegistOrder({ navigation }) {
+    const { info, setInfo } = useContext(UserContext);
     const { registInfo, setRegistInfo } = useContext(RegistContext);
     const [vehicleType, setVehicleType] = useState(0);
     const [direction, setDirection] = useState(0);
@@ -152,6 +156,39 @@ function RegistOrder({ navigation }) {
     const [both, setBoth] = useState(null);
     const [cur, setCur] = useState(-1);
 
+    const [price, setPrice] = useState(0);
+    useEffect(() => {
+        let p = 0;
+
+        if (vehicleType === 1) {
+            p = p + 50000;
+        } else if (vehicleType === 2) {
+            p = p + 70000;
+        }
+
+        if (direction === 1 || direction === 2) {
+            p = p + 30000;
+        } else if (direction === 3) {
+            p = p + 60000;
+        }
+
+        if (floor < 8) {
+            p = p + 30000;
+        } else if (floor >= 8) {
+            p = p + 70000;
+        }
+
+        if (quantity > 3) {
+            p = p + 30000;
+        }
+
+        if (quantity > 2) {
+            p = p + 30000;
+        } else if (quantity > 3) {
+            p = p + 50000;
+        }
+        setPrice(p);
+    });
     // useEffect(() => {
     //     if (registInfo.vehicleType) {
     //         setVehicleType(registInfo.vehicleType === 1 ? "사다리" : "스카이");
@@ -286,12 +323,28 @@ function RegistOrder({ navigation }) {
         );
     };
 
+    const gopay = () => {
+        let curPoint = 0;
+        const data = {
+            application_id: PAYMENT_APP_ID,
+            price: price - curPoint,
+            order_name: VEHICLE[vehicleType - 1] + " 이용비 결제",
+            order_id: info.userId + "_" + Date.now(),
+            user: {
+                username: info.userName,
+                phone: info.phone,
+            },
+            curPoint,
+            pointId: 126,
+        };
+        navigation.navigate("Payment", { data });
+    };
     // TODO: 카카오 버튼 추가
     return (
         <Layout
             bottomButtonProps={{
-                onPress: () => showErrorMessage("지원 예정 기능입니다."),
-                title: "예상 운임 0AP 확인",
+                onPress: gopay,
+                title: `예상 운임 ${price}AP 확인`,
             }}
         >
             <LastOrder>
