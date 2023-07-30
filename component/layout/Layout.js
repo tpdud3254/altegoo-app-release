@@ -17,14 +17,18 @@ const Wrapper = styled.View`
     min-height: ${(props) => props.windowHeight - 120}px;
 `;
 
-export default function Layout({ children, headerShown = true }) {
+export default function Layout({
+    children,
+    headerShown = true,
+    registBtnShown = false,
+}) {
     const { height } = useWindowDimensions();
     return (
         <Container headerShown={headerShown}>
             <ScrollView>
                 <Wrapper windowHeight={height}>{children}</Wrapper>
             </ScrollView>
-            <RegistButton />
+            {registBtnShown ? <RegistButton /> : null}
         </Container>
     );
 }

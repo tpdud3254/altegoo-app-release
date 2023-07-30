@@ -6,6 +6,7 @@ import { GetDate, GetTime } from "../../utils";
 import MediumText from "../text/MediumText";
 import RegularText from "../text/RegularText";
 import { color } from "../../styles";
+import { useNavigation } from "@react-navigation/native";
 
 const ItemContainer = styled.TouchableOpacity``;
 const Row = styled.View`
@@ -20,6 +21,7 @@ export const Order = {
         return <View>{children}</View>;
     },
     Item: ({ data }) => {
+        const navigation = useNavigation();
         const Badge = ({ status }) => {
             let text = "";
             let textColor = "";
@@ -82,8 +84,12 @@ export const Order = {
                 />
             );
         };
+
+        const goToOrderDetail = () => {
+            navigation.navigate("OrderDetail", { order: data });
+        };
         return (
-            <ItemContainer>
+            <ItemContainer onPress={goToOrderDetail}>
                 <Row>
                     <LightText style={{ marginBottom: 5 }}>
                         {GetDate(data.workDateTime)}

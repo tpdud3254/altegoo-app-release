@@ -24,7 +24,7 @@ function Button(props) {
                 height: 60,
                 justifyContent: "center",
                 alignItems: "center",
-                borderRadius: 12,
+                borderRadius: 14,
                 ...props.style,
             }}
         >

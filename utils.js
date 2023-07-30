@@ -397,3 +397,10 @@ export const checkPosition = async (location) => {
         console.log(error);
     }
 };
+
+export const GetPhoneNumberWithDash = (phone) => {
+    return `${phone.substring(0, 3)}-${phone.substring(3, 7)}-${phone.substring(
+        7,
+        phone.length
+    )}`;
+};

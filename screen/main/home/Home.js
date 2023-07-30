@@ -303,7 +303,7 @@ function Home({ navigation }) {
         </View>
     );
     return (
-        <Layout headerShown={false}>
+        <Layout headerShown={false} registBtnShown={true}>
             <ItemRow>
                 <BoldText
                     style={{

@@ -2,11 +2,10 @@ import { createStackNavigator } from "@react-navigation/stack";
 import axios from "axios";
 import React, { useContext, useEffect, useRef, useState } from "react";
 import LoadingLayout from "../../component/layout/LoadingLayout";
-import { VALID } from "../../constant";
+import { FONTS, VALID } from "../../constant";
 import LoginContext from "../../context/LoginContext";
 import Charge from "../../screen/main/Charge";
 import CompleteOrder from "../../screen/main/CompleteOrder";
-import OrderDetail from "../../screen/main/OrderDetail";
 import OrderProgress from "../../screen/main/OrderProgress";
 import OrdinaryOrderDetail from "../../screen/main/OrdinaryOrderDetail";
 import Payment from "../../screen/main/Payment";
@@ -16,11 +15,12 @@ import { checkPosition, getAsyncStorageToken } from "../../utils";
 import TabsNavigator from "./TabsNavigator";
 import * as Device from "expo-device";
 import * as Notifications from "expo-notifications";
-import { Platform } from "react-native";
+import { Image, Platform } from "react-native";
 import { AndroidNotificationVisibility } from "expo-notifications";
 import { color } from "../../styles";
 import { useNavigation } from "@react-navigation/native";
 import * as Location from "expo-location";
+import OrderDetail from "../../screen/main/orders/OrderDetail";
 
 Location.watchPositionAsync(
     {
@@ -313,8 +313,27 @@ export default function MainNavigator() {
                         options={{
                             headerShown: true,
                             headerTitleAlign: "center",
-                            headerTitle: "작업 상세 보기",
+                            headerShadowVisible: false,
                             headerBackTitleVisible: false,
+                            presentation: "transparentModal",
+                            headerTintColor: color["header-title-text"],
+                            headerTitleStyle: {
+                                fontFamily: FONTS.medium,
+                            },
+                            headerStyle: {
+                                backgroundColor: color["page-background"],
+                            },
+                            headerBackImage: () => (
+                                <Image
+                                    source={require(`../../assets/images/icons/btn_prev.png`)}
+                                    style={{
+                                        resizeMode: "contain",
+                                        width: 25,
+                                        marginLeft: 5,
+                                    }}
+                                />
+                            ),
+                            headerTitle: "오더 현황",
                         }}
                     />
                     <Stack.Screen
