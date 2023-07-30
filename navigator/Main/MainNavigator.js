@@ -21,6 +21,7 @@ import { color } from "../../styles";
 import { useNavigation } from "@react-navigation/native";
 import * as Location from "expo-location";
 import OrderDetail from "../../screen/main/orders/OrderDetail";
+import RegistNavigator from "./RegistNavigator";
 
 Location.watchPositionAsync(
     {
@@ -260,8 +261,28 @@ export default function MainNavigator() {
             ) : (
                 <Stack.Navigator
                     screenOptions={{
-                        presentation: "modal",
-                        headerShown: false,
+                        headerShown: true,
+                        headerTitleAlign: "center",
+                        headerShadowVisible: false,
+                        headerBackTitleVisible: false,
+                        presentation: "transparentModal",
+                        headerTintColor: color["header-title-text"],
+                        headerTitleStyle: {
+                            fontFamily: FONTS.medium,
+                        },
+                        headerStyle: {
+                            backgroundColor: color["page-background"],
+                        },
+                        headerBackImage: () => (
+                            <Image
+                                source={require(`../../assets/images/icons/btn_prev.png`)}
+                                style={{
+                                    resizeMode: "contain",
+                                    width: 25,
+                                    marginLeft: 5,
+                                }}
+                            />
+                        ),
                     }}
                 >
                     {firstLogin ? (
@@ -270,7 +291,6 @@ export default function MainNavigator() {
                             component={Welcome}
                             options={{
                                 headerShown: false,
-                                headerTitleAlign: "center",
                             }}
                         />
                     ) : null}
@@ -279,10 +299,6 @@ export default function MainNavigator() {
                         <Stack.Screen
                             name="IntroOrderProgress"
                             component={OrderProgress}
-                            options={{
-                                headerShown: true,
-                                headerTitleAlign: "center",
-                            }}
                             initialParams={{
                                 orderData: { ...acceptOrderList[0] },
                             }}
@@ -295,8 +311,6 @@ export default function MainNavigator() {
                             component={CompleteOrder}
                             options={{
                                 title: "작업 완료 요청",
-                                headerShown: true,
-                                headerTitleAlign: "center",
                             }}
                             initialParams={{
                                 orderData: { ...registOrderList[0] },
@@ -306,35 +320,19 @@ export default function MainNavigator() {
                     <Stack.Screen
                         name="TabsNavigator"
                         component={TabsNavigator}
+                        options={{ headerShown: false }}
                     />
                     <Stack.Screen
                         name="OrderDetail"
                         component={OrderDetail}
                         options={{
-                            headerShown: true,
-                            headerTitleAlign: "center",
-                            headerShadowVisible: false,
-                            headerBackTitleVisible: false,
-                            presentation: "transparentModal",
-                            headerTintColor: color["header-title-text"],
-                            headerTitleStyle: {
-                                fontFamily: FONTS.medium,
-                            },
-                            headerStyle: {
-                                backgroundColor: color["page-background"],
-                            },
-                            headerBackImage: () => (
-                                <Image
-                                    source={require(`../../assets/images/icons/btn_prev.png`)}
-                                    style={{
-                                        resizeMode: "contain",
-                                        width: 25,
-                                        marginLeft: 5,
-                                    }}
-                                />
-                            ),
                             headerTitle: "오더 현황",
                         }}
+                    />
+                    <Stack.Screen
+                        name="RegistNavigator"
+                        component={RegistNavigator}
+                        options={{ headerShown: false }}
                     />
                     <Stack.Screen
                         name="OrderProgress"

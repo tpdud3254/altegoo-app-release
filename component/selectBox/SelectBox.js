@@ -3,6 +3,7 @@ import {
     Image,
     TouchableOpacity,
     TouchableWithoutFeedback,
+    ScrollView,
 } from "react-native";
 import styled from "styled-components/native";
 import MediumText from "../text/MediumText";
@@ -29,6 +30,7 @@ const Options = styled.View`
     padding-top: 30px;
     padding-bottom: 30px;
     background-color: white;
+    max-height: 500px;
 `;
 
 const Option = styled.TouchableOpacity`
@@ -59,18 +61,20 @@ function SelectBox({ title, titleProps, onSelect, data, width, placeholder }) {
     return (
         <TouchableWithoutFeedback onPress={hide}>
             <Container width={width}>
-                <MediumText
-                    {...titleProps}
-                    style={{
-                        fontSize: 17,
-                        color: color["page-grey-text"],
-                        ...titleProps?.style,
-                    }}
-                >
-                    {title}
-                </MediumText>
+                {title ? (
+                    <MediumText
+                        {...titleProps}
+                        style={{
+                            fontSize: 17,
+                            color: color["page-grey-text"],
+                            ...titleProps?.style,
+                        }}
+                    >
+                        {title}
+                    </MediumText>
+                ) : null}
                 <TouchableOpacity
-                    onPress={show}
+                    onPress={data.length > 0 ? show : null}
                     style={{
                         width: "100%",
                         flexDirection: "row",
@@ -125,25 +129,40 @@ function SelectBox({ title, titleProps, onSelect, data, width, placeholder }) {
                 >
                     <OptionsContainer>
                         <Options style={shadowProps}>
-                            {data.map((value, index) => (
-                                <Fragment key={index}>
-                                    <Option onPress={() => clickOption(index)}>
-                                        <RegularText
-                                            style={{
-                                                color: color["page-dark-text"],
-                                            }}
+                            <ScrollView
+                                style={{
+                                    width: "100%",
+                                }}
+                                contentContainerStyle={{
+                                    alignItems: "center",
+                                }}
+                            >
+                                {data.map((value, index) => (
+                                    <Fragment key={index}>
+                                        <Option
+                                            onPress={() => clickOption(index)}
                                         >
-                                            {value}
-                                        </RegularText>
-                                    </Option>
-                                    {index < data.length - 1 ? (
-                                        <HorizontalDivider
-                                            color={color["box-border"] + "55"}
-                                            width="90%"
-                                        />
-                                    ) : null}
-                                </Fragment>
-                            ))}
+                                            <RegularText
+                                                style={{
+                                                    color: color[
+                                                        "page-dark-text"
+                                                    ],
+                                                }}
+                                            >
+                                                {value}
+                                            </RegularText>
+                                        </Option>
+                                        {index < data.length - 1 ? (
+                                            <HorizontalDivider
+                                                color={
+                                                    color["box-border"] + "55"
+                                                }
+                                                width="90%"
+                                            />
+                                        ) : null}
+                                    </Fragment>
+                                ))}
+                            </ScrollView>
                         </Options>
                     </OptionsContainer>
                 </SelectPopup>

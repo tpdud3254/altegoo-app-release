@@ -1,6 +1,6 @@
 import { createStackNavigator } from "@react-navigation/stack";
 import React from "react";
-import { REGIST_NAV } from "../../constant";
+import { FONTS, REGIST_NAV } from "../../constant";
 import Address from "../../screen/Address";
 import Payment from "../../screen/main/Payment";
 import AddOtherData from "../../screen/main/regist/AddOtherData";
@@ -10,8 +10,10 @@ import SearchAddress from "../../screen/main/regist/SearchAddress";
 import SelectDateTime from "../../screen/main/regist/SelectDateTime";
 import SelectFloor from "../../screen/main/regist/SelectFloor";
 import SelectVolume from "../../screen/main/regist/SelectVolume";
-import SelectWorkType from "../../screen/main/regist/SelectWorkType";
+import SelectWorkType from "../../screen/main/regist/RegistOrder";
 import { color } from "../../styles";
+import { Image } from "react-native";
+import RegistOrder from "../../screen/main/regist/RegistOrder";
 
 const Stack = createStackNavigator();
 
@@ -19,20 +21,34 @@ export default function RegistNavigator() {
     return (
         <Stack.Navigator
             screenOptions={{
-                headerStyle: {
-                    backgroundColor: color.sub.blue,
-                },
-                headerTitleStyle: {
-                    color: "white",
-                },
+                headerShown: true,
                 headerTitleAlign: "center",
-                headerTintColor: "white",
+                headerShadowVisible: false,
+                headerBackTitleVisible: false,
+                presentation: "transparentModal",
+                headerTintColor: color["header-title-text"],
+                headerTitleStyle: {
+                    fontFamily: FONTS.medium,
+                },
+                headerStyle: {
+                    backgroundColor: color["page-background"],
+                },
+                headerBackImage: () => (
+                    <Image
+                        source={require(`../../assets/images/icons/btn_prev.png`)}
+                        style={{
+                            resizeMode: "contain",
+                            width: 25,
+                            marginLeft: 5,
+                        }}
+                    />
+                ),
             }}
         >
             <Stack.Screen
                 name={REGIST_NAV[0]}
-                component={SelectWorkType}
-                options={{ headerTitle: "작업 선택" }}
+                component={RegistOrder}
+                options={{ headerTitle: "오더 등록" }}
             />
             <Stack.Screen
                 name={REGIST_NAV[1]}

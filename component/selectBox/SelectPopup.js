@@ -6,7 +6,10 @@ const Container = styled.View``;
 export const SelectPopup = ({ children, visible, onTouchOutside }) => {
     return (
         <Dialog
-            dialogStyle={{ width: "80%", backgroundColor: "#ffffff00" }}
+            dialogStyle={{
+                width: "80%",
+                backgroundColor: "#ffffff00",
+            }}
             visible={visible}
             onTouchOutside={onTouchOutside}
             overlayBackgroundColor="#00000044"

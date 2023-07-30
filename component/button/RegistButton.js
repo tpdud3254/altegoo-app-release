@@ -4,6 +4,7 @@ import styled from "styled-components/native";
 import { color } from "../../styles";
 import { shadowProps } from "../Shadow";
 import useWindowDimensions from "react-native/Libraries/Utilities/useWindowDimensions";
+import { useNavigation } from "@react-navigation/native";
 
 export const ButtonContainer = styled.View`
     flex-direction: row;
@@ -20,7 +21,10 @@ const Container = styled.TouchableOpacity`
 
 function RegistButton() {
     const { height } = useWindowDimensions();
-    const goToRegist = () => {};
+    const navigation = useNavigation();
+    const goToRegist = () => {
+        navigation.navigate("RegistNavigator");
+    };
 
     return (
         <View style={{ height: height, position: "absolute", width: "100%" }}>
