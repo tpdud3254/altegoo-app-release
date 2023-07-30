@@ -7,19 +7,40 @@ import ModifyUserInfo from "../../screen/main/setting/ModifyUserInfo";
 import Setting from "../../screen/main/setting/Setting";
 import PointNavigator from "./PointNavigator";
 import Menus from "../../screen/main/setting/Menus";
+import { FONTS } from "../../constant";
+import { color } from "../../styles";
+import { Image } from "react-native";
 
 const Stack = createStackNavigator();
 
 export default function SettingNavigator() {
     return (
-        <Stack.Navigator screenOptions={{ headerTitleAlign: "center" }}>
-            <Stack.Screen
-                name="Menus"
-                options={{
-                    title: "내 정보",
-                }}
-                component={Menus}
-            />
+        <Stack.Navigator
+            screenOptions={{
+                headerTitleAlign: "center",
+                headerShadowVisible: false,
+                headerBackTitleVisible: false,
+                presentation: "transparentModal",
+                headerTintColor: color["header-title-text"],
+                headerTitleStyle: {
+                    fontFamily: FONTS.medium,
+                },
+                headerStyle: {
+                    backgroundColor: color["page-background"],
+                },
+                headerBackImage: () => (
+                    <Image
+                        source={require(`../../assets/images/icons/btn_prev.png`)}
+                        style={{
+                            resizeMode: "contain",
+                            width: 25,
+                            marginLeft: 5,
+                        }}
+                    />
+                ),
+            }}
+        >
+            <Stack.Screen name="Menus" component={Menus} />
             <Stack.Screen
                 name="BlockUser"
                 component={BlockUser}
