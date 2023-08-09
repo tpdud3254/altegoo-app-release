@@ -144,7 +144,7 @@ function BusinessLicense() {
                             />
                             <CancelButton onPress={deleteLicense}>
                                 <Image
-                                    style={{ width: 30, height: 30 }}
+                                    style={{ width: 30, height: 30 }} //TODO: 안드에서 확인해보기
                                     source={require("../../../assets/images/icons/btn_del_s.png")}
                                 />
                             </CancelButton>

@@ -82,7 +82,7 @@ function SelectBox({ title, titleProps, onSelect, data, width, placeholder }) {
                         justifyContent: "space-between",
                         borderBottomWidth: 2,
                         borderBottomColor: color["input-border"],
-                        marginTop: 2,
+                        marginTop: 2, //TODO: 안드에서 확인해보기
                     }}
                 >
                     <RegularText

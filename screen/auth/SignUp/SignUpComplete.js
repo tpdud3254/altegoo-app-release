@@ -79,7 +79,7 @@ function SignUpComplete() {
             password: info.password || null,
             birth: info.birth || null,
             gender: info.gender || null,
-            sms: info.sms || null,
+            sms: info.sms || false,
             license: uploadedLicense || null,
             recommendUserId: info.recommendUserId || null,
             companyName: info.companyName || null,

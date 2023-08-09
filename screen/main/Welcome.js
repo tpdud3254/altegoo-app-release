@@ -2,13 +2,13 @@ import React, { useContext, useEffect } from "react";
 import styled from "styled-components/native";
 import { useNavigation } from "@react-navigation/native";
 import { color } from "../../styles";
-import { COMPANY, DRIVER, NORMAL } from "../../constant";
 import AuthLayout from "../../component/layout/AuthLayout";
 import RegularText from "../../component/text/RegularText";
 import MediumText from "../../component/text/MediumText";
 import { BackHandler, useWindowDimensions } from "react-native";
 import BoldText from "../../component/text/BoldText";
 import UserContext from "../../context/UserContext";
+import { GetPhoneNumberWithDash } from "../../utils";
 
 const Container = styled.View`
     justify-content: space-between;
@@ -108,7 +108,7 @@ function Welcome() {
                             marginBottom: 5,
                         }}
                     >
-                        {info.phone}
+                        {GetPhoneNumberWithDash(info.phone)}
                     </BoldText>
                     <RegularText
                         style={{
@@ -120,19 +120,56 @@ function Welcome() {
                     </RegularText>
                 </WelcomText>
                 <Content>
-                    <RegularText
-                        style={{
-                            fontSize: 19,
-                            color: color["page-dark-text"],
-                            lineHeight: 29,
-                            textAlign: "center",
-                        }}
-                    >
-                        간편하고 정확한 사다리차 & 스카이차를{"\n"}지금 바로
-                        이용해 보세요!{"\n"}작업을 등록만해도{"\n"}작업운임의
-                        15%가 적립됩니다.
-                        {/* TODO: 기사 기업일때도 추가(텍스트 다름)*/}
-                    </RegularText>
+                    {info.userTypeId === 2 ? (
+                        <RegularText
+                            style={{
+                                fontSize: 19,
+                                color: color["page-dark-text"],
+                                lineHeight: 29,
+                                textAlign: "center",
+                            }}
+                        >
+                            최초 1회 정회원 가입 없이{"/n"}작업 진행이
+                            가능합니다.{"/n"}지금 바로 작업 요청을 확인해
+                            보세요,
+                        </RegularText>
+                    ) : info.userTypeId === 3 ? (
+                        <RegularText
+                            style={{
+                                fontSize: 19,
+                                color: color["page-dark-text"],
+                                lineHeight: 29,
+                                textAlign: "center",
+                            }}
+                        >
+                            <BoldText
+                                style={{
+                                    fontSize: 20,
+                                    color: color["page-color-text"],
+                                    lineHeight: 29,
+                                }}
+                            >
+                                20,000원
+                            </BoldText>{" "}
+                            상당의 쿠폰이 발급되었습니다.{"\n"}
+                            간편하고 정확한 사다리차 & 스카이차를
+                            {"\n"}지금 바로 이용해 보세요!{"\n"}작업을
+                            등록만해도{"\n"}작업운임의 15%가 적립됩니다.
+                        </RegularText>
+                    ) : (
+                        <RegularText
+                            style={{
+                                fontSize: 19,
+                                color: color["page-dark-text"],
+                                lineHeight: 29,
+                                textAlign: "center",
+                            }}
+                        >
+                            간편하고 정확한 사다리차 & 스카이차를{"\n"}지금 바로
+                            이용해 보세요!{"\n"}작업을 등록만해도{"\n"}
+                            작업운임의 15%가 적립됩니다.
+                        </RegularText>
+                    )}
                 </Content>
                 <Bottom>
                     <BottomButtonWrapper>

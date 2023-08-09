@@ -125,7 +125,7 @@ function Agreements() {
 
     const onNext = () => {
         const data = {
-            sms: checkArr[4],
+            sms: checkArr[4] ? true : false,
         };
 
         setInfo({ ...info, ...data });

@@ -48,6 +48,9 @@ function RegisterVehicle() {
         register("vehicleType");
         register("vehicleNumber");
         register("option");
+
+        setValue("vehicleType", 1);
+        setValue("option", 1);
     }, []);
 
     useEffect(() => {
@@ -72,7 +75,9 @@ function RegisterVehicle() {
             vehicle.number = vehicleNumber;
             if (vehicleType === 1) {
                 vehicle.floor = option;
+                vehicle.weight = null;
             } else {
+                vehicle.floor = null;
                 vehicle.weight = option;
             }
         }

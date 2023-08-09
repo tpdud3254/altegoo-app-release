@@ -12,9 +12,9 @@ import { Toast } from "react-native-toast-message/lib/src/Toast";
 
 const explainText = {
     NORMAL: "일반회원은 작업 등록만 가능하며\n등록된 작업을 예약할 수 없습니다.\n일반회원 가입 후 언제든지 기사 및\n기업회원 전환이 가능합니다.",
-    DRIVER: "기사회원은 등록된 작업을 예약, 진행하고\n작업포인트 적립이 가능합니다.\n일반회원과 마찬가지로\n작업 등록 또한가능합니다.",
+    DRIVER: "기사회원은 등록된 작업을 예약, 진행하고\n작업포인트 적립이 가능합니다.\n일반회원과 마찬가지로\n작업 등록 또한 가능합니다.",
     COMPANY:
-        "기업회원의 경우 작업 등록 뿐만 아니라\n차량 번호 입력시 등록된 작업의\n진행 또한 가능합니다.\n제휴 기업의 경우 별도의 작업등록 시스템이 제공됩니다.",
+        "기업회원의 경우 작업 등록 뿐만 아니라\n차량 번호 입력시 등록된 작업의\n진행 또한 가능합니다.\n제휴 기업의 경우 별도의 작업등록 시스템이\n제공됩니다.",
 };
 
 const Options = styled.View`
@@ -72,7 +72,7 @@ const NecessityWrapper = styled.View`
 function SignUp() {
     const navigation = useNavigation();
     const { setInfo } = useContext(UserContext);
-    const [type, setType] = useState("");
+    const [type, setType] = useState(NORMAL);
 
     const onNext = () => {
         if (type === "") {
