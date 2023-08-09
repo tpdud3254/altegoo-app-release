@@ -83,8 +83,7 @@ function SignUp() {
             return;
         }
         const data = {
-            // userType: type,
-            userType: NORMAL, //TODO: testcode
+            userType: type,
         };
 
         setInfo(data);
