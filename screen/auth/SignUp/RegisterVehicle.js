@@ -32,7 +32,8 @@ const SkipButton = styled.TouchableOpacity`
 `;
 
 const vehicleType = ["사다리차", "스카이차"];
-const floor = ["1층", "10층", "50층", "100층"]; //TODO: 정책 정하기
+const floor = ["1층", "10층", "50층", "100층"]; //TODO: 정책 정하기,db에서 가져오기
+const weight = ["1t", "2.5t", "3.5t", "5t"]; //TODO: 정책 정하기,db에서 가져오기
 
 function RegisterVehicle() {
     const navigation = useNavigation();
@@ -46,7 +47,7 @@ function RegisterVehicle() {
         console.log(info);
         register("vehicleType");
         register("vehicleNumber");
-        register("floor");
+        register("option");
     }, []);
 
     useEffect(() => {
@@ -58,18 +59,22 @@ function RegisterVehicle() {
     }, [getValues()]);
 
     const onNext = (data) => {
-        const { vehicleType, vehicleNumber, floor } = data;
+        const { vehicleType, vehicleNumber, option } = data;
 
         const vehicle = {};
 
         if (data.skip) {
             vehicle.type = "";
             vehicle.number = "";
-            vehicle.floor = "";
+            vehicle.option = "";
         } else {
             vehicle.type = vehicleType;
             vehicle.number = vehicleNumber;
-            vehicle.floor = floor;
+            if (vehicleType === 1) {
+                vehicle.floor = option;
+            } else {
+                vehicle.weight = option;
+            }
         }
 
         setInfo({ ...info, vehicle });
@@ -104,6 +109,7 @@ function RegisterVehicle() {
                         <RadioContainer>
                             {vehicleType.map((value, index) => (
                                 <Radio
+                                    key={index}
                                     value={value}
                                     selected={
                                         watch("vehicleType") === index + 1
@@ -115,20 +121,40 @@ function RegisterVehicle() {
                             ))}
                         </RadioContainer>
                     </Item>
-                    <Item>
-                        <Title>최대 작업 층수</Title>
-                        <RadioContainer>
-                            {floor.map((value, index) => (
-                                <Radio
-                                    value={value}
-                                    selected={watch("floor") === index + 1}
-                                    onSelect={() =>
-                                        setValue("floor", index + 1)
-                                    }
-                                />
-                            ))}
-                        </RadioContainer>
-                    </Item>
+                    {watch("vehicleType") !== 1 ? (
+                        <Item>
+                            <Title>차량 옵션</Title>
+                            <RadioContainer>
+                                {weight.map((value, index) => (
+                                    <Radio
+                                        key={index}
+                                        value={value}
+                                        selected={watch("option") === index + 1}
+                                        onSelect={() =>
+                                            setValue("option", index + 1)
+                                        }
+                                    />
+                                ))}
+                            </RadioContainer>
+                        </Item>
+                    ) : (
+                        <Item>
+                            <Title>최대 작업 층수</Title>
+                            <RadioContainer>
+                                {floor.map((value, index) => (
+                                    <Radio
+                                        key={index}
+                                        value={value}
+                                        selected={watch("option") === index + 1}
+                                        onSelect={() =>
+                                            setValue("option", index + 1)
+                                        }
+                                    />
+                                ))}
+                            </RadioContainer>
+                        </Item>
+                    )}
+
                     <Item>
                         <Title>차량번호</Title>
                         <TextInput
