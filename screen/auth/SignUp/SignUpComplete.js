@@ -2,24 +2,12 @@ import React, { useContext, useEffect } from "react";
 import styled from "styled-components/native";
 import UserContext from "../../../context/UserContext";
 import { useNavigation } from "@react-navigation/native";
-import { color } from "../../../styles";
-import { DRIVER, SERVER, SIGNUP_NAV, VALID } from "../../../constant";
-import AuthLayout from "../../../component/layout/AuthLayout";
-import RegularText from "../../../component/text/RegularText";
-import { Toast } from "react-native-toast-message/lib/src/Toast";
-import MediumText from "../../../component/text/MediumText";
+import { SERVER, VALID } from "../../../constant";
 import LoginContext from "../../../context/LoginContext";
-import { Ionicons } from "@expo/vector-icons";
-import { BackHandler, useWindowDimensions } from "react-native";
-import BoldText from "../../../component/text/BoldText";
 import Loading from "../../../component/Loading";
 import * as Location from "expo-location";
 import axios from "axios";
-import {
-    setAsyncStorageToken,
-    showError,
-    showErrorMessage,
-} from "../../../utils";
+import { setAsyncStorageToken, showErrorMessage } from "../../../utils";
 
 const Container = styled.View`
     align-items: center;
@@ -84,24 +72,6 @@ function SignUpComplete() {
             );
         }
 
-        // data = {
-        //     userType: "DRIVER",
-        //     name: "ㄱㅅㅇ",
-        //     phone: "0109066545",
-        //     password: "qqqq1111",
-        //     birth: "580820",
-        //     gender: "남",
-        //     sms: true,
-        //     licenseUrl: "",
-        //     recommendUserId: 1,
-        //     companyName: "딩딩딩",
-        //     companyPersonName: "딩딩",
-        //     workCategory: 3,
-        //     vehicle: { floor: 1, number: "ㅈㄴㅈ", type: 1 },
-        //     vehiclePermissionUrl: "",
-        //     workRegion: [1, 2, 4],
-        // };
-
         const sendingData = {
             userType: info.userType || null,
             name: info.name || null,
@@ -115,7 +85,7 @@ function SignUpComplete() {
             companyName: info.companyName || null,
             companyPersonName: info.companyPersonName || null,
             workCategory: info.workCategory || null,
-            vehicle: [info.vehicle] || [],
+            vehicle: info.vehicle ? [info.vehicle] : [],
             vehiclePermission: uploadedVehiclePermission || null,
             workRegion: info.workRegion || null,
             accessedRegion: accessedRegion,
@@ -123,9 +93,7 @@ function SignUpComplete() {
             grade: 1, //고정값
         };
 
-        if (sendingData.userType === DRIVER) {
-            console.log(sendingData);
-        }
+        console.log(sendingData);
 
         try {
             const response = await axios.post(SERVER + "/users/create", {
@@ -269,7 +237,6 @@ function SignUpComplete() {
             console.log(error);
             navigation.navigate("SignInNavigator");
             showErrorMessage("자동 로그인에 실패하였습니다.");
-            showError(error);
         }
     };
 
