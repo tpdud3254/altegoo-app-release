@@ -3,7 +3,7 @@ import styled from "styled-components/native";
 import UserContext from "../../../context/UserContext";
 import { useNavigation } from "@react-navigation/native";
 import { color } from "../../../styles";
-import { SERVER, SIGNUP_NAV, VALID } from "../../../constant";
+import { DRIVER, SERVER, SIGNUP_NAV, VALID } from "../../../constant";
 import AuthLayout from "../../../component/layout/AuthLayout";
 import RegularText from "../../../component/text/RegularText";
 import { Toast } from "react-native-toast-message/lib/src/Toast";
@@ -71,6 +71,19 @@ function SignUpComplete() {
             console.log(error);
         }
 
+        let uploadedLicense = null;
+        let uploadedVehiclePermission = null;
+
+        if (info.licenseUrl) {
+            uploadedLicense = await uploadLicense(info.licenseUrl);
+        }
+
+        if (info.vehiclePermissionUrl) {
+            uploadedVehiclePermission = await uploadVehiclePermission(
+                info.vehiclePermissionUrl
+            );
+        }
+
         // data = {
         //     userType: "DRIVER",
         //     name: "ㄱㅅㅇ",
@@ -97,18 +110,22 @@ function SignUpComplete() {
             birth: info.birth || null,
             gender: info.gender || null,
             sms: info.sms || null,
-            license: info.licenseUrl || null,
+            license: uploadedLicense || null,
             recommendUserId: info.recommendUserId || null,
             companyName: info.companyName || null,
             companyPersonName: info.companyPersonName || null,
             workCategory: info.workCategory || null,
-            vehicle: info.vehicle || null,
-            vehiclePermission: info.vehiclePermissionUrl || null,
+            vehicle: [info.vehicle] || [],
+            vehiclePermission: uploadedVehiclePermission || null,
             workRegion: info.workRegion || null,
             accessedRegion: accessedRegion,
             status: "정상", //고정값
             grade: 1, //고정값
         };
+
+        if (sendingData.userType === DRIVER) {
+            console.log(sendingData);
+        }
 
         try {
             const response = await axios.post(SERVER + "/users/create", {
@@ -132,6 +149,94 @@ function SignUpComplete() {
             navigation.goBack();
             showErrorMessage("회원가입에 실패하였습니다.");
         }
+    };
+
+    const uploadLicense = (fileName) => {
+        return new Promise((resolve, reject) => {
+            const localUri = fileName;
+            const filename = localUri.split("/").pop();
+            const match = /\.(\w+)$/.exec(filename ?? "");
+            const type = match ? `image/${match[1]}` : `image`;
+            const formData = new FormData();
+            console.log(filename, type);
+            formData.append("file", { uri: localUri, name: filename, type });
+
+            axios
+                .post(
+                    SERVER + "/users/license",
+                    {
+                        formData,
+                    },
+                    {
+                        headers: {
+                            "Content-Type": "multipart/form-data",
+                        },
+                        transformRequest: [
+                            function () {
+                                return formData;
+                            },
+                        ],
+                    }
+                )
+                .then(({ data }) => {
+                    const {
+                        data: { location },
+                        result,
+                    } = data;
+                    if (result === VALID) {
+                        console.log("license url : ", location);
+                        resolve(location);
+                    }
+                })
+                .catch((error) => {
+                    //TODO: showError 함수 삭제
+                    showErrorMessage(error);
+                })
+                .finally(() => {});
+        });
+    };
+
+    const uploadVehiclePermission = (fileName) => {
+        return new Promise((resolve, reject) => {
+            const localUri = fileName;
+            const filename = localUri.split("/").pop();
+            const match = /\.(\w+)$/.exec(filename ?? "");
+            const type = match ? `image/${match[1]}` : `image`;
+            const formData = new FormData();
+            console.log(filename, type);
+            formData.append("file", { uri: localUri, name: filename, type });
+
+            axios
+                .post(
+                    SERVER + "/users/permission",
+                    {
+                        formData,
+                    },
+                    {
+                        headers: {
+                            "Content-Type": "multipart/form-data",
+                        },
+                        transformRequest: [
+                            function () {
+                                return formData;
+                            },
+                        ],
+                    }
+                )
+                .then(({ data }) => {
+                    const {
+                        data: { location },
+                        result,
+                    } = data;
+                    if (result === VALID) {
+                        resolve(location);
+                    }
+                })
+                .catch((error) => {
+                    showErrorMessage(error);
+                })
+                .finally(() => {});
+        });
     };
 
     const signIn = async (phone, password) => {
