@@ -27,6 +27,10 @@ const BottomButton = styled.TouchableOpacity`
     justify-content: center;
 `;
 
+const CustomButton = styled.View`
+    /* height: 60px; */
+`;
+
 export default function Layout({
     children,
     headerShown = true,
@@ -50,14 +54,20 @@ export default function Layout({
             {kakaoBtnShown ? <KakaoButton /> : null}
             {registBtnShown ? <RegistButton /> : null}
             {bottomButtonProps ? (
-                <BottomButton
-                    onPress={bottomButtonProps.onPress}
-                    disabled={bottomButtonProps.disabled}
-                >
-                    <MediumText style={{ color: "white" }}>
-                        {bottomButtonProps.title}
-                    </MediumText>
-                </BottomButton>
+                bottomButtonProps.customButton ? (
+                    <CustomButton>
+                        {bottomButtonProps.customButton}
+                    </CustomButton>
+                ) : (
+                    <BottomButton
+                        onPress={bottomButtonProps.onPress}
+                        disabled={bottomButtonProps.disabled}
+                    >
+                        <MediumText style={{ color: "white" }}>
+                            {bottomButtonProps.title}
+                        </MediumText>
+                    </BottomButton>
+                )
             ) : null}
         </Container>
     );

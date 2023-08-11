@@ -1,7 +1,8 @@
 import React, { useContext, useEffect, useState } from "react";
 import {
+    Image,
     ScrollView,
-    TextInput,
+    TextInput as RNTextInput,
     TouchableOpacity,
     TouchableWithoutFeedback,
     View,
@@ -16,6 +17,10 @@ import { numberWithComma } from "../../../utils";
 import Checkbox from "expo-checkbox";
 import { useForm } from "react-hook-form";
 import { REGIST_NAV } from "../../../constant";
+import Layout from "../../../component/layout/Layout";
+import BoldText from "../../../component/text/BoldText";
+import RegularText from "../../../component/text/RegularText";
+import TextInput, * as Input from "../../../component/input/TextInput";
 
 const Container = styled.View``;
 const SRow = styled.View`
@@ -37,6 +42,34 @@ const SContent = styled.View`
     background-color: ${(props) => (props.background ? "white" : "")};
 `;
 
+const Row = styled.View`
+    flex-direction: row;
+    align-items: center;
+`;
+
+const Item = styled.View`
+    flex-direction: row;
+    align-items: center;
+    margin-bottom: ${(props) => (props.uninterval ? 8 : 15)}px;
+`;
+
+const TitleWrapper = styled.View`
+    width: 25%;
+`;
+const Wrapper = styled.View`
+    width: 75%;
+`;
+
+const Content = styled.View`
+    background-color: ${color.btnDefault};
+    border: 1px solid ${color["box-border"]};
+    padding-top: ${(props) => (props.unpadded ? 6 : 10)}px;
+    padding-bottom: ${(props) => (props.unpadded ? 6 : 10)}px;
+    padding-left: 17px;
+    padding-right: 5px;
+    border-radius: 15px;
+    justify-content: center;
+`;
 const Emergency = styled.View`
     align-items: center;
     margin-top: -5px;
@@ -53,6 +86,26 @@ const Button = styled.TouchableOpacity`
     margin-top: 15px;
     margin-bottom: 10px;
     padding: 10px;
+`;
+
+const BottomButtonContainer = styled.View`
+    flex-direction: row;
+`;
+
+const EmergencyButton = styled.TouchableOpacity`
+    flex-direction: row;
+    background-color: ${color["box-color-background"]};
+    align-items: center;
+    justify-content: center;
+    width: 50%;
+    height: 60px;
+`;
+const NormalButton = styled.TouchableOpacity`
+    background-color: ${color["button-accent-background"]};
+    align-items: center;
+    justify-content: center;
+    width: 50%;
+    height: 60px;
 `;
 function AddOtherData({ navigation }) {
     const { registInfo, setRegistInfo } = useContext(RegistContext);
@@ -185,68 +238,20 @@ function AddOtherData({ navigation }) {
         navigation.navigate(REGIST_NAV[6]);
     };
 
-    const Row = ({ title, content, view }) => (
-        <SRow>
-            <STitle>
-                <MediumText style={{ fontSize: 18 }}>{title}</MediumText>
-            </STitle>
-            {view ? (
-                view
-            ) : (
-                <SContent>
-                    <MediumText style={{ fontSize: 18 }}>{content}</MediumText>
-                </SContent>
-            )}
-        </SRow>
-    );
-
-    const InputRow = ({ title, placeholder, checkBox, defaultValue, type }) => (
-        <SRow>
-            <STitle>
-                <MediumText style={{ fontSize: 18 }}>{title}</MediumText>
-            </STitle>
-            <SContent
-                inputBorderLine={!checkBox}
-                borderLine={checkBox}
-                background={!checkBox}
-            >
-                {checkBox ? (
-                    <View
-                        style={{
-                            flexDirection: "row",
-                            alignItems: "center",
-                            marginTop: -5,
-                            marginBottom: -5,
-                        }}
-                    >
-                        <Checkbox
-                            style={{
-                                width: 28,
-                                height: 28,
-                                marginRight: 5,
-                            }}
-                            value={isDirectPhone}
-                            onValueChange={setIsDirectPhone}
-                            color="#777"
-                        />
-                        <MediumText style={{ fontSize: 18 }}>
-                            핸드폰 번호 동일
-                        </MediumText>
-                    </View>
-                ) : (
-                    <TextInput
-                        style={{ fontSize: 18 }}
-                        placeholder={placeholder}
-                        defaultValue={defaultValue}
-                        onChangeText={(text) => setValue(type, text)}
-                        keyboardType={
-                            type === "memo" ? "default" : "number-pad"
-                        }
-                    />
-                )}
-            </SContent>
-        </SRow>
-    );
+    // const Row = ({ title, content, view }) => (
+    //     <SRow>
+    //         <STitle>
+    //             <RegularText>{title}</RegularText>
+    //         </STitle>
+    //         {view ? (
+    //             view
+    //         ) : (
+    //             <SContent>
+    //                 <MediumText style={{ fontSize: 18 }}>{content}</MediumText>
+    //             </SContent>
+    //         )}
+    //     </SRow>
+    // );
 
     const SetPriceView = (
         <View style={{ flexDirection: "row" }}>
@@ -276,109 +281,297 @@ function AddOtherData({ navigation }) {
             </TouchableOpacity>
         </View>
     );
+
+    const ItemTitle = ({ title }) => {
+        return (
+            <TitleWrapper>
+                <RegularText>{title}</RegularText>
+            </TitleWrapper>
+        );
+    };
+
+    const Checkbox = ({ checked }) => {
+        return (
+            <Image
+                source={
+                    checked
+                        ? require("../../../assets/images/icons/Check_ON.png")
+                        : require("../../../assets/images/icons/Check_OFF.png")
+                }
+                resizeMode="contain"
+                style={{ width: 23, height: 23, marginRight: 6 }}
+            />
+        );
+    };
+
+    const Line = () => {
+        return (
+            <View
+                style={{
+                    height: 2,
+                    backgroundColor: color["input-border"],
+                    marginTop: 10,
+                }}
+            ></View>
+        );
+    };
+    const BottomButton = () => {
+        return (
+            <BottomButtonContainer>
+                <EmergencyButton>
+                    <Image
+                        source={require("../../../assets/images/icons/icon_emerg.png")}
+                        style={{ width: 24, height: 24 }}
+                    />
+                    <BoldText style={{ color: "#EB1D36" }}>긴급오더</BoldText>
+                </EmergencyButton>
+                <NormalButton>
+                    <BoldText style={{ color: "white" }}>일반오더</BoldText>
+                </NormalButton>
+            </BottomButtonContainer>
+        );
+    };
     return (
-        <MainLayout>
-            <ScrollView>
-                <TouchableWithoutFeedback>
-                    <View>
-                        <Container>
-                            <Row title="작업 종류" content={getWorkType()} />
-                            <Row title="작업 일시" content={getWorkTime()} />
-                            {registInfo.upDown === "양사" ? (
-                                <>
-                                    <Row
-                                        title={
-                                            (registInfo.bothType === 1
-                                                ? "내림"
-                                                : "올림") + " 주소"
-                                        }
-                                        content={registInfo.address}
-                                    />
-                                    <Row
-                                        title={
-                                            (registInfo.bothType === 1
-                                                ? "올림"
-                                                : "내림") + " 주소"
-                                        }
-                                        content={registInfo.otherAddress}
-                                    />
-                                </>
-                            ) : (
-                                <Row
-                                    title="작업 주소"
-                                    content={registInfo.address}
+        <Layout
+            bottomButtonProps={{
+                customButton: <BottomButton />,
+            }}
+        >
+            <Item>
+                <ItemTitle title="작업 종류" />
+                <Wrapper>
+                    <Content>
+                        <RegularText>사다리차 / 내림</RegularText>
+                    </Content>
+                </Wrapper>
+            </Item>
+            <Item>
+                <ItemTitle title="작업 일시" />
+                <Wrapper>
+                    <Content>
+                        <RegularText>2023년 5월 25일 (수) 19:23</RegularText>
+                    </Content>
+                </Wrapper>
+            </Item>
+            <Item uninterval>
+                <ItemTitle title="작업 주소" />
+                <Wrapper>
+                    <Content>
+                        <RegularText>경기도 고양시 고양이로 12-34</RegularText>
+                    </Content>
+                </Wrapper>
+            </Item>
+            <Item>
+                <ItemTitle />
+                <Wrapper>
+                    <Content>
+                        <RegularText>102호</RegularText>
+                    </Content>
+                </Wrapper>
+            </Item>
+            <Item>
+                <ItemTitle title="작업 높이" />
+                <Wrapper>
+                    <Content>
+                        <RegularText>11층</RegularText>
+                    </Content>
+                </Wrapper>
+            </Item>
+            <Item>
+                <ItemTitle title="연락처" />
+                <Wrapper>
+                    <Content>
+                        <RegularText>010-1323-1212</RegularText>
+                    </Content>
+                </Wrapper>
+            </Item>
+            <Item uninterval>
+                <ItemTitle title="현장 연락처" />
+                <Wrapper>
+                    <Content unpadded>
+                        <RNTextInput
+                            style={{
+                                fontSize: 18,
+                                fontFamily: "SpoqaHanSansNeo-Regular",
+                            }}
+                            placeholder="현장 연락처를 입력해주세요 (선택)"
+                            cursorColor={color["page-lightgrey-text"]}
+                        />
+                    </Content>
+                </Wrapper>
+            </Item>
+            <Item>
+                <ItemTitle />
+                <Wrapper>
+                    <TouchableOpacity style={{ marginBottom: 10 }}>
+                        <Row>
+                            <Checkbox checked={false} />
+                            <RegularText style={{ fontSize: 16 }}>
+                                핸드폰 번호 동일
+                            </RegularText>
+                        </Row>
+                    </TouchableOpacity>
+                </Wrapper>
+            </Item>
+            <Item uninterval>
+                <ItemTitle title="작업 비용" />
+                <Wrapper>
+                    <BoldText>
+                        150,000<BoldText style={{ fontSize: 14 }}> AP</BoldText>
+                    </BoldText>
+                </Wrapper>
+            </Item>
+            <Item>
+                <ItemTitle />
+                <Wrapper>
+                    <Line />
+                    <RegularText style={{ fontSize: 14, marginTop: 7 }}>
+                        비용 세부 조정
+                    </RegularText>
+                    <View style={{ marginTop: 7, marginBottom: 10 }}>
+                        <Row>
+                            <TouchableOpacity>
+                                <Image
+                                    source={require("../../../assets/images/icons/icon_plus.png")}
+                                    style={{ width: 24, height: 24 }}
                                 />
-                            )}
-                            <Row title="작업 높이" content={getWorkFloor()} />
-
-                            {registInfo.volumeType === "quantity" ? (
-                                <Row
-                                    title="작업 물량"
-                                    content={registInfo.quantity}
+                            </TouchableOpacity>
+                            <MediumText
+                                style={{
+                                    fontSize: 16,
+                                    color: color["page-color-text"],
+                                    marginLeft: 10,
+                                    marginRight: 10,
+                                }}
+                            >
+                                10,000{" "}
+                                <MediumText
+                                    style={{
+                                        fontSize: 12,
+                                        color: color["page-color-text"],
+                                    }}
+                                >
+                                    AP
+                                </MediumText>
+                            </MediumText>
+                            <TouchableOpacity>
+                                <Image
+                                    source={require("../../../assets/images/icons/icon_minus.png")}
+                                    style={{ width: 24, height: 24 }}
                                 />
-                            ) : (
-                                <Row
-                                    title="작업 시간"
-                                    content={registInfo.time}
-                                />
-                            )}
-
-                            <Row title="휴대 전화" content={info.phone} />
-                            <InputRow
-                                title="현장 연락처"
-                                placeholder="현장에서 연락 가능한 번호 입력"
-                                defaultValue={isDirectPhone ? info.phone : null}
-                                type="directPhone"
-                            />
-                            <InputRow title="" checkBox />
-
-                            <Row title="작업 비용" content={getPrice()} />
-                            <Row title="" view={SetPriceView} />
-                            <Row title="적립 포인트" content={getPoint()} />
-                            <SRow>
-                                <STitle>
-                                    <MediumText style={{ fontSize: 18 }}>
-                                        긴급 오더
-                                    </MediumText>
-                                </STitle>
-                                <Checkbox
-                                    style={{ width: 28, height: 28 }}
-                                    value={emergencyOrder}
-                                    onValueChange={setEmergencyOrder}
-                                    color={color.btnAccent}
-                                />
-                            </SRow>
-                            {emergencyOrder ? (
-                                <Emergency>
-                                    <MediumText
-                                        style={{
-                                            fontSize: 18,
-                                            color: color.main,
-                                            marginBottom: 5,
-                                        }}
-                                    >
-                                        긴급 오더 선택 시 작업 비용이 20%
-                                        증가하며
-                                        {"\n"}
-                                        모든 기사님에게 알림이 전송됩니다.
-                                    </MediumText>
-                                </Emergency>
-                            ) : null}
-                            <InputRow
-                                title="특이 사항"
-                                placeholder="특이사항을 입력해주세요."
-                                type="memo"
-                            />
-                        </Container>
-                        <ButtonContainer>
-                            <Button onPress={handleSubmit(onNextStep)}>
-                                <MediumText>확인</MediumText>
-                            </Button>
-                        </ButtonContainer>
+                            </TouchableOpacity>
+                        </Row>
                     </View>
-                </TouchableWithoutFeedback>
-            </ScrollView>
-        </MainLayout>
+                </Wrapper>
+            </Item>
+            <Item uninterval>
+                <ItemTitle title="특이사항" />
+                <Wrapper>
+                    <RNTextInput
+                        style={{
+                            fontSize: 18,
+                            fontFamily: "SpoqaHanSansNeo-Regular",
+                        }}
+                        placeholder="특이사항을 입력해주세요."
+                        cursorColor={color["page-lightgrey-text"]}
+                    />
+                </Wrapper>
+            </Item>
+            <Item>
+                <ItemTitle />
+                <Wrapper>
+                    <View style={{ marginTop: -10 }}>
+                        <Line />
+                    </View>
+                </Wrapper>
+            </Item>
+            {/* <View>
+                <Container>
+                    <Row title="작업 종류" content={getWorkType()} />
+                    <Row title="작업 일시" content={getWorkTime()} />
+                    {registInfo.upDown === "양사" ? (
+                        <>
+                            <Row
+                                title={
+                                    (registInfo.bothType === 1
+                                        ? "내림"
+                                        : "올림") + " 주소"
+                                }
+                                content={registInfo.address}
+                            />
+                            <Row
+                                title={
+                                    (registInfo.bothType === 1
+                                        ? "올림"
+                                        : "내림") + " 주소"
+                                }
+                                content={registInfo.otherAddress}
+                            />
+                        </>
+                    ) : (
+                        <Row title="작업 주소" content={registInfo.address} />
+                    )}
+                    <Row title="작업 높이" content={getWorkFloor()} />
+
+                    {registInfo.volumeType === "quantity" ? (
+                        <Row title="작업 물량" content={registInfo.quantity} />
+                    ) : (
+                        <Row title="작업 시간" content={registInfo.time} />
+                    )}
+
+                    <Row title="휴대 전화" content={info.phone} />
+                    <InputRow
+                        title="현장 연락처"
+                        placeholder="현장에서 연락 가능한 번호 입력"
+                        defaultValue={isDirectPhone ? info.phone : null}
+                        type="directPhone"
+                    />
+                    <InputRow title="" checkBox />
+
+                    <Row title="작업 비용" content={getPrice()} />
+                    <Row title="" view={SetPriceView} />
+                    <Row title="적립 포인트" content={getPoint()} />
+                    <SRow>
+                        <STitle>
+                            <MediumText style={{ fontSize: 18 }}>
+                                긴급 오더
+                            </MediumText>
+                        </STitle>
+                        <Checkbox
+                            style={{ width: 28, height: 28 }}
+                            value={emergencyOrder}
+                            onValueChange={setEmergencyOrder}
+                            color={color.btnAccent}
+                        />
+                    </SRow>
+                    {emergencyOrder ? (
+                        <Emergency>
+                            <MediumText
+                                style={{
+                                    fontSize: 18,
+                                    color: color.main,
+                                    marginBottom: 5,
+                                }}
+                            >
+                                긴급 오더 선택 시 작업 비용이 20% 증가하며
+                                {"\n"}
+                                모든 기사님에게 알림이 전송됩니다.
+                            </MediumText>
+                        </Emergency>
+                    ) : null}
+                    <InputRow
+                        title="특이 사항"
+                        placeholder="특이사항을 입력해주세요."
+                        type="memo"
+                    />
+                </Container>
+                <ButtonContainer>
+                    <Button onPress={handleSubmit(onNextStep)}>
+                        <MediumText>확인</MediumText>
+                    </Button>
+                </ButtonContainer>
+            </View> */}
+        </Layout>
     );
 }
 

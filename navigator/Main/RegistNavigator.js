@@ -62,8 +62,8 @@ export default function RegistNavigator() {
             />
             <Stack.Screen
                 name={REGIST_NAV[3]}
-                component={SelectFloor}
-                options={{ headerTitle: "층수 선택" }}
+                component={AddOtherData}
+                options={{ headerTitle: "추가 정보 입력" }}
             />
             <Stack.Screen
                 name={REGIST_NAV[4]}
@@ -72,8 +72,8 @@ export default function RegistNavigator() {
             />
             <Stack.Screen
                 name={REGIST_NAV[5]}
-                component={AddOtherData}
-                options={{ headerTitle: "추가 정보 입력" }}
+                component={SelectFloor}
+                options={{ headerTitle: "층수 선택" }}
             />
             <Stack.Screen
                 name={REGIST_NAV[6]}
