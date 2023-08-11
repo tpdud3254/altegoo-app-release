@@ -12,7 +12,7 @@ import { Toast } from "react-native-toast-message/lib/src/Toast";
 import RegistContext from "../../../context/RegistContext";
 import KakaoButton, {
     ButtonContainer,
-} from "../../../component/button/KakaoButton";
+} from "../../../component/button/KakaoButton_";
 import { REGIST_NAV } from "../../../constant";
 import UpIcon from "../../../component/icon/UpIcon";
 import DownIcon from "../../../component/icon/DownIcon";

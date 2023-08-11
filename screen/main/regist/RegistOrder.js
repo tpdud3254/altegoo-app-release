@@ -12,7 +12,7 @@ import { Toast } from "react-native-toast-message/lib/src/Toast";
 import RegistContext from "../../../context/RegistContext";
 import KakaoButton, {
     ButtonContainer,
-} from "../../../component/button/KakaoButton";
+} from "../../../component/button/KakaoButton_";
 import { REGIST_NAV } from "../../../constant";
 import UpIcon from "../../../component/icon/UpIcon";
 import DownIcon from "../../../component/icon/DownIcon";
@@ -23,8 +23,9 @@ import SelectBox from "../../../component/selectBox/SelectBox";
 import { showErrorMessage } from "../../../utils";
 import { PAYMENT_APP_ID } from "@env";
 import UserContext from "../../../context/UserContext";
+import { PopupWithButtons } from "../../../component/PopupWithButtons";
 
-const LastOrder = styled.View`
+const LastOrder = styled.TouchableOpacity`
     flex-direction: row;
     align-items: center;
     justify-content: flex-end;
@@ -33,6 +34,7 @@ const LastOrder = styled.View`
 
 const Item = styled.View`
     margin-bottom: 35px;
+    padding-bottom: ${(props) => (props.bottomSpace ? props.bottomSpace : 0)}px;
 `;
 const Wrapper = styled.View``;
 const Row = styled.View`
@@ -145,9 +147,11 @@ const VOLUME = {
 function RegistOrder({ navigation }) {
     const { info, setInfo } = useContext(UserContext);
     const { registInfo, setRegistInfo } = useContext(RegistContext);
-    const [vehicleType, setVehicleType] = useState(0);
+    const [vehicleType, setVehicleType] = useState(1);
     const [direction, setDirection] = useState(0);
     const [floor, setFloor] = useState(0);
+    const [downFloor, setDownFloor] = useState(0);
+    const [upFloor, setUpFloor] = useState(0);
     const [volume, setVolume] = useState("");
     const [quantity, setQuantity] = useState(0);
     const [time, setTime] = useState(0);
@@ -157,6 +161,10 @@ function RegistOrder({ navigation }) {
     const [cur, setCur] = useState(-1);
 
     const [price, setPrice] = useState(0);
+
+    const [isPopupShown, setIsPopupShown] = useState(false);
+    const [lastOrder, setLastOrder] = useState(false);
+
     useEffect(() => {
         let p = 0;
 
@@ -228,6 +236,12 @@ function RegistOrder({ navigation }) {
         }
     }, [vehicleType, upDown, both]);
 
+    useEffect(() => {
+        if (lastOrder) {
+            setIsPopupShown(true);
+        }
+    }, [lastOrder]);
+
     const onNextStep = () => {
         if (cur !== 0) {
             Toast.show({
@@ -245,6 +259,16 @@ function RegistOrder({ navigation }) {
         });
 
         navigation.navigate(REGIST_NAV[1]);
+    };
+
+    const cancelLastOrder = () => {
+        setIsPopupShown(false);
+        setLastOrder(false);
+    };
+
+    const getLastOrder = () => {
+        setIsPopupShown(false);
+        console.log("get last order");
     };
 
     const Help = ({ number, cur, text }) => (
@@ -323,32 +347,34 @@ function RegistOrder({ navigation }) {
         );
     };
 
-    const gopay = () => {
-        let curPoint = 0;
-        const data = {
-            application_id: PAYMENT_APP_ID,
-            price: price - curPoint,
-            order_name: VEHICLE[vehicleType - 1] + " 이용비 결제",
-            order_id: info.userId + "_" + Date.now(),
-            user: {
-                username: info.userName,
-                phone: info.phone,
-            },
-            curPoint,
-            pointId: 126,
-        };
-        navigation.navigate("Payment", { data });
-    };
-    // TODO: 카카오 버튼 추가
+    // const gopay = () => {
+    //     let curPoint = 0;
+    //     const data = {
+    //         application_id: PAYMENT_APP_ID,
+    //         price: price - curPoint,
+    //         order_name: VEHICLE[vehicleType - 1] + " 이용비 결제",
+    //         order_id: info.userId + "_" + Date.now(),
+    //         user: {
+    //             username: info.userName,
+    //             phone: info.phone,
+    //         },
+    //         curPoint,
+    //         pointId: 126,
+    //     };
+    //     navigation.navigate("Payment", { data });
+    // };
+
     return (
         <Layout
+            kakaoBtnShown={true}
             bottomButtonProps={{
-                onPress: gopay,
+                // onPress: gopay,
                 title: `예상 운임 ${price}AP 확인`,
+                disabled: true,
             }}
         >
-            <LastOrder>
-                <Checkbox checked={false} />
+            <LastOrder onPress={() => setLastOrder((prev) => !prev)}>
+                <Checkbox checked={lastOrder} />
                 <RegularText>지난 오더 불러오기</RegularText>
             </LastOrder>
             <Item>
@@ -377,95 +403,212 @@ function RegistOrder({ navigation }) {
                     </Row>
                 </Wrapper>
             </Item>
-            <Item>
-                <ItemTitle title="2. 올리시나요, 내리시나요?" />
-                <Wrapper>
-                    {DIRECTION.map((value, index) => (
-                        <View
-                            key={index}
-                            style={{
-                                marginBottom:
-                                    index + 1 === DIRECTION.length ? 0 : 13,
-                            }}
-                        >
-                            <Option
-                                selected={index + 1 === direction}
-                                onPress={() => setDirection(index + 1)}
+            {vehicleType === 1 ? (
+                <Item>
+                    <ItemTitle title="2. 올리시나요, 내리시나요?" />
+                    <Wrapper>
+                        {DIRECTION.map((value, index) => (
+                            <View
+                                key={index}
+                                style={{
+                                    marginBottom:
+                                        index + 1 === DIRECTION.length ? 0 : 13,
+                                }}
                             >
-                                <View
-                                    style={{
-                                        flexDirection: "row",
-                                        alignItems: "center",
-                                    }}
+                                <Option
+                                    selected={index + 1 === direction}
+                                    onPress={() => setDirection(index + 1)}
                                 >
-                                    <MediumText
+                                    <View
                                         style={{
-                                            color:
-                                                index + 1 === direction
-                                                    ? color.main
-                                                    : color["page-black-text"],
+                                            flexDirection: "row",
+                                            alignItems: "center",
                                         }}
                                     >
-                                        {value}
-                                    </MediumText>
-                                    <Image
-                                        source={
-                                            index + 1 === direction
-                                                ? DIRECTION_IMAGE[index].on
-                                                : DIRECTION_IMAGE[index].off
-                                        }
+                                        <MediumText
+                                            style={{
+                                                color:
+                                                    index + 1 === direction
+                                                        ? color.main
+                                                        : color[
+                                                              "page-black-text"
+                                                          ],
+                                            }}
+                                        >
+                                            {value}
+                                        </MediumText>
+                                        <Image
+                                            source={
+                                                index + 1 === direction
+                                                    ? DIRECTION_IMAGE[index].on
+                                                    : DIRECTION_IMAGE[index].off
+                                            }
+                                            style={{
+                                                width: 13,
+                                                height: 20,
+                                                marginLeft: 8,
+                                            }}
+                                        />
+                                    </View>
+                                </Option>
+                            </View>
+                        ))}
+                    </Wrapper>
+                </Item>
+            ) : null}
+
+            <Item>
+                <ItemTitle
+                    title={`${
+                        vehicleType === 1 ? 3 : 2
+                    }. 작업의 높이는 어떻게 되나요?`}
+                />
+                {direction !== 3 ? (
+                    <Wrapper>
+                        <SelectBox
+                            placeholder="층 수 선택"
+                            data={FLOOR}
+                            onSelect={(index) => setFloor(index + 2)}
+                        />
+                        {/* 양사일 경우 UI 변경 */}
+                    </Wrapper>
+                ) : (
+                    <Wrapper>
+                        <View style={{ marginBottom: 20 }}>
+                            <Row>
+                                <View
+                                    style={{
+                                        width: "25%",
+                                        flexDirection: "row",
+                                        alignItems: "center",
+                                        justifyContent: "space-between",
+                                        borderBottomWidth: 2,
+                                        borderBottomColor:
+                                            color["input-border"],
+                                        marginTop: 2,
+                                    }}
+                                >
+                                    <RegularText
                                         style={{
-                                            width: 13,
-                                            height: 20,
-                                            marginLeft: 8,
+                                            width: "90%",
+                                            fontSize: 19,
+                                            paddingTop: 8,
+                                            paddingBottom: 16,
+                                            color: color["page-black-text"],
                                         }}
-                                    />
+                                    >
+                                        내림
+                                    </RegularText>
                                 </View>
-                            </Option>
+                                <SelectBox
+                                    width="71%"
+                                    placeholder="층 수 선택"
+                                    data={FLOOR}
+                                    onSelect={(index) =>
+                                        setDownFloor(index + 2)
+                                    }
+                                />
+                            </Row>
                         </View>
-                    ))}
-                </Wrapper>
+                        <Row>
+                            <View
+                                style={{
+                                    width: "25%",
+                                    flexDirection: "row",
+                                    alignItems: "center",
+                                    justifyContent: "space-between",
+                                    borderBottomWidth: 2,
+                                    borderBottomColor: color["input-border"],
+                                    marginTop: 2,
+                                }}
+                            >
+                                <RegularText
+                                    style={{
+                                        width: "90%",
+                                        fontSize: 19,
+                                        paddingTop: 8,
+                                        paddingBottom: 16,
+                                        color: color["page-black-text"],
+                                    }}
+                                >
+                                    올림
+                                </RegularText>
+                            </View>
+                            <SelectBox
+                                width="71%"
+                                placeholder="층 수 선택"
+                                data={FLOOR}
+                                onSelect={(index) => setUpFloor(index + 2)}
+                            />
+                        </Row>
+                    </Wrapper>
+                )}
             </Item>
-            <Item>
-                <ItemTitle title="3. 작업의 높이는 어떻게 되나요?" />
-                <Wrapper>
-                    <SelectBox
-                        placeholder="층 수 선택"
-                        data={FLOOR}
-                        onSelect={(index) => setFloor(index + 2)}
-                    />
-                    {/* 양사일 경우 UI 변경 */}
-                </Wrapper>
-            </Item>
-            <Item>
-                <ItemTitle title="4. 작업의 물량 혹은 시간은 어떻게 되나요?" />
-                <Wrapper>
-                    <Row>
-                        <SelectBox
-                            width="25%"
-                            placeholder="선택"
-                            data={Object.keys(VOLUME)}
-                            onSelect={(index) =>
-                                setVolume(Object.keys(VOLUME)[index])
-                            }
-                        />
-                        <SelectBox
-                            width="71%"
-                            placeholder={
-                                volume.length > 0
-                                    ? `${volume} 선택`
-                                    : "물량 또는 시간을 선택하세요."
-                            }
-                            data={volume.length > 0 ? VOLUME[volume] : []}
-                            onSelect={(index) =>
-                                volume === "물량"
-                                    ? setQuantity(index + 1)
-                                    : setTime(index + 1)
-                            }
-                        />
-                    </Row>
-                </Wrapper>
-            </Item>
+
+            {vehicleType === 1 ? (
+                <Item bottomSpace="40">
+                    <ItemTitle title="4. 작업의 물량 혹은 시간은 어떻게 되나요?" />
+                    <Wrapper>
+                        <Row>
+                            <SelectBox
+                                width="25%"
+                                placeholder="선택"
+                                data={Object.keys(VOLUME)}
+                                onSelect={(index) =>
+                                    setVolume(Object.keys(VOLUME)[index])
+                                }
+                            />
+                            <SelectBox
+                                width="71%"
+                                placeholder={
+                                    volume.length > 0
+                                        ? `${volume} 선택`
+                                        : "물량 또는 시간을 선택하세요."
+                                }
+                                data={volume.length > 0 ? VOLUME[volume] : []}
+                                onSelect={(index) =>
+                                    volume === "물량"
+                                        ? setQuantity(index + 1)
+                                        : setTime(index + 1)
+                                }
+                            />
+                        </Row>
+                    </Wrapper>
+                </Item>
+            ) : (
+                <Item>
+                    <ItemTitle title="3. 작업 시간은 어느정도 예상하시나요?" />
+                    <Wrapper>
+                        <Row>
+                            <SelectBox
+                                placeholder="시간 선택"
+                                data={VOLUME["시간"]}
+                                onSelect={(index) => setTime(index + 1)}
+                            />
+                        </Row>
+                    </Wrapper>
+                </Item>
+            )}
+
+            <PopupWithButtons
+                visible={isPopupShown}
+                onTouchOutside={cancelLastOrder}
+                onClick={getLastOrder}
+            >
+                <RegularText
+                    style={{
+                        fontSize: 20,
+                        textAlign: "center",
+                        lineHeight: 30,
+                        paddingTop: 15,
+                        paddingLeft: 20,
+                        paddingRight: 20,
+                        paddingBottom: 25,
+                    }}
+                >
+                    지난 번에 진행했던{"\n"}내용을 불러옵니다.
+                </RegularText>
+            </PopupWithButtons>
         </Layout>
     );
 }

@@ -24,7 +24,7 @@ import SubTitleText from "../../component/text/SubTitleText";
 import SubmitButton from "../../component/button/SubmitButton";
 import KakaoButton, {
     ButtonContainer,
-} from "../../component/button/KakaoButton";
+} from "../../component/button/KakaoButton_";
 import axios from "axios";
 import { SERVER } from "../../constant";
 import { VALID } from "../../constant";

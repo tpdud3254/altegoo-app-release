@@ -5,6 +5,7 @@ import { ScrollView, TouchableWithoutFeedback } from "react-native";
 import useWindowDimensions from "react-native/Libraries/Utilities/useWindowDimensions";
 import RegistButton from "../button/RegistButton";
 import MediumText from "../text/MediumText";
+import KakaoButton from "../button/KakaoButton";
 
 export const LAYOUT_PADDING_X = 16;
 const Container = styled.View`
@@ -30,6 +31,7 @@ export default function Layout({
     children,
     headerShown = true,
     registBtnShown = false,
+    kakaoBtnShown = false,
     bottomButtonProps,
 }) {
     const { height } = useWindowDimensions();
@@ -40,6 +42,7 @@ export default function Layout({
                     <Wrapper windowHeight={height}>{children}</Wrapper>
                 </TouchableWithoutFeedback>
             </ScrollView>
+            {kakaoBtnShown ? <KakaoButton /> : null}
             {registBtnShown ? <RegistButton /> : null}
             {bottomButtonProps ? (
                 <BottomButton

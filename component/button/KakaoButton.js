@@ -1,37 +1,41 @@
 import React from "react";
-import { Image } from "react-native";
+import { Image, View } from "react-native";
 import styled from "styled-components/native";
-import { color } from "../../styles";
+import useWindowDimensions from "react-native/Libraries/Utilities/useWindowDimensions";
+import { useNavigation } from "@react-navigation/native";
 
 export const ButtonContainer = styled.View`
     flex-direction: row;
     align-items: center;
     justify-content: space-between;
+    z-index: 100;
 `;
-const KaKaoButton = styled.TouchableOpacity`
-    width: 18%;
-    height: 55px;
-    background-color: ${color.btnDefault};
-    border-radius: 5px;
-    justify-content: center;
+
+const Container = styled.TouchableOpacity`
+    position: absolute;
+    bottom: 60px;
+    right: 0px;
 `;
 
 function KakaoButton() {
+    const { height } = useWindowDimensions();
+    const navigation = useNavigation();
     const goToKakaoChat = () => {
-        //TODO: 카카오톡 챗 추가
+        console.log("kakao");
     };
 
     return (
-        <KaKaoButton onPress={goToKakaoChat}>
-            <Image
-                style={{
-                    resizeMode: "contain",
-                    width: "100%",
-                    height: 45,
-                }}
-                source={require(`../../assets/images/kakao-logo.png`)}
-            />
-        </KaKaoButton>
+        <View style={{ height: height, position: "absolute", width: "100%" }}>
+            <Container onPress={goToKakaoChat} windowHeight={height}>
+                <Image
+                    style={{
+                        resizeMode: "contain",
+                        width: 170,
+                    }}
+                    source={require(`../../assets/images/icons/btn_kakao_help.png`)}
+                />
+            </Container>
+        </View>
     );
 }
 

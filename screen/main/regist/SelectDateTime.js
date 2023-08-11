@@ -8,7 +8,7 @@ import MainLayout from "../../../component/layout/MainLayout";
 import styled from "styled-components/native";
 import KakaoButton, {
     ButtonContainer,
-} from "../../../component/button/KakaoButton";
+} from "../../../component/button/KakaoButton_";
 import PlainButton from "../../../component/button/PlainButton";
 import { useForm } from "react-hook-form";
 import { Toast } from "react-native-toast-message/lib/src/Toast";

@@ -2,7 +2,7 @@ import React, { useContext, useEffect, useState } from "react";
 import styled from "styled-components/native";
 import KakaoButton, {
     ButtonContainer,
-} from "../../../component/button/KakaoButton";
+} from "../../../component/button/KakaoButton_";
 import PlainButton from "../../../component/button/PlainButton";
 import MainLayout from "../../../component/layout/MainLayout";
 import MediumText from "../../../component/text/MediumText";
