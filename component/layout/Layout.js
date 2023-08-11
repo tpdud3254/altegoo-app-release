@@ -16,7 +16,7 @@ const Container = styled.View`
 const Wrapper = styled.View`
     flex: 1;
     padding: 10px ${LAYOUT_PADDING_X}px;
-    min-height: ${(props) => props.windowHeight - 120}px;
+    min-height: ${(props) => (props.scroll ? props.windowHeight - 120 : 0)}px;
 `;
 
 const BottomButton = styled.TouchableOpacity`
@@ -33,15 +33,20 @@ export default function Layout({
     registBtnShown = false,
     kakaoBtnShown = false,
     bottomButtonProps,
+    scroll = true,
 }) {
     const { height } = useWindowDimensions();
     return (
         <Container headerShown={headerShown}>
-            <ScrollView>
-                <TouchableWithoutFeedback>
-                    <Wrapper windowHeight={height}>{children}</Wrapper>
-                </TouchableWithoutFeedback>
-            </ScrollView>
+            {scroll ? (
+                <ScrollView>
+                    <TouchableWithoutFeedback>
+                        <Wrapper windowHeight={height}>{children}</Wrapper>
+                    </TouchableWithoutFeedback>
+                </ScrollView>
+            ) : (
+                <Wrapper windowHeight={height}>{children}</Wrapper>
+            )}
             {kakaoBtnShown ? <KakaoButton /> : null}
             {registBtnShown ? <RegistButton /> : null}
             {bottomButtonProps ? (

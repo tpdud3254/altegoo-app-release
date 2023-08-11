@@ -1,209 +1,67 @@
 import React, { useContext, useEffect, useState } from "react";
-import { TextInput, TouchableOpacity, View } from "react-native";
+import { Image, TouchableOpacity, View } from "react-native";
 import { Calendar, LocaleConfig } from "react-native-calendars";
 import { color } from "../../../styles";
 import MediumText from "../../../component/text/MediumText";
-import { MaterialCommunityIcons, AntDesign } from "@expo/vector-icons";
-import MainLayout from "../../../component/layout/MainLayout";
+import { AntDesign } from "@expo/vector-icons";
 import styled from "styled-components/native";
-import KakaoButton, {
-    ButtonContainer,
-} from "../../../component/button/KakaoButton_";
-import PlainButton from "../../../component/button/PlainButton";
 import { useForm } from "react-hook-form";
-import { Toast } from "react-native-toast-message/lib/src/Toast";
 import RegistContext from "../../../context/RegistContext";
-import { REGIST_NAV } from "../../../constant";
+import { CALENDAR_HAND, CALENDAR_LOCALES, REGIST_NAV } from "../../../constant";
+import Layout from "../../../component/layout/Layout";
+import { OptionScroll } from "../../../component/OptionScroll";
+import RegularText from "../../../component/text/RegularText";
+import { shadowProps } from "../../../component/Shadow";
+import Dialog, { DialogContent } from "react-native-popup-dialog";
+import RNDateTimePicker from "@react-native-community/datetimepicker";
 
-LocaleConfig.locales["fr"] = {
-    monthNames: [
-        "1월",
-        "2월",
-        "3월",
-        "4월",
-        "5월",
-        "6월",
-        "7월",
-        "8월",
-        "9월",
-        "10월",
-        "11월",
-        "12월",
-    ],
-    monthNamesShort: [
-        "1월",
-        "2월",
-        "3월",
-        "4월",
-        "5월",
-        "6월",
-        "7월",
-        "8월",
-        "9월",
-        "10월",
-        "11월",
-        "12월",
-    ],
-    dayNames: [
-        "일요일",
-        "월요일",
-        "화요일",
-        "수요일",
-        "목요일",
-        "금요일",
-        "토요일",
-    ],
-    dayNamesShort: ["일", "월", "화", "수", "목", "금", "토"],
-    today: "Aujourd'hui",
-};
+LocaleConfig.locales["fr"] = CALENDAR_LOCALES;
 LocaleConfig.defaultLocale = "fr";
 
-const handArr = [
-    [
-        "2023-01-01",
-        "2023-01-10",
-        "2023-01-11",
-        "2023-01-20",
-        "2023-01-21",
-        "2023-01-30",
-        "2023-01-31",
-    ],
-    ["2023-02-09", "2023-02-10", "2023-02-19", "2023-02-28"],
-    [
-        "2023-03-01",
-        "2023-03-10",
-        "2023-03-11",
-        "2023-03-20",
-        "2023-03-21",
-        "2023-03-30",
-        "2023-03-31",
-    ],
-    ["2023-04-09", "2023-04-10", "2023-04-19", "2023-04-28", "2023-04-29"],
-    [
-        "2023-05-08",
-        "2023-05-09",
-        "2023-05-18",
-        "2023-05-19",
-        "2023-05-28",
-        "2023-05-29",
-    ],
-    ["2023-06-07", "2023-06-08", "2023-06-17", "2023-06-26", "2023-06-27"],
-    [
-        "2023-07-06",
-        "2023-07-07",
-        "2023-07-16",
-        "2023-07-17",
-        "2023-07-26",
-        "2023-07-27",
-    ],
-    ["2023-08-05", "2023-08-06", "2023-08-15", "2023-08-24", "2023-08-25"],
-    [
-        "2023-09-03",
-        "2023-09-04",
-        "2023-09-13",
-        "2023-09-14",
-        "2023-09-23",
-        "2023-09-24",
-    ],
-    [
-        "2023-10-03",
-        "2023-10-04",
-        "2023-10-13",
-        "2023-10-14",
-        "2023-10-23",
-        "2023-10-24",
-    ],
-    ["2023-11-02", "2023-11-03", "2023-11-12", "2023-11-21", "2023-11-22"],
-    [
-        "2023-12-01",
-        "2023-12-02",
-        "2023-12-11",
-        "2023-12-12",
-        "2023-12-21",
-        "2023-12-22",
-        "2023-12-31",
-    ],
-];
-
-const Container = styled.KeyboardAvoidingView`
-    flex: 1;
-`;
-
-const SelectDate = styled.View`
+const SelectDateContainer = styled.View`
     background-color: white;
     border-radius: 10px;
-    padding: 10px;
-`;
-const HelpContainer = styled.View`
-    flex-direction: row;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 5px;
-`;
-
-const HelpWrapper = styled.View`
-    flex-direction: row;
 `;
 
 const Notice = styled.View`
     flex-direction: row;
     align-items: center;
-`;
-const SelectTime = styled(SelectDate)`
-    margin-top: 10px;
+    justify-content: flex-end;
+    margin-bottom: 10px;
 `;
 
-const SelectTimeWrapper = styled.View`
-    flex-direction: row;
+const Item = styled.View`
+    margin-bottom: 35px;
+`;
+const Wrapper = styled.View``;
+
+const DialogContainer = styled.View`
+    width: 90%;
     align-items: center;
-    margin-top: 5px;
+    justify-content: center;
+    border-radius: 20px;
+    padding-top: 30px;
+    padding-bottom: 30px;
+    background-color: white;
+    max-height: 500px;
 `;
-const Ampm = styled.View`
-    flex-direction: row;
-`;
-const Am = styled.TouchableOpacity`
-    border-left-width: 1px;
-    border-left-color: #777777;
-    border-top-width: 1px;
-    border-top-color: #777777;
-    border-bottom-width: 1px;
-    border-bottom-color: #777777;
-    border-right-width: 1px;
-    border-right-color: #777777;
-    padding: 5px 10px 5px 13px;
-    border-top-left-radius: 20px;
-    border-bottom-left-radius: 20px;
-    background-color: ${(props) => (props.selected ? "aliceblue" : "white")};
-`;
-const Pm = styled.TouchableOpacity`
-    border-top-width: 1px;
-    border-top-color: #777777;
-    border-bottom-width: 1px;
-    border-bottom-color: #777777;
-    border-right-width: 1px;
-    border-right-color: #777777;
-    padding: 5px 13px 5px 10px;
-    border-top-right-radius: 20px;
-    border-bottom-right-radius: 20px;
-    background-color: ${(props) => (props.selected ? "aliceblue" : "white")};
-`;
-const InputTime = styled.View`
-    flex-direction: row;
-    align-items: center;
-`;
-const Input = styled.TextInput`
-    border: 1px solid #777;
-    margin-left: 13px;
-    width: 55px;
-    padding: 3px 3px;
-    margin-right: 5px;
-    font-size: 20px;
-`;
+
+const optionData = [
+    "사다리차",
+    "내림",
+    "10층",
+    "예상 운임 150,000AP",
+    "예상 운임 150,000AP",
+    "예상 운임 150,000AP",
+];
 function SelectDateTime({ navigation }) {
     const [selectedDay, setSelectedDay] = useState("");
     const [ampm, setAmpm] = useState(null);
     const { setValue, register, handleSubmit, getValues } = useForm();
     const { registInfo, setRegistInfo } = useContext(RegistContext);
+
+    const [popupShown, setPopupShown] = useState(false);
+    const [selectionType, setSelectionType] = useState("");
 
     console.log(registInfo);
 
@@ -235,6 +93,16 @@ function SelectDateTime({ navigation }) {
         // }
     }, []);
 
+    const showPopup = (option) => {
+        setPopupShown(true);
+        setSelectionType(option);
+    };
+
+    const hidePopup = () => {
+        setPopupShown(false);
+        setSelectionType("");
+    };
+
     const getMonth = (date) => {
         return date.getMonth() + 1 < 10
             ? "0" + (date.getMonth() + 1)
@@ -253,62 +121,66 @@ function SelectDateTime({ navigation }) {
         }`;
     };
     const isHandDay = (dateString, month) =>
-        handArr[month - 1].includes(dateString);
+        CALENDAR_HAND[month - 1].includes(dateString);
 
     const isSelectedDay = (dataString) => selectedDay === dataString;
 
+    const onSelectDate = (dateString) => {
+        setSelectedDay(dateString);
+        hidePopup();
+    };
     const onNextStep = ({ hour, min }) => {
-        const selectHour = parseInt(hour);
-        const selectMin = parseInt(min);
+        // const selectHour = parseInt(hour);
+        // const selectMin = parseInt(min);
 
-        console.log(ampm, selectHour, selectMin);
+        // console.log(ampm, selectHour, selectMin);
 
-        if (!selectedDay || selectedDay === "") {
-            Toast.show({
-                type: "errorToast",
-                props: "작업 날짜를 선택해주세요.",
-            });
-            return;
-        }
+        // if (!selectedDay || selectedDay === "") {
+        //     Toast.show({
+        //         type: "errorToast",
+        //         props: "작업 날짜를 선택해주세요.",
+        //     });
+        //     return;
+        // }
 
-        if (
-            !ampm ||
-            (!selectHour && selectHour !== 0) ||
-            (!selectMin && selectMin !== 0)
-        ) {
-            Toast.show({
-                type: "errorToast",
-                props: "작업 시간을 입력해주세요.",
-            });
-            return;
-        }
+        // if (
+        //     !ampm ||
+        //     (!selectHour && selectHour !== 0) ||
+        //     (!selectMin && selectMin !== 0)
+        // ) {
+        //     Toast.show({
+        //         type: "errorToast",
+        //         props: "작업 시간을 입력해주세요.",
+        //     });
+        //     return;
+        // }
 
-        if (
-            selectHour < 1 ||
-            selectHour > 12 ||
-            selectMin < 0 ||
-            selectMin > 59
-        ) {
-            Toast.show({
-                type: "errorToast",
-                props: "유효한 시간을 입력해주세요.",
-            });
-            return;
-        }
+        // if (
+        //     selectHour < 1 ||
+        //     selectHour > 12 ||
+        //     selectMin < 0 ||
+        //     selectMin > 59
+        // ) {
+        //     Toast.show({
+        //         type: "errorToast",
+        //         props: "유효한 시간을 입력해주세요.",
+        //     });
+        //     return;
+        // }
 
-        const selectDateTime = new Date(selectedDay);
-        const hourResult =
-            ampm === "am"
-                ? selectHour === 12
-                    ? 0
-                    : selectHour
-                : selectHour !== 12
-                ? selectHour + 12
-                : selectHour;
+        // const selectDateTime = new Date(selectedDay);
+        // const hourResult =
+        //     ampm === "am"
+        //         ? selectHour === 12
+        //             ? 0
+        //             : selectHour
+        //         : selectHour !== 12
+        //         ? selectHour + 12
+        //         : selectHour;
 
-        selectDateTime.setHours(hourResult, selectMin);
+        // selectDateTime.setHours(hourResult, selectMin);
 
-        setRegistInfo({ dateTime: selectDateTime, ...registInfo });
+        // setRegistInfo({ dateTime: selectDateTime, ...registInfo });
         navigation.navigate(REGIST_NAV[2]);
     };
     const LeftArrow = () => (
@@ -319,159 +191,224 @@ function SelectDateTime({ navigation }) {
         <AntDesign name="rightcircleo" size={28} color="black" />
     );
 
-    const Help = ({ number, text }) => (
-        <HelpWrapper>
-            <MaterialCommunityIcons
-                name={`numeric-${number}-circle-outline`}
-                size={30}
-                color="#777777"
-            />
-            <MediumText style={{ marginLeft: 5, color: "#777777" }}>
-                {text}
-            </MediumText>
-        </HelpWrapper>
-    );
+    const ItemTitle = ({ title }) => {
+        return (
+            <RegularText style={{ fontSize: 20, marginBottom: 15 }}>
+                {title}
+            </RegularText>
+        );
+    };
+
+    const SelectButton = ({ option }) => {
+        return (
+            <TouchableOpacity
+                onPress={() => showPopup(option)}
+                style={{
+                    width: "100%",
+                    flexDirection: "row",
+                    alignItems: "center",
+                    justifyContent: "space-between",
+                    borderBottomWidth: 2,
+                    borderBottomColor: color["input-border"],
+                    marginTop: 2,
+                }}
+            >
+                <RegularText
+                    style={{
+                        width: "90%",
+                        fontSize: 19,
+                        paddingTop: 8,
+                        paddingBottom: 16,
+                        color:
+                            option === "date"
+                                ? selectedDay.length > 0
+                                    ? color["page-black-text"]
+                                    : color["page-lightgrey-text"]
+                                : selectedDay.length > 0
+                                ? color["page-black-text"]
+                                : color["page-lightgrey-text"],
+                    }}
+                >
+                    {option === "date"
+                        ? selectedDay.length > 0
+                            ? selectedDay
+                            : "날짜 선택"
+                        : null}
+                    {option === "time"
+                        ? selectedDay.length > 0
+                            ? selectedDay
+                            : "시간 선택"
+                        : null}
+                </RegularText>
+                <View
+                    style={{
+                        width: "10%",
+                        alignItems: "flex-end",
+                        paddingTop: 8,
+                        paddingRight: 2,
+                        paddingBottom: 16,
+                    }}
+                >
+                    <Image
+                        source={require(`../../../assets/images/icons/allow_down.png`)}
+                        resizeMode="contain"
+                        style={{
+                            width: 25,
+                            height: 25,
+                        }}
+                    />
+                </View>
+            </TouchableOpacity>
+        );
+    };
+
+    const SelectDate = () => {
+        return (
+            <SelectDateContainer>
+                <Notice>
+                    <View
+                        style={{
+                            backgroundColor: color.sub.yellow + "44",
+                            borderRadius: 25,
+                            width: 30,
+                            height: 30,
+                            justifyContent: "center",
+                            alignItems: "center",
+                        }}
+                    />
+                    <AntDesign
+                        name="arrowright"
+                        size={20}
+                        color="#777777"
+                        style={{
+                            marginLeft: 5,
+                            marginRight: 5,
+                        }}
+                    />
+                    <MediumText style={{ color: "#777777" }}>
+                        손 없는 날
+                    </MediumText>
+                </Notice>
+                <Calendar
+                    style={{
+                        borderTopColor: "#eeeeee",
+                        borderTopWidth: 1,
+                    }}
+                    renderHeader={(date) => (
+                        <View>
+                            <MediumText>
+                                {date.getFullYear()}년 {getMonth(date)}월
+                            </MediumText>
+                        </View>
+                    )}
+                    renderArrow={(direction) =>
+                        direction === "left" ? <LeftArrow /> : <RightArrow />
+                    }
+                    dayComponent={({ date, state }) => (
+                        <TouchableOpacity
+                            style={{
+                                backgroundColor: isSelectedDay(date.dateString)
+                                    ? color.main
+                                    : isHandDay(date.dateString, date.month)
+                                    ? color.sub.yellow + "44"
+                                    : state === "today"
+                                    ? "aliceblue"
+                                    : "white",
+                                borderRadius: 25,
+                                width: 45,
+                                height: 45,
+                                justifyContent: "center",
+                                alignItems: "center",
+                            }}
+                            onPress={
+                                state === "disabled"
+                                    ? null
+                                    : () => onSelectDate(date.dateString)
+                            }
+                        >
+                            <MediumText
+                                style={{
+                                    color: isSelectedDay(date.dateString)
+                                        ? "white"
+                                        : state === "disabled"
+                                        ? "#cccccc"
+                                        : "black",
+                                    fontSize: 19,
+                                }}
+                            >
+                                {date.day < 10 ? "0" + date.day : date.day}
+                            </MediumText>
+                        </TouchableOpacity>
+                    )}
+                    theme={{
+                        textDayHeaderFontSize: 18,
+                        textDayHeaderFontFamily: "SpoqaHanSansNeo-Regular",
+                        textSectionTitleColor: "#777777",
+                    }}
+                    minDate={getMinDate()}
+                    monthFormat={"yyyy년 MM월"}
+                />
+            </SelectDateContainer>
+        );
+    };
 
     return (
-        <MainLayout>
-            <Container behavior="position" keyboardVerticalOffset={200}>
-                <SelectDate>
-                    <HelpContainer>
-                        <Help number="1" text="날짜 선택" />
-                        <Notice>
-                            <View
-                                style={{
-                                    backgroundColor: color.sub.yellow + "44",
-                                    borderRadius: 25,
-                                    width: 30,
-                                    height: 30,
-                                    justifyContent: "center",
-                                    alignItems: "center",
-                                }}
-                            />
-                            <AntDesign
-                                name="arrowright"
-                                size={20}
-                                color="#777777"
-                                style={{ marginLeft: 5, marginRight: 5 }}
-                            />
-                            <MediumText style={{ color: "#777777" }}>
-                                손 없는 날
-                            </MediumText>
-                        </Notice>
-                    </HelpContainer>
-                    <Calendar
-                        style={{
-                            borderTopColor: "#eeeeee",
-                            borderTopWidth: 1,
-                        }}
-                        renderHeader={(date) => (
-                            <View>
-                                <MediumText>
-                                    {date.getFullYear()}년 {getMonth(date)}월
-                                </MediumText>
-                            </View>
-                        )}
-                        renderArrow={(direction) =>
-                            direction === "left" ? (
-                                <LeftArrow />
-                            ) : (
-                                <RightArrow />
-                            )
-                        }
-                        dayComponent={({ date, state }) => (
-                            <TouchableOpacity
-                                style={{
-                                    backgroundColor: isSelectedDay(
-                                        date.dateString
-                                    )
-                                        ? color.main
-                                        : isHandDay(date.dateString, date.month)
-                                        ? color.sub.yellow + "44"
-                                        : state === "today"
-                                        ? "aliceblue"
-                                        : "white",
-                                    borderRadius: 25,
-                                    width: 45,
-                                    height: 45,
-                                    justifyContent: "center",
-                                    alignItems: "center",
-                                }}
-                                onPress={
-                                    state === "disabled"
-                                        ? null
-                                        : () => setSelectedDay(date.dateString)
-                                }
-                            >
-                                <MediumText
-                                    style={{
-                                        color: isSelectedDay(date.dateString)
-                                            ? "white"
-                                            : state === "disabled"
-                                            ? "#cccccc"
-                                            : "black",
-                                        fontSize: 19,
-                                    }}
-                                >
-                                    {date.day < 10 ? "0" + date.day : date.day}
-                                </MediumText>
-                            </TouchableOpacity>
-                        )}
-                        theme={{
-                            textDayHeaderFontSize: 18,
-                            textDayHeaderFontFamily: "NanumGothic_400Regular",
-                            textSectionTitleColor: "#777777",
-                        }}
-                        minDate={getMinDate()}
-                        monthFormat={"yyyy년 MM월"}
-                    />
-                </SelectDate>
-                <SelectTime>
-                    <Help number="2" text="시간 선택" />
-                    <SelectTimeWrapper>
-                        <Ampm>
-                            <Am
-                                onPress={() => setAmpm("am")}
-                                selected={ampm === "am"}
-                            >
-                                <MediumText>오전</MediumText>
-                            </Am>
-                            <Pm
-                                onPress={() => setAmpm("pm")}
-                                selected={ampm === "pm"}
-                            >
-                                <MediumText>오후</MediumText>
-                            </Pm>
-                        </Ampm>
-                        <InputTime>
-                            <Input
-                                keyboardType="number-pad"
-                                onChangeText={(text) => setValue("hour", text)}
-                                defaultValue={getValues("hour")}
-                            />
-
-                            <MediumText>시</MediumText>
-                            <Input
-                                keyboardType="number-pad"
-                                onChangeText={(text) => setValue("min", text)}
-                                defaultValue={() => {
-                                    getValues("min");
-                                }}
-                            />
-                            <MediumText>분</MediumText>
-                        </InputTime>
-                    </SelectTimeWrapper>
-                </SelectTime>
-            </Container>
-            <ButtonContainer>
-                <PlainButton
-                    text="다음단계"
-                    style={{ width: "80%" }}
-                    onPress={handleSubmit(onNextStep)}
+        <Layout
+            scroll={false}
+            kakaoBtnShown={true}
+            bottomButtonProps={{
+                onPress: onNextStep,
+                title: "다음으로",
+                // disabled: true,
+            }}
+        >
+            <OptionScroll data={optionData} />
+            <Item>
+                <ItemTitle title="1. 원하시는 날짜를 선택해주세요." />
+                <Wrapper>
+                    <SelectButton option="date" />
+                </Wrapper>
+            </Item>
+            <Item>
+                <ItemTitle title="2. 원하시는 시간을 선택해주세요." />
+                <Wrapper>
+                    <SelectButton option="time" />
+                </Wrapper>
+            </Item>
+            {popupShown && selectionType === "time" ? (
+                <RNDateTimePicker
+                    mode="time"
+                    value={new Date()}
+                    display="clock"
+                    onChange={(e) => {
+                        console.log(e);
+                        hidePopup();
+                    }}
                 />
-                <KakaoButton />
-            </ButtonContainer>
-        </MainLayout>
+            ) : (
+                <Dialog
+                    dialogStyle={{
+                        width: "100%",
+                        backgroundColor: "#ffffff00",
+                    }}
+                    visible={popupShown}
+                    onTouchOutside={hidePopup}
+                    overlayOpacity={0.5}
+                    overlayBackgroundColor="#00000044"
+                    onHardwareBackPress={hidePopup}
+                >
+                    <DialogContent
+                        style={{ width: "100%", alignItems: "center" }}
+                    >
+                        <DialogContainer style={shadowProps}>
+                            <MediumText>
+                                <SelectDate />
+                            </MediumText>
+                        </DialogContainer>
+                    </DialogContent>
+                </Dialog>
+            )}
+        </Layout>
     );
 }
 
