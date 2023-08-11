@@ -2,10 +2,10 @@ import { View } from "react-native";
 import { color } from "../../styles";
 import RegularText from "../text/RegularText";
 
-export const Box = ({ text }) => (
+export const Box = ({ width, text, textStyle }) => (
     <View
         style={{
-            width: "25%",
+            width: width ? width : "25%",
             flexDirection: "row",
             alignItems: "center",
             justifyContent: "space-between",
@@ -21,6 +21,7 @@ export const Box = ({ text }) => (
                 paddingTop: 8,
                 paddingBottom: 16,
                 color: color["page-black-text"],
+                ...textStyle,
             }}
         >
             {text}

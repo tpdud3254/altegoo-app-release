@@ -12,6 +12,12 @@ import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { color } from "../../../styles";
 import { Toast } from "react-native-toast-message/lib/src/Toast";
 import { REGIST_NAV } from "../../../constant";
+import Layout from "../../../component/layout/Layout";
+import { OptionScroll } from "../../../component/OptionScroll";
+import RegularText from "../../../component/text/RegularText";
+import TextInput from "../../../component/input/TextInput";
+import { Box } from "../../../component/box/Box";
+import { TouchableOpacity } from "react-native";
 
 const Container = styled.KeyboardAvoidingView`
     flex: 1;
@@ -44,6 +50,21 @@ const DetailAddress = styled.TextInput`
     font-weight: 300;
     margin-top: 8px;
 `;
+
+const Item = styled.View`
+    margin-bottom: 35px;
+`;
+const Wrapper = styled.View``;
+
+const optionData = [
+    "사다리차",
+    "내림",
+    "10층",
+    "예상 운임 150,000AP",
+    "예상 운임 150,000AP",
+    "예상 운임 150,000AP",
+];
+
 function SearchAddress({ route, navigation }) {
     const { registInfo, setRegistInfo } = useContext(RegistContext);
     const { setValue, register, handleSubmit } = useForm();
@@ -122,76 +143,76 @@ function SearchAddress({ route, navigation }) {
         }
     };
     const onNextStep = ({ detailAddress1, detailAddress2 }) => {
-        if (registInfo.upDown === "양사") {
-            if (
-                !route?.params?.selectAddress1 ||
-                route?.params?.selectAddress1 === "" ||
-                !detailAddress1 ||
-                detailAddress1 === "" ||
-                !route?.params?.selectAddress2 ||
-                route?.params?.selectAddress2 === "" ||
-                !detailAddress2 ||
-                detailAddress2 === ""
-            ) {
-                //TODO: 상세주소 없음 추가
-                Toast.show({
-                    type: "errorToast",
-                    props: "주소를 입력해주세요.",
-                });
-                return;
-            }
+        // if (registInfo.upDown === "양사") {
+        //     if (
+        //         !route?.params?.selectAddress1 ||
+        //         route?.params?.selectAddress1 === "" ||
+        //         !detailAddress1 ||
+        //         detailAddress1 === "" ||
+        //         !route?.params?.selectAddress2 ||
+        //         route?.params?.selectAddress2 === "" ||
+        //         !detailAddress2 ||
+        //         detailAddress2 === ""
+        //     ) {
+        //         //TODO: 상세주소 없음 추가
+        //         Toast.show({
+        //             type: "errorToast",
+        //             props: "주소를 입력해주세요.",
+        //         });
+        //         return;
+        //     }
 
-            const address1 =
-                route?.params?.selectAddress1?.address + " " + detailAddress1;
+        //     const address1 =
+        //         route?.params?.selectAddress1?.address + " " + detailAddress1;
 
-            const address2 =
-                route?.params?.selectAddress2?.address + " " + detailAddress2;
+        //     const address2 =
+        //         route?.params?.selectAddress2?.address + " " + detailAddress2;
 
-            setRegistInfo({
-                address1: route?.params?.selectAddress1?.address,
-                simpleAddress1: `${route?.params?.selectAddress1?.sido} ${route?.params?.selectAddress1?.sigungu}`,
-                detailAddress1,
-                address2: route?.params?.selectAddress2?.address,
-                simpleAddress2: `${route?.params?.selectAddress2?.sido} ${route?.params?.selectAddress2?.sigungu}`,
-                detailAddress2,
-                region: getRegion(
-                    route?.params?.selectAddress1?.sido,
-                    route?.params?.selectAddress1?.sigungu
-                ),
-                ...registInfo,
-            });
-        } else {
-            if (
-                !route?.params?.selectAddress1 ||
-                route?.params?.selectAddress1 === "" ||
-                !detailAddress1 ||
-                detailAddress1 === ""
-            ) {
-                //TODO: 상세주소 없음 추가
-                Toast.show({
-                    type: "errorToast",
-                    props: "주소를 입력해주세요.",
-                });
-                return;
-            }
+        //     setRegistInfo({
+        //         address1: route?.params?.selectAddress1?.address,
+        //         simpleAddress1: `${route?.params?.selectAddress1?.sido} ${route?.params?.selectAddress1?.sigungu}`,
+        //         detailAddress1,
+        //         address2: route?.params?.selectAddress2?.address,
+        //         simpleAddress2: `${route?.params?.selectAddress2?.sido} ${route?.params?.selectAddress2?.sigungu}`,
+        //         detailAddress2,
+        //         region: getRegion(
+        //             route?.params?.selectAddress1?.sido,
+        //             route?.params?.selectAddress1?.sigungu
+        //         ),
+        //         ...registInfo,
+        //     });
+        // } else {
+        //     if (
+        //         !route?.params?.selectAddress1 ||
+        //         route?.params?.selectAddress1 === "" ||
+        //         !detailAddress1 ||
+        //         detailAddress1 === ""
+        //     ) {
+        //         //TODO: 상세주소 없음 추가
+        //         Toast.show({
+        //             type: "errorToast",
+        //             props: "주소를 입력해주세요.",
+        //         });
+        //         return;
+        //     }
 
-            const address1 =
-                route?.params?.selectAddress1?.address + " " + detailAddress1;
+        //     const address1 =
+        //         route?.params?.selectAddress1?.address + " " + detailAddress1;
 
-            setRegistInfo({
-                address1: route?.params?.selectAddress1?.address,
-                simpleAddress1: `${route?.params?.selectAddress1?.sido} ${route?.params?.selectAddress1?.sigungu}`,
-                detailAddress1,
-                address2: null,
-                simpleAddress2: null,
-                detailAddress2: null,
-                region: getRegion(
-                    route?.params?.selectAddress1?.sido,
-                    route?.params?.selectAddress1?.sigungu
-                ),
-                ...registInfo,
-            });
-        }
+        //     setRegistInfo({
+        //         address1: route?.params?.selectAddress1?.address,
+        //         simpleAddress1: `${route?.params?.selectAddress1?.sido} ${route?.params?.selectAddress1?.sigungu}`,
+        //         detailAddress1,
+        //         address2: null,
+        //         simpleAddress2: null,
+        //         detailAddress2: null,
+        //         region: getRegion(
+        //             route?.params?.selectAddress1?.sido,
+        //             route?.params?.selectAddress1?.sigungu
+        //         ),
+        //         ...registInfo,
+        //     });
+        // }
 
         navigation.navigate(REGIST_NAV[3]);
     };
@@ -208,10 +229,80 @@ function SearchAddress({ route, navigation }) {
             </MediumText>
         </HelpWrapper>
     );
+
+    const ItemTitle = ({ title }) => {
+        return (
+            <RegularText style={{ fontSize: 20, marginBottom: 15 }}>
+                {title}
+            </RegularText>
+        );
+    };
+
     // TODO: 경기도, 인천, 서울 이외에는 막기
     return (
-        <MainLayout>
-            <Container behavior="position" keyboardVerticalOffset={0}>
+        <Layout
+            scroll={false}
+            kakaoBtnShown={true}
+            bottomButtonProps={{
+                onPress: onNextStep,
+                title: "다음으로",
+                // disabled: true,
+            }}
+        >
+            <OptionScroll data={optionData} />
+            <Item>
+                <ItemTitle title="1. ‘내림’ 주소 입력하기" />
+                <Wrapper>
+                    <TouchableOpacity
+                        onPress={() => searchAddress(0)}
+                        style={{ marginBottom: 15 }}
+                    >
+                        <Box
+                            width="100%"
+                            text="내림 주소 입력"
+                            textStyle={{
+                                color: color["page-lightgrey-text"],
+                            }}
+                        />
+                    </TouchableOpacity>
+                    <TextInput
+                        placeholder="상세 주소 입력"
+                        returnKeyType="done"
+                        // keyboardType="number-pad"
+                        // value={watch("phone")}
+                        // onSubmitEditing={() => onNext("password")}
+                        // onReset={() => reset(setValue, "phone")}
+                        // onChangeText={(text) => setValue("phone", text)}
+                    />
+                </Wrapper>
+            </Item>
+            <Item>
+                <ItemTitle title="2. ‘올림’ 주소 입력하기" />
+                <Wrapper>
+                    <TouchableOpacity
+                        onPress={() => searchAddress(0)}
+                        style={{ marginBottom: 15 }}
+                    >
+                        <Box
+                            width="100%"
+                            text="올림 주소 입력"
+                            textStyle={{
+                                color: color["page-lightgrey-text"],
+                            }}
+                        />
+                    </TouchableOpacity>
+                    <TextInput
+                        placeholder="상세 주소 입력"
+                        returnKeyType="done"
+                        // keyboardType="number-pad"
+                        // value={watch("phone")}
+                        // onSubmitEditing={() => onNext("password")}
+                        // onReset={() => reset(setValue, "phone")}
+                        // onChangeText={(text) => setValue("phone", text)}
+                    />
+                </Wrapper>
+            </Item>
+            {/* <Container behavior="position" keyboardVerticalOffset={0}>
                 <InputAddress>
                     <Help
                         number="1"
@@ -229,9 +320,9 @@ function SearchAddress({ route, navigation }) {
                             ) : (
                                 <MediumText style={{ color: "#777777" }}>
                                     주소 입력하기
-                                    {/* {registInfo.address1
+                                     {registInfo.address1
                                         ? registInfo.address1
-                                        : "주소 입력하기"} */}
+                                        : "주소 입력하기"} 
                                 </MediumText>
                             )}
                         </Search>
@@ -266,9 +357,9 @@ function SearchAddress({ route, navigation }) {
                                 ) : (
                                     <MediumText style={{ color: "#777777" }}>
                                         주소 입력하기
-                                        {/* {registInfo.address2
+                                         {registInfo.address2
                                             ? registInfo.address2
-                                            : "주소 입력하기"} */}
+                                            : "주소 입력하기"} 
                                     </MediumText>
                                 )}
                             </Search>
@@ -282,16 +373,8 @@ function SearchAddress({ route, navigation }) {
                         </InputAddWrapper>
                     </InputOtherAddress>
                 ) : null}
-            </Container>
-            <ButtonContainer>
-                <PlainButton
-                    text="다음단계"
-                    style={{ width: "80%" }}
-                    onPress={handleSubmit(onNextStep)}
-                />
-                <KakaoButton />
-            </ButtonContainer>
-        </MainLayout>
+            </Container> */}
+        </Layout>
     );
 }
 
