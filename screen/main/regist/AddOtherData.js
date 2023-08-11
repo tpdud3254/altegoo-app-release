@@ -224,18 +224,18 @@ function AddOtherData({ navigation }) {
     };
 
     const onNextStep = ({ directPhone, memo }) => {
-        const point = price * 0.15;
+        // const point = price * 0.15;
 
-        setRegistInfo({
-            price,
-            point,
-            memo: memo || null,
-            directPhone: directPhone || info.phone,
-            emergency: emergencyOrder,
-            ...registInfo,
-        });
+        // setRegistInfo({
+        //     price,
+        //     point,
+        //     memo: memo || null,
+        //     directPhone: directPhone || info.phone,
+        //     emergency: emergencyOrder,
+        //     ...registInfo,
+        // });
 
-        navigation.navigate(REGIST_NAV[6]);
+        navigation.navigate(REGIST_NAV[4]);
     };
 
     // const Row = ({ title, content, view }) => (
@@ -325,7 +325,7 @@ function AddOtherData({ navigation }) {
                     />
                     <BoldText style={{ color: "#EB1D36" }}>긴급오더</BoldText>
                 </EmergencyButton>
-                <NormalButton>
+                <NormalButton onPress={onNextStep}>
                     <BoldText style={{ color: "white" }}>일반오더</BoldText>
                 </NormalButton>
             </BottomButtonContainer>
@@ -393,6 +393,7 @@ function AddOtherData({ navigation }) {
                             style={{
                                 fontSize: 18,
                                 fontFamily: "SpoqaHanSansNeo-Regular",
+                                color: color["page-black-text"],
                             }}
                             placeholder="현장 연락처를 입력해주세요 (선택)"
                             cursorColor={color["page-lightgrey-text"]}
@@ -471,6 +472,7 @@ function AddOtherData({ navigation }) {
                         style={{
                             fontSize: 18,
                             fontFamily: "SpoqaHanSansNeo-Regular",
+                            color: color["page-black-text"],
                         }}
                         placeholder="특이사항을 입력해주세요."
                         cursorColor={color["page-lightgrey-text"]}

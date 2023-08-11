@@ -14,6 +14,7 @@ import SelectWorkType from "../../screen/main/regist/RegistOrder";
 import { color } from "../../styles";
 import { Image } from "react-native";
 import RegistOrder from "../../screen/main/regist/RegistOrder";
+import CheckOrderPrice from "../../screen/main/regist/CheckOrderPrice";
 
 const Stack = createStackNavigator();
 
@@ -67,25 +68,25 @@ export default function RegistNavigator() {
             />
             <Stack.Screen
                 name={REGIST_NAV[4]}
-                component={SelectVolume}
-                options={{ headerTitle: "물량/시간 선택" }}
+                component={CheckOrderPrice}
+                options={{ headerTitle: "결제 금액 확인" }}
             />
             <Stack.Screen
                 name={REGIST_NAV[5]}
-                component={SelectFloor}
-                options={{ headerTitle: "층수 선택" }}
+                component={Payment}
+                options={{ headerShown: false }}
             />
             <Stack.Screen
                 name={REGIST_NAV[6]}
-                component={RegistDone}
-                options={{ headerTitle: "최종 등록" }}
+                component={RegistCompleted}
+                options={{ headerShown: false }}
             />
-            <Stack.Screen name={REGIST_NAV[7]} component={Payment} />
+            {/* <Stack.Screen name={REGIST_NAV[7]} component={Payment} />
             <Stack.Screen
                 name={REGIST_NAV[8]}
                 component={RegistCompleted}
                 options={{ headerShown: false }}
-            />
+            /> */}
             <Stack.Screen
                 name="Address"
                 component={Address}

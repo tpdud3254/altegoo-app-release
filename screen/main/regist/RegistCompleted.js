@@ -4,17 +4,20 @@ import DefaultLayout from "../../../component/layout/DefaultLayout";
 import { color } from "../../../styles";
 import Logo from "../../../component/logo/Logo";
 import MediumText from "../../../component/text/MediumText";
-import { BackHandler, View } from "react-native";
+import { BackHandler, Image, View, useWindowDimensions } from "react-native";
 import RegistContext from "../../../context/RegistContext";
 import { SERVER } from "../../../constant";
 import axios from "axios";
 import { getAsyncStorageToken } from "../../../utils";
 import { VALID } from "../../../constant";
+import Layout from "../../../component/layout/Layout";
+import BoldText from "../../../component/text/BoldText";
+import RegularText from "../../../component/text/RegularText";
 
 const Container = styled.View`
     flex: 1;
     justify-content: space-between;
-    margin-top: 20px;
+    margin-top: 80px;
     align-items: center;
 `;
 const Header = styled.View``;
@@ -25,7 +28,8 @@ const WelcomeImage = styled.Image`
     margin-top: -50px;
 `;
 const Bottom = styled.View`
-    margin-top: 55px;
+    /* margin-top: 55px; */
+    margin-bottom: 10px;
 `;
 
 const BottomButtonWrapper = styled.View`
@@ -35,8 +39,9 @@ const BottomButtonWrapper = styled.View`
 `;
 
 const Button = styled.TouchableOpacity`
-    background-color: ${(props) => (props.accent ? "#CD6A41" : "#EAF4FE")};
-    width: 24%;
+    background-color: ${(props) =>
+        props.accent ? color.main : color.btnDefault};
+    width: 34%;
     height: 60px;
     justify-content: center;
     align-items: center;
@@ -44,10 +49,11 @@ const Button = styled.TouchableOpacity`
 `;
 
 const AccentButton = styled(Button)`
-    width: 74%;
+    width: 64%;
 `;
 
 function RegistCompleted({ navigation, route }) {
+    const { width: windowWidth } = useWindowDimensions();
     const [userCount, setUserCount] = useState(0);
 
     useEffect(() => {
@@ -100,41 +106,64 @@ function RegistCompleted({ navigation, route }) {
     console.log(route?.params);
 
     return (
-        <DefaultLayout>
+        <Layout scroll={false}>
             <Container>
-                <Logo />
-                <Header>
-                    <MediumText
+                <View style={{ width: "100%", alignItems: "center" }}>
+                    <BoldText
                         style={{
-                            fontWeight: "600",
-                            fontSize: 30,
+                            fontSize: 26,
                             textAlign: "center",
-                            marginBottom: 30,
+                            marginBottom: 20,
                         }}
                     >
-                        작업 등록이{"\n"}완료되었습니다.
-                    </MediumText>
-
-                    <MediumText
+                        결제 및 작업 등록이{"\n"}완료되었습니다.
+                    </BoldText>
+                    <RegularText
+                        style={{
+                            fontSize: 20,
+                            color: color["page-bluegrey-text"],
+                            textAlign: "center",
+                            marginBottom: 20,
+                        }}
+                    >
+                        2023.05.25{"  "}16:42
+                    </RegularText>
+                    <Image
+                        source={require("../../../assets/images/regist_done.png")}
+                        style={{
+                            width: windowWidth - 80,
+                            height: 300,
+                            resizeMode: "contain",
+                        }}
+                    />
+                    <RegularText
                         style={{
                             fontSize: 22,
                             textAlign: "center",
+                            lineHeight: 35,
+                            marginTop: 20,
                         }}
                     >
-                        현재 등록되어 있는{"\n"}
-                        <MediumText
+                        현재 등록되어 있는{" "}
+                        <BoldText
                             style={{
                                 fontSize: 22,
-                                fontWeight: "400",
                                 color: color.main,
                             }}
                         >
                             {userCount}명
-                        </MediumText>
+                        </BoldText>
                         의 기사님께{"\n"}작업 알림이 전송되었습니다.
-                    </MediumText>
-                </Header>
-                {/* <HorizontalDivider color={"#dedede"} /> */}
+                    </RegularText>
+                    <View
+                        style={{
+                            height: 1.5,
+                            backgroundColor: color["image-area-background"],
+                            width: "90%",
+                            marginTop: 20,
+                        }}
+                    ></View>
+                </View>
 
                 <Bottom>
                     <BottomButtonWrapper>
@@ -144,22 +173,19 @@ function RegistCompleted({ navigation, route }) {
                         >
                             <MediumText
                                 style={{
-                                    fontWeight: "500",
                                     color: "white",
                                 }}
                             >
-                                작업등록하러 하기
+                                내 작업 확인하기
                             </MediumText>
                         </AccentButton>
                         <Button onPress={() => goToPage("Home")}>
-                            <MediumText style={{ fontWeight: "500" }}>
-                                홈
-                            </MediumText>
+                            <MediumText>홈으로</MediumText>
                         </Button>
                     </BottomButtonWrapper>
                 </Bottom>
             </Container>
-        </DefaultLayout>
+        </Layout>
     );
 }
 
