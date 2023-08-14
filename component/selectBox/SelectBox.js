@@ -8,7 +8,7 @@ import {
 import styled from "styled-components/native";
 import MediumText from "../text/MediumText";
 import { color } from "../../styles";
-import { Fragment, useState } from "react";
+import { Fragment, useEffect, useState } from "react";
 import RegularText from "../text/RegularText";
 import HorizontalDivider from "../divider/HorizontalDivider";
 import { shadowProps } from "../Shadow";
@@ -40,9 +40,21 @@ const Option = styled.TouchableOpacity`
     padding-bottom: 20px;
 `;
 
-function SelectBox({ title, titleProps, onSelect, data, width, placeholder }) {
+function SelectBox({
+    title,
+    titleProps,
+    onSelect,
+    data,
+    width,
+    placeholder,
+    selectedIndex,
+}) {
     const [showOptions, setShowOptions] = useState(false);
     const [selected, setSelected] = useState(-1);
+
+    useEffect(() => {
+        if (selectedIndex) setSelected(selectedIndex);
+    }, [selectedIndex]);
 
     const show = () => {
         setShowOptions(true);

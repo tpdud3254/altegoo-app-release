@@ -11,12 +11,13 @@ import SelectBox from "../../../component/selectBox/SelectBox";
 import UserContext from "../../../context/UserContext";
 import { PopupWithButtons } from "../../../component/PopupWithButtons";
 import { Box } from "../../../component/box/Box";
+import { CheckValidation } from "../../../utils";
 
 const LastOrder = styled.TouchableOpacity`
     flex-direction: row;
     align-items: center;
     justify-content: flex-end;
-    margin-bottom: 20;
+    margin-bottom: 20px;
 `;
 
 const Item = styled.View`
@@ -69,24 +70,34 @@ const DIRECTION_IMAGE = [
     },
 ];
 const FLOOR = [];
-const VOLUME = {
-    물량: ["1톤 이하 (단품)", "1톤 ~ 5톤", "5톤", "6톤", "7.5톤", "10톤"],
-    시간: ["1시간", "추가 1시간 당", "반나절", "하루"],
-};
+const VOLUME = ["물량", "시간"];
+const QUANTITY = [
+    "1톤 이하 (단품)",
+    "1톤 ~ 5톤",
+    "5톤",
+    "6톤",
+    "7.5톤",
+    "10톤",
+];
+const TIME = ["1시간", "추가 1시간 당", "반나절", "하루"];
+//TODO: db에서 가져오기
 
 function RegistOrder({ navigation }) {
-    const { info, setInfo } = useContext(UserContext);
-    const { registInfo, setRegistInfo } = useContext(RegistContext);
+    const { info } = useContext(UserContext);
+    const { setRegistInfo } = useContext(RegistContext);
+
     const [vehicleType, setVehicleType] = useState(1);
-    const [direction, setDirection] = useState(0);
+    const [direction, setDirection] = useState(1);
     const [floor, setFloor] = useState(0);
     const [downFloor, setDownFloor] = useState(0);
     const [upFloor, setUpFloor] = useState(0);
-    const [volume, setVolume] = useState("");
+    const [volume, setVolume] = useState(0);
     const [quantity, setQuantity] = useState(0);
     const [time, setTime] = useState(0);
 
-    const [price, setPrice] = useState(0);
+    const [validation, setValidation] = useState(false);
+
+    const [price, setPrice] = useState(0); //TODO: 수정
 
     const [isPopupShown, setIsPopupShown] = useState(false);
     const [lastOrder, setLastOrder] = useState(false);
@@ -96,6 +107,36 @@ function RegistOrder({ navigation }) {
             FLOOR.push(`${index}층`);
         }
     }, []);
+
+    useEffect(() => {
+        const check = {
+            vehicleType,
+            ...(vehicleType === 1 && {
+                direction,
+                ...((direction === 1 || direction === 2) && { floor }),
+                ...(direction === 3 && { downFloor, upFloor }),
+                volume,
+                ...(volume === 1 && { quantity }),
+                ...(volume === 2 && { time }),
+            }),
+            ...(vehicleType === 2 && { floor, time }),
+        };
+
+        if (CheckValidation(check)) {
+            setValidation(true);
+        } else {
+            setValidation(false);
+        }
+    }, [
+        vehicleType,
+        direction,
+        floor,
+        downFloor,
+        upFloor,
+        volume,
+        quantity,
+        time,
+    ]);
 
     useEffect(() => {
         if (lastOrder) {
@@ -110,28 +151,61 @@ function RegistOrder({ navigation }) {
 
     const getLastOrder = () => {
         setIsPopupShown(false);
-        console.log("get last order");
+        console.log("get last order / use Id : ", info.id);
     };
 
     const onNextStep = () => {
-        // if (cur !== 0) {
-        //     Toast.show({
-        //         type: "errorToast",
-        //         props: "모든 작업 유형 선택을 완료해주세요.",
-        //     });
-        //     return;
-        // }
+        const data = {
+            price,
+            vehicleType: VEHICLE[vehicleType - 1],
+            ...(vehicleType === 1 && {
+                direction: DIRECTION[direction],
+                ...((direction === 1 || direction === 2) && { floor }),
+                ...(direction === 3 && { downFloor, upFloor }),
+                volume: VOLUME[volume - 1],
+                ...(volume === 1 && { quantity: QUANTITY[quantity - 1] }),
+                ...(volume === 2 && { time: TIME[time - 1] }),
+            }),
+            ...(vehicleType === 2 && {
+                floor,
+                volume: VOLUME[1],
+                time: TIME[time - 1],
+            }),
+        };
 
-        // setRegistInfo({
-        //     vehicleType: vehicleType === 1 ? "사다리" : "스카이",
-        //     upDown:
-        //         upDown === "up" ? "올림" : upDown === "down" ? "내림" : "양사",
-        //     bothType: both,
-        // });
+        console.log(data);
+
+        setRegistInfo(data);
 
         navigation.navigate(REGIST_NAV[1]);
     };
 
+    const selectVehicleType = (index) => {
+        setDirection(1);
+        setFloor(0);
+        setDownFloor(0);
+        setUpFloor(0);
+        setVolume(0);
+        setQuantity(0);
+        setTime(0);
+
+        setVehicleType(index);
+    };
+
+    const selectDirection = (index) => {
+        const prev = direction;
+
+        if ((prev !== 3 && index === 3) || (prev === 3 && index !== 3)) {
+            console.log("dd");
+            setFloor(0);
+            setDownFloor(0);
+            setUpFloor(0);
+            setVolume(0);
+            setQuantity(0);
+            setTime(0);
+        }
+        setDirection(index);
+    };
     const Checkbox = ({ checked }) => {
         return (
             <Image
@@ -176,30 +250,13 @@ function RegistOrder({ navigation }) {
         );
     };
 
-    // const gopay = () => {
-    //     let curPoint = 0;
-    //     const data = {
-    //         application_id: PAYMENT_APP_ID,
-    //         price: price - curPoint,
-    //         order_name: VEHICLE[vehicleType - 1] + " 이용비 결제",
-    //         order_id: info.userId + "_" + Date.now(),
-    //         user: {
-    //             username: info.userName,
-    //             phone: info.phone,
-    //         },
-    //         curPoint,
-    //         pointId: 126,
-    //     };
-    //     navigation.navigate("Payment", { data });
-    // };
-
     return (
         <Layout
             kakaoBtnShown={true}
             bottomButtonProps={{
                 onPress: onNextStep,
                 title: `예상 운임 ${price}AP 확인`,
-                // disabled: true,
+                disabled: !validation,
             }}
         >
             <LastOrder onPress={() => setLastOrder((prev) => !prev)}>
@@ -215,7 +272,7 @@ function RegistOrder({ navigation }) {
                                 key={index}
                                 width="48%"
                                 selected={index + 1 === vehicleType}
-                                onPress={() => setVehicleType(index + 1)}
+                                onPress={() => selectVehicleType(index + 1)}
                             >
                                 <MediumText
                                     style={{
@@ -249,7 +306,9 @@ function RegistOrder({ navigation }) {
                                 >
                                     <Option
                                         selected={index + 1 === direction}
-                                        onPress={() => setDirection(index + 1)}
+                                        onPress={() =>
+                                            selectDirection(index + 1)
+                                        }
                                     >
                                         <View
                                             style={{
@@ -335,25 +394,37 @@ function RegistOrder({ navigation }) {
                                 <SelectBox
                                     width="25%"
                                     placeholder="선택"
-                                    data={Object.keys(VOLUME)}
-                                    onSelect={(index) =>
-                                        setVolume(Object.keys(VOLUME)[index])
-                                    }
+                                    data={VOLUME}
+                                    onSelect={(index) => setVolume(index + 1)}
+                                    selectedIndex={volume - 1}
                                 />
                                 <SelectBox
                                     width="71%"
                                     placeholder={
-                                        volume.length > 0
-                                            ? `${volume} 선택`
+                                        volume !== 0
+                                            ? `${VOLUME[volume - 1]} 선택`
                                             : "물량 또는 시간을 선택하세요."
                                     }
                                     data={
-                                        volume.length > 0 ? VOLUME[volume] : []
+                                        volume === 1
+                                            ? QUANTITY
+                                            : volume === 2
+                                            ? TIME
+                                            : []
                                     }
                                     onSelect={(index) =>
-                                        volume === "물량"
+                                        volume === 1
                                             ? setQuantity(index + 1)
-                                            : setTime(index + 1)
+                                            : volume === 2
+                                            ? setTime(index + 1)
+                                            : null
+                                    }
+                                    selectedIndex={
+                                        volume === 1
+                                            ? quantity - 1
+                                            : volume === 2
+                                            ? time - 1
+                                            : -1
                                     }
                                 />
                             </Row>
@@ -378,7 +449,7 @@ function RegistOrder({ navigation }) {
                             <Row>
                                 <SelectBox
                                     placeholder="시간 선택"
-                                    data={VOLUME["시간"]}
+                                    data={TIME}
                                     onSelect={(index) => setTime(index + 1)}
                                 />
                             </Row>

@@ -65,6 +65,22 @@ const CheckOrderPrice = ({ navigation }) => {
             </View>
         );
     };
+    // const gopay = () => {
+    //     let curPoint = 0;
+    //     const data = {
+    //         application_id: PAYMENT_APP_ID,
+    //         price: price - curPoint,
+    //         order_name: VEHICLE[vehicleType - 1] + " 이용비 결제",
+    //         order_id: info.userId + "_" + Date.now(),
+    //         user: {
+    //             username: info.userName,
+    //             phone: info.phone,
+    //         },
+    //         curPoint,
+    //         pointId: 126,
+    //     };
+    //     navigation.navigate("Payment", { data });
+    // };
     return (
         <Layout
             bottomButtonProps={{

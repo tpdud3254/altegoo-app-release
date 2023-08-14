@@ -26,11 +26,13 @@ function KakaoButton() {
 
     return (
         <View style={{ height: height, position: "absolute", width: "100%" }}>
-            <Container onPress={goToKakaoChat} windowHeight={height}>
+            <Container onPress={goToKakaoChat}>
                 <Image
                     style={{
                         resizeMode: "contain",
                         width: 170,
+                        height: 80,
+                        bottom: 80,
                     }}
                     source={require(`../../assets/images/icons/btn_kakao_help.png`)}
                 />
