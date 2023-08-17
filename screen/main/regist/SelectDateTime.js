@@ -14,6 +14,7 @@ import RegularText from "../../../component/text/RegularText";
 import { shadowProps } from "../../../component/Shadow";
 import Dialog, { DialogContent } from "react-native-popup-dialog";
 import RNDateTimePicker from "@react-native-community/datetimepicker";
+import { numberWithComma } from "../../../utils";
 
 LocaleConfig.locales["fr"] = CALENDAR_LOCALES;
 LocaleConfig.defaultLocale = "fr";
@@ -46,16 +47,10 @@ const DialogContainer = styled.View`
     max-height: 500px;
 `;
 
-const optionData = [
-    "사다리차",
-    "내림",
-    "10층",
-    "예상 운임 150,000AP",
-    "예상 운임 150,000AP",
-    "예상 운임 150,000AP",
-];
 function SelectDateTime({ navigation }) {
+    const [optionData, setOptionData] = useState([]);
     const [selectedDay, setSelectedDay] = useState("");
+    const [selectedTime, setSelectedTime] = useState(null);
     const [ampm, setAmpm] = useState(null);
     const { setValue, register, handleSubmit, getValues } = useForm();
     const { registInfo, setRegistInfo } = useContext(RegistContext);
@@ -63,12 +58,22 @@ function SelectDateTime({ navigation }) {
     const [popupShown, setPopupShown] = useState(false);
     const [selectionType, setSelectionType] = useState("");
 
-    console.log(registInfo);
-
     useEffect(() => {
+        console.log(registInfo);
+
         register("hour");
         register("min");
 
+        const data = [];
+
+        Object.keys(registInfo).map((value, index) => {
+            data.push(registInfo[value]);
+            if (value === "price")
+                data[index] =
+                    "예상 운임 " + numberWithComma(data[index]) + "AP";
+        });
+
+        setOptionData(data);
         // if (registInfo.dateTime) {
         //     const date = new Date(registInfo.dateTime);
         //     setSelectedDay(
@@ -129,7 +134,14 @@ function SelectDateTime({ navigation }) {
         setSelectedDay(dateString);
         hidePopup();
     };
+
+    const onSelectTime = (e) => {
+        console.log(e);
+        hidePopup();
+        setSelectedTime(e.nativeEvent.timestamp);
+    };
     const onNextStep = ({ hour, min }) => {
+        console.log(selectedDay);
         // const selectHour = parseInt(hour);
         // const selectMin = parseInt(min);
 
@@ -181,7 +193,7 @@ function SelectDateTime({ navigation }) {
         // selectDateTime.setHours(hourResult, selectMin);
 
         // setRegistInfo({ dateTime: selectDateTime, ...registInfo });
-        navigation.navigate(REGIST_NAV[2]);
+        // navigation.navigate(REGIST_NAV[2]);
     };
     const LeftArrow = () => (
         <AntDesign name="leftcircleo" size={28} color="black" />
@@ -224,7 +236,7 @@ function SelectDateTime({ navigation }) {
                                 ? selectedDay.length > 0
                                     ? color["page-black-text"]
                                     : color["page-lightgrey-text"]
-                                : selectedDay.length > 0
+                                : selectedTime
                                 ? color["page-black-text"]
                                 : color["page-lightgrey-text"],
                     }}
@@ -235,8 +247,8 @@ function SelectDateTime({ navigation }) {
                             : "날짜 선택"
                         : null}
                     {option === "time"
-                        ? selectedDay.length > 0
-                            ? selectedDay
+                        ? selectedTime
+                            ? selectedTime
                             : "시간 선택"
                         : null}
                 </RegularText>
@@ -380,10 +392,7 @@ function SelectDateTime({ navigation }) {
                     mode="time"
                     value={new Date()}
                     display="clock"
-                    onChange={(e) => {
-                        console.log(e);
-                        hidePopup();
-                    }}
+                    onChange={onSelectTime}
                 />
             ) : (
                 <Dialog

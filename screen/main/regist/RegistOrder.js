@@ -3,7 +3,15 @@ import styled from "styled-components/native";
 import MediumText from "../../../component/text/MediumText";
 import { color } from "../../../styles";
 import RegistContext from "../../../context/RegistContext";
-import { REGIST_NAV } from "../../../constant";
+import {
+    DIRECTION,
+    FLOOR,
+    QUANTITY,
+    REGIST_NAV,
+    TIME,
+    VEHICLE,
+    VOLUME,
+} from "../../../constant";
 import Layout from "../../../component/layout/Layout";
 import { Image, View } from "react-native";
 import RegularText from "../../../component/text/RegularText";
@@ -53,8 +61,6 @@ const OptionTitle = styled.View`
     padding: 0px 20px;
 `;
 
-const VEHICLE = ["사다리차", "스카이차"];
-const DIRECTION = ["내림", "올림", "양사"];
 const DIRECTION_IMAGE = [
     {
         on: require(`../../../assets/images/icons/icon_lift_down_ON.png`),
@@ -68,19 +74,7 @@ const DIRECTION_IMAGE = [
         on: require(`../../../assets/images/icons/icon_lift_both_ON.png`),
         off: require(`../../../assets/images/icons/icon_lift_both_OFF.png`),
     },
-];
-const FLOOR = [];
-const VOLUME = ["물량", "시간"];
-const QUANTITY = [
-    "1톤 이하 (단품)",
-    "1톤 ~ 5톤",
-    "5톤",
-    "6톤",
-    "7.5톤",
-    "10톤",
-];
-const TIME = ["1시간", "추가 1시간 당", "반나절", "하루"];
-//TODO: db에서 가져오기
+]; //TODO: db에서 가져오기
 
 function RegistOrder({ navigation }) {
     const { info } = useContext(UserContext);
@@ -160,20 +154,23 @@ function RegistOrder({ navigation }) {
             vehicleType: VEHICLE[vehicleType - 1],
             ...(vehicleType === 1 && {
                 direction: DIRECTION[direction],
-                ...((direction === 1 || direction === 2) && { floor }),
-                ...(direction === 3 && { downFloor, upFloor }),
+                ...((direction === 1 || direction === 2) && {
+                    floor: floor + "층",
+                }),
+                ...(direction === 3 && {
+                    downFloor: downFloor + "층",
+                    upFloor: upFloor + "층",
+                }),
                 volume: VOLUME[volume - 1],
                 ...(volume === 1 && { quantity: QUANTITY[quantity - 1] }),
                 ...(volume === 2 && { time: TIME[time - 1] }),
             }),
             ...(vehicleType === 2 && {
-                floor,
+                floor: floor + "층",
                 volume: VOLUME[1],
                 time: TIME[time - 1],
             }),
         };
-
-        console.log(data);
 
         setRegistInfo(data);
 
