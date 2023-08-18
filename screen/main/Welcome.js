@@ -129,8 +129,8 @@ function Welcome() {
                                 textAlign: "center",
                             }}
                         >
-                            최초 1회 정회원 가입 없이{"/n"}작업 진행이
-                            가능합니다.{"/n"}지금 바로 작업 요청을 확인해
+                            최초 1회 정회원 가입 없이{"\n"}작업 진행이
+                            가능합니다.{"\n"}지금 바로 작업 요청을 확인해
                             보세요,
                         </RegularText>
                     ) : info.userTypeId === 3 ? (

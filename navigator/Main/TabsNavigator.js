@@ -75,9 +75,65 @@ export default function TabsNavigator({ route }) {
         >
             {
                 //TODO: 나중에 userTYpe 수정
-                info.userType === DRIVER || info.userType === PERSON ? (
+                info.userType === DRIVER ||
+                info.userType === PERSON ||
+                info.userTypeId === 2 ? (
                     <>
                         <Tabs.Screen
+                            name="Home"
+                            options={{
+                                tabBarIcon: ({ focused }) => (
+                                    <TabIcon
+                                        tabName="home"
+                                        focused={focused}
+                                        iconText="홈"
+                                    />
+                                ),
+                            }}
+                            component={Home}
+                        />
+                        <Tabs.Screen
+                            name="realTimeWork"
+                            options={{
+                                tabBarIcon: ({ focused }) => (
+                                    <TabIcon
+                                        tabName="realTime"
+                                        focused={focused}
+                                        iconText="실시간 오더"
+                                    />
+                                ),
+                            }}
+                            component={Home}
+                        />
+                        <Tabs.Screen
+                            name="OrderList"
+                            options={{
+                                headerShown: true,
+                                tabBarIcon: ({ focused }) => (
+                                    <TabIcon
+                                        tabName="list"
+                                        focused={focused}
+                                        iconText="내 작업"
+                                    />
+                                ),
+                            }}
+                            component={OrderList}
+                        />
+                        <Tabs.Screen
+                            name="SettingNavigator"
+                            options={{
+                                headerShown: false,
+                                tabBarIcon: ({ focused }) => (
+                                    <TabIcon
+                                        tabName="setting"
+                                        focused={focused}
+                                        iconText="내 정보"
+                                    />
+                                ),
+                            }}
+                            component={SettingNavigator}
+                        />
+                        {/* <Tabs.Screen
                             name="Home"
                             options={{
                                 headerTitle: "요청 오더 목록",
@@ -92,8 +148,8 @@ export default function TabsNavigator({ route }) {
                             }}
                             component={Home}
                             initialParams={{ refresh: route?.params?.refresh }}
-                        />
-                        <Tabs.Screen
+                        /> */}
+                        {/* <Tabs.Screen
                             name="MyOrderList"
                             options={{
                                 headerTitle: "내 작업",
@@ -138,7 +194,7 @@ export default function TabsNavigator({ route }) {
                                 ),
                             }}
                             component={SettingNavigator}
-                        />
+                        /> */}
                     </>
                 ) : (
                     <>

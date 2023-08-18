@@ -10,7 +10,13 @@ import {
 } from "../../../utils";
 import HeaderLeft from "../../../component/HeaderLeft";
 import HeaderRight from "../../../component/HeaderRight";
-import { FlatList, Image, View, useWindowDimensions } from "react-native";
+import {
+    FlatList,
+    Image,
+    TouchableOpacity,
+    View,
+    useWindowDimensions,
+} from "react-native";
 import styled from "styled-components/native";
 import MediumText from "../../../component/text/MediumText";
 import { color } from "../../../styles";
@@ -22,6 +28,7 @@ import RightArrow from "../../../assets/images/icons/arrow_right_s.png";
 import { Order } from "../../../component/order/OrderList";
 import { Notification } from "../../../component/Notification";
 import LoginContext from "../../../context/LoginContext";
+import { Row } from "../../../component/Row";
 
 const Item = styled.View`
     width: 100%;
@@ -41,12 +48,18 @@ const PointButton = styled.TouchableOpacity`
     padding: 8px 13px;
     border-radius: 12px;
     margin-top: -20px;
+    margin-right: 10px;
 `;
 
+const ChargeButton = styled(PointButton)`
+    background-color: ${color.btnDefault};
+    border: 1px solid ${color["image-area-background"]};
+`;
 const Wrapper = styled.View`
     background-color: white;
     padding: 16px 16px;
     border-radius: 14px;
+    border: ${(props) => (props.border ? "1" : "0")}px solid ${color.blue};
 `;
 const Header = styled.View`
     flex-direction: row;
@@ -63,7 +76,7 @@ const Select = styled.TouchableOpacity`
     width: 110px;
 `;
 const Orders = styled.View`
-    margin-top: 25px;
+    margin-top: 30px;
 `;
 const NoOrder = styled.View`
     align-items: center;
@@ -312,32 +325,68 @@ function Home({ navigation }) {
                 >
                     안녕하세요! {info.name}님.
                 </BoldText>
-                <Notification />
+                <View style={{ flexDirection: "row" }}>
+                    {info.userTypeId === 2 ? (
+                        <TouchableOpacity>
+                            {/* TODO: 카카오톡으로 수정 */}
+                            <Image
+                                source={require("../../../assets/images/icons/icon_info2.png")}
+                                style={{
+                                    width: 30,
+                                    height: 30,
+                                    marginRight: 13,
+                                }}
+                            />
+                        </TouchableOpacity>
+                    ) : null}
+                    <Notification />
+                </View>
             </ItemRow>
             <Item>
-                <PointButton>
-                    <Image
-                        source={require("../../../assets/images/icons/icon_point.png")}
-                        style={{ width: 27, height: 27 }}
-                    />
-                    <BoldText
-                        style={{
-                            fontSize: 15,
-                            color: "white",
-                        }}
-                    >
-                        {" " + numberWithComma(point || 0)}
+                <Row>
+                    <PointButton>
+                        <Image
+                            source={require("../../../assets/images/icons/icon_point.png")}
+                            style={{ width: 27, height: 27 }}
+                        />
                         <BoldText
                             style={{
-                                fontSize: 12,
+                                fontSize: 15,
                                 color: "white",
                             }}
                         >
-                            {" "}
-                            AP
+                            {" " + numberWithComma(point || 0)}
+                            <BoldText
+                                style={{
+                                    fontSize: 12,
+                                    color: "white",
+                                }}
+                            >
+                                {" "}
+                                AP
+                            </BoldText>
                         </BoldText>
-                    </BoldText>
-                </PointButton>
+                    </PointButton>
+                    {info.userTypeId === 2 ? (
+                        <ChargeButton>
+                            <Image
+                                source={require("../../../assets/images/icons/icon_charge.png")}
+                                style={{
+                                    width: 27,
+                                    height: 27,
+                                    marginRight: 5,
+                                }}
+                            />
+                            <MediumText
+                                style={{
+                                    fontSize: 15,
+                                }}
+                            >
+                                충전
+                            </MediumText>
+                        </ChargeButton>
+                    ) : null}
+                </Row>
             </Item>
             <Item>
                 <FlatList
@@ -382,6 +431,27 @@ function Home({ navigation }) {
                     </Header>
                 </Wrapper>
             </Item>
+            {info.userTypeId === 2 ? (
+                <Item>
+                    <Wrapper style={shadowProps} border={true}>
+                        <Header>
+                            <MediumText
+                                style={{
+                                    fontSize: 18,
+                                    marginTop: 5,
+                                }}
+                            >
+                                {false ? "예약된 작업" : "진행중 작업"}
+                            </MediumText>
+                        </Header>
+                        <Orders>
+                            <Order.Items>
+                                <Order.Item data={orderData[0]} />
+                            </Order.Items>
+                        </Orders>
+                    </Wrapper>
+                </Item>
+            ) : null}
             <Item>
                 <Wrapper style={shadowProps}>
                     <Header>
