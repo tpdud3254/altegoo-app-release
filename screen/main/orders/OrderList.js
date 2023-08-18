@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { Image } from "react-native";
+import { Image, View } from "react-native";
 import styled from "styled-components/native";
 import BoldText from "../../../component/text/BoldText";
 import RegularText from "../../../component/text/RegularText";
@@ -183,21 +183,65 @@ function OrderList({ navigation }) {
                         </RegularText>
                     </BoldText>
                 </HaederWrapper>
-                <HaederWrapper style={{ justifyContent: "center" }}>
-                    <Select>
-                        <MediumText
+                {false ? (
+                    <HaederWrapper style={{ justifyContent: "center" }}>
+                        <Select>
+                            <MediumText
+                                style={{
+                                    fontSize: 15,
+                                }}
+                            >
+                                전체 기간
+                            </MediumText>
+                            <Image
+                                source={require("../../../assets/images/icons/allow_down.png")}
+                                style={{ width: 21, height: 12 }}
+                            />
+                        </Select>
+                    </HaederWrapper>
+                ) : (
+                    <View
+                        style={{
+                            alignItems: "center",
+                        }}
+                    >
+                        <HaederWrapper
                             style={{
-                                fontSize: 15,
+                                justifyContent: "center",
                             }}
                         >
-                            전체 기간
-                        </MediumText>
-                        <Image
-                            source={require("../../../assets/images/icons/allow_down.png")}
-                            style={{ width: 21, height: 12 }}
-                        />
-                    </Select>
-                </HaederWrapper>
+                            <Image
+                                source={require("../../../assets/images/icons/btn_prev_s.png")}
+                                style={{
+                                    width: 25,
+                                    height: 25,
+                                    resizeMode: "contain",
+                                }}
+                            />
+                            <BoldText
+                                style={{
+                                    fontSize: 22,
+                                    paddingLeft: 12,
+                                    paddingRight: 12,
+                                }}
+                            >
+                                3주차
+                            </BoldText>
+                            <Image
+                                source={require("../../../assets/images/icons/btn_next_s.png")}
+                                style={{
+                                    width: 25,
+                                    height: 25,
+                                    resizeMode: "contain",
+                                }}
+                            />
+                        </HaederWrapper>
+                        <RegularText style={{ fontSize: 14, paddingTop: 4 }}>
+                            23년 5월
+                        </RegularText>
+                    </View>
+                )}
+
                 <HaederWrapper style={{ justifyContent: "flex-end" }}>
                     <Notification />
                 </HaederWrapper>
