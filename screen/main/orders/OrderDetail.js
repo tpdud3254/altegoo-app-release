@@ -76,7 +76,6 @@ const Box = styled.View`
     padding: 20px 15px;
     border: 1px ${color.main} solid;
     margin-top: 20px;
-    margin-bottom: 20px;
 `;
 
 const Row = styled.View`
@@ -118,6 +117,10 @@ const Point = styled.View`
     padding: 10px 20px;
     border-radius: 20px;
 `;
+
+const DriverTitle = styled.View`
+    align-items: center;
+`;
 const orderData = {
     acceptUser: 55,
     address: "",
@@ -157,10 +160,15 @@ const STEP = [
     { title: "오더요청", progress: 20 },
     { title: "예약완료", progress: 40 },
     { title: "작업시작", progress: 60 },
-    { title: "작업완료", progress: 80 },
+    { title: "작업완료", progress: 100 },
 ];
 function OrderDetail({ navigation, route }) {
-    const [progress, setProgress] = useState(20);
+    const [progress, setProgress] = useState(0);
+    const [status, setStatus] = useState(4);
+
+    useEffect(() => {
+        setProgress(STEP[status - 1].progress);
+    }, [status]);
 
     useEffect(() => {
         console.log(route?.params?.order);
@@ -281,28 +289,145 @@ function OrderDetail({ navigation, route }) {
                     <InProgressBar progress={progress} />
                 </ProgressBar>
             </Progress>
-            <Box>
-                <BoldText style={{ lineHeight: 25 }}>
-                    기사님들의 응답을{"\n"}기다리고 있습니다…
-                    {/* TODO: status에 따라 문구 바뀜 */}
-                </BoldText>
-                <RegularText
-                    style={{
-                        color: color["page-grey-text"],
-                        fontSize: 14,
-                        marginTop: 10,
-                    }}
-                >
-                    매칭이 완료될 때까지 시간이 걸릴 수 있습니다.
-                </RegularText>
-            </Box>
-            <Button
-                onPress={() => console.log("cancel")}
-                type="accent"
-                text="요청 취소"
-            />
-            {/* TODO: status 값에 따라 해당 UI 변경 */}
-            {/* <Items style={shadowProps}></Items> */}
+            {status === 4 ? null : (
+                <Box>
+                    <BoldText style={{ lineHeight: 25 }}>
+                        {status === 1
+                            ? "기사님들의 응답을\n기다리고 있습니다…"
+                            : null}
+                        {status === 2
+                            ? "기사님이 고객님의 오더를\n예약하였습니다."
+                            : null}
+                        {status === 3
+                            ? "기사님이 작업을 시작하였습니다."
+                            : null}
+                        {/* TODO: status에 따라 문구 바뀜 */}
+                    </BoldText>
+                    {status === 1 ? (
+                        <RegularText
+                            style={{
+                                color: color["page-grey-text"],
+                                fontSize: 14,
+                                marginTop: 10,
+                            }}
+                        >
+                            매칭이 완료될 때까지 시간이 걸릴 수 있습니다.
+                        </RegularText>
+                    ) : null}
+                </Box>
+            )}
+            {status === 1 || status === 2 ? (
+                <Button
+                    onPress={() => console.log("cancel")}
+                    type="accent"
+                    text="요청 취소"
+                    style={{ marginTop: 20 }}
+                />
+            ) : null}
+            {status === 4 ? (
+                <Items style={shadowProps}>
+                    <View style={{ alignItems: "center", paddingTop: 20 }}>
+                        <BoldText>기사님이 작업을 완료했습니다.</BoldText>
+                        <Image
+                            source={RefreshBtn}
+                            resizeMode="contain"
+                            style={{
+                                width: 120,
+                                height: 120,
+                                marginTop: 30,
+                                marginBottom: 30,
+                            }}
+                        />
+                        <RegularText
+                            style={{
+                                fontSize: 20,
+                                textAlign: "center",
+                                lineHeight: 27,
+                            }}
+                        >
+                            작업 내역을 확인하시고{"\n"}작업에 이상이 없을 시
+                            {"\n"}
+                            아래{" "}
+                            <RegularText
+                                style={{
+                                    fontSize: 20,
+                                    color: "#EB1D36",
+                                    textDecorationLine: "underline",
+                                }}
+                            >
+                                작업 완료 확인 버튼
+                            </RegularText>
+                            을{"\n"}꼭! 눌러주세요
+                        </RegularText>
+                    </View>
+                    <View style={{ flexDirection: "row", marginTop: 30 }}>
+                        <Image
+                            source={require("../../../assets/images/icons/icon_info2.png")}
+                            style={{
+                                width: 17,
+                                height: 17,
+                                marginRight: 5,
+                                marginTop: 2,
+                            }}
+                            resizeMode="contain"
+                        />
+                        <RegularText
+                            style={{
+                                fontSize: 16,
+                                color: color.main,
+                                lineHeight: 23,
+                            }}
+                        >
+                            작업에 문제가 있나요?{"\n"}아래 카톡 상담 버튼을
+                            눌러주세요.
+                        </RegularText>
+                    </View>
+                </Items>
+            ) : null}
+
+            {status === 2 || status === 3 ? (
+                <Items style={shadowProps}>
+                    <DriverTitle>
+                        <Image
+                            source={RefreshBtn}
+                            resizeMode="contain"
+                            style={{ width: 60, height: 60 }}
+                        />
+                        <MediumText style={{ marginTop: 10, marginBottom: 25 }}>
+                            기사님 정보
+                        </MediumText>
+                    </DriverTitle>
+                    <Row around={true}>
+                        <Item
+                            title="기사님 성함"
+                            value="나백진"
+                            center={true}
+                        />
+                        <Item
+                            title="연락처"
+                            value={GetPhoneNumberWithDash(
+                                orderData.directPhone
+                            )}
+                            center={true}
+                        />
+                    </Row>
+                    <Line />
+                    <Row around={true}>
+                        <Item
+                            title="차량 번호"
+                            value="12가 1234"
+                            center={true}
+                        />
+                        <Item
+                            title="차량정보"
+                            value="사다리차 / 5t"
+                            center={true}
+                        />
+                    </Row>
+                    <Line />
+                </Items>
+            ) : null}
+
             <Items style={shadowProps}>
                 <MediumText>오더 내역</MediumText>
                 <Wrapper>
