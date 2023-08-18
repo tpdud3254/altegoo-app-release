@@ -25,7 +25,7 @@ import BoldText from "../../../component/text/BoldText";
 import { shadowProps } from "../../../component/Shadow";
 import RegularText from "../../../component/text/RegularText";
 import RightArrow from "../../../assets/images/icons/arrow_right_s.png";
-import { Order } from "../../../component/order/OrderList";
+import { Order } from "../../../component/order/OrderComponent";
 import { Notification } from "../../../component/Notification";
 import LoginContext from "../../../context/LoginContext";
 import { Row } from "../../../component/Row";

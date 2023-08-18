@@ -8,7 +8,7 @@ import { Notification } from "../../../component/Notification";
 import { color } from "../../../styles";
 import Layout from "../../../component/layout/Layout";
 import { shadowProps } from "../../../component/Shadow";
-import { Order } from "../../../component/order/OrderList";
+import { Order } from "../../../component/order/OrderComponent";
 
 const HeaderContainer = styled.View`
     background-color: white;

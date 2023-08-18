@@ -14,6 +14,7 @@ import MyOrderList from "../../screen/main/myOrders/MyOrderList";
 import MyOrdinaryOrderList from "../../screen/main/myOrders/MyOrdinaryOrderList";
 import BoldText from "../../component/text/BoldText";
 import OrderList from "../../screen/main/orders/OrderList";
+import RealTimeOrder from "../../screen/main/orders/RealTimeOrder";
 
 const Tabs = createBottomTabNavigator();
 const Stack = createStackNavigator();
@@ -93,7 +94,7 @@ export default function TabsNavigator({ route }) {
                             component={Home}
                         />
                         <Tabs.Screen
-                            name="realTimeWork"
+                            name="realTimeOrder"
                             options={{
                                 tabBarIcon: ({ focused }) => (
                                     <TabIcon
@@ -103,7 +104,7 @@ export default function TabsNavigator({ route }) {
                                     />
                                 ),
                             }}
-                            component={Home}
+                            component={RealTimeOrder}
                         />
                         <Tabs.Screen
                             name="OrderList"

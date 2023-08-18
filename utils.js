@@ -69,6 +69,40 @@ export const GetDate = (dateTime, mode = "short") => {
             .substring(2, 4)}.${numberWithZero(
             workDateTime.getMonth() + 1
         )}.${numberWithZero(workDateTime.getDate())}`;
+    else if (mode === "long")
+        return `${workDateTime.getFullYear()}년 ${
+            workDateTime.getMonth() + 1
+        }월 ${workDateTime.getDate()}일`;
+};
+
+export const GetDayOfWeek = (dateTime) => {
+    const workDateTime = new Date(dateTime);
+    const dayOfWeek = workDateTime.getDay();
+    let str = "";
+    switch (dayOfWeek) {
+        case 0:
+            str = "일";
+            break;
+        case 1:
+            str = "월";
+            break;
+        case 2:
+            str = "화";
+            break;
+        case 3:
+            str = "수";
+            break;
+        case 4:
+            str = "목";
+            break;
+        case 5:
+            str = "금";
+            break;
+        case 6:
+            str = "토";
+            break;
+    }
+    return str;
 };
 
 export const GetTime = (dateTime, mode = "short") => {
