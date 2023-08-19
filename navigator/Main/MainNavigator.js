@@ -23,6 +23,7 @@ import * as Location from "expo-location";
 import OrderProgress from "../../screen/main/orders/OrderProgress";
 import RegistNavigator from "./RegistNavigator";
 import OrderDetails from "../../screen/main/orders/OrderDetails";
+import DriverOrderProgress from "../../screen/main/orders/DriverOrderProgress";
 
 Location.watchPositionAsync(
     {
@@ -328,6 +329,13 @@ export default function MainNavigator() {
                         component={OrderProgress}
                         options={{
                             headerTitle: "오더 현황",
+                        }}
+                    />
+                    <Stack.Screen
+                        name="DriverOrderProgress"
+                        component={DriverOrderProgress}
+                        options={{
+                            headerTitle: "작업 현황",
                         }}
                     />
                     <Stack.Screen

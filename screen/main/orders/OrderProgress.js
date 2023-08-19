@@ -307,7 +307,7 @@ function OrderProgress({ navigation, route }) {
                         <RegularText
                             style={{
                                 color: color["page-grey-text"],
-                                fontSize: 14,
+                                fontSize: 15,
                                 marginTop: 10,
                             }}
                         >

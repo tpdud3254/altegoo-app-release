@@ -112,7 +112,9 @@ export const Order = {
         };
 
         const goToOrderProgress = () => {
-            navigation.navigate("OrderDetails", { order: data });
+            if (data.orderStatusId === 1)
+                navigation.navigate("OrderDetails", { order: data });
+            else navigation.navigate("DriverOrderProgress", { order: data });
         };
 
         return (
