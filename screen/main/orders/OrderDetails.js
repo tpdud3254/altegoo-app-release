@@ -55,6 +55,13 @@ const ItemButton = styled.TouchableOpacity`
     height: 44px;
     border-radius: 10px;
 `;
+
+const BottomButtonContainer = styled.View`
+    background-color: ${color["page-bluegrey-text"]};
+    height: 60px;
+    align-items: center;
+    justify-content: center;
+`;
 function OrderDetails({ navigation, route }) {
     const webViewRef = useRef();
     const [progress, setProgress] = useState(0.0);
@@ -185,6 +192,14 @@ function OrderDetails({ navigation, route }) {
         );
     };
 
+    const BottomButton = () => {
+        return (
+            <BottomButtonContainer>
+                <MediumText style={{ color: "white" }}>완료된 작업</MediumText>
+            </BottomButtonContainer>
+        );
+    };
+
     return (
         <Layout
             touchableElement={Map}
@@ -193,6 +208,10 @@ function OrderDetails({ navigation, route }) {
                 title: route?.params?.order.emergency
                     ? "긴급 예약 하기"
                     : "예약하기",
+                customButton:
+                    route?.params?.order.orderStatusId > 4 ? (
+                        <BottomButton />
+                    ) : null,
             }}
         >
             <Wrapper>

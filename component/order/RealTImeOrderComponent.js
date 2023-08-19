@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { Image, View } from "react-native";
 import styled from "styled-components/native";
 import LightText from "../text/LightText";
@@ -8,6 +8,7 @@ import RegularText from "../text/RegularText";
 import { color } from "../../styles";
 import { useNavigation } from "@react-navigation/native";
 import BoldText from "../text/BoldText";
+import { PopupWithButtons } from "../PopupWithButtons";
 
 const ItemContainer = styled.TouchableOpacity`
     flex-direction: row;
@@ -62,59 +63,20 @@ export const Order = {
     },
     Item: ({ data }) => {
         const navigation = useNavigation();
-        const Badge = ({ status }) => {
-            let text = "";
-            let textColor = "";
-            let backgroundColor = "";
-
-            switch (status) {
-                case 1:
-                    text = "요청중";
-                    textColor = color["page-color-text"];
-                    backgroundColor = color["box-color-background"];
-                    break;
-                case 5:
-                    text = "작업 완료";
-                    textColor = color["page-black-text"];
-                    backgroundColor = color["image-area-background"];
-                    break;
-                case 6:
-                    text = "작업 완료";
-                    textColor = color["page-black-text"];
-                    backgroundColor = color["image-area-background"];
-                    break;
-                default:
-                    text = "예약 완료";
-                    textColor = color.blue;
-                    backgroundColor = color.lightblue;
-                    break;
-            }
-            return (
-                <View
-                    style={{
-                        backgroundColor: backgroundColor,
-                        paddingTop: status === 1 ? 6 : 7,
-                        paddingBottom: status === 1 ? 6 : 7,
-                        paddingLeft: 15,
-                        paddingRight: 15,
-                        borderRadius: 16,
-                        ...(status !== 1 || {
-                            borderWidth: 1,
-                            borderColor: color.main,
-                        }),
-                    }}
-                >
-                    <MediumText style={{ fontSize: 15, color: textColor }}>
-                        {text}
-                    </MediumText>
-                </View>
-            );
-        };
+        const [isPopupShown, setIsPopupShown] = useState(false);
 
         const goToOrderProgress = () => {
             if (data.orderStatusId === 1)
                 navigation.navigate("OrderDetails", { order: data });
             else navigation.navigate("DriverOrderProgress", { order: data });
+        };
+
+        const showPopup = () => {
+            setIsPopupShown(true);
+        };
+
+        const hidePopup = () => {
+            setIsPopupShown(false);
         };
 
         return (
@@ -220,11 +182,42 @@ export const Order = {
                         </Row>
                     </Wrapper>
                 </ItemContainer>
-                <Button>
+                <Button onPress={showPopup}>
                     <MediumText style={{ color: "white" }}>
                         {data.emergency ? "긴급 예약하기" : "예약하기"}
                     </MediumText>
                 </Button>
+                <PopupWithButtons
+                    visible={isPopupShown}
+                    onTouchOutside={hidePopup}
+                    onClick={hidePopup}
+                    negativeButtonLabel="취소"
+                >
+                    <RegularText
+                        style={{
+                            fontSize: 22,
+                            textAlign: "center",
+                            lineHeight: 33,
+                            paddingTop: 15,
+                            paddingLeft: 20,
+                            paddingRight: 20,
+                            paddingBottom: 15,
+                        }}
+                    >
+                        예약을 진행하시겠습니까?{"\n"}예약 후{" "}
+                        <RegularText
+                            style={{
+                                fontSize: 22,
+                                textDecorationLine: "underline",
+                                color: color.main,
+                            }}
+                        >
+                            내 작업
+                        </RegularText>{" "}
+                        메뉴에서{"\n"}
+                        확인할 수 있습니다.
+                    </RegularText>
+                </PopupWithButtons>
             </View>
         );
     },
