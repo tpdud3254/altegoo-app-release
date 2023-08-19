@@ -7,7 +7,7 @@ function LightText(props) {
         <Text
             {...props}
             style={{
-                fontSize: 18,
+                fontSize: 19,
                 fontFamily: "SpoqaHanSansNeo-Light",
                 color: color["page-black-text"],
                 ...props.style,

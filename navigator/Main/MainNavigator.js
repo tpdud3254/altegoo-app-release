@@ -6,7 +6,7 @@ import { FONTS, VALID } from "../../constant";
 import LoginContext from "../../context/LoginContext";
 import Charge from "../../screen/main/Charge";
 import CompleteOrder from "../../screen/main/CompleteOrder";
-import OrderProgress from "../../screen/main/OrderProgress";
+// import OrderProgress from "../../screen/main/OrderProgress";
 import OrdinaryOrderDetail from "../../screen/main/OrdinaryOrderDetail";
 import Payment from "../../screen/main/Payment";
 import Welcome from "../../screen/main/Welcome";
@@ -20,8 +20,9 @@ import { AndroidNotificationVisibility } from "expo-notifications";
 import { color } from "../../styles";
 import { useNavigation } from "@react-navigation/native";
 import * as Location from "expo-location";
-import OrderDetail from "../../screen/main/orders/OrderDetail";
+import OrderProgress from "../../screen/main/orders/OrderProgress";
 import RegistNavigator from "./RegistNavigator";
+import OrderDetails from "../../screen/main/orders/OrderDetails";
 
 Location.watchPositionAsync(
     {
@@ -100,7 +101,7 @@ export default function MainNavigator() {
                             //TODO: 리프레쉬
                         } else if (
                             pushData.screen === "OrderProgress" ||
-                            pushData.screen === "OrderDetail" ||
+                            pushData.screen === "OrderProgress" ||
                             pushData.screen === "CompleteOrder"
                         ) {
                             navigation.navigate(pushData.screen, {
@@ -323,10 +324,17 @@ export default function MainNavigator() {
                         options={{ headerShown: false }}
                     />
                     <Stack.Screen
-                        name="OrderDetail"
-                        component={OrderDetail}
+                        name="OrderProgress"
+                        component={OrderProgress}
                         options={{
                             headerTitle: "오더 현황",
+                        }}
+                    />
+                    <Stack.Screen
+                        name="OrderDetails"
+                        component={OrderDetails}
+                        options={{
+                            headerTitle: "작업 상세 보기",
                         }}
                     />
                     <Stack.Screen
@@ -334,14 +342,14 @@ export default function MainNavigator() {
                         component={RegistNavigator}
                         options={{ headerShown: false }}
                     />
-                    <Stack.Screen
+                    {/* <Stack.Screen
                         name="OrderProgress"
                         component={OrderProgress}
                         options={{
                             headerShown: true,
                             headerTitleAlign: "center",
                         }}
-                    />
+                    /> */}
                     <Stack.Screen
                         name="CompleteOrder"
                         component={CompleteOrder}

@@ -38,12 +38,14 @@ export default function Layout({
     kakaoBtnShown = false,
     bottomButtonProps,
     scroll = true,
+    touchableElement,
 }) {
     const { height } = useWindowDimensions();
     return (
         <Container headerShown={headerShown}>
             {scroll ? (
                 <ScrollView>
+                    {touchableElement ? touchableElement() : null}
                     <TouchableWithoutFeedback>
                         <Wrapper windowHeight={height}>{children}</Wrapper>
                     </TouchableWithoutFeedback>

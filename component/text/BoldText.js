@@ -7,7 +7,7 @@ function BoldText(props) {
         <Text
             {...props}
             style={{
-                fontSize: 18,
+                fontSize: 19,
                 fontFamily: "SpoqaHanSansNeo-Bold",
                 color: color["page-black-text"],
                 ...props.style,

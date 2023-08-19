@@ -16,6 +16,7 @@ export const PopupWithButtons = ({
     visible,
     onTouchOutside,
     onClick,
+    negativeButtonLabel,
 }) => {
     return (
         <Dialog
@@ -26,7 +27,9 @@ export const PopupWithButtons = ({
             footer={
                 <DialogFooter bordered={false}>
                     <DialogButton
-                        text="닫기"
+                        text={
+                            negativeButtonLabel ? negativeButtonLabel : "닫기"
+                        }
                         onPress={onTouchOutside}
                         style={{
                             backgroundColor: color["image-area-background"],

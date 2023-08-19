@@ -6,7 +6,7 @@ function RegularText(props) {
         <Text
             {...props}
             style={{
-                fontSize: 18,
+                fontSize: 19,
                 fontFamily: "SpoqaHanSansNeo-Regular",
                 ...props.style,
             }}

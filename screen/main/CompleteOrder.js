@@ -148,7 +148,7 @@ function CompleteOrder({ route, navigation }) {
         <MainLayout>
             <Order
                 onPress={() =>
-                    goToPage("OrderDetail", {
+                    goToPage("OrderProgress", {
                         orderData: order,
                     })
                 }

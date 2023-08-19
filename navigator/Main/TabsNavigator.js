@@ -15,6 +15,7 @@ import MyOrdinaryOrderList from "../../screen/main/myOrders/MyOrdinaryOrderList"
 import BoldText from "../../component/text/BoldText";
 import OrderList from "../../screen/main/orders/OrderList";
 import RealTimeOrder from "../../screen/main/orders/RealTimeOrder";
+import DriverOrderList from "../../screen/main/orders/DriverOrderList";
 
 const Tabs = createBottomTabNavigator();
 const Stack = createStackNavigator();
@@ -107,7 +108,7 @@ export default function TabsNavigator({ route }) {
                             component={RealTimeOrder}
                         />
                         <Tabs.Screen
-                            name="OrderList"
+                            name="DriverOrderList"
                             options={{
                                 headerShown: true,
                                 tabBarIcon: ({ focused }) => (
@@ -118,7 +119,7 @@ export default function TabsNavigator({ route }) {
                                     />
                                 ),
                             }}
-                            component={OrderList}
+                            component={DriverOrderList}
                         />
                         <Tabs.Screen
                             name="SettingNavigator"

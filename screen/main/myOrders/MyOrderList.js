@@ -668,7 +668,7 @@ function MyOrderList({ navigation }) {
                                                             4
                                                         }
                                                         onPress={goToPage(
-                                                            "OrderDetail",
+                                                            "OrderProgress",
                                                             {
                                                                 orderData:
                                                                     order,

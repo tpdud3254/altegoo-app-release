@@ -111,14 +111,14 @@ export const Order = {
             );
         };
 
-        const goToOrderDetail = () => {
-            navigation.navigate("OrderDetail", { order: data });
+        const goToOrderProgress = () => {
+            navigation.navigate("OrderDetails", { order: data });
         };
 
         return (
             <View style={{ marginBottom: 20 }}>
                 <ItemContainer
-                    onPress={goToOrderDetail}
+                    onPress={goToOrderProgress}
                     emergency={data.emergency}
                 >
                     <Icon>

@@ -613,7 +613,7 @@ function OrderList() {
                                                 onPress={
                                                     () =>
                                                         goToPage(
-                                                            "OrderDetail",
+                                                            "OrderProgress",
                                                             {
                                                                 orderData:
                                                                     order,
@@ -639,7 +639,7 @@ function OrderList() {
                                                     //           }
                                                     //       )
                                                     //     : goToPage(
-                                                    //           "OrderDetail",
+                                                    //           "OrderProgress",
                                                     //           {
                                                     //               orderData:
                                                     //                   order,

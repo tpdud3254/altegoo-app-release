@@ -162,7 +162,7 @@ const STEP = [
     { title: "작업시작", progress: 60 },
     { title: "작업완료", progress: 100 },
 ];
-function OrderDetail({ navigation, route }) {
+function OrderProgress({ navigation, route }) {
     const [progress, setProgress] = useState(0);
     const [status, setStatus] = useState(4);
 
@@ -592,5 +592,5 @@ function OrderDetail({ navigation, route }) {
     );
 }
 
-OrderDetail.propTypes = {};
-export default OrderDetail;
+OrderProgress.propTypes = {};
+export default OrderProgress;
