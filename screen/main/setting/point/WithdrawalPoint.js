@@ -41,6 +41,11 @@ function WithdrawalPoint({ route, navigation }) {
     useEffect(() => {
         // setAccount(route?.params?.account);
     }, []);
+
+    const goToPage = (page, data) => {
+        navigation.navigate(page, data);
+    };
+
     // const onWithdrawal = () => {
     //     console.log(withdrawalPoint);
     //     if (withdrawalPoint > account.curPoint) {
@@ -126,7 +131,7 @@ function WithdrawalPoint({ route, navigation }) {
                 </RegularText>
             </Row>
             <Button
-                onPress={() => console.log("cancel")}
+                onPress={() => goToPage("RegistPointAccount")}
                 type="accent"
                 text="계좌등록 하기"
             />
@@ -151,7 +156,12 @@ function WithdrawalPoint({ route, navigation }) {
     return (
         <Layout
             bottomButtonProps={
-                isExistedAccount ? { title: "포인트 출금" } : null
+                isExistedAccount
+                    ? {
+                          title: "포인트 출금",
+                          onPress: () => goToPage("ModifyPointAccount"),
+                      }
+                    : null
             }
         >
             {isExistedAccount ? (

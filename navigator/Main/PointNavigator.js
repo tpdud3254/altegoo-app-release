@@ -39,17 +39,6 @@ export default function PointNavigator() {
                     />
                 ),
             }}
-        >
-            <Stack.Screen
-                name="ModifyPointAccount"
-                component={ModifyPointAccount}
-                options={{ title: "출금계좌 수정하기" }}
-            />
-            <Stack.Screen
-                name="RegistPointAccount"
-                component={RegistPointAccount}
-                options={{ title: "계좌등록 하기" }}
-            />
-        </Stack.Navigator>
+        ></Stack.Navigator>
     );
 }

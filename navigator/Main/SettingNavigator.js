@@ -15,6 +15,8 @@ import PointMain from "../../screen/main/setting/point/PointMain";
 import PointBreakdown from "../../screen/main/setting/point/PointBreakdown";
 import ChargePoint from "../../screen/main/setting/point/ChargePoint";
 import WithdrawalPoint from "../../screen/main/setting/point/WithdrawalPoint";
+import RegistPointAccount from "../../screen/main/setting/point/RegistPointAccount";
+import ModifyPointAccount from "../../screen/main/setting/point/ModifyPointAccount";
 
 const Stack = createStackNavigator();
 
@@ -70,6 +72,16 @@ export default function SettingNavigator() {
                 name="WithdrawalPoint"
                 component={WithdrawalPoint}
                 options={{ title: "포인트 출금" }}
+            />
+            <Stack.Screen
+                name="RegistPointAccount"
+                component={RegistPointAccount}
+                options={{ title: "계좌등록" }}
+            />
+            <Stack.Screen
+                name="ModifyPointAccount"
+                component={ModifyPointAccount}
+                options={{ title: "계좌수정" }}
             />
             <Stack.Screen
                 name="BlockUser"

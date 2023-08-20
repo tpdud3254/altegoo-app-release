@@ -8,13 +8,26 @@ import SubTitleText from "../../../../component/text/SubTitleText";
 import { Picker } from "@react-native-picker/picker";
 import TitleInputItem from "../../../../component/item/TitleInputItem";
 import SubmitButton from "../../../../component/button/SubmitButton";
-import { TextInput } from "react-native-paper";
+
 import axios from "axios";
 import { SERVER } from "../../../../constant";
 import { getAsyncStorageToken } from "../../../../utils";
 import { VALID } from "../../../../constant";
+import Layout from "../../../../component/layout/Layout";
+import SelectBox from "../../../../component/selectBox/SelectBox";
+import TextInput from "../../../../component/input/TextInput";
+import Button from "../../../../component/button/Button";
 
-const bank = [
+const Container = styled.View`
+    margin-top: 30px;
+    margin-bottom: 10px;
+`;
+
+const Wrapper = styled.View`
+    margin-bottom: 25px;
+`;
+
+const BANK_LIST = [
     "은행 선택",
     "KEB하나은행",
     "SC제일은행",
@@ -36,7 +49,7 @@ const bank = [
     "한국수출입은행",
 ];
 
-function ModifyPointAccount({ route, navigation }) {
+function RegistPointAccount({ route, navigation }) {
     const [selectedBank, setSelectedBank] = useState(0);
     const { register, handleSubmit, setValue, watch } = useForm();
 
@@ -96,58 +109,55 @@ function ModifyPointAccount({ route, navigation }) {
             console.log(error);
         }
     };
-    const onClose = () => {};
     return (
-        <FormLayout>
-            <View>
-                <Picker
-                    selectedValue={bank[selectedBank]}
-                    onValueChange={(itemValue, itemIndex) =>
-                        setSelectedBank(itemIndex)
-                    }
-                    style={{
-                        width: "100%",
-                        backgroundColor: "#ffffffcc",
-                        margin: 10,
-                    }}
-                >
-                    {bank.map((value, index) => (
-                        <Picker.Item
-                            key={index}
-                            label={value}
-                            value={value}
-                            style={{
-                                fontSize: 18,
-                            }}
-                        />
-                    ))}
-                </Picker>
-                <TitleInputItem title="계좌번호">
+        <Layout>
+            <Container>
+                <Wrapper>
+                    <SelectBox
+                        title="은행 선택"
+                        placeholder="은행을 선택하세요."
+                        data={BANK_LIST}
+                        // onSelect={(index) =>
+                        //     setValue("workCategory", index + 1)
+                        // }
+                    />
+                </Wrapper>
+                <Wrapper>
                     <TextInput
-                        placeholder="숫자만 적어주세요"
-                        keyboardType="number-pad"
+                        title="계좌 번호"
+                        placeholder="- 빼고 숫자만 적어주세요."
                         returnKeyType="next"
-                        onSubmitEditing={() => onNext(nameRef)}
-                        onChangeText={(text) => setValue("number", text)}
-                        style={{ backgroundColor: "white" }}
+                        keyboardType="number-pad"
+                        // value={watch("companyName")}
+                        // onChangeText={(text) => setValue("companyName", text)}
+                        // onReset={() => setValue("companyName", "")}
+                        // onSubmitEditing={() =>
+                        //     companyPersonNameRef.current.setFocus()
+                        // }
                     />
-                </TitleInputItem>
-                <TitleInputItem title="예금주">
+                </Wrapper>
+                <Wrapper>
                     <TextInput
-                        placeholder="예금주"
+                        // ref={companyPersonNameRef}
+                        title="예금주"
+                        placeholder="예금주 이름을 적어주세요."
                         returnKeyType="done"
-                        onChangeText={(text) => setValue("name", text)}
-                        style={{ backgroundColor: "white" }}
+                        // value={watch("companyPersonName")}
+                        // onChangeText={(text) =>
+                        //     setValue("companyPersonName", text)
+                        // }
+                        // onReset={() => setValue("companyPersonName", "")}
                     />
-                </TitleInputItem>
-            </View>
-            <View>
-                <SubmitButton text="등록" onPress={handleSubmit(onValid)} />
-                <SubmitButton text="취소" onPress={onClose} />
-            </View>
-        </FormLayout>
+                </Wrapper>
+                <Button
+                    // onPress={() => goToPage("RegistPointAccount")}
+                    type="accent"
+                    text="수정하기"
+                />
+            </Container>
+        </Layout>
     );
 }
 
-ModifyPointAccount.propTypes = {};
-export default ModifyPointAccount;
+RegistPointAccount.propTypes = {};
+export default RegistPointAccount;
