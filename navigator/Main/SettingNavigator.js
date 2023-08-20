@@ -18,6 +18,8 @@ import WithdrawalPoint from "../../screen/main/setting/point/WithdrawalPoint";
 import RegistPointAccount from "../../screen/main/setting/point/RegistPointAccount";
 import ModifyPointAccount from "../../screen/main/setting/point/ModifyPointAccount";
 import RecommandedUser from "../../screen/main/setting/RecommandedUser";
+import ChangePassword from "../../screen/main/setting/ChangePassword";
+import PaymentDetails from "../../screen/main/setting/PaymentDetails";
 
 const Stack = createStackNavigator();
 
@@ -90,10 +92,15 @@ export default function SettingNavigator() {
                 options={{ title: "추천인" }}
             />
             <Stack.Screen
-                name="BlockUser"
-                component={BlockUser}
+                name="ChangePassword"
+                component={ChangePassword}
+                options={{ title: "비밀번호 변경" }}
+            />
+            <Stack.Screen
+                name="PaymentDetails"
+                component={PaymentDetails}
                 options={{
-                    title: "부정당 회원",
+                    title: "결제 내역",
                 }}
             />
             <Stack.Screen
