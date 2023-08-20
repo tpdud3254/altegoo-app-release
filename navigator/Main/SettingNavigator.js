@@ -13,6 +13,8 @@ import { Image } from "react-native";
 import MemberInformation from "../../screen/main/setting/MemberInformation";
 import PointMain from "../../screen/main/setting/point/PointMain";
 import PointBreakdown from "../../screen/main/setting/point/PointBreakdown";
+import ChargePoint from "../../screen/main/setting/point/ChargePoint";
+import WithdrawalPoint from "../../screen/main/setting/point/WithdrawalPoint";
 
 const Stack = createStackNavigator();
 
@@ -58,6 +60,16 @@ export default function SettingNavigator() {
                 name="PointBreakdown"
                 component={PointBreakdown}
                 options={{ title: "포인트 이용내역" }}
+            />
+            <Stack.Screen
+                name="ChargePoint"
+                component={ChargePoint}
+                options={{ title: "포인트 충전" }}
+            />
+            <Stack.Screen
+                name="WithdrawalPoint"
+                component={WithdrawalPoint}
+                options={{ title: "포인트 출금" }}
             />
             <Stack.Screen
                 name="BlockUser"

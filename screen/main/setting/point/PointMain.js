@@ -196,7 +196,7 @@ function PointMain({ navigation }) {
                 <Line />
                 <RowAround>
                     {info.userTypeId === 2 ? (
-                        <Button>
+                        <Button onPress={() => goToPage("ChargePoint")}>
                             <Row>
                                 <Image
                                     source={require("../../../../assets/images/icons/icon_charge.png")}
@@ -259,7 +259,7 @@ function PointMain({ navigation }) {
                     </Button>
                 </RowAround>
             </Box>
-            <WithdrawalButton>
+            <WithdrawalButton onPress={() => goToPage("WithdrawalPoint")}>
                 <BoldText style={{ color: color.main }}>
                     포인트 출금하기
                 </BoldText>

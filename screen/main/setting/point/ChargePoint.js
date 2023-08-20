@@ -1,16 +1,53 @@
-import React, { useContext } from "react";
+import React, { useContext, useState } from "react";
 import styled from "styled-components/native";
 import PropTypes from "prop-types";
-import { Text, TouchableOpacity, View } from "react-native";
+import { Image, Text, TouchableOpacity, View } from "react-native";
 import PlainButton from "../../../../component/button/PlainButton";
 import MediumText from "../../../../component/text/MediumText";
 import { color } from "../../../../styles";
 import SubTitleText from "../../../../component/text/SubTitleText";
 import UserContext from "../../../../context/UserContext";
 import { PAYMENT_APP_ID } from "@env";
+import Layout from "../../../../component/layout/Layout";
+import TextInput from "../../../../component/input/TextInput";
+import BoldText from "../../../../component/text/BoldText";
+import { Row, RowBetween } from "../../../../component/Row";
+import RegularText from "../../../../component/text/RegularText";
+
+const Container = styled.View`
+    height: 100%;
+`;
+
+const Button = styled.TouchableOpacity`
+    align-items: center;
+    background-color: white;
+    border: 1px solid ${color.main};
+    border-radius: 10px;
+    padding: 15px;
+    margin-top: 20px;
+`;
+
+const Noti = styled.View`
+    margin-top: 20px;
+`;
+
+const NotiContainer = styled.View`
+    padding-top: 20px;
+`;
+
+const Dot = styled.View`
+    width: 6px;
+    height: 6px;
+    background-color: ${color.main};
+    border-radius: 5px;
+    margin-top: 4px;
+    margin-right: 4px;
+`;
 
 function ChargePoint({ route, navigation }) {
     const { info } = useContext(UserContext);
+
+    const [notiVisible, setNotiVisiblè] = useState(false);
     const onPay = (price) => {
         console.log(price);
         const data = {
@@ -27,47 +64,115 @@ function ChargePoint({ route, navigation }) {
         };
         navigation.navigate("Charge", { data });
     };
+
+    const toggleNoti = () => setNotiVisiblè((prev) => !prev);
+    const NotiContent = ({ children }) => (
+        <Row style={{ alignItems: "flex-start", marginBottom: 10 }}>
+            <Dot />
+            <MediumText style={{ fontSize: 14 }}>{children}</MediumText>
+        </Row>
+    );
     return (
-        <View
-            style={{
-                flex: 1,
-                alignItems: "center",
-                justifyContent: "center",
-            }}
-        >
-            <View style={{ height: 300, justifyContent: "space-between" }}>
-                <TouchableOpacity
-                    style={{
-                        backgroundColor: color.textLight,
-                        padding: 10,
-                    }}
-                    onPress={() => onPay(99000)}
-                >
-                    <MediumText>99,000 충전</MediumText>
-                    <MediumText>(VAT 포함)</MediumText>
-                </TouchableOpacity>
-                <TouchableOpacity
-                    style={{
-                        backgroundColor: color.textLight,
-                        padding: 10,
-                    }}
-                    onPress={() => onPay(33000)}
-                >
-                    <MediumText>33,000 충전</MediumText>
-                    <MediumText>(VAT 포함)</MediumText>
-                </TouchableOpacity>
-                <TouchableOpacity
-                    style={{
-                        backgroundColor: color.textLight,
-                        padding: 10,
-                    }}
-                    onPress={() => onPay(55000)}
-                >
-                    <MediumText>55,000 충전</MediumText>
-                    <MediumText>(VAT 포함)</MediumText>
-                </TouchableOpacity>
-            </View>
-        </View>
+        <Layout scroll={false}>
+            <Container>
+                <TextInput
+                    title="충전 금액 입력"
+                    placeholder="충전할 금액을 입력해 주세요"
+                    returnKeyType="done"
+                    keyboardType="number-pad"
+                    // value={watch("phone")}
+                    // onSubmitEditing={() => onNext("password")}
+                    // onReset={() => reset(setValue, "phone")}
+                    // onChangeText={(text) => setValue("phone", text)}
+                />
+                <Button>
+                    <BoldText style={{ color: color.main }}>
+                        포인트 충전하기
+                    </BoldText>
+                </Button>
+                <Noti>
+                    <TouchableOpacity onPress={toggleNoti}>
+                        <RowBetween>
+                            <Row>
+                                <Image
+                                    source={require("../../../../assets/images/icons/icon_info2.png")}
+                                    style={{
+                                        width: 18,
+                                        height: 18,
+                                        marginRight: 5,
+                                    }}
+                                />
+                                <RegularText
+                                    style={{ fontSize: 16, color: color.main }}
+                                >
+                                    포인트 충전 시 유의사항
+                                </RegularText>
+                            </Row>
+                            {notiVisible ? (
+                                <Image
+                                    source={require("../../../../assets/images/icons/icon_fullup.png")}
+                                    style={{
+                                        width: 24,
+                                        height: 24,
+                                    }}
+                                />
+                            ) : (
+                                <Image
+                                    source={require("../../../../assets/images/icons/icon_fulldw2.png")}
+                                    style={{
+                                        width: 24,
+                                        height: 24,
+                                    }}
+                                />
+                            )}
+                        </RowBetween>
+                    </TouchableOpacity>
+                    {notiVisible ? (
+                        <NotiContainer>
+                            <NotiContent>
+                                1원당 1포인트가 충전됩니다.
+                            </NotiContent>
+                            <NotiContent>
+                                최대 200만 포인트 까지 보유 가능합니다.
+                            </NotiContent>
+                            <NotiContent>
+                                충전수단에 따라 충전수단 발행자가 부과하는
+                                사용수수료를 부담할 수 있습니다.
+                            </NotiContent>
+                            <BoldText
+                                style={{
+                                    fontSize: 14,
+                                    marginTop: 15,
+                                    marginBottom: 15,
+                                }}
+                            >
+                                포인트 충전취소/환급 시 유의사항
+                            </BoldText>
+                            <NotiContent>
+                                포인트 충전 후 7일 내에 청약철회 시
+                                전자상거래법에 따라 충전금액이 환급됩니다.
+                            </NotiContent>
+                            <NotiContent>
+                                은행 점검 시간으로 인해 매일 23:50~00:10
+                                사이에는 환급신청 불가합니다.
+                            </NotiContent>
+                            <NotiContent>
+                                포인트 충전 후 7일 내에 청약철회 시
+                                전자상거래법에 따라 충전금액이 환급됩니다.
+                            </NotiContent>
+                            <NotiContent>
+                                보유한 충전포인트가 환급 수수료보다 많은
+                                경우에만 환급 신청할 수 있습니다.
+                            </NotiContent>
+                            <NotiContent>
+                                충전 포인트의 환급은 본인명의 계좌로만
+                                가능합니다.
+                            </NotiContent>
+                        </NotiContainer>
+                    ) : null}
+                </Noti>
+            </Container>
+        </Layout>
     );
 }
 

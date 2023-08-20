@@ -41,11 +41,6 @@ export default function PointNavigator() {
             }}
         >
             <Stack.Screen
-                name="ChargePoint"
-                component={ChargePoint}
-                options={{ title: "포인트 충전" }}
-            />
-            <Stack.Screen
                 name="ModifyPointAccount"
                 component={ModifyPointAccount}
                 options={{ title: "출금계좌 수정하기" }}
@@ -54,11 +49,6 @@ export default function PointNavigator() {
                 name="RegistPointAccount"
                 component={RegistPointAccount}
                 options={{ title: "계좌등록 하기" }}
-            />
-            <Stack.Screen
-                name="WithdrawalPoint"
-                component={WithdrawalPoint}
-                options={{ title: "포인트 출금" }}
             />
         </Stack.Navigator>
     );
