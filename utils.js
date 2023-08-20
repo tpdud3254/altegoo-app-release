@@ -442,3 +442,17 @@ export const GetPhoneNumberWithDash = (phone) => {
         phone.length
     )}`;
 };
+
+export const GetOrderOption = (registInfo) => {
+    const data = [];
+
+    Object.keys(registInfo).map((value, index) => {
+        data.push(registInfo[value]);
+        if (value === "price")
+            data[index] = "예상 운임 " + numberWithComma(data[index]) + "AP";
+        if (value === "dateTime")
+            data[index] = GetDate(new Date(data[index]), "long");
+    });
+
+    return data;
+};

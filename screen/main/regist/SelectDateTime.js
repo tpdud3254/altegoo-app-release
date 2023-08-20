@@ -13,7 +13,12 @@ import RegularText from "../../../component/text/RegularText";
 import { shadowProps } from "../../../component/Shadow";
 import Dialog, { DialogContent } from "react-native-popup-dialog";
 import RNDateTimePicker from "@react-native-community/datetimepicker";
-import { GetDate, GetTime, numberWithComma } from "../../../utils";
+import {
+    GetDate,
+    GetOrderOption,
+    GetTime,
+    numberWithComma,
+} from "../../../utils";
 
 LocaleConfig.locales["fr"] = CALENDAR_LOCALES;
 LocaleConfig.defaultLocale = "fr";
@@ -61,16 +66,7 @@ function SelectDateTime({ navigation }) {
     useEffect(() => {
         console.log(registInfo);
 
-        const data = [];
-
-        Object.keys(registInfo).map((value, index) => {
-            data.push(registInfo[value]);
-            if (value === "price")
-                data[index] =
-                    "예상 운임 " + numberWithComma(data[index]) + "AP";
-        });
-
-        setOptionData(data);
+        setOptionData(GetOrderOption(registInfo));
     }, []);
 
     const showPopup = (option) => {
@@ -130,7 +126,7 @@ function SelectDateTime({ navigation }) {
 
         console.log(sendDateTime);
 
-        setRegistInfo({ dateTime: sendDateTime, ...registInfo });
+        setRegistInfo({ ...registInfo, dateTime: sendDateTime });
 
         navigation.navigate(REGIST_NAV[2]);
     };

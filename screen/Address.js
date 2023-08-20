@@ -40,7 +40,7 @@ function Address({ navigation, route }) {
     );
 
     return (
-        <View>
+        <View style={{ backgroundColor: "white" }}>
             <YourView />
         </View>
     );
