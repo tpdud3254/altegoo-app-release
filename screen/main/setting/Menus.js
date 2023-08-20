@@ -101,7 +101,7 @@ function Menus({ navigation }) {
             <Menu>
                 <MediumText>결제내역</MediumText>
             </Menu>
-            <Menu>
+            <Menu onPress={() => goToPage("RecommandedUser")}>
                 <MediumText>추천인 정보</MediumText>
             </Menu>
             <Menu>

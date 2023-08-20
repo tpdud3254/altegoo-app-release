@@ -17,6 +17,7 @@ import ChargePoint from "../../screen/main/setting/point/ChargePoint";
 import WithdrawalPoint from "../../screen/main/setting/point/WithdrawalPoint";
 import RegistPointAccount from "../../screen/main/setting/point/RegistPointAccount";
 import ModifyPointAccount from "../../screen/main/setting/point/ModifyPointAccount";
+import RecommandedUser from "../../screen/main/setting/RecommandedUser";
 
 const Stack = createStackNavigator();
 
@@ -82,6 +83,11 @@ export default function SettingNavigator() {
                 name="ModifyPointAccount"
                 component={ModifyPointAccount}
                 options={{ title: "계좌수정" }}
+            />
+            <Stack.Screen
+                name="RecommandedUser"
+                component={RecommandedUser}
+                options={{ title: "추천인" }}
             />
             <Stack.Screen
                 name="BlockUser"

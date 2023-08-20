@@ -11,6 +11,7 @@ export const LAYOUT_PADDING_X = 16;
 const Container = styled.View`
     flex: 1;
     background-color: ${color["page-background"]};
+
     padding-top: ${(props) => (props.headerShown ? 0 : 40)}px;
 `;
 const Wrapper = styled.View`
