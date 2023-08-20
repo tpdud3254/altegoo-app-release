@@ -13,12 +13,7 @@ import RegularText from "../../../component/text/RegularText";
 import { shadowProps } from "../../../component/Shadow";
 import Dialog, { DialogContent } from "react-native-popup-dialog";
 import RNDateTimePicker from "@react-native-community/datetimepicker";
-import {
-    GetDate,
-    GetOrderOption,
-    GetTime,
-    numberWithComma,
-} from "../../../utils";
+import { GetDate, GetOrderOption, GetTime } from "../../../utils";
 
 LocaleConfig.locales["fr"] = CALENDAR_LOCALES;
 LocaleConfig.defaultLocale = "fr";

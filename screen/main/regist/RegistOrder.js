@@ -19,7 +19,13 @@ import SelectBox from "../../../component/selectBox/SelectBox";
 import UserContext from "../../../context/UserContext";
 import { PopupWithButtons } from "../../../component/PopupWithButtons";
 import { Box } from "../../../component/box/Box";
-import { CheckValidation } from "../../../utils";
+import {
+    CheckValidation,
+    GetLadderPrice,
+    GetSkyPrice,
+    numberWithComma,
+    showMessage,
+} from "../../../utils";
 
 const LastOrder = styled.TouchableOpacity`
     flex-direction: row;
@@ -92,17 +98,19 @@ function RegistOrder({ navigation }) {
     const [validation, setValidation] = useState(false);
 
     const [price, setPrice] = useState(0); //TODO: 수정
+    const [consultation, setConsultation] = useState(false);
 
     const [isPopupShown, setIsPopupShown] = useState(false);
     const [lastOrder, setLastOrder] = useState(false);
 
     useEffect(() => {
-        for (let index = 2; index < 19; index++) {
-            FLOOR.push(`${index}층`);
+        if (vehicleType === 2 && floor > 14 && time === 1) {
+            showMessage("1시간 작업은 2층 ~ 14층 사이만 가능합니다.");
         }
-    }, []);
+    }, [vehicleType, floor, time]);
 
     useEffect(() => {
+        //유효성 검사
         const check = {
             vehicleType,
             ...(vehicleType === 1 && {
@@ -121,6 +129,51 @@ function RegistOrder({ navigation }) {
         } else {
             setValidation(false);
         }
+
+        //금액 책정
+        let calc = 0;
+        setConsultation(false);
+
+        if (vehicleType === 1) {
+            if (direction === 1 || direction === 2) {
+                const ladderPrice = GetLadderPrice(
+                    floor,
+                    volume,
+                    quantity,
+                    time
+                );
+
+                if (ladderPrice === "consultation") setConsultation(true);
+                else calc = calc + ladderPrice;
+            } else if (direction === 3) {
+                const ladderPrice1 = GetLadderPrice(
+                    downFloor,
+                    volume,
+                    quantity,
+                    time
+                );
+
+                if (ladderPrice1 === "consultation") setConsultation(true);
+                else calc = calc + ladderPrice1;
+
+                const ladderPrice2 = GetLadderPrice(
+                    upFloor,
+                    volume,
+                    quantity,
+                    time
+                );
+
+                if (ladderPrice2 === "consultation") setConsultation(true);
+                else calc = calc + ladderPrice2;
+            }
+        } else if (vehicleType === 2) {
+            const skyPrice = GetSkyPrice(floor, time);
+
+            if (skyPrice === "consultation") setConsultation(true);
+            else calc = calc + skyPrice;
+        }
+
+        setPrice(calc);
     }, [
         vehicleType,
         direction,
@@ -149,24 +202,29 @@ function RegistOrder({ navigation }) {
     };
 
     const onNextStep = () => {
+        if (vehicleType === 2 && floor > 14 && time === 1) {
+            showMessage("1시간 작업은 2층 ~ 14층 사이만 가능합니다.");
+            return;
+        }
+
         const data = {
             price,
             vehicleType: VEHICLE[vehicleType - 1],
             ...(vehicleType === 1 && {
                 direction: DIRECTION[direction],
                 ...((direction === 1 || direction === 2) && {
-                    floor: floor + "층",
+                    floor: floor > 25 ? "26층 이상" : floor + "층",
                 }),
                 ...(direction === 3 && {
-                    downFloor: downFloor + "층",
-                    upFloor: upFloor + "층",
+                    downFloor: downFloor > 25 ? "26층 이상" : downFloor + "층",
+                    upFloor: upFloor > 25 ? "26층 이상" : upFloor + "층",
                 }),
                 volume: VOLUME[volume - 1],
                 ...(volume === 1 && { quantity: QUANTITY[quantity - 1] }),
                 ...(volume === 2 && { time: TIME[time - 1] }),
             }),
             ...(vehicleType === 2 && {
-                floor: floor + "층",
+                floor: floor > 20 ? "21층 이상" : floor + "층",
                 volume: VOLUME[1],
                 time: TIME[time - 1],
             }),
@@ -252,7 +310,9 @@ function RegistOrder({ navigation }) {
             kakaoBtnShown={true}
             bottomButtonProps={{
                 onPress: onNextStep,
-                title: `예상 운임 ${price}AP 확인`,
+                title: consultation
+                    ? "예상 운임 협의"
+                    : `예상 운임 ${numberWithComma(price)}AP 확인`,
                 disabled: !validation,
             }}
         >
@@ -351,7 +411,7 @@ function RegistOrder({ navigation }) {
                             <Wrapper>
                                 <SelectBox
                                     placeholder="층 수 선택"
-                                    data={FLOOR}
+                                    data={FLOOR[vehicleType - 1]}
                                     onSelect={(index) => setFloor(index + 2)}
                                 />
                             </Wrapper>
@@ -363,7 +423,7 @@ function RegistOrder({ navigation }) {
                                         <SelectBox
                                             width="71%"
                                             placeholder="층 수 선택"
-                                            data={FLOOR}
+                                            data={FLOOR[vehicleType - 1]}
                                             onSelect={(index) =>
                                                 setDownFloor(index + 2)
                                             }
@@ -375,7 +435,7 @@ function RegistOrder({ navigation }) {
                                     <SelectBox
                                         width="71%"
                                         placeholder="층 수 선택"
-                                        data={FLOOR}
+                                        data={FLOOR[vehicleType - 1]}
                                         onSelect={(index) =>
                                             setUpFloor(index + 2)
                                         }
@@ -435,7 +495,7 @@ function RegistOrder({ navigation }) {
                         <Wrapper>
                             <SelectBox
                                 placeholder="층 수 선택"
-                                data={FLOOR}
+                                data={FLOOR[vehicleType - 1]}
                                 onSelect={(index) => setFloor(index + 2)}
                             />
                         </Wrapper>

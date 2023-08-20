@@ -449,10 +449,362 @@ export const GetOrderOption = (registInfo) => {
     Object.keys(registInfo).map((value, index) => {
         data.push(registInfo[value]);
         if (value === "price")
-            data[index] = "예상 운임 " + numberWithComma(data[index]) + "AP";
+            data[index] =
+                data[index] === 0
+                    ? "예상 운임 협의"
+                    : "예상 운임 " + numberWithComma(data[index]) + "AP";
         if (value === "dateTime")
             data[index] = GetDate(new Date(data[index]), "long");
     });
 
     return data;
+};
+
+export const GetLadderPrice = (floor, volume, quantity, time) => {
+    let calc = 0;
+
+    if (floor >= 2 && floor <= 5) {
+        if (volume === 1) {
+            //물량
+            if (quantity === 1) calc = calc + 7;
+            else if (quantity === 2) calc = calc + 10;
+            else if (quantity === 3) calc = calc + 12;
+            else if (quantity === 4) calc = calc + 15;
+            else if (quantity === 5) calc = calc + 18;
+            else if (quantity === 6) calc = calc + 21;
+        } else if (volume === 2) {
+            //시간
+            if (time === 1) calc = calc + 10;
+            else if (time === 2) calc = calc + 6 + 10;
+            else if (time === 3) calc = calc + 6 * 2 + 10;
+            else if (time === 4) calc = calc + 6 * 3 + 10;
+            else if (time === 5) calc = calc + 30;
+            else if (time === 6) calc = calc + 45;
+        }
+    } else if (floor >= 6 && floor <= 7) {
+        if (volume === 1) {
+            //물량
+            if (quantity === 1) calc = calc + 8;
+            else if (quantity === 2) calc = calc + 11;
+            else if (quantity === 3) calc = calc + 13;
+            else if (quantity === 4) calc = calc + 16;
+            else if (quantity === 5) calc = calc + 19;
+            else if (quantity === 6) calc = calc + 22;
+        } else if (volume === 2) {
+            //시간
+            if (time === 1) calc = calc + 11;
+            else if (time === 2) calc = calc + 6 + 11;
+            else if (time === 3) calc = calc + 6 * 2 + 11;
+            else if (time === 4) calc = calc + 6 * 3 + 11;
+            else if (time === 5) calc = calc + 35;
+            else if (time === 6) calc = calc + 50;
+        }
+    } else if (floor >= 8 && floor <= 9) {
+        if (volume === 1) {
+            //물량
+            if (quantity === 1) calc = calc + 9;
+            else if (quantity === 2) calc = calc + 12;
+            else if (quantity === 3) calc = calc + 14;
+            else if (quantity === 4) calc = calc + 17;
+            else if (quantity === 5) calc = calc + 20;
+            else if (quantity === 6) calc = calc + 23;
+        } else if (volume === 2) {
+            //시간
+            if (time === 1) calc = calc + 12;
+            else if (time === 2) calc = calc + 6 + 12;
+            else if (time === 3) calc = calc + 6 * 2 + 12;
+            else if (time === 4) calc = calc + 6 * 3 + 12;
+            else if (time === 5) calc = calc + 35;
+            else if (time === 6) calc = calc + 50;
+        }
+    } else if (floor >= 10 && floor <= 11) {
+        if (volume === 1) {
+            //물량
+            if (quantity === 1) calc = calc + 10;
+            else if (quantity === 2) calc = calc + 13;
+            else if (quantity === 3) calc = calc + 15;
+            else if (quantity === 4) calc = calc + 18;
+            else if (quantity === 5) calc = calc + 21;
+            else if (quantity === 6) calc = calc + 24;
+        } else if (volume === 2) {
+            //시간
+            if (time === 1) calc = calc + 13;
+            else if (time === 2) calc = calc + 6 + 13;
+            else if (time === 3) calc = calc + 6 * 2 + 13;
+            else if (time === 4) calc = calc + 6 * 3 + 13;
+            else if (time === 5) calc = calc + 40;
+            else if (time === 6) calc = calc + 55;
+        }
+    } else if (floor >= 12 && floor <= 13) {
+        if (volume === 1) {
+            //물량
+            if (quantity === 1) calc = calc + 11;
+            else if (quantity === 2) calc = calc + 14;
+            else if (quantity === 3) calc = calc + 16;
+            else if (quantity === 4) calc = calc + 19;
+            else if (quantity === 5) calc = calc + 22;
+            else if (quantity === 6) calc = calc + 25;
+        } else if (volume === 2) {
+            //시간
+            if (time === 1) calc = calc + 14;
+            else if (time === 2) calc = calc + 8 + 14;
+            else if (time === 3) calc = calc + 8 * 2 + 14;
+            else if (time === 4) calc = calc + 8 * 3 + 14;
+            else if (time === 5) calc = calc + 40;
+            else if (time === 6) calc = calc + 55;
+        }
+    } else if (floor === 14) {
+        if (volume === 1) {
+            //물량
+            if (quantity === 1) calc = calc + 12;
+            else if (quantity === 2) calc = calc + 15;
+            else if (quantity === 3) calc = calc + 17;
+            else if (quantity === 4) calc = calc + 21;
+            else if (quantity === 5) calc = calc + 25;
+            else if (quantity === 6) calc = calc + 29;
+        } else if (volume === 2) {
+            //시간
+            if (time === 1) calc = calc + 15;
+            else if (time === 2) calc = calc + 8 + 15;
+            else if (time === 3) calc = calc + 8 * 2 + 15;
+            else if (time === 4) calc = calc + 8 * 3 + 15;
+            else if (time === 5) calc = calc + 45;
+            else if (time === 6) calc = calc + 60;
+        }
+    } else if (floor === 15) {
+        if (volume === 1) {
+            //물량
+            if (quantity === 1) calc = calc + 13;
+            else if (quantity === 2) calc = calc + 16;
+            else if (quantity === 3) calc = calc + 18;
+            else if (quantity === 4) calc = calc + 22;
+            else if (quantity === 5) calc = calc + 26;
+            else if (quantity === 6) calc = calc + 30;
+        } else if (volume === 2) {
+            //시간
+            if (time === 1) calc = calc + 16;
+            else if (time === 2) calc = calc + 8 + 16;
+            else if (time === 3) calc = calc + 8 * 2 + 16;
+            else if (time === 4) calc = calc + 8 * 3 + 16;
+            else if (time === 5) calc = calc + 45;
+            else if (time === 6) calc = calc + 60;
+        }
+    } else if (floor === 16) {
+        if (volume === 1) {
+            //물량
+            if (quantity === 1) calc = calc + 14;
+            else if (quantity === 2) calc = calc + 17;
+            else if (quantity === 3) calc = calc + 19;
+            else if (quantity === 4) calc = calc + 23;
+            else if (quantity === 5) calc = calc + 27;
+            else if (quantity === 6) calc = calc + 31;
+        } else if (volume === 2) {
+            //시간
+            if (time === 1) calc = calc + 17;
+            else if (time === 2) calc = calc + 8 + 17;
+            else if (time === 3) calc = calc + 8 * 2 + 17;
+            else if (time === 4) calc = calc + 8 * 3 + 17;
+            else if (time === 5) calc = calc + 50;
+            else if (time === 6) calc = calc + 65;
+        }
+    } else if (floor === 17) {
+        if (volume === 1) {
+            //물량
+            if (quantity === 1) calc = calc + 15;
+            else if (quantity === 2) calc = calc + 18;
+            else if (quantity === 3) calc = calc + 20;
+            else if (quantity === 4) calc = calc + 24;
+            else if (quantity === 5) calc = calc + 28;
+            else if (quantity === 6) calc = calc + 32;
+        } else if (volume === 2) {
+            //시간
+            if (time === 1) calc = calc + 18;
+            else if (time === 2) calc = calc + 8 + 18;
+            else if (time === 3) calc = calc + 8 * 2 + 18;
+            else if (time === 4) calc = calc + 8 * 3 + 18;
+            else if (time === 5) calc = calc + 50;
+            else if (time === 6) calc = calc + 65;
+        }
+    } else if (floor === 18) {
+        if (volume === 1) {
+            //물량
+            if (quantity === 1) calc = calc + 16;
+            else if (quantity === 2) calc = calc + 19;
+            else if (quantity === 3) calc = calc + 22;
+            else if (quantity === 4) calc = calc + 26;
+            else if (quantity === 5) calc = calc + 30;
+            else if (quantity === 6) calc = calc + 34;
+        } else if (volume === 2) {
+            //시간
+            if (time === 1) calc = calc + 20;
+            else if (time === 2) calc = calc + 10 + 20;
+            else if (time === 3) calc = calc + 10 * 2 + 20;
+            else if (time === 4) calc = calc + 10 * 3 + 20;
+            else if (time === 5) calc = calc + 55;
+            else if (time === 6) calc = calc + 70;
+        }
+    } else if (floor === 19) {
+        if (volume === 1) {
+            //물량
+            if (quantity === 1) calc = calc + 18;
+            else if (quantity === 2) calc = calc + 19;
+            else if (quantity === 3) calc = calc + 24;
+            else if (quantity === 4) calc = calc + 28;
+            else if (quantity === 5) calc = calc + 32;
+            else if (quantity === 6) calc = calc + 36;
+        } else if (volume === 2) {
+            //시간
+            if (time === 1) calc = calc + 22;
+            else if (time === 2) calc = calc + 10 + 22;
+            else if (time === 3) calc = calc + 10 * 2 + 22;
+            else if (time === 4) calc = calc + 10 * 3 + 22;
+            else if (time === 5) calc = calc + 55;
+            else if (time === 6) calc = calc + 70;
+        }
+    } else if (floor === 20) {
+        if (volume === 1) {
+            //물량
+            if (quantity === 1) calc = calc + 21;
+            else if (quantity === 2) calc = calc + 23;
+            else if (quantity === 3) calc = calc + 26;
+            else if (quantity === 4) calc = calc + 30;
+            else if (quantity === 5) calc = calc + 34;
+            else if (quantity === 6) calc = calc + 38;
+        } else if (volume === 2) {
+            //시간
+            if (time === 1) calc = calc + 24;
+            else if (time === 2) calc = calc + 10 + 24;
+            else if (time === 3) calc = calc + 10 * 2 + 24;
+            else if (time === 4) calc = calc + 10 * 3 + 24;
+            else if (time === 5) calc = calc + 60;
+            else if (time === 6) calc = calc + 75;
+        }
+    } else if (floor === 21) {
+        if (volume === 1) {
+            //물량
+            if (quantity === 1) calc = calc + 23;
+            else if (quantity === 2) calc = calc + 26;
+            else if (quantity === 3) calc = calc + 29;
+            else if (quantity === 4) calc = calc + 34;
+            else if (quantity === 5) calc = calc + 39;
+            else if (quantity === 6) calc = calc + 44;
+        } else if (volume === 2) {
+            //시간
+            if (time === 1) calc = calc + 27;
+            else if (time === 2) calc = calc + 10 + 27;
+            else if (time === 3) calc = calc + 10 * 2 + 27;
+            else if (time === 4) calc = calc + 10 * 3 + 27;
+            else if (time === 5) calc = calc + 60;
+            else if (time === 6) calc = calc + 80;
+        }
+    } else if (floor === 22) {
+        if (volume === 1) {
+            //물량
+            if (quantity === 1) calc = calc + 26;
+            else if (quantity === 2) calc = calc + 39;
+            else if (quantity === 3) calc = calc + 32;
+            else if (quantity === 4) calc = calc + 37;
+            else if (quantity === 5) calc = calc + 42;
+            else if (quantity === 6) calc = calc + 47;
+        } else if (volume === 2) {
+            //시간
+            if (time === 1) calc = calc + 30;
+            else if (time === 2) calc = calc + 10 + 30;
+            else if (time === 3) calc = calc + 10 * 2 + 30;
+            else if (time === 4) calc = calc + 10 * 3 + 30;
+            else if (time === 5) calc = calc + 65;
+            else if (time === 6) calc = calc + 85;
+        }
+    } else if (floor === 23) {
+        if (volume === 1) {
+            //물량
+            if (quantity === 1) calc = calc + 29;
+            else if (quantity === 2) calc = calc + 32;
+            else if (quantity === 3) calc = calc + 35;
+            else if (quantity === 4) calc = calc + 40;
+            else if (quantity === 5) calc = calc + 45;
+            else if (quantity === 6) calc = calc + 50;
+        } else if (volume === 2) {
+            //시간
+            if (time === 1) calc = calc + 33;
+            else if (time === 2) calc = calc + 10 + 33;
+            else if (time === 3) calc = calc + 10 * 2 + 33;
+            else if (time === 4) calc = calc + 10 * 3 + 33;
+            else if (time === 5) calc = calc + 65;
+            else if (time === 6) calc = calc + 90;
+        }
+    } else if (floor === 24) {
+        calc = calc + 31;
+        if (volume === 1) {
+            //물량
+            return "consultation";
+        } else if (volume === 2) {
+            //시간
+            if (time === 1) calc = calc + 37;
+            else if (time === 2) calc = calc + 10 + 37;
+            else if (time === 3) calc = calc + 10 * 2 + 37;
+            else if (time === 4) calc = calc + 10 * 3 + 37;
+            else if (time === 5) calc = calc + 70;
+            else if (time === 6) calc = calc + 95;
+        }
+    } else if (floor === 25) {
+        calc = calc + 36;
+        if (volume === 1) {
+            //물량
+            return "consultation";
+        } else if (volume === 2) {
+            //시간
+            if (time === 1) calc = calc + 42;
+            else if (time === 2) calc = calc + 10 + 42;
+            else if (time === 3) calc = calc + 10 * 2 + 42;
+            else if (time === 4) calc = calc + 10 * 3 + 42;
+            else if (time === 5) calc = calc + 75;
+            else if (time === 6) calc = calc + 105;
+        }
+    } else if (floor === 26) return "consultation";
+
+    return calc * 10000;
+};
+
+export const GetSkyPrice = (floor, time) => {
+    let calc = 0;
+
+    if (floor >= 2 && floor <= 7) {
+        if (time === 1) calc = calc + 20;
+        else if (time === 2) calc = calc + 15 + 20;
+        else if (time === 3) calc = calc + 1(5 * 2) + 20;
+        else if (time === 4) calc = calc + 1(5 * 3) + 20;
+        else if (time === 5) calc = calc + 40;
+        else if (time === 6) calc = calc + 60;
+    } else if (floor >= 8 && floor <= 11) {
+        if (time === 1) calc = calc + 35;
+        else if (time === 2) calc = calc + 20 + 35;
+        else if (time === 3) calc = calc + 20 * 2 + 35;
+        else if (time === 4) calc = calc + 20 * 3 + 35;
+        else if (time === 5) calc = calc + 50;
+        else if (time === 6) calc = calc + 70;
+    } else if (floor >= 12 && floor <= 14) {
+        if (time === 1) calc = calc + 40;
+        else if (time === 2) calc = calc + 20 + 40;
+        else if (time === 3) calc = calc + 20 * 2 + 40;
+        else if (time === 4) calc = calc + 20 * 3 + 40;
+        else if (time === 5) calc = calc + 70;
+        else if (time === 6) calc = calc + 90;
+    } else if (floor >= 15 && floor <= 17) {
+        if (time === 1) calc = calc + 0;
+        else if (time === 2) calc = calc + 30 + 0;
+        else if (time === 3) calc = calc + 30 * 2 + 0;
+        else if (time === 4) calc = calc + 30 * 3 + 0;
+        else if (time === 5) calc = calc + 90;
+        else if (time === 6) calc = calc + 130;
+    } else if (floor >= 18 && floor <= 20) {
+        if (time === 1) calc = calc + 0;
+        else if (time === 2) calc = calc + 40 + 0;
+        else if (time === 3) calc = calc + 40 * 2 + 0;
+        else if (time === 4) calc = calc + 40 * 3 + 0;
+        else if (time === 5) calc = calc + 130;
+        else if (time === 6) calc = calc + 180;
+    } else if (floor === 21) return "consultation";
+
+    return calc * 10000;
 };
