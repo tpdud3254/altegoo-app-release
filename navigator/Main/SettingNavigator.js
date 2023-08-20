@@ -12,6 +12,7 @@ import { color } from "../../styles";
 import { Image } from "react-native";
 import MemberInformation from "../../screen/main/setting/MemberInformation";
 import PointMain from "../../screen/main/setting/point/PointMain";
+import PointBreakdown from "../../screen/main/setting/point/PointBreakdown";
 
 const Stack = createStackNavigator();
 
@@ -54,9 +55,9 @@ export default function SettingNavigator() {
                 options={{ title: "포인트" }}
             />
             <Stack.Screen
-                name="PointNavigator"
-                component={PointNavigator}
-                options={{ title: "포인트" }}
+                name="PointBreakdown"
+                component={PointBreakdown}
+                options={{ title: "포인트 이용내역" }}
             />
             <Stack.Screen
                 name="BlockUser"

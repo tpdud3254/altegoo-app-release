@@ -60,11 +60,6 @@ export default function PointNavigator() {
                 component={WithdrawalPoint}
                 options={{ title: "포인트 출금" }}
             />
-            <Stack.Screen
-                name="PointBreakdown"
-                component={PointBreakdown}
-                options={{ title: "포인트 사용내역" }}
-            />
         </Stack.Navigator>
     );
 }

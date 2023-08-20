@@ -217,7 +217,7 @@ function PointMain({ navigation }) {
                             </Row>
                         </Button>
                     ) : null}
-                    <Button>
+                    <Button onPress={() => goToPage("PointBreakdown")}>
                         <Row>
                             <Image
                                 source={require("../../../../assets/images/icons/icon_point_histy.png")}
