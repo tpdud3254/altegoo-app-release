@@ -211,7 +211,7 @@ function RegistOrder({ navigation }) {
             price,
             vehicleType: VEHICLE[vehicleType - 1],
             ...(vehicleType === 1 && {
-                direction: DIRECTION[direction],
+                direction: DIRECTION[direction - 1],
                 ...((direction === 1 || direction === 2) && {
                     floor: floor > 25 ? "26층 이상" : floor + "층",
                 }),

@@ -13,7 +13,12 @@ import MediumText from "../../../component/text/MediumText";
 import RegistContext from "../../../context/RegistContext";
 import UserContext from "../../../context/UserContext";
 import { color } from "../../../styles";
-import { numberWithComma } from "../../../utils";
+import {
+    GetDate,
+    GetDayOfWeek,
+    GetTime,
+    numberWithComma,
+} from "../../../utils";
 import Checkbox from "expo-checkbox";
 import { useForm } from "react-hook-form";
 import { REGIST_NAV } from "../../../constant";
@@ -341,7 +346,9 @@ function AddOtherData({ navigation }) {
                 <ItemTitle title="작업 종류" />
                 <Wrapper>
                     <Content>
-                        <RegularText>사다리차 / 내림</RegularText>
+                        <RegularText>
+                            {registInfo.vehicleType} / {registInfo.direction}
+                        </RegularText>
                     </Content>
                 </Wrapper>
             </Item>
@@ -349,7 +356,14 @@ function AddOtherData({ navigation }) {
                 <ItemTitle title="작업 일시" />
                 <Wrapper>
                     <Content>
-                        <RegularText>2023년 5월 25일 (수) 19:23</RegularText>
+                        <RegularText>
+                            {`${GetDate(
+                                registInfo.dateTime,
+                                "long"
+                            )} (${GetDayOfWeek(registInfo.dateTime)}) ${GetTime(
+                                registInfo.dateTime
+                            )}`}
+                        </RegularText>
                     </Content>
                 </Wrapper>
             </Item>

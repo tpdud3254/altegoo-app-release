@@ -119,10 +119,14 @@ export const GetTime = (dateTime, mode = "short") => {
         return `${GetAmpm(workDateTime.getHours())} ${numberWithZero(
             hours
         )}:${numberWithZero(workDateTime.getMinutes())}`;
-    else mode === "long";
-    return `${GetAmpm(workDateTime.getHours())} ${numberWithZero(
-        hours
-    )}시 ${numberWithZero(workDateTime.getMinutes())}분`;
+    else if (mode === "long")
+        return `${GetAmpm(workDateTime.getHours())} ${numberWithZero(
+            hours
+        )}시 ${numberWithZero(workDateTime.getMinutes())}분`;
+    else if (mode === "24")
+        return `${numberWithZero(workDateTime.getHours())}:${numberWithZero(
+            workDateTime.getMinutes()
+        )}`;
 };
 
 export const GetAmpm = (hours) => {
