@@ -119,6 +119,10 @@ export const GetTime = (dateTime, mode = "short") => {
         return `${GetAmpm(workDateTime.getHours())} ${numberWithZero(
             hours
         )}:${numberWithZero(workDateTime.getMinutes())}`;
+    else mode === "long";
+    return `${GetAmpm(workDateTime.getHours())} ${numberWithZero(
+        hours
+    )}시 ${numberWithZero(workDateTime.getMinutes())}분`;
 };
 
 export const GetAmpm = (hours) => {

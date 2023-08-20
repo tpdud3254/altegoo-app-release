@@ -5,7 +5,6 @@ import { color } from "../../../styles";
 import MediumText from "../../../component/text/MediumText";
 import { AntDesign } from "@expo/vector-icons";
 import styled from "styled-components/native";
-import { useForm } from "react-hook-form";
 import RegistContext from "../../../context/RegistContext";
 import { CALENDAR_HAND, CALENDAR_LOCALES, REGIST_NAV } from "../../../constant";
 import Layout from "../../../component/layout/Layout";
@@ -14,7 +13,7 @@ import RegularText from "../../../component/text/RegularText";
 import { shadowProps } from "../../../component/Shadow";
 import Dialog, { DialogContent } from "react-native-popup-dialog";
 import RNDateTimePicker from "@react-native-community/datetimepicker";
-import { numberWithComma } from "../../../utils";
+import { GetDate, GetTime, numberWithComma } from "../../../utils";
 
 LocaleConfig.locales["fr"] = CALENDAR_LOCALES;
 LocaleConfig.defaultLocale = "fr";
@@ -48,21 +47,19 @@ const DialogContainer = styled.View`
 `;
 
 function SelectDateTime({ navigation }) {
-    const [optionData, setOptionData] = useState([]);
-    const [selectedDay, setSelectedDay] = useState("");
-    const [selectedTime, setSelectedTime] = useState(null);
-    const [ampm, setAmpm] = useState(null);
-    const { setValue, register, handleSubmit, getValues } = useForm();
     const { registInfo, setRegistInfo } = useContext(RegistContext);
+
+    const [optionData, setOptionData] = useState([]);
+    const [day, setDay] = useState("");
+    const [time, setTime] = useState("");
+    const [selectedDay, setSelectedDay] = useState("");
+    const [selectedTime, setSelectedTime] = useState("");
 
     const [popupShown, setPopupShown] = useState(false);
     const [selectionType, setSelectionType] = useState("");
 
     useEffect(() => {
         console.log(registInfo);
-
-        register("hour");
-        register("min");
 
         const data = [];
 
@@ -74,28 +71,6 @@ function SelectDateTime({ navigation }) {
         });
 
         setOptionData(data);
-        // if (registInfo.dateTime) {
-        //     const date = new Date(registInfo.dateTime);
-        //     setSelectedDay(
-        //         `${date.getFullYear()}-${getMonth(date)}-${getDate(date)}`
-        //     );
-
-        //     if (date.getHours() >= 12 || date.getHours() <= 23) {
-        //         setAmpm("pm");
-        //     } else {
-        //         setAmpm("am");
-        //     }
-
-        //     if (date.getHours() > 12) {
-        //         setValue("hour", date.getHours() - 12);
-        //     } else if (date.getHours() === 0) {
-        //         setValue("hour", "12");
-        //     } else {
-        //         setValue("hour", date.getHours());
-        //     }
-
-        //     setValue("min", date.getMinutes());
-        // }
     }, []);
 
     const showPopup = (option) => {
@@ -114,10 +89,6 @@ function SelectDateTime({ navigation }) {
             : date.getMonth() + 1;
     };
 
-    const getDate = (date) => {
-        return date.getDate() < 10 ? "0" + date.getDate() : date.getDate();
-    };
-
     const getMinDate = () => {
         const today = new Date();
 
@@ -131,69 +102,37 @@ function SelectDateTime({ navigation }) {
     const isSelectedDay = (dataString) => selectedDay === dataString;
 
     const onSelectDate = (dateString) => {
-        setSelectedDay(dateString);
+        setDay(dateString);
+        setSelectedDay(GetDate(dateString, "long"));
         hidePopup();
     };
 
     const onSelectTime = (e) => {
-        console.log(e);
         hidePopup();
-        setSelectedTime(e.nativeEvent.timestamp);
+
+        const date = new Date(e.nativeEvent.timestamp);
+        setTime(`${date.getHours()}:${date.getMinutes()}`);
+        setSelectedTime(GetTime(date, "long"));
     };
-    const onNextStep = ({ hour, min }) => {
-        console.log(selectedDay);
-        // const selectHour = parseInt(hour);
-        // const selectMin = parseInt(min);
+    const onNextStep = () => {
+        const sendDateTime = new Date();
 
-        // console.log(ampm, selectHour, selectMin);
+        const year = day.substring(0, 4);
+        const month = day.substring(5, 7);
+        const date = day.substring(8, 10);
+        const [hours, min] = time.split(":");
 
-        // if (!selectedDay || selectedDay === "") {
-        //     Toast.show({
-        //         type: "errorToast",
-        //         props: "작업 날짜를 선택해주세요.",
-        //     });
-        //     return;
-        // }
+        sendDateTime.setFullYear(Number(year));
+        sendDateTime.setMonth(Number(month) - 1);
+        sendDateTime.setDate(Number(date));
+        sendDateTime.setHours(+hours);
+        sendDateTime.setMinutes(min);
 
-        // if (
-        //     !ampm ||
-        //     (!selectHour && selectHour !== 0) ||
-        //     (!selectMin && selectMin !== 0)
-        // ) {
-        //     Toast.show({
-        //         type: "errorToast",
-        //         props: "작업 시간을 입력해주세요.",
-        //     });
-        //     return;
-        // }
+        console.log(sendDateTime);
 
-        // if (
-        //     selectHour < 1 ||
-        //     selectHour > 12 ||
-        //     selectMin < 0 ||
-        //     selectMin > 59
-        // ) {
-        //     Toast.show({
-        //         type: "errorToast",
-        //         props: "유효한 시간을 입력해주세요.",
-        //     });
-        //     return;
-        // }
+        setRegistInfo({ dateTime: sendDateTime, ...registInfo });
 
-        // const selectDateTime = new Date(selectedDay);
-        // const hourResult =
-        //     ampm === "am"
-        //         ? selectHour === 12
-        //             ? 0
-        //             : selectHour
-        //         : selectHour !== 12
-        //         ? selectHour + 12
-        //         : selectHour;
-
-        // selectDateTime.setHours(hourResult, selectMin);
-
-        // setRegistInfo({ dateTime: selectDateTime, ...registInfo });
-        // navigation.navigate(REGIST_NAV[2]);
+        navigation.navigate(REGIST_NAV[2]);
     };
     const LeftArrow = () => (
         <AntDesign name="leftcircleo" size={28} color="black" />
@@ -371,7 +310,7 @@ function SelectDateTime({ navigation }) {
             bottomButtonProps={{
                 onPress: onNextStep,
                 title: "다음으로",
-                // disabled: true,
+                disabled: !(selectedDay.length > 0 && selectedTime.length > 0),
             }}
         >
             <OptionScroll data={optionData} />
