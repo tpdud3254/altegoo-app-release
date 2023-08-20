@@ -16,6 +16,7 @@ import BoldText from "../../component/text/BoldText";
 import OrderList from "../../screen/main/orders/OrderList";
 import RealTimeOrder from "../../screen/main/orders/RealTimeOrder";
 import DriverOrderList from "../../screen/main/orders/DriverOrderList";
+import Menus from "../../screen/main/setting/Menus";
 
 const Tabs = createBottomTabNavigator();
 const Stack = createStackNavigator();
@@ -122,9 +123,9 @@ export default function TabsNavigator({ route }) {
                             component={DriverOrderList}
                         />
                         <Tabs.Screen
-                            name="SettingNavigator"
+                            name="Menus"
                             options={{
-                                headerShown: false,
+                                headerShown: true,
                                 tabBarIcon: ({ focused }) => (
                                     <TabIcon
                                         tabName="setting"
@@ -133,7 +134,7 @@ export default function TabsNavigator({ route }) {
                                     />
                                 ),
                             }}
-                            component={SettingNavigator}
+                            component={Menus}
                         />
                         {/* <Tabs.Screen
                             name="Home"
@@ -228,7 +229,7 @@ export default function TabsNavigator({ route }) {
                             component={OrderList}
                         />
                         <Tabs.Screen
-                            name="SettingNavigator"
+                            name="Menus"
                             options={{
                                 headerShown: false,
                                 tabBarIcon: ({ focused }) => (
@@ -239,7 +240,7 @@ export default function TabsNavigator({ route }) {
                                     />
                                 ),
                             }}
-                            component={SettingNavigator}
+                            component={Menus}
                         />
                         {/* <Tabs.Screen
                             name="TabRegistWork"

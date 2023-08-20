@@ -24,6 +24,7 @@ import OrderProgress from "../../screen/main/orders/OrderProgress";
 import RegistNavigator from "./RegistNavigator";
 import OrderDetails from "../../screen/main/orders/OrderDetails";
 import DriverOrderProgress from "../../screen/main/orders/DriverOrderProgress";
+import SettingNavigator from "./SettingNavigator";
 
 Location.watchPositionAsync(
     {
@@ -344,6 +345,11 @@ export default function MainNavigator() {
                         options={{
                             headerTitle: "작업 상세 보기",
                         }}
+                    />
+                    <Stack.Screen
+                        name="SettingNavigator"
+                        component={SettingNavigator}
+                        options={{ headerShown: false }}
                     />
                     <Stack.Screen
                         name="RegistNavigator"

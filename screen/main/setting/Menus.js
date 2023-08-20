@@ -59,7 +59,9 @@ function Menus({ navigation }) {
                             {GetPhoneNumberWithDash(info.phone)}
                         </RegularText>
                     </View>
-                    <UserInfomation onPress={notYet}>
+                    <UserInfomation
+                        onPress={() => goToPage("MemberInformation")}
+                    >
                         <MediumText style={{ fontSize: 16 }}>
                             회원정보
                         </MediumText>
@@ -68,6 +70,12 @@ function Menus({ navigation }) {
             ),
         });
     }, []);
+
+    const goToPage = (pageName) => {
+        navigation.navigate("SettingNavigator", {
+            screen: pageName,
+        });
+    };
 
     const notYet = () => {
         showErrorMessage("지원 예정 기능입니다.");
@@ -104,7 +112,7 @@ function Menus({ navigation }) {
         );
     };
     return (
-        <Layout>
+        <Layout scroll={false}>
             <Menu>
                 <MediumText>
                     포인트 및 쿠폰{"      "}

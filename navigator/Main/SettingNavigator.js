@@ -10,6 +10,7 @@ import Menus from "../../screen/main/setting/Menus";
 import { FONTS } from "../../constant";
 import { color } from "../../styles";
 import { Image } from "react-native";
+import MemberInformation from "../../screen/main/setting/MemberInformation";
 
 const Stack = createStackNavigator();
 
@@ -17,6 +18,7 @@ export default function SettingNavigator() {
     return (
         <Stack.Navigator
             screenOptions={{
+                headerShown: true,
                 headerTitleAlign: "center",
                 headerShadowVisible: false,
                 headerBackTitleVisible: false,
@@ -40,7 +42,11 @@ export default function SettingNavigator() {
                 ),
             }}
         >
-            <Stack.Screen name="Menus" component={Menus} />
+            <Stack.Screen
+                name="MemberInformation"
+                component={MemberInformation}
+                options={{ title: "회원 정보" }}
+            />
             <Stack.Screen
                 name="BlockUser"
                 component={BlockUser}
