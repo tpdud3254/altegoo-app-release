@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useState } from "react";
 import styled from "styled-components/native";
 import PropTypes from "prop-types";
-import { Text, View } from "react-native";
+import { Image, Text, TouchableOpacity, View } from "react-native";
 import SubTitleText from "../../../../component/text/SubTitleText";
 import MediumText from "../../../../component/text/MediumText";
 import SubmitButton from "../../../../component/button/SubmitButton";
@@ -12,7 +12,41 @@ import axios from "axios";
 import { SERVER } from "../../../../constant";
 import { VALID } from "../../../../constant";
 import { useIsFocused } from "@react-navigation/native";
+import Layout from "../../../../component/layout/Layout";
+import LightText from "../../../../component/text/LightText";
+import BoldText from "../../../../component/text/BoldText";
 
+import RegularText from "../../../../component/text/RegularText";
+import { Row, RowAround, RowBetween } from "../../../../component/Row";
+import { color } from "../../../../styles";
+
+const Header = styled.View`
+    margin-bottom: 20px;
+`;
+const Box = styled.View`
+    background-color: ${color.lightblue};
+    padding: 17px 20px;
+    border-radius: 10px;
+    margin-bottom: 15px;
+`;
+const Button = styled.TouchableOpacity`
+    padding-top: 5px;
+    padding-bottom: 5px;
+`;
+const WithdrawalButton = styled.TouchableOpacity`
+    align-items: center;
+    background-color: white;
+    border: 1px solid ${color.main};
+    border-radius: 10px;
+    padding: 15px;
+`;
+
+const Dot = styled.View`
+    width: 8px;
+    height: 8px;
+    background-color: ${color.main};
+    border-radius: 5px;
+`;
 const point = {
     accountName: null,
     accountNumber: null,
@@ -25,20 +59,35 @@ const point = {
     userId: 56,
     withdrawalPoint: 0,
 };
+
+const COUPON_LIST = [
+    {
+        title: "회원 가입 축하 쿠폰",
+        value: "작업 등록시 20,000 AP 할인",
+    },
+    {
+        title: "회원 가입 축하 쿠폰",
+        value: "작업 등록시 20,000 AP 할인",
+    },
+];
+
 function PointMain({ navigation }) {
     const [account, setAccount] = useState({});
-    const [createAccountVisible, setCreateAccountVisible] = useState(false);
     const { info } = useContext(UserContext);
     const isFocused = useIsFocused();
+    const [couponListVisible, setCouponListVisible] = useState(false);
 
     useEffect(() => {
         getMyPoint();
     }, [isFocused]);
+
     const goToPage = (page, data) => {
         navigation.navigate(page, data);
     };
 
     console.log(info);
+
+    const toggleCouponList = () => setCouponListVisible((prev) => !prev);
 
     const getMyPoint = async () => {
         try {
@@ -62,11 +111,6 @@ function PointMain({ navigation }) {
                 } = response;
                 console.log("point info : ", points);
                 setAccount(points);
-                if (points.accountNumber) {
-                    setCreateAccountVisible(false);
-                } else {
-                    setCreateAccountVisible(true);
-                }
             } else {
                 const {
                     data: { msg },
@@ -78,76 +122,196 @@ function PointMain({ navigation }) {
             console.log(error);
         }
     };
+
+    const Line = () => (
+        <View
+            style={{
+                height: 1,
+                backgroundColor: "#D3E0F4",
+                marginTop: 15,
+                marginBottom: 15,
+            }}
+        ></View>
+    );
+
+    const Coupon = ({ data, lastChild }) => (
+        <View
+            style={{
+                alignItems: "flex-end",
+                marginTop: 5,
+                marginBottom: lastChild ? 10 : 20,
+            }}
+        >
+            <Row>
+                <View style={{ width: "4%" }}>
+                    <Dot />
+                </View>
+                <BoldText style={{ width: "96%" }}>{data.title}</BoldText>
+            </Row>
+            <RegularText style={{ width: "96%", fontSize: 17, marginTop: 6 }}>
+                작업 등록시 20,000 AP 할인
+            </RegularText>
+        </View>
+    );
+
     return (
-        <>
-            {createAccountVisible ? (
-                <View
-                    style={{
-                        flex: 1,
-                        alignItems: "center",
-                        justifyContent: "center",
-                    }}
-                >
-                    <SubTitleText>
-                        계좌 정보가 등록되지 않았습니다.
-                    </SubTitleText>
-                    <SubTitleText>
-                        본인 명의의 계좌정보를 등록해 주시기 바랍니다.
-                    </SubTitleText>
-
-                    <MediumText>
-                        본인 및 예금주 성명이 일치하여야{"\n"}계좌등록이
-                        가능합니다.
-                    </MediumText>
-
-                    <SubmitButton
-                        text="계좌등록 하러가기"
-                        onPress={() =>
-                            goToPage("RegistPointAccount", { account: account })
-                        }
-                    />
-                </View>
-            ) : (
-                <View>
-                    <SubTitleText>{info.name}님의 포인트</SubTitleText>
-                    <SubTitleText>
-                        {numberWithComma(account.curPoint || 0)} AP
-                    </SubTitleText>
-                    <MediumText>
-                        포인트 출금을 위해 정확한 계좌번호를 입력해주세요.
-                    </MediumText>
-                    <MediumText>
-                        잘못된 계좌입력으로 정상출금이 되지 않을 경우 책임을
-                        지지 않습니다.
-                    </MediumText>
-                    <PlainButton
-                        text="계좌수정하기"
-                        onPress={() =>
-                            goToPage("ModifyPointAccount", { account: account })
-                        }
-                    />
-
-                    <PlainButton
-                        text="포인트 충전"
-                        onPress={() =>
-                            goToPage("ChargePoint", { account: account })
-                        }
-                    />
-
-                    <PlainButton
-                        text="포인트 출금"
-                        onPress={() =>
-                            goToPage("WithdrawalPoint", { account: account })
-                        }
-                    />
-
-                    <PlainButton
-                        text="포인트 사용내역"
-                        // onPress={() => goToPage("PointBreakdown")}
-                    />
-                </View>
-            )}
-        </>
+        <Layout>
+            <Header>
+                <LightText style={{ marginBottom: 3 }}>
+                    쌓일 수록 행복해지는
+                </LightText>
+                <BoldText>알테구 포인트</BoldText>
+            </Header>
+            <Box>
+                <RowBetween>
+                    <RegularText style={{ fontSize: 15 }}>
+                        보유한 출금 가능한 포인트
+                    </RegularText>
+                    <Row>
+                        <Image
+                            source={require("../../../../assets/images/icons/icon_point.png")}
+                            style={{
+                                width: 27,
+                                height: 27,
+                                marginRight: 2,
+                            }}
+                        />
+                        <BoldText
+                            style={{
+                                fontSize: 16,
+                            }}
+                        >
+                            150,000
+                            <BoldText
+                                style={{
+                                    fontSize: 13,
+                                }}
+                            >
+                                {" "}
+                                AP
+                            </BoldText>
+                        </BoldText>
+                    </Row>
+                </RowBetween>
+                <Line />
+                <RowAround>
+                    {info.userTypeId === 2 ? (
+                        <Button>
+                            <Row>
+                                <Image
+                                    source={require("../../../../assets/images/icons/icon_charge.png")}
+                                    style={{
+                                        width: 27,
+                                        height: 27,
+                                        marginRight: 5,
+                                    }}
+                                    resizeMode="contain"
+                                />
+                                <RegularText
+                                    style={{
+                                        fontSize: 15,
+                                    }}
+                                >
+                                    충전하기
+                                </RegularText>
+                            </Row>
+                        </Button>
+                    ) : null}
+                    <Button>
+                        <Row>
+                            <Image
+                                source={require("../../../../assets/images/icons/icon_point_histy.png")}
+                                style={{
+                                    width: 22,
+                                    height: 25,
+                                    marginRight: 5,
+                                }}
+                                resizeMode="contain"
+                            />
+                            <RegularText
+                                style={{
+                                    fontSize: 15,
+                                }}
+                            >
+                                이용내역
+                            </RegularText>
+                        </Row>
+                    </Button>
+                    <Button>
+                        <Row>
+                            <Image
+                                source={require("../../../../assets/images/icons/icon_taxback.png")}
+                                style={{
+                                    width: 25,
+                                    height: 25,
+                                    marginRight: 5,
+                                }}
+                                resizeMode="contain"
+                            />
+                            <RegularText
+                                style={{
+                                    fontSize: 15,
+                                }}
+                            >
+                                소득공제
+                            </RegularText>
+                        </Row>
+                    </Button>
+                </RowAround>
+            </Box>
+            <WithdrawalButton>
+                <BoldText style={{ color: color.main }}>
+                    포인트 출금하기
+                </BoldText>
+            </WithdrawalButton>
+            {/* TODO: 기사일경우 차트 추가,,ㅋㅋㅋㅋㅋ 존나 어이없네 */}
+            <BoldText style={{ marginTop: 30, marginBottom: 10 }}>
+                쿠폰
+            </BoldText>
+            <Box>
+                <TouchableOpacity onPress={toggleCouponList}>
+                    <RowBetween>
+                        <RegularText style={{ fontSize: 15 }}>
+                            보유한 쿠폰
+                        </RegularText>
+                        <Row>
+                            <BoldText>{COUPON_LIST.length}장</BoldText>
+                            {couponListVisible ? (
+                                <Image
+                                    source={require("../../../../assets/images/icons/icon_fullup.png")}
+                                    style={{
+                                        width: 27,
+                                        height: 27,
+                                        marginLeft: 2,
+                                    }}
+                                />
+                            ) : (
+                                <Image
+                                    source={require("../../../../assets/images/icons/icon_fulldw2.png")}
+                                    style={{
+                                        width: 27,
+                                        height: 27,
+                                        marginLeft: 2,
+                                    }}
+                                />
+                            )}
+                        </Row>
+                    </RowBetween>
+                    {couponListVisible ? (
+                        <>
+                            <Line />
+                            {COUPON_LIST.map((coupon, index) => (
+                                <Coupon
+                                    data={coupon}
+                                    key={index}
+                                    lastChild={COUPON_LIST.length === index + 1}
+                                />
+                            ))}
+                        </>
+                    ) : null}
+                </TouchableOpacity>
+            </Box>
+        </Layout>
     );
 }
 

@@ -77,35 +77,9 @@ function Menus({ navigation }) {
         });
     };
 
-    const notYet = () => {
-        showErrorMessage("지원 예정 기능입니다.");
-    };
-    const Logout = () => (
-        <TouchableOpacity
-            onPress={async () => {
-                setIsLoggedIn(false);
-                setInfo({});
-                await AsyncStorage.removeItem("token");
-            }}
-        >
-            <MediumText>로그아웃</MediumText>
-        </TouchableOpacity>
-    );
-
-    const Menu = ({ children, logout }) => {
+    const Menu = ({ children, onPress }) => {
         return (
-            <SMenu
-                style={shadowProps}
-                onPress={
-                    logout
-                        ? async () => {
-                              setIsLoggedIn(false);
-                              setInfo({});
-                              await AsyncStorage.removeItem("token");
-                          }
-                        : notYet
-                }
-            >
+            <SMenu style={shadowProps} onPress={onPress}>
                 <View>{children}</View>
                 <Image source={Arrow} style={{ width: 20, height: 30 }} />
             </SMenu>
@@ -113,7 +87,7 @@ function Menus({ navigation }) {
     };
     return (
         <Layout scroll={false}>
-            <Menu>
+            <Menu onPress={() => goToPage("PointMain")}>
                 <MediumText>
                     포인트 및 쿠폰{"      "}
                     <MediumText style={{ color: color.main }}>
@@ -132,9 +106,6 @@ function Menus({ navigation }) {
             </Menu>
             <Menu>
                 <MediumText>비밀번호 변경</MediumText>
-            </Menu>
-            <Menu logout={true}>
-                <MediumText>로그아웃</MediumText>
             </Menu>
             {/* <TouchableOpacity
                 onPress={() => {

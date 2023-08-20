@@ -11,6 +11,7 @@ import { FONTS } from "../../constant";
 import { color } from "../../styles";
 import { Image } from "react-native";
 import MemberInformation from "../../screen/main/setting/MemberInformation";
+import PointMain from "../../screen/main/setting/point/PointMain";
 
 const Stack = createStackNavigator();
 
@@ -48,6 +49,16 @@ export default function SettingNavigator() {
                 options={{ title: "회원 정보" }}
             />
             <Stack.Screen
+                name="PointMain"
+                component={PointMain}
+                options={{ title: "포인트" }}
+            />
+            <Stack.Screen
+                name="PointNavigator"
+                component={PointNavigator}
+                options={{ title: "포인트" }}
+            />
+            <Stack.Screen
                 name="BlockUser"
                 component={BlockUser}
                 options={{
@@ -74,13 +85,6 @@ export default function SettingNavigator() {
                 component={Setting}
                 options={{
                     title: "설정",
-                }}
-            />
-            <Stack.Screen
-                name="PointNavigator"
-                component={PointNavigator}
-                options={{
-                    headerShown: false,
                 }}
             />
         </Stack.Navigator>

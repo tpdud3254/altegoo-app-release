@@ -347,13 +347,13 @@ export default function MainNavigator() {
                         }}
                     />
                     <Stack.Screen
-                        name="SettingNavigator"
-                        component={SettingNavigator}
+                        name="RegistNavigator"
+                        component={RegistNavigator}
                         options={{ headerShown: false }}
                     />
                     <Stack.Screen
-                        name="RegistNavigator"
-                        component={RegistNavigator}
+                        name="SettingNavigator"
+                        component={SettingNavigator}
                         options={{ headerShown: false }}
                     />
                     {/* <Stack.Screen
