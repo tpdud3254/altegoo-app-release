@@ -76,8 +76,8 @@ function ChargePoint({ route, navigation }) {
         <Layout scroll={false}>
             <Container>
                 <TextInput
-                    title="충전 금액 입력"
-                    placeholder="충전할 금액을 입력해 주세요"
+                    title="충전 포인트 입력"
+                    placeholder="충전할 금액을 입력해주세요."
                     returnKeyType="done"
                     keyboardType="number-pad"
                     // value={watch("phone")}
