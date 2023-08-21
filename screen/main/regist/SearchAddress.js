@@ -243,7 +243,11 @@ function SearchAddress({ route, navigation }) {
             ) : (
                 <Item>
                     <ItemTitle
-                        title={`1. ‘${registInfo.direction}’ 주소 입력하기`}
+                        title={
+                            registInfo.vehicleType === "스카이차"
+                                ? "1. 주소 입력하기"
+                                : `1. ‘${registInfo.direction}’ 주소 입력하기`
+                        }
                     />
                     <Wrapper>
                         <TouchableOpacity
@@ -254,7 +258,9 @@ function SearchAddress({ route, navigation }) {
                                 width="100%"
                                 text={
                                     route?.params?.selectAddress1?.address ||
-                                    `${registInfo.direction} 주소 입력`
+                                    (registInfo.vehicleType === "스카이차"
+                                        ? "주소 입력"
+                                        : `${registInfo.direction} 주소 입력`)
                                 }
                                 textStyle={{
                                     color: route?.params?.selectAddress1
