@@ -5,7 +5,19 @@ import { color } from "../../../styles";
 import MediumText from "../../../component/text/MediumText";
 import { Image, TextInput, View } from "react-native";
 import BoldText from "../../../component/text/BoldText";
-import { REGIST_NAV } from "../../../constant";
+import { REGIST_NAV, SERVER } from "../../../constant";
+import { useContext, useEffect, useState } from "react";
+import UserContext from "../../../context/UserContext";
+import RegistContext from "../../../context/RegistContext";
+import {
+    GetEmergencyPrice,
+    getAsyncStorageToken,
+    numberWithComma,
+    showError,
+    showErrorMessage,
+} from "../../../utils";
+import axios from "axios";
+import { useForm } from "react-hook-form";
 
 const Item = styled.View`
     background-color: white;
@@ -33,38 +45,67 @@ const PointButton = styled.TouchableOpacity`
     border-radius: 10px;
 `;
 const CheckOrderPrice = ({ navigation }) => {
+    const { info } = useContext(UserContext);
+    const { registInfo, setRegistInfo } = useContext(RegistContext);
+
+    const { setValue, register, handleSubmit, watch, getValues } = useForm();
+
+    const [pointData, setPointData] = useState(null);
+
+    useEffect(() => {
+        console.log("registInfo : ", registInfo);
+
+        getPoint();
+
+        register("usePoint");
+        register("emergencyPrice");
+
+        if (registInfo.emergency)
+            setValue(
+                "emergencyPrice",
+                GetEmergencyPrice(registInfo.price).toString()
+            );
+        else setValue("emergencyPrice", "0");
+    }, []);
+
+    useEffect(() => {
+        if (!pointData) null;
+        const usePoint = watch("usePoint");
+
+        if (usePoint && usePoint > 0) {
+            if (usePoint > pointData.curPoint)
+                setValue("usePoint", pointData.curPoint.toString());
+        }
+    }, [watch("usePoint")]);
+    const getPoint = async () => {
+        axios
+            .get(SERVER + "/users/point", {
+                headers: {
+                    auth: await getAsyncStorageToken(),
+                },
+            })
+            .then(({ data }) => {
+                const {
+                    result,
+                    data: { point },
+                } = data;
+                console.log("result: ", result);
+                console.log("point: ", point);
+
+                // setPointData(point);
+                setPointData({ curPoint: 10000 }); //TODO: testcode
+            })
+            .catch((error) => {
+                showError(error);
+            })
+            .finally(() => {});
+    };
+
     const onNextStep = () => {
         //TODO: 결제
         navigation.navigate(REGIST_NAV[6]);
     };
-    const EnterPoint = () => {
-        return (
-            <View style={{ width: "55%", marginRight: 20 }}>
-                <Row>
-                    <TextInput
-                        style={{
-                            width: "90%",
-                            fontSize: 18,
-                            fontFamily: "SpoqaHanSansNeo-Regular",
-                            color: color["page-black-text"],
-                        }}
-                        placeholder="사용할 포인트 입력"
-                        cursorColor={color["page-lightgrey-text"]}
-                    />
-                    <BoldText style={{ color: color["page-color-text"] }}>
-                        AP
-                    </BoldText>
-                </Row>
-                <View
-                    style={{
-                        height: 2,
-                        backgroundColor: color["input-border"],
-                        marginTop: 10,
-                    }}
-                ></View>
-            </View>
-        );
-    };
+
     // const gopay = () => {
     //     let curPoint = 0;
     //     const data = {
@@ -81,6 +122,8 @@ const CheckOrderPrice = ({ navigation }) => {
     //     };
     //     navigation.navigate("Payment", { data });
     // };
+
+    //TODO: 쿠폰사용 포함
     return (
         <Layout
             bottomButtonProps={{
@@ -102,41 +145,45 @@ const CheckOrderPrice = ({ navigation }) => {
                     결제금액
                 </RegularText>
                 <MediumText>
-                    150,000<MediumText style={{ fontSize: 14 }}> AP</MediumText>
+                    {numberWithComma(registInfo.price)}
+                    <MediumText style={{ fontSize: 14 }}> AP</MediumText>
                 </MediumText>
             </Item>
-            <Item emergency>
-                <Row>
-                    <Image
-                        source={require("../../../assets/images/icons/icon_emerg.png")}
-                        style={{ width: 25, height: 25 }}
-                    />
+            {registInfo.emergency ? (
+                <Item emergency>
+                    <Row>
+                        <Image
+                            source={require("../../../assets/images/icons/icon_emerg.png")}
+                            style={{ width: 25, height: 25 }}
+                        />
+                        <RegularText
+                            style={{
+                                fontSize: 19,
+                                color: "#EB1D36",
+                                marginTop: 5,
+                                marginLeft: 8,
+                            }}
+                        >
+                            긴급오더
+                        </RegularText>
+                    </Row>
                     <RegularText
                         style={{
-                            fontSize: 19,
-                            color: "#EB1D36",
-                            marginTop: 5,
-                            marginLeft: 8,
+                            color: color.main,
+                            fontSize: 15,
+                            marginBottom: 5,
+                            marginTop: 13,
                         }}
                     >
-                        긴급오더
+                        25% 추가운임
                     </RegularText>
-                </Row>
-                <RegularText
-                    style={{
-                        color: color.main,
-                        fontSize: 15,
-                        marginBottom: 5,
-                        marginTop: 13,
-                    }}
-                >
-                    25% 추가운임
-                </RegularText>
-                <BoldText style={{ fontSize: 22 }}>
-                    36,000
-                    <BoldText style={{ fontSize: 16 }}> AP</BoldText>
-                </BoldText>
-            </Item>
+                    <BoldText style={{ fontSize: 22 }}>
+                        {numberWithComma(watch("emergencyPrice"))}
+                        <BoldText style={{ fontSize: 16 }}> AP</BoldText>
+                    </BoldText>
+                </Item>
+            ) : null}
+
             <Item>
                 <RegularText style={{ marginBottom: 13 }}>포인트</RegularText>
                 <RegularText
@@ -149,12 +196,49 @@ const CheckOrderPrice = ({ navigation }) => {
                     보유한 포인트
                 </RegularText>
                 <MediumText style={{ marginBottom: 18 }}>
-                    36,000<MediumText style={{ fontSize: 14 }}> AP</MediumText>
+                    {pointData?.curPoint
+                        ? numberWithComma(pointData.curPoint)
+                        : 0}
+                    <MediumText style={{ fontSize: 14 }}> AP</MediumText>
                 </MediumText>
-
                 <Row>
-                    <EnterPoint />
-                    <PointButton>
+                    <View style={{ width: "55%", marginRight: 20 }}>
+                        <Row>
+                            <TextInput
+                                style={{
+                                    width: "90%",
+                                    fontSize: 18,
+                                    fontFamily: "SpoqaHanSansNeo-Regular",
+                                    color: color["page-black-text"],
+                                }}
+                                placeholder="사용할 포인트 입력"
+                                cursorColor={color["page-lightgrey-text"]}
+                                returnKeyType="done"
+                                keyboardType="number-pad"
+                                value={watch("usePoint")}
+                                onChangeText={(text) =>
+                                    setValue("usePoint", text)
+                                }
+                            />
+                            <BoldText
+                                style={{ color: color["page-color-text"] }}
+                            >
+                                AP
+                            </BoldText>
+                        </Row>
+                        <View
+                            style={{
+                                height: 2,
+                                backgroundColor: color["input-border"],
+                                marginTop: 10,
+                            }}
+                        ></View>
+                    </View>
+                    <PointButton
+                        onPress={() =>
+                            setValue("usePoint", pointData.curPoint.toString())
+                        }
+                    >
                         <MediumText
                             style={{
                                 fontSize: 15,
@@ -189,7 +273,9 @@ const CheckOrderPrice = ({ navigation }) => {
                             textAlign: "right",
                         }}
                     >
-                        150,000
+                        {numberWithComma(
+                            registInfo.price + Number(watch("emergencyPrice"))
+                        )}
                         <RegularText
                             style={{
                                 fontSize: 14,
@@ -218,7 +304,7 @@ const CheckOrderPrice = ({ navigation }) => {
                             textAlign: "right",
                         }}
                     >
-                        - 0
+                        - {watch("usePoint")}
                         <RegularText
                             style={{
                                 fontSize: 14,
@@ -248,7 +334,11 @@ const CheckOrderPrice = ({ navigation }) => {
                         총 결제 금액
                     </RegularText>
                     <BoldText style={{ fontSize: 22, color: color.main }}>
-                        36,000
+                        {numberWithComma(
+                            registInfo.price +
+                                Number(watch("emergencyPrice")) -
+                                Number(watch("usePoint"))
+                        )}
                         <BoldText style={{ fontSize: 16, color: color.main }}>
                             {" "}
                             AP
@@ -261,7 +351,12 @@ const CheckOrderPrice = ({ navigation }) => {
                     적립 예정 포인트
                 </MediumText>
                 <BoldText style={{ fontSize: 22, color: color.blue }}>
-                    36,000
+                    {numberWithComma(
+                        (registInfo.price +
+                            Number(watch("emergencyPrice")) -
+                            Number(watch("usePoint"))) *
+                            0.2
+                    )}
                     <BoldText style={{ fontSize: 16, color: color.blue }}>
                         {" "}
                         AP

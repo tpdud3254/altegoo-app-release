@@ -815,3 +815,5 @@ export const GetSkyPrice = (floor, time) => {
 
     return calc * 10000;
 };
+
+export const GetEmergencyPrice = (price) => price * 0.25;
