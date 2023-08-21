@@ -441,6 +441,9 @@ export const checkPosition = async (location) => {
 };
 
 export const GetPhoneNumberWithDash = (phone) => {
+    if (!phone) {
+        return "";
+    }
     return `${phone.substring(0, 3)}-${phone.substring(3, 7)}-${phone.substring(
         7,
         phone.length
@@ -776,8 +779,8 @@ export const GetSkyPrice = (floor, time) => {
     if (floor >= 2 && floor <= 7) {
         if (time === 1) calc = calc + 20;
         else if (time === 2) calc = calc + 15 + 20;
-        else if (time === 3) calc = calc + 1(5 * 2) + 20;
-        else if (time === 4) calc = calc + 1(5 * 3) + 20;
+        else if (time === 3) calc = calc + 15 * 2 + 20;
+        else if (time === 4) calc = calc + 15 * 3 + 20;
         else if (time === 5) calc = calc + 40;
         else if (time === 6) calc = calc + 60;
     } else if (floor >= 8 && floor <= 11) {

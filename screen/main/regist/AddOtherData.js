@@ -1,14 +1,12 @@
 import React, { useContext, useEffect, useState } from "react";
 import {
     Image,
-    ScrollView,
     TextInput as RNTextInput,
     TouchableOpacity,
-    TouchableWithoutFeedback,
     View,
 } from "react-native";
 import styled from "styled-components/native";
-import MainLayout from "../../../component/layout/MainLayout";
+
 import MediumText from "../../../component/text/MediumText";
 import RegistContext from "../../../context/RegistContext";
 import UserContext from "../../../context/UserContext";
@@ -16,36 +14,15 @@ import { color } from "../../../styles";
 import {
     GetDate,
     GetDayOfWeek,
+    GetPhoneNumberWithDash,
     GetTime,
     numberWithComma,
 } from "../../../utils";
-import Checkbox from "expo-checkbox";
 import { useForm } from "react-hook-form";
 import { REGIST_NAV } from "../../../constant";
 import Layout from "../../../component/layout/Layout";
 import BoldText from "../../../component/text/BoldText";
 import RegularText from "../../../component/text/RegularText";
-import TextInput, * as Input from "../../../component/input/TextInput";
-
-const Container = styled.View``;
-const SRow = styled.View`
-    flex-direction: row;
-    align-items: center;
-    margin-bottom: 10px;
-`;
-const STitle = styled.View`
-    width: 25%;
-    align-items: center;
-`;
-
-const SContent = styled.View`
-    width: 75%;
-    border: ${(props) =>
-            props.borderLine || props.inputBorderLine ? "0px" : "1px"}
-        solid ${color.border};
-    padding: 5px;
-    background-color: ${(props) => (props.background ? "white" : "")};
-`;
 
 const Row = styled.View`
     flex-direction: row;
@@ -75,23 +52,6 @@ const Content = styled.View`
     border-radius: 15px;
     justify-content: center;
 `;
-const Emergency = styled.View`
-    align-items: center;
-    margin-top: -5px;
-`;
-
-const ButtonContainer = styled.View`
-    align-items: center;
-`;
-const Button = styled.TouchableOpacity`
-    background-color: ${color.sub.blue};
-    width: 100px;
-    align-items: center;
-    border-radius: 5px;
-    margin-top: 15px;
-    margin-bottom: 10px;
-    padding: 10px;
-`;
 
 const BottomButtonContainer = styled.View`
     flex-direction: row;
@@ -112,18 +72,26 @@ const NormalButton = styled.TouchableOpacity`
     width: 50%;
     height: 60px;
 `;
+
+//TODO: price정책정리
 function AddOtherData({ navigation }) {
-    const { registInfo, setRegistInfo } = useContext(RegistContext);
     const { info } = useContext(UserContext);
-    const [price, setPrice] = useState(0);
-    const [emergencyOrder, setEmergencyOrder] = useState(false);
+    const { registInfo, setRegistInfo } = useContext(RegistContext);
+
     const [isDirectPhone, setIsDirectPhone] = useState(false);
-    const { setValue, register, handleSubmit } = useForm();
-    console.log("registInfo : ", registInfo);
+
+    const { setValue, register, handleSubmit, watch, getValues } = useForm();
 
     useEffect(() => {
+        console.log("registInfo : ", registInfo);
+
         register("directPhone");
+        register("price", {
+            min: 0,
+        });
         register("memo");
+
+        setValue("price", registInfo.price);
     }, []);
 
     useEffect(() => {
@@ -134,158 +102,31 @@ function AddOtherData({ navigation }) {
         }
     }, [isDirectPhone]);
 
-    useEffect(() => {
-        setPrice(60000);
-        if (emergencyOrder) {
-            setPrice((prev) => prev + prev * 0.2);
-        }
-    }, [emergencyOrder]);
-
-    const getWorkType = () => {
-        const info = registInfo;
-
-        let text = "";
-        if (info.upDown !== "양사") {
-            text = `${info.vehicleType} / ${info.upDown}`;
-        } else {
-            text = `${info.vehicleType} / ${info.upDown} (${
-                info.bothType === 1 ? "내림 > 올림" : "올림 > 내림"
-            })`;
-        }
-
-        return text;
+    const plus = () => {
+        setValue("price", getValues("price") + 10000);
+    };
+    const minus = () => {
+        setValue("price", getValues("price") - 10000);
     };
 
-    const getWorkTime = () => {
-        const getDay = (index) => {
-            switch (index) {
-                case 0:
-                    return "일";
-                case 1:
-                    return "월";
-                case 2:
-                    return "화";
-                case 3:
-                    return "수";
-                case 4:
-                    return "목";
-                case 5:
-                    return "금";
-                case 6:
-                    return "토";
+    const onNextStep = (data) => {
+        const { directPhone, emergency, memo, price } = data;
 
-                default:
-                    break;
-            }
+        const prevInfo = registInfo;
+
+        delete prevInfo.price;
+
+        const sendData = {
+            directPhone: directPhone || null,
+            emergency,
+            memo: memo || null,
+            price,
         };
-        const info = registInfo;
-        const workTime = new Date(info.dateTime);
-        let text = `${workTime.getFullYear()}년 ${
-            workTime.getMonth() + 1 < 10
-                ? "0" + (workTime.getMonth() + 1)
-                : workTime.getMonth() + 1
-        }월 ${
-            workTime.getDate() < 10
-                ? "0" + workTime.getDate()
-                : workTime.getDate()
-        }일 (${getDay(workTime.getDay())}) ${
-            workTime.getHours() < 10
-                ? "0" + workTime.getHours()
-                : workTime.getHours()
-        }:${
-            workTime.getMinutes() < 10
-                ? "0" + workTime.getMinutes()
-                : workTime.getMinutes()
-        }`;
 
-        return text;
-    };
-
-    const getWorkFloor = () => {
-        const info = registInfo;
-
-        let text = "";
-
-        if (info.upDown === "양사") {
-            text = `${info.floor}층(${
-                info.bothType === 1 ? "내림" : "올림"
-            }) > ${info.otherFloor}층(${
-                info.bothType === 1 ? "올림" : "내림"
-            })`;
-        } else {
-            text = `${info.floor}층`;
-        }
-
-        return text;
-    };
-
-    const getPrice = () => {
-        //TODO: 작업비용
-        return `${numberWithComma(price)} AP`;
-    };
-
-    const getPoint = () => {
-        return `${numberWithComma(price * 0.15)} AP`;
-    };
-
-    const onNextStep = ({ directPhone, memo }) => {
-        // const point = price * 0.15;
-
-        // setRegistInfo({
-        //     price,
-        //     point,
-        //     memo: memo || null,
-        //     directPhone: directPhone || info.phone,
-        //     emergency: emergencyOrder,
-        //     ...registInfo,
-        // });
+        setRegistInfo({ ...prevInfo, ...sendData });
 
         navigation.navigate(REGIST_NAV[4]);
     };
-
-    // const Row = ({ title, content, view }) => (
-    //     <SRow>
-    //         <STitle>
-    //             <RegularText>{title}</RegularText>
-    //         </STitle>
-    //         {view ? (
-    //             view
-    //         ) : (
-    //             <SContent>
-    //                 <MediumText style={{ fontSize: 18 }}>{content}</MediumText>
-    //             </SContent>
-    //         )}
-    //     </SRow>
-    // );
-
-    const SetPriceView = (
-        <View style={{ flexDirection: "row" }}>
-            <TouchableOpacity
-                style={{
-                    backgroundColor: "white",
-                    borderRadius: 3,
-                    padding: 3,
-                    marginRight: 10,
-                }}
-                onPress={() =>
-                    setPrice(price - 10000 <= 0 ? price : price - 10000)
-                }
-            >
-                <MediumText>-10,000</MediumText>
-            </TouchableOpacity>
-            <TouchableOpacity
-                style={{
-                    backgroundColor: "white",
-                    borderRadius: 3,
-                    padding: 3,
-                    marginRight: 10,
-                }}
-                onPress={() => setPrice(price + 10000)}
-            >
-                <MediumText>+10,000</MediumText>
-            </TouchableOpacity>
-        </View>
-    );
 
     const ItemTitle = ({ title }) => {
         return (
@@ -323,14 +164,22 @@ function AddOtherData({ navigation }) {
     const BottomButton = () => {
         return (
             <BottomButtonContainer>
-                <EmergencyButton>
+                <EmergencyButton
+                    onPress={handleSubmit((data) =>
+                        onNextStep({ ...data, emergency: true })
+                    )}
+                >
                     <Image
                         source={require("../../../assets/images/icons/icon_emerg.png")}
                         style={{ width: 24, height: 24 }}
                     />
                     <BoldText style={{ color: "#EB1D36" }}>긴급오더</BoldText>
                 </EmergencyButton>
-                <NormalButton onPress={onNextStep}>
+                <NormalButton
+                    onPress={handleSubmit((data) =>
+                        onNextStep({ ...data, emergency: false })
+                    )}
+                >
                     <BoldText style={{ color: "white" }}>일반오더</BoldText>
                 </NormalButton>
             </BottomButtonContainer>
@@ -347,7 +196,11 @@ function AddOtherData({ navigation }) {
                 <Wrapper>
                     <Content>
                         <RegularText>
-                            {registInfo.vehicleType} / {registInfo.direction}
+                            {registInfo.vehicleType === "스카이차"
+                                ? registInfo.vehicleType
+                                : registInfo.vehicleType +
+                                  " / " +
+                                  registInfo.direction}
                         </RegularText>
                     </Content>
                 </Wrapper>
@@ -371,7 +224,7 @@ function AddOtherData({ navigation }) {
                 <ItemTitle title="작업 주소" />
                 <Wrapper>
                     <Content>
-                        <RegularText>경기도 고양시 고양이로 12-34</RegularText>
+                        <RegularText>{registInfo.address1}</RegularText>
                     </Content>
                 </Wrapper>
             </Item>
@@ -379,7 +232,7 @@ function AddOtherData({ navigation }) {
                 <ItemTitle />
                 <Wrapper>
                     <Content>
-                        <RegularText>102호</RegularText>
+                        <RegularText>{registInfo.detailAddress1}</RegularText>
                     </Content>
                 </Wrapper>
             </Item>
@@ -387,7 +240,11 @@ function AddOtherData({ navigation }) {
                 <ItemTitle title="작업 높이" />
                 <Wrapper>
                     <Content>
-                        <RegularText>11층</RegularText>
+                        <RegularText>
+                            {registInfo.direction === "양사"
+                                ? registInfo.downFloor
+                                : registInfo.floor}
+                        </RegularText>
                     </Content>
                 </Wrapper>
             </Item>
@@ -395,7 +252,9 @@ function AddOtherData({ navigation }) {
                 <ItemTitle title="연락처" />
                 <Wrapper>
                     <Content>
-                        <RegularText>010-1323-1212</RegularText>
+                        <RegularText>
+                            {GetPhoneNumberWithDash(info.phone)}
+                        </RegularText>
                     </Content>
                 </Wrapper>
             </Item>
@@ -410,7 +269,12 @@ function AddOtherData({ navigation }) {
                                 color: color["page-black-text"],
                             }}
                             placeholder="현장 연락처를 입력해주세요 (선택)"
+                            keyboardType="number-pad"
                             cursorColor={color["page-lightgrey-text"]}
+                            value={watch("directPhone")}
+                            onChangeText={(text) =>
+                                setValue("directPhone", text)
+                            }
                         />
                     </Content>
                 </Wrapper>
@@ -418,9 +282,12 @@ function AddOtherData({ navigation }) {
             <Item>
                 <ItemTitle />
                 <Wrapper>
-                    <TouchableOpacity style={{ marginBottom: 10 }}>
+                    <TouchableOpacity
+                        style={{ marginBottom: 10 }}
+                        onPress={() => setIsDirectPhone((prev) => !prev)}
+                    >
                         <Row>
-                            <Checkbox checked={false} />
+                            <Checkbox checked={isDirectPhone} />
                             <RegularText style={{ fontSize: 16 }}>
                                 핸드폰 번호 동일
                             </RegularText>
@@ -432,7 +299,10 @@ function AddOtherData({ navigation }) {
                 <ItemTitle title="작업 비용" />
                 <Wrapper>
                     <BoldText>
-                        150,000<BoldText style={{ fontSize: 14 }}> AP</BoldText>
+                        {watch("price")
+                            ? numberWithComma(watch("price").toString())
+                            : watch("price")}
+                        <BoldText style={{ fontSize: 14 }}> AP</BoldText>
                     </BoldText>
                 </Wrapper>
             </Item>
@@ -445,7 +315,7 @@ function AddOtherData({ navigation }) {
                     </RegularText>
                     <View style={{ marginTop: 7, marginBottom: 10 }}>
                         <Row>
-                            <TouchableOpacity>
+                            <TouchableOpacity onPress={plus}>
                                 <Image
                                     source={require("../../../assets/images/icons/icon_plus.png")}
                                     style={{ width: 24, height: 24 }}
@@ -469,7 +339,7 @@ function AddOtherData({ navigation }) {
                                     AP
                                 </MediumText>
                             </MediumText>
-                            <TouchableOpacity>
+                            <TouchableOpacity onPress={minus}>
                                 <Image
                                     source={require("../../../assets/images/icons/icon_minus.png")}
                                     style={{ width: 24, height: 24 }}
@@ -501,92 +371,6 @@ function AddOtherData({ navigation }) {
                     </View>
                 </Wrapper>
             </Item>
-            {/* <View>
-                <Container>
-                    <Row title="작업 종류" content={getWorkType()} />
-                    <Row title="작업 일시" content={getWorkTime()} />
-                    {registInfo.upDown === "양사" ? (
-                        <>
-                            <Row
-                                title={
-                                    (registInfo.bothType === 1
-                                        ? "내림"
-                                        : "올림") + " 주소"
-                                }
-                                content={registInfo.address}
-                            />
-                            <Row
-                                title={
-                                    (registInfo.bothType === 1
-                                        ? "올림"
-                                        : "내림") + " 주소"
-                                }
-                                content={registInfo.otherAddress}
-                            />
-                        </>
-                    ) : (
-                        <Row title="작업 주소" content={registInfo.address} />
-                    )}
-                    <Row title="작업 높이" content={getWorkFloor()} />
-
-                    {registInfo.volumeType === "quantity" ? (
-                        <Row title="작업 물량" content={registInfo.quantity} />
-                    ) : (
-                        <Row title="작업 시간" content={registInfo.time} />
-                    )}
-
-                    <Row title="휴대 전화" content={info.phone} />
-                    <InputRow
-                        title="현장 연락처"
-                        placeholder="현장에서 연락 가능한 번호 입력"
-                        defaultValue={isDirectPhone ? info.phone : null}
-                        type="directPhone"
-                    />
-                    <InputRow title="" checkBox />
-
-                    <Row title="작업 비용" content={getPrice()} />
-                    <Row title="" view={SetPriceView} />
-                    <Row title="적립 포인트" content={getPoint()} />
-                    <SRow>
-                        <STitle>
-                            <MediumText style={{ fontSize: 18 }}>
-                                긴급 오더
-                            </MediumText>
-                        </STitle>
-                        <Checkbox
-                            style={{ width: 28, height: 28 }}
-                            value={emergencyOrder}
-                            onValueChange={setEmergencyOrder}
-                            color={color.btnAccent}
-                        />
-                    </SRow>
-                    {emergencyOrder ? (
-                        <Emergency>
-                            <MediumText
-                                style={{
-                                    fontSize: 18,
-                                    color: color.main,
-                                    marginBottom: 5,
-                                }}
-                            >
-                                긴급 오더 선택 시 작업 비용이 20% 증가하며
-                                {"\n"}
-                                모든 기사님에게 알림이 전송됩니다.
-                            </MediumText>
-                        </Emergency>
-                    ) : null}
-                    <InputRow
-                        title="특이 사항"
-                        placeholder="특이사항을 입력해주세요."
-                        type="memo"
-                    />
-                </Container>
-                <ButtonContainer>
-                    <Button onPress={handleSubmit(onNextStep)}>
-                        <MediumText>확인</MediumText>
-                    </Button>
-                </ButtonContainer>
-            </View> */}
         </Layout>
     );
 }
