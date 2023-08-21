@@ -145,7 +145,7 @@ const CheckOrderPrice = ({ navigation }) => {
                     결제금액
                 </RegularText>
                 <MediumText>
-                    {numberWithComma(registInfo.price)}
+                    {registInfo.price}
                     <MediumText style={{ fontSize: 14 }}> AP</MediumText>
                 </MediumText>
             </Item>
@@ -178,7 +178,7 @@ const CheckOrderPrice = ({ navigation }) => {
                         25% 추가운임
                     </RegularText>
                     <BoldText style={{ fontSize: 22 }}>
-                        {numberWithComma(watch("emergencyPrice"))}
+                        {watch("emergencyPrice")}
                         <BoldText style={{ fontSize: 16 }}> AP</BoldText>
                     </BoldText>
                 </Item>
@@ -196,9 +196,7 @@ const CheckOrderPrice = ({ navigation }) => {
                     보유한 포인트
                 </RegularText>
                 <MediumText style={{ marginBottom: 18 }}>
-                    {pointData?.curPoint
-                        ? numberWithComma(pointData.curPoint)
-                        : 0}
+                    {pointData?.curPoint ? pointData.curPoint : 0}
                     <MediumText style={{ fontSize: 14 }}> AP</MediumText>
                 </MediumText>
                 <Row>
@@ -273,9 +271,7 @@ const CheckOrderPrice = ({ navigation }) => {
                             textAlign: "right",
                         }}
                     >
-                        {numberWithComma(
-                            registInfo.price + Number(watch("emergencyPrice"))
-                        )}
+                        {registInfo.price + Number(watch("emergencyPrice"))}
                         <RegularText
                             style={{
                                 fontSize: 14,
@@ -334,11 +330,9 @@ const CheckOrderPrice = ({ navigation }) => {
                         총 결제 금액
                     </RegularText>
                     <BoldText style={{ fontSize: 22, color: color.main }}>
-                        {numberWithComma(
-                            registInfo.price +
-                                Number(watch("emergencyPrice")) -
-                                Number(watch("usePoint"))
-                        )}
+                        {registInfo.price +
+                            Number(watch("emergencyPrice")) -
+                            Number(watch("usePoint"))}
                         <BoldText style={{ fontSize: 16, color: color.main }}>
                             {" "}
                             AP
@@ -351,12 +345,10 @@ const CheckOrderPrice = ({ navigation }) => {
                     적립 예정 포인트
                 </MediumText>
                 <BoldText style={{ fontSize: 22, color: color.blue }}>
-                    {numberWithComma(
-                        (registInfo.price +
-                            Number(watch("emergencyPrice")) -
-                            Number(watch("usePoint"))) *
-                            0.2
-                    )}
+                    {(registInfo.price +
+                        Number(watch("emergencyPrice")) -
+                        Number(watch("usePoint"))) *
+                        0.2}
                     <BoldText style={{ fontSize: 16, color: color.blue }}>
                         {" "}
                         AP
