@@ -109,6 +109,7 @@ function RegistOrder({ navigation }) {
         }
     }, [vehicleType, floor, time]);
 
+    //TODO: 예상 운임 협의 어떻게 처리할지
     useEffect(() => {
         //유효성 검사
         const check = {

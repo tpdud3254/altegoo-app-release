@@ -7,7 +7,7 @@ const Container = styled.View`
     flex: 1;
     justify-content: center;
     align-items: center;
-    background-color: white;
+    background-color: ${color["page-background"]};
 `;
 
 export default function LoadingLayout() {

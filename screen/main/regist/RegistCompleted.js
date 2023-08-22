@@ -58,9 +58,7 @@ function RegistCompleted({ navigation, route }) {
     const [userCount, setUserCount] = useState(0);
 
     useEffect(() => {
-        BackHandler.addEventListener("hardwareBackPress", () =>
-            goToPage("Home")
-        ); //TODO: 뒤로가기 안됨
+        BackHandler.addEventListener("hardwareBackPress", () => goToHome()); //TODO: 뒤로가기 안됨
 
         getSpecialUserCount();
     });
@@ -99,11 +97,6 @@ function RegistCompleted({ navigation, route }) {
         }
     };
 
-    const goToPage = (pageName) => {
-        if (pageName === "TabRegistWork") navigation.popToTop();
-        else navigation.navigate(pageName);
-    };
-
     const goToProgress = () => {
         navigation.dispatch(
             CommonActions.reset({
@@ -118,7 +111,17 @@ function RegistCompleted({ navigation, route }) {
             })
         );
     };
-    console.log(route?.params);
+
+    const goToHome = () => {
+        navigation.dispatch(
+            CommonActions.reset({
+                index: 1,
+                routes: [{ name: "Home" }],
+            })
+        );
+
+        navigation.navigate("Home", { refresh: true });
+    };
 
     return (
         <Layout scroll={false}>
@@ -191,7 +194,7 @@ function RegistCompleted({ navigation, route }) {
                                 내 작업 확인하기
                             </MediumText>
                         </AccentButton>
-                        <Button onPress={() => goToPage("Home")}>
+                        <Button onPress={goToHome}>
                             <MediumText>홈으로</MediumText>
                         </Button>
                     </BottomButtonWrapper>

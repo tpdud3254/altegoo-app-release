@@ -279,12 +279,7 @@ function DriverOrderProgress({ navigation, route }) {
             kakaoBtnShown={status === 4 ? true : false}
             bottomButtonProps={status === 4 ? { title: "홈으로" } : null}
             touchableElement={() => (
-                <View
-                    style={{
-                        paddingLeft: LAYOUT_PADDING_X,
-                        paddingRight: LAYOUT_PADDING_X,
-                    }}
-                >
+                <View>
                     <Progress>
                         <Image
                             source={Car}

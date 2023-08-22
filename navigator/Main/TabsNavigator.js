@@ -231,7 +231,7 @@ export default function TabsNavigator({ route }) {
                         <Tabs.Screen
                             name="Menus"
                             options={{
-                                headerShown: false,
+                                headerShown: true,
                                 tabBarIcon: ({ focused }) => (
                                     <TabIcon
                                         tabName="setting"

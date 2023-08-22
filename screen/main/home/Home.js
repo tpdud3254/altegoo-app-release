@@ -1,12 +1,15 @@
 import React, { useContext, useEffect, useRef, useState } from "react";
 import UserContext from "../../../context/UserContext";
-import { ORDINARY } from "../../../constant";
+import { ORDINARY, VALID } from "../../../constant";
 import axios from "axios";
 import { SERVER } from "../../../constant";
 import {
+    CheckLoading,
+    Filter,
     getAsyncStorageToken,
     numberWithComma,
     showError,
+    showMessage,
 } from "../../../utils";
 import HeaderLeft from "../../../component/HeaderLeft";
 import HeaderRight from "../../../component/HeaderRight";
@@ -29,6 +32,8 @@ import { Order } from "../../../component/order/OrderComponent";
 import { Notification } from "../../../component/Notification";
 import LoginContext from "../../../context/LoginContext";
 import { Row } from "../../../component/Row";
+import SelectPeriod from "../../../component/selectBox/SelectPeriod";
+import LoadingLayout from "../../../component/layout/LoadingLayout";
 
 const Item = styled.View`
     width: 100%;
@@ -189,62 +194,48 @@ const orderData = [
     },
 ];
 
-function Home({ navigation }) {
+const bannerData = [
+    {
+        title: "banner1",
+    },
+    {
+        title: "banner2",
+    },
+    {
+        title: "banner3",
+    },
+];
+
+const PERIOD = ["1주일", "1개월", "3개월"];
+function Home({ navigation, route }) {
     const { width } = useWindowDimensions();
     const { info } = useContext(UserContext);
-    const [point, setPoint] = useState(0);
-    const [refresh, setRefresh] = useState(false);
+
+    const [loading, setLoading] = useState(true);
+
+    const [point, setPoint] = useState(-1);
+    const [orders, setOrders] = useState(-1);
+    const [period, setPeriod] = useState(1);
+
     const bannerRef = useRef();
     const { firstLogin, setFirstLogin } = useContext(LoginContext); //TODO: 앱 처음 로그인 시 가이드 말풍선 만들기
     const [showGuide, setShowGuide] = useState(false);
 
-    const orders = 1;
     useEffect(() => {
-        if (info.userType !== ORDINARY) {
-            navigation.setOptions({
-                headerRight: () => <HeaderRight />,
-            });
+        setLoading(true);
+        getPoint(); //포인트
+        getOrders(); //작업리스트
+    }, [route?.params?.refresh]);
+
+    useEffect(() => {
+        if (CheckLoading({ point, orders })) {
+            setLoading(false);
         }
-        getPoint(); //포인트가져오기
+    }, [point, orders]);
 
-        // getTest();
-    }, []);
-
-    const getTest = async () => {
-        axios
-            .get(SERVER + "/users/test", {
-                headers: {
-                    auth: await getAsyncStorageToken(),
-                },
-            })
-            .then(({ data }) => {
-                console.log(data);
-                // const {
-                //     result,
-                //     data: { point },
-                // } = data;
-                // console.log("result: ", result);
-                // console.log("point: ", point);
-                // if (info.userType !== ORDINARY) {
-                //     navigation.setOptions({
-                //         headerLeft: () => (
-                //             <HeaderLeft
-                //                 onPress={goToPoint}
-                //                 name={info.name}
-                //                 point={point?.curPoint}
-                //             />
-                //         ),
-                //     });
-                // } else {
-                //     setPoint(point?.curPoint);
-                // }
-            })
-            .catch((error) => {
-                showError(error);
-            })
-            .finally(() => {});
-    };
-
+    useEffect(() => {
+        getOrders();
+    }, [period]);
     const getPoint = async () => {
         axios
             .get(SERVER + "/users/point", {
@@ -260,18 +251,36 @@ function Home({ navigation }) {
                 console.log("result: ", result);
                 console.log("point: ", point);
 
-                if (info.userType !== ORDINARY) {
-                    navigation.setOptions({
-                        headerLeft: () => (
-                            <HeaderLeft
-                                onPress={goToPoint}
-                                name={info.name}
-                                point={point?.curPoint}
-                            />
-                        ),
-                    });
+                setPoint(point?.curPoint);
+            })
+            .catch((error) => {
+                setPoint(0);
+                showError(error);
+            })
+            .finally(() => {});
+    };
+
+    const getOrders = async () => {
+        axios
+            .get(SERVER + "/orders/mylist", {
+                headers: {
+                    auth: await getAsyncStorageToken(),
+                },
+            })
+            .then(({ data }) => {
+                const { result } = data;
+
+                if (result === VALID) {
+                    const {
+                        data: { order },
+                    } = data;
+
+                    console.log(order[0]);
+                    setOrders(
+                        Filter({ data: order, period: PERIOD[period - 1] })
+                    );
                 } else {
-                    setPoint(point?.curPoint);
+                    setOrders([]);
                 }
             })
             .catch((error) => {
@@ -279,28 +288,10 @@ function Home({ navigation }) {
             })
             .finally(() => {});
     };
-
     const goToPoint = () => {
-        navigation.navigate("SettingNavigator", { screen: "PointNavigator" });
+        navigation.navigate("SettingNavigator", { screen: "PointMain" });
     };
 
-    const imagePath = [
-        require(`../../../assets/images/intro/img_01.png`),
-        require(`../../../assets/images/intro/img_02.png`),
-        require(`../../../assets/images/intro/img_03.png`),
-    ];
-
-    const bannerData = [
-        {
-            title: "banner1",
-        },
-        {
-            title: "banner2",
-        },
-        {
-            title: "banner3",
-        },
-    ];
     const renderIntro = ({ item }) => (
         <View
             style={{
@@ -316,189 +307,200 @@ function Home({ navigation }) {
         </View>
     );
     return (
-        <Layout headerShown={false} registBtnShown={true}>
-            <ItemRow>
-                <BoldText
-                    style={{
-                        fontSize: 23,
-                    }}
-                >
-                    안녕하세요! {info.name}님.
-                </BoldText>
-                <View style={{ flexDirection: "row" }}>
-                    {info.userTypeId === 2 ? (
-                        <TouchableOpacity>
-                            {/* TODO: 카카오톡으로 수정 */}
-                            <Image
-                                source={require("../../../assets/images/icons/icon_info2.png")}
-                                style={{
-                                    width: 30,
-                                    height: 30,
-                                    marginRight: 13,
-                                }}
-                            />
-                        </TouchableOpacity>
-                    ) : null}
-                    <Notification />
-                </View>
-            </ItemRow>
-            <Item>
-                <Row>
-                    <PointButton>
-                        <Image
-                            source={require("../../../assets/images/icons/icon_point.png")}
-                            style={{ width: 27, height: 27 }}
-                        />
-                        <BoldText
-                            style={{
-                                fontSize: 15,
-                                color: "white",
-                            }}
-                        >
-                            {" " + numberWithComma(point || 0)}
-                            <BoldText
-                                style={{
-                                    fontSize: 12,
-                                    color: "white",
-                                }}
-                            >
-                                {" "}
-                                AP
-                            </BoldText>
-                        </BoldText>
-                    </PointButton>
-                    {info.userTypeId === 2 ? (
-                        <ChargeButton>
-                            <Image
-                                source={require("../../../assets/images/icons/icon_charge.png")}
-                                style={{
-                                    width: 27,
-                                    height: 27,
-                                    marginRight: 5,
-                                }}
-                            />
-                            <MediumText
-                                style={{
-                                    fontSize: 15,
-                                }}
-                            >
-                                충전
-                            </MediumText>
-                        </ChargeButton>
-                    ) : null}
-                </Row>
-            </Item>
-            <Item>
-                <FlatList
-                    horizontal
-                    pagingEnabled
-                    showsHorizontalScrollIndicator={false}
-                    data={bannerData}
-                    renderItem={renderIntro}
-                    ref={bannerRef}
-                />
-            </Item>
-            <Item>
-                <Wrapper style={shadowProps}>
-                    <Header>
-                        <MediumText>
-                            이번 달{" "}
-                            <MediumText
-                                style={{ color: color["page-color-text"] }}
-                            >
-                                추천인
-                            </MediumText>{" "}
-                            수익
-                        </MediumText>
-
-                        <View
-                            style={{
-                                flexDirection: "row",
-                                alignItems: "center",
-                            }}
-                        >
-                            <MediumText style={{ fontSize: 22 }}>
-                                1,234,000{" "}
-                                <MediumText style={{ fontSize: 12 }}>
-                                    AP
-                                </MediumText>
-                            </MediumText>
-                            <Image
-                                source={RightArrow}
-                                style={{ width: 30, height: 30 }}
-                            />
-                        </View>
-                    </Header>
-                </Wrapper>
-            </Item>
-            {info.userTypeId === 2 ? (
-                <Item>
-                    <Wrapper style={shadowProps} border={true}>
-                        <Header>
-                            <MediumText
-                                style={{
-                                    fontSize: 18,
-                                    marginTop: 5,
-                                }}
-                            >
-                                {false ? "예약된 작업" : "진행중 작업"}
-                            </MediumText>
-                        </Header>
-                        <Orders>
-                            <Order.Items>
-                                <Order.Item data={orderData[0]} />
-                            </Order.Items>
-                        </Orders>
-                    </Wrapper>
-                </Item>
-            ) : null}
-            <Item>
-                <Wrapper style={shadowProps}>
-                    <Header>
-                        <MediumText
-                            style={{
-                                fontSize: 18,
-                            }}
-                        >
-                            최근 등록한 작업
-                        </MediumText>
-                        <Select>
-                            <MediumText
-                                style={{
-                                    fontSize: 15,
-                                }}
-                            >
-                                3개월
-                            </MediumText>
-                            <Image
-                                source={require("../../../assets/images/icons/allow_down.png")}
-                                style={{ width: 21, height: 12 }}
-                            />
-                        </Select>
-                    </Header>
-                    {orders === 0 ? (
-                        <NoOrder>
-                            <RegularText
-                                style={{
-                                    fontSize: 18,
-                                    color: color["page-bluegrey-text"],
-                                }}
-                            >
-                                최근 등록한 작업이 없습니다.
-                            </RegularText>
-                        </NoOrder>
-                    ) : (
-                        <Orders>
-                            <Order.Items>
-                                {orderData.map((order, index) => (
-                                    <Order.Item key={index} data={order} />
-                                ))}
-                            </Order.Items>
-                        </Orders>
+        <>
+            {loading ? (
+                <LoadingLayout />
+            ) : (
+                <Layout
+                    headerShown={false}
+                    registBtnShown={true}
+                    touchableElement={() => (
+                        <>
+                            <ItemRow>
+                                <BoldText
+                                    style={{
+                                        fontSize: 23,
+                                    }}
+                                >
+                                    안녕하세요! {info.name}님.
+                                </BoldText>
+                                <View style={{ flexDirection: "row" }}>
+                                    {info.userTypeId === 2 ? (
+                                        <TouchableOpacity>
+                                            {/* TODO: 카카오톡으로 수정 */}
+                                            <Image
+                                                source={require("../../../assets/images/icons/icon_info2.png")}
+                                                style={{
+                                                    width: 30,
+                                                    height: 30,
+                                                    marginRight: 13,
+                                                }}
+                                            />
+                                        </TouchableOpacity>
+                                    ) : null}
+                                    <Notification
+                                        onPress={() =>
+                                            showMessage("지원 예정 기능입니다.")
+                                        }
+                                    />
+                                </View>
+                            </ItemRow>
+                            <Item>
+                                <Row>
+                                    <PointButton onPress={goToPoint}>
+                                        <Image
+                                            source={require("../../../assets/images/icons/icon_point.png")}
+                                            style={{ width: 27, height: 27 }}
+                                        />
+                                        <BoldText
+                                            style={{
+                                                fontSize: 15,
+                                                color: "white",
+                                            }}
+                                        >
+                                            {" " + numberWithComma(point || 0)}
+                                            <BoldText
+                                                style={{
+                                                    fontSize: 12,
+                                                    color: "white",
+                                                }}
+                                            >
+                                                {" "}
+                                                AP
+                                            </BoldText>
+                                        </BoldText>
+                                    </PointButton>
+                                    {info.userTypeId === 2 ? (
+                                        <ChargeButton>
+                                            <Image
+                                                source={require("../../../assets/images/icons/icon_charge.png")}
+                                                style={{
+                                                    width: 27,
+                                                    height: 27,
+                                                    marginRight: 5,
+                                                }}
+                                            />
+                                            <MediumText
+                                                style={{
+                                                    fontSize: 15,
+                                                }}
+                                            >
+                                                충전
+                                            </MediumText>
+                                        </ChargeButton>
+                                    ) : null}
+                                </Row>
+                            </Item>
+                            <Item>
+                                <FlatList
+                                    horizontal
+                                    pagingEnabled
+                                    showsHorizontalScrollIndicator={false}
+                                    data={bannerData}
+                                    renderItem={renderIntro}
+                                    ref={bannerRef}
+                                />
+                            </Item>
+                        </>
                     )}
-                </Wrapper>
-            </Item>
-        </Layout>
+                >
+                    {/* <Item>
+            <Wrapper style={shadowProps}>
+                <Header>
+                    <MediumText>
+                        이번 달{" "}
+                        <MediumText
+                            style={{ color: color["page-color-text"] }}
+                        >
+                            추천인
+                        </MediumText>{" "}
+                        수익
+                    </MediumText>
+
+                    <View
+                        style={{
+                            flexDirection: "row",
+                            alignItems: "center",
+                        }}
+                    >
+                        <MediumText style={{ fontSize: 22 }}>
+                            1,234,000{" "}
+                            <MediumText style={{ fontSize: 12 }}>
+                                AP
+                            </MediumText>
+                        </MediumText>
+                        <Image
+                            source={RightArrow}
+                            style={{ width: 30, height: 30 }}
+                        />
+                    </View>
+                </Header>
+            </Wrapper>
+        </Item> */}
+                    {info.userTypeId === 2 ? (
+                        <Item>
+                            <Wrapper style={shadowProps} border={true}>
+                                <Header>
+                                    <MediumText
+                                        style={{
+                                            fontSize: 18,
+                                            marginTop: 5,
+                                        }}
+                                    >
+                                        {false ? "예약된 작업" : "진행중 작업"}
+                                    </MediumText>
+                                </Header>
+                                <Orders>
+                                    <Order.Items>
+                                        <Order.Item data={orderData[0]} />
+                                    </Order.Items>
+                                </Orders>
+                            </Wrapper>
+                        </Item>
+                    ) : null}
+                    <Item>
+                        <Wrapper style={shadowProps}>
+                            <Header>
+                                <MediumText
+                                    style={{
+                                        fontSize: 18,
+                                    }}
+                                >
+                                    최근 등록한 작업
+                                </MediumText>
+                                <SelectPeriod
+                                    data={PERIOD}
+                                    onSelect={(index) => setPeriod(index + 1)}
+                                />
+                            </Header>
+                            {orders.length === 0 ? (
+                                <NoOrder>
+                                    <RegularText
+                                        style={{
+                                            fontSize: 18,
+                                            color: color["page-bluegrey-text"],
+                                        }}
+                                    >
+                                        최근 등록한 작업이 없습니다.
+                                    </RegularText>
+                                </NoOrder>
+                            ) : (
+                                <Orders>
+                                    <Order.Items>
+                                        {orders.map((order, index) => (
+                                            <Order.Item
+                                                key={index}
+                                                data={order}
+                                            />
+                                        ))}
+                                    </Order.Items>
+                                </Orders>
+                            )}
+                        </Wrapper>
+                    </Item>
+                </Layout>
+            )}
+        </>
     );
 }
 

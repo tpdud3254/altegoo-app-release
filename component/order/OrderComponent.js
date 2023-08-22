@@ -2,7 +2,7 @@ import React from "react";
 import { View } from "react-native";
 import styled from "styled-components/native";
 import LightText from "../text/LightText";
-import { GetDate, GetTime } from "../../utils";
+import { GetDate, GetTime, numberWithComma } from "../../utils";
 import MediumText from "../text/MediumText";
 import RegularText from "../text/RegularText";
 import { color } from "../../styles";
@@ -92,15 +92,24 @@ export const Order = {
             <ItemContainer onPress={goToOrderProgress}>
                 <Row>
                     <LightText style={{ marginBottom: 5 }}>
-                        {GetDate(data.workDateTime)}
-                        {"   "}
-                        <LightText>{GetTime(data.workDateTime)}</LightText>
+                        {GetDate(data.dateTime)}
+                        {"  "}
+                        <LightText>{GetTime(data.dateTime)}</LightText>
                     </LightText>
                 </Row>
                 <Row>
-                    <MediumText>{`${data.vehicleType}차 / ${data.type} / ${data.time}`}</MediumText>
+                    {data.vehicleType === "사다리차" ? (
+                        <MediumText>{`${data.vehicleType} / ${
+                            data.direction
+                        } / ${
+                            data.volume === "시간" ? data.time : data.quantity
+                        }`}</MediumText>
+                    ) : (
+                        <MediumText>{`${data.vehicleType} / ${data.floor} / ${data.time}`}</MediumText>
+                    )}
+
                     <MediumText>
-                        {data.price}{" "}
+                        {numberWithComma(data.price)}{" "}
                         <MediumText
                             style={{
                                 fontSize: 14,

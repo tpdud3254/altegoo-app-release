@@ -820,3 +820,43 @@ export const GetSkyPrice = (floor, time) => {
 export const GetEmergencyPrice = (price) => price * 0.25;
 export const GetSavePoint = (price) => price * 0.2;
 export const GetTax = (price) => price * 0.1;
+
+export const CheckLoading = (data) => {
+    let result = [];
+
+    Object.keys(data).map((value) => {
+        if (typeof data[value] === "number")
+            result.push(data[value] > -1 ? true : false);
+    });
+
+    for (let i = 0; i < result.length; i++)
+        if (result[i] === false) return false;
+
+    return true;
+};
+
+export const Filter = ({ data, period }) => {
+    console.log("기간 : ", period);
+
+    const today = new Date();
+    const ago = new Date();
+
+    if (period === "1주일") {
+        ago.setDate(today.getDate() - 7);
+    } else if (period === "1개월") {
+        ago.setMonth(today.getMonth() - 1);
+    } else if (period === "3개월") {
+        ago.setMonth(today.getMonth() - 3);
+    }
+
+    const result = [];
+    data.map((value) => {
+        const dateTime = new Date(value.createdAt);
+
+        if (dateTime >= ago) {
+            result.push(value);
+        }
+    });
+
+    return result;
+};

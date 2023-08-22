@@ -1,7 +1,7 @@
 import React from "react";
 import styled from "styled-components/native";
 import { color } from "../../styles";
-import { ScrollView, TouchableWithoutFeedback } from "react-native";
+import { ScrollView, TouchableWithoutFeedback, View } from "react-native";
 import useWindowDimensions from "react-native/Libraries/Utilities/useWindowDimensions";
 import RegistButton from "../button/RegistButton";
 import MediumText from "../text/MediumText";
@@ -11,12 +11,12 @@ export const LAYOUT_PADDING_X = 16;
 const Container = styled.View`
     flex: 1;
     background-color: ${color["page-background"]};
-
     padding-top: ${(props) => (props.headerShown ? 0 : 40)}px;
 `;
 const Wrapper = styled.View`
     flex: 1;
-    padding: 10px ${LAYOUT_PADDING_X}px;
+    padding: ${(props) => (props.touchableElement ? 0 : 10)}px
+        ${LAYOUT_PADDING_X}px;
     min-height: ${(props) => (props.scroll ? props.windowHeight - 120 : 0)}px;
 `;
 
@@ -40,15 +40,31 @@ export default function Layout({
     bottomButtonProps,
     scroll = true,
     touchableElement,
+    onRefresh,
 }) {
     const { height } = useWindowDimensions();
     return (
         <Container headerShown={headerShown}>
             {scroll ? (
                 <ScrollView>
-                    {touchableElement ? touchableElement() : null}
+                    {touchableElement ? (
+                        <View
+                            style={{
+                                paddingLeft: LAYOUT_PADDING_X,
+                                paddingRight: LAYOUT_PADDING_X,
+                                paddingTop: 8,
+                            }}
+                        >
+                            {touchableElement()}
+                        </View>
+                    ) : null}
                     <TouchableWithoutFeedback>
-                        <Wrapper windowHeight={height}>{children}</Wrapper>
+                        <Wrapper
+                            windowHeight={height}
+                            touchableElement={touchableElement}
+                        >
+                            {children}
+                        </Wrapper>
                     </TouchableWithoutFeedback>
                 </ScrollView>
             ) : (

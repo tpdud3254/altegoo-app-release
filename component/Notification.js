@@ -7,20 +7,22 @@ const Badge = styled.View`
     right: -10px;
     top: -8px;
 `;
-export const Notification = () => {
+export const Notification = ({ onPress }) => {
     return (
         <View>
-            <TouchableOpacity>
+            <TouchableOpacity onPress={onPress}>
                 <Image
                     source={require("../assets/images/icons/btn_notifcation.png")}
                     style={{ width: 30, height: 30 }}
                 />
-                <Badge>
-                    <Image
-                        source={require("../assets/images/icons/badge.png")}
-                        style={{ width: 23, height: 23 }}
-                    />
-                </Badge>
+                {false ? (
+                    <Badge>
+                        <Image
+                            source={require("../assets/images/icons/badge.png")}
+                            style={{ width: 20, height: 20 }}
+                        />
+                    </Badge>
+                ) : null}
             </TouchableOpacity>
         </View>
     );
