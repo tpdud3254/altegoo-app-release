@@ -10,7 +10,7 @@ import RegularText from "../../../component/text/RegularText";
 import TextInput from "../../../component/input/TextInput";
 import { Box } from "../../../component/box/Box";
 import { TouchableOpacity } from "react-native";
-import { GetOrderOption } from "../../../utils";
+import { GetOrderOption, showErrorMessage } from "../../../utils";
 
 const Item = styled.View`
     margin-bottom: 35px;
@@ -112,9 +112,21 @@ function SearchAddress({ route, navigation }) {
             )
                 return 6;
         }
+
+        return null;
     };
     const onNextStep = (data) => {
         const { detailAddress1, detailAddress2 } = data;
+
+        const regionId = getRegion(
+            route?.params?.selectAddress1?.sido,
+            route?.params?.selectAddress1?.sigungu
+        );
+
+        if (!regionId) {
+            showErrorMessage("해당 지역은 서비스를 이용할 수 없습니다.");
+            return;
+        }
 
         if (registInfo.direction === DIRECTION[2]) {
             setRegistInfo({
@@ -124,10 +136,7 @@ function SearchAddress({ route, navigation }) {
                 address2: route?.params?.selectAddress2?.address,
                 simpleAddress2: `${route?.params?.selectAddress2?.sido} ${route?.params?.selectAddress2?.sigungu}`,
                 detailAddress2,
-                region: getRegion(
-                    route?.params?.selectAddress1?.sido,
-                    route?.params?.selectAddress1?.sigungu
-                ),
+                region: regionId,
                 ...registInfo,
             });
         } else {
@@ -138,10 +147,7 @@ function SearchAddress({ route, navigation }) {
                 address2: null,
                 simpleAddress2: null,
                 detailAddress2: null,
-                region: getRegion(
-                    route?.params?.selectAddress1?.sido,
-                    route?.params?.selectAddress1?.sigungu
-                ),
+                region: regionId,
                 ...registInfo,
             });
         }

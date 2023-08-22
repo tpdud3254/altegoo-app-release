@@ -382,7 +382,7 @@ export default function MainNavigator() {
                             headerTitleAlign: "center",
                         }}
                     />
-                    <Stack.Screen
+                    {/* <Stack.Screen
                         name="Payment"
                         component={Payment}
                         options={{
@@ -390,7 +390,7 @@ export default function MainNavigator() {
                             headerShown: false,
                             headerTitleAlign: "center",
                         }}
-                    />
+                    /> */}
                     <Stack.Screen
                         name="Charge"
                         component={Charge}

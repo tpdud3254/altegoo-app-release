@@ -20,6 +20,7 @@ import {
 } from "../../../utils";
 import axios from "axios";
 import { useForm } from "react-hook-form";
+import { PAYMENT_APP_ID } from "@env";
 
 const Item = styled.View`
     background-color: white;
@@ -133,9 +134,47 @@ const CheckOrderPrice = ({ navigation }) => {
     };
 
     const onNextStep = (data) => {
-        console.log(data);
+        const {
+            curPoint,
+            emergencyPrice,
+            price,
+            savePoint,
+            tax,
+            totalPrice,
+            usePoint,
+        } = data;
+
+        const prevInfo = registInfo;
+
+        delete prevInfo.price;
+
+        const sendData = {
+            emergencyPrice: Number(emergencyPrice) || 0,
+            price: Number(price),
+            savePoint: Number(savePoint),
+            tax: Number(tax),
+            totalPrice: Number(totalPrice),
+            usePoint: Number(usePoint) || 0,
+        };
+
+        setRegistInfo({ ...prevInfo, ...sendData });
+
+        console.log("info : ", info);
         //TODO: 결제
-        // navigation.navigate(REGIST_NAV[6]);
+        const paymentData = {
+            application_id: PAYMENT_APP_ID,
+            price: sendData.price + sendData.tax,
+            order_name: registInfo.vehicleType + " 이용비 결제",
+            order_id: info.userId + "_" + Date.now(),
+            user: {
+                username: info.name,
+                phone: info.phone,
+            },
+            curPoint,
+            pointId: pointData.id,
+        };
+
+        navigation.navigate(REGIST_NAV[5], { data: paymentData });
     };
 
     const gopay = () => {
@@ -374,7 +413,7 @@ const CheckOrderPrice = ({ navigation }) => {
                     적립 예정 포인트
                 </MediumText>
                 <BoldText style={{ fontSize: 22, color: color.blue }}>
-                    {numberWithComma(watch("tax", "0"))}
+                    {numberWithComma(watch("savePoint", "0"))}
                     <BoldText style={{ fontSize: 16, color: color.blue }}>
                         {" "}
                         AP

@@ -52,7 +52,7 @@ export const setAsyncStorageToken = async (token) => {
 };
 
 export const numberWithComma = (cost) => {
-    if (!cost) return null;
+    if (!cost && cost !== 0) return null;
     return cost.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 };
 

@@ -25,7 +25,7 @@ function Payment({ navigation, route }) {
     const { registInfo } = useContext(RegistContext);
     const { info } = useContext(UserContext);
 
-    console.log(route?.params?.data);
+    console.log("payment :", route?.params?.data);
     const sendMessage = (data) => {
         webViewRef.current.postMessage(data);
     };
@@ -44,11 +44,14 @@ function Payment({ navigation, route }) {
             switch (parsed.handle) {
                 case "error":
                     Alert.alert("결제 오류입니다. 다시 시도해주세요.");
-                    navigation.goBack();
+                    //TODO: 안됨
+                    navigation.navigate(REGIST_NAV[4]);
+                    // navigation.goBack();
                     break;
                 case "cancle":
                     Alert.alert("결제를 취소하였습니다.");
-                    navigation.goBack();
+                    navigation.navigate(REGIST_NAV[4]);
+                    // navigation.goBack();
                     break;
                 case "issued":
                     await registWork(parsed);
@@ -67,30 +70,37 @@ function Payment({ navigation, route }) {
         }
     };
     //TODO: eject후 ,,
-    const registWork = async () => {
+
+    const registWork = async (data) => {
+        console.log("parsed payment data : ", data);
+
         const sendingData = {
-            workDateTime: registInfo.dateTime,
-            type: registInfo.upDown,
-            bothType: registInfo.bothType || null,
-            address1: registInfo.address1,
-            simpleAddress1: registInfo.simpleAddress1,
-            detailAddress1: registInfo.detailAddress1,
-            address2: registInfo.address2,
-            simpleAddress2: registInfo.simpleAddress2,
-            detailAddress2: registInfo.detailAddress2,
-            regionId: registInfo.region,
-            floor: registInfo.floor,
-            otherFloor: registInfo.otherFloor || null,
-            phone: info.phone,
-            directPhone: registInfo.directPhone,
-            price: registInfo.price,
-            point: registInfo.point,
-            volumeType: registInfo.volumeType,
-            quantity: registInfo.quantity || null,
+            vehicleType: registInfo.vehicleType || null,
+            direction: registInfo.direction || null,
+            floor: registInfo.floor || null,
+            downFloor: registInfo.downFloor || null,
+            upFloor: registInfo.upFloor || null,
+            volume: registInfo.volume || null,
             time: registInfo.time || null,
-            vehicleType: registInfo.vehicleType,
-            emergency: registInfo.emergency,
+            quantity: registInfo.quantity || null,
+            dateTime: registInfo.dateTime || null,
+            address1: registInfo.address1 || null,
+            address2: registInfo.address2 || null,
+            detailAddress1: registInfo.detailAddress1 || null,
+            detailAddress2: registInfo.detailAddress2 || null,
+            simpleAddress1: registInfo.simpleAddress1 || null,
+            simpleAddress2: registInfo.simpleAddress2 || null,
+            region: registInfo.region || null,
+            phone: info.phone || null,
+            directPhone: registInfo.directPhone || null,
+            emergency: registInfo.emergency || false,
             memo: registInfo.memo || null,
+            price: registInfo.price || 0,
+            savePoint: registInfo.savePoint || 0,
+            usePoint: registInfo.usePoint || 0,
+            emergencyPrice: registInfo.emergencyPrice || 0,
+            tax: registInfo.tax || 0,
+            totalPrice: registInfo.totalPrice || 0,
         };
 
         try {
@@ -117,6 +127,8 @@ function Payment({ navigation, route }) {
                     },
                 } = response;
 
+                navigation.navigate(REGIST_NAV[6], { orderId: order.id });
+                return;
                 //포인트 차감
                 //TODO: admin 말고 다른거 파서 포인트 내역도 남기기
 
@@ -140,9 +152,7 @@ function Payment({ navigation, route }) {
                         console.log(points);
 
                         if (result === VALID) {
-                            navigation.navigate(REGIST_NAV[8], {
-                                paymentData: order,
-                            });
+                            navigation.navigate(REGIST_NAV[6]);
                         } else console.log(msg);
                     } catch (error) {
                         console.log(error);

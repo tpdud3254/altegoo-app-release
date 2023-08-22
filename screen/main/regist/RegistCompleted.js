@@ -13,6 +13,7 @@ import { VALID } from "../../../constant";
 import Layout from "../../../component/layout/Layout";
 import BoldText from "../../../component/text/BoldText";
 import RegularText from "../../../component/text/RegularText";
+import { CommonActions } from "@react-navigation/native";
 
 const Container = styled.View`
     flex: 1;
@@ -103,6 +104,20 @@ function RegistCompleted({ navigation, route }) {
         else navigation.navigate(pageName);
     };
 
+    const goToProgress = () => {
+        navigation.dispatch(
+            CommonActions.reset({
+                index: 1,
+                routes: [
+                    { name: "TabsNavigator" },
+                    {
+                        name: "OrderProgress",
+                        params: { user: "jane" },
+                    },
+                ],
+            })
+        );
+    };
     console.log(route?.params);
 
     return (
@@ -167,10 +182,7 @@ function RegistCompleted({ navigation, route }) {
 
                 <Bottom>
                     <BottomButtonWrapper>
-                        <AccentButton
-                            accent
-                            onPress={() => goToPage("TabRegistWork")}
-                        >
+                        <AccentButton accent onPress={goToProgress}>
                             <MediumText
                                 style={{
                                     color: "white",
