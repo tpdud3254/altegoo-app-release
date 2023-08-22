@@ -818,3 +818,5 @@ export const GetSkyPrice = (floor, time) => {
 };
 
 export const GetEmergencyPrice = (price) => price * 0.25;
+export const GetSavePoint = (price) => price * 0.2;
+export const GetTax = (price) => price * 0.1;

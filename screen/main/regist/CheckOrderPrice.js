@@ -11,6 +11,8 @@ import UserContext from "../../../context/UserContext";
 import RegistContext from "../../../context/RegistContext";
 import {
     GetEmergencyPrice,
+    GetSavePoint,
+    GetTax,
     getAsyncStorageToken,
     numberWithComma,
     showError,
@@ -44,6 +46,7 @@ const PointButton = styled.TouchableOpacity`
     padding: 10px;
     border-radius: 10px;
 `;
+
 const CheckOrderPrice = ({ navigation }) => {
     const { info } = useContext(UserContext);
     const { registInfo, setRegistInfo } = useContext(RegistContext);
@@ -57,8 +60,15 @@ const CheckOrderPrice = ({ navigation }) => {
 
         getPoint();
 
-        register("usePoint");
-        register("emergencyPrice");
+        register("price"); //알테구 이용비
+        register("emergencyPrice"); // 긴급 비용
+        register("curPoint"); //보유한 포인트
+        register("usePoint"); //사용할 포인트
+        register("totalPrice"); //최종 결제 금액
+        register("savePoint"); //적립 예정 포인트
+        register("tax"); //부가세
+
+        setValue("price", registInfo.price.toString());
 
         if (registInfo.emergency)
             setValue(
@@ -69,6 +79,23 @@ const CheckOrderPrice = ({ navigation }) => {
     }, []);
 
     useEffect(() => {
+        const { price, emergencyPrice, usePoint } = getValues();
+
+        const priceNum = Number(price) || 0;
+        const emergencyPriceNum = Number(emergencyPrice) || 0;
+        const usePointNum = Number(usePoint) || 0;
+
+        const totalPrice = priceNum + emergencyPriceNum - usePointNum;
+        const savePoint = GetSavePoint(totalPrice);
+        const tax = GetTax(totalPrice);
+
+        setValue("totalPrice", totalPrice.toString());
+        setValue("savePoint", savePoint.toString());
+        setValue("tax", tax.toString());
+    }, [watch("price"), watch("emergencyPrice"), watch("usePoint")]);
+
+    useEffect(() => {
+        //내가 가지고 있는 포인트보다 작거나 같아야함
         if (!pointData) null;
         const usePoint = watch("usePoint");
 
@@ -77,6 +104,7 @@ const CheckOrderPrice = ({ navigation }) => {
                 setValue("usePoint", pointData.curPoint.toString());
         }
     }, [watch("usePoint")]);
+
     const getPoint = async () => {
         axios
             .get(SERVER + "/users/point", {
@@ -92,8 +120,11 @@ const CheckOrderPrice = ({ navigation }) => {
                 console.log("result: ", result);
                 console.log("point: ", point);
 
-                // setPointData(point);
-                setPointData({ curPoint: 10000 }); //TODO: testcode
+                setPointData(point);
+                setValue("curPoint", point.curPoint.toString());
+
+                // setPointData({ curPoint: 30000 });
+                // setValue("curPoint", "30000");
             })
             .catch((error) => {
                 showError(error);
@@ -101,33 +132,33 @@ const CheckOrderPrice = ({ navigation }) => {
             .finally(() => {});
     };
 
-    const onNextStep = () => {
+    const onNextStep = (data) => {
+        console.log(data);
         //TODO: 결제
-        navigation.navigate(REGIST_NAV[6]);
+        // navigation.navigate(REGIST_NAV[6]);
     };
 
-    // const gopay = () => {
-    //     let curPoint = 0;
-    //     const data = {
-    //         application_id: PAYMENT_APP_ID,
-    //         price: price - curPoint,
-    //         order_name: VEHICLE[vehicleType - 1] + " 이용비 결제",
-    //         order_id: info.userId + "_" + Date.now(),
-    //         user: {
-    //             username: info.userName,
-    //             phone: info.phone,
-    //         },
-    //         curPoint,
-    //         pointId: 126,
-    //     };
-    //     navigation.navigate("Payment", { data });
-    // };
+    const gopay = () => {
+        const data = {
+            application_id: PAYMENT_APP_ID,
+            price: price - curPoint,
+            order_name: VEHICLE[vehicleType - 1] + " 이용비 결제",
+            order_id: info.userId + "_" + Date.now(),
+            user: {
+                username: info.userName,
+                phone: info.phone,
+            },
+            curPoint,
+            pointId: 126,
+        };
+        navigation.navigate("Payment", { data });
+    };
 
     //TODO: 쿠폰사용 포함
     return (
         <Layout
             bottomButtonProps={{
-                onPress: onNextStep,
+                onPress: handleSubmit(onNextStep),
                 title: "결제 진행",
             }}
         >
@@ -145,7 +176,7 @@ const CheckOrderPrice = ({ navigation }) => {
                     결제금액
                 </RegularText>
                 <MediumText>
-                    {registInfo.price}
+                    {numberWithComma(watch("price", "0"))}
                     <MediumText style={{ fontSize: 14 }}> AP</MediumText>
                 </MediumText>
             </Item>
@@ -178,7 +209,7 @@ const CheckOrderPrice = ({ navigation }) => {
                         25% 추가운임
                     </RegularText>
                     <BoldText style={{ fontSize: 22 }}>
-                        {watch("emergencyPrice")}
+                        {numberWithComma(watch("emergencyPrice", "0"))}
                         <BoldText style={{ fontSize: 16 }}> AP</BoldText>
                     </BoldText>
                 </Item>
@@ -196,7 +227,7 @@ const CheckOrderPrice = ({ navigation }) => {
                     보유한 포인트
                 </RegularText>
                 <MediumText style={{ marginBottom: 18 }}>
-                    {pointData?.curPoint ? pointData.curPoint : 0}
+                    {numberWithComma(watch("curPoint", "0"))}
                     <MediumText style={{ fontSize: 14 }}> AP</MediumText>
                 </MediumText>
                 <Row>
@@ -271,7 +302,7 @@ const CheckOrderPrice = ({ navigation }) => {
                             textAlign: "right",
                         }}
                     >
-                        {registInfo.price + Number(watch("emergencyPrice"))}
+                        {numberWithComma(watch("totalPrice", "0"))}
                         <RegularText
                             style={{
                                 fontSize: 14,
@@ -300,7 +331,7 @@ const CheckOrderPrice = ({ navigation }) => {
                             textAlign: "right",
                         }}
                     >
-                        - {watch("usePoint")}
+                        - {numberWithComma(watch("usePoint", "0"))}
                         <RegularText
                             style={{
                                 fontSize: 14,
@@ -330,9 +361,7 @@ const CheckOrderPrice = ({ navigation }) => {
                         총 결제 금액
                     </RegularText>
                     <BoldText style={{ fontSize: 22, color: color.main }}>
-                        {registInfo.price +
-                            Number(watch("emergencyPrice")) -
-                            Number(watch("usePoint"))}
+                        {numberWithComma(watch("totalPrice", "0"))}
                         <BoldText style={{ fontSize: 16, color: color.main }}>
                             {" "}
                             AP
@@ -345,10 +374,7 @@ const CheckOrderPrice = ({ navigation }) => {
                     적립 예정 포인트
                 </MediumText>
                 <BoldText style={{ fontSize: 22, color: color.blue }}>
-                    {(registInfo.price +
-                        Number(watch("emergencyPrice")) -
-                        Number(watch("usePoint"))) *
-                        0.2}
+                    {numberWithComma(watch("tax", "0"))}
                     <BoldText style={{ fontSize: 16, color: color.blue }}>
                         {" "}
                         AP
