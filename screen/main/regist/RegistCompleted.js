@@ -98,6 +98,11 @@ function RegistCompleted({ navigation, route }) {
     };
 
     const goToProgress = () => {
+        if (!route?.params?.orderId) {
+            goToHome();
+            return;
+        }
+
         navigation.dispatch(
             CommonActions.reset({
                 index: 1,
@@ -105,7 +110,7 @@ function RegistCompleted({ navigation, route }) {
                     { name: "TabsNavigator" },
                     {
                         name: "OrderProgress",
-                        params: { user: "jane" },
+                        params: { orderId: route?.params?.orderId },
                     },
                 ],
             })

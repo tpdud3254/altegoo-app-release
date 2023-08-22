@@ -11,11 +11,16 @@ import RefreshBtn from "../../../assets/images/icons/btn_Refresh.png";
 import Car from "../../../assets/images/icons/Procress_car.png";
 import Button from "../../../component/button/Button";
 import {
+    CheckLoading,
     GetDate,
     GetPhoneNumberWithDash,
     GetTime,
     numberWithComma,
+    showError,
 } from "../../../utils";
+import LoadingLayout from "../../../component/layout/LoadingLayout";
+import axios from "axios";
+import { SERVER, VALID } from "../../../constant";
 
 const Refresh = styled.View`
     flex-direction: row;
@@ -121,40 +126,6 @@ const Point = styled.View`
 const DriverTitle = styled.View`
     align-items: center;
 `;
-const orderData = {
-    acceptUser: 55,
-    address: "",
-    address1: "서울 관악구 신림동 1623-3",
-    address2: null,
-    bothType: null,
-    createdAt: "2023-05-12T07:56:39.900Z",
-    detailAddress1: null,
-    detailAddress2: null,
-    directPhone: "01032655452",
-    emergency: false,
-    floor: 8,
-    id: 119,
-    memo: null,
-    orderReservation: [],
-    orderStatusId: 3,
-    otherAddress: null,
-    otherFloor: null,
-    phone: "01032655452",
-    point: 9000,
-    price: 60000,
-    pushStatus: null,
-    quantity: null,
-    regionId: 1,
-    registUser: { id: 56 },
-    simpleAddress1: "서울 관악구",
-    simpleAddress2: null,
-    time: "하루",
-    type: "올림",
-    userId: 56,
-    vehicleType: "스카이",
-    volumeType: "time",
-    workDateTime: "2023-05-13T08:00:00.000Z",
-};
 
 const STEP = [
     { title: "오더요청", progress: 20 },
@@ -163,15 +134,16 @@ const STEP = [
     { title: "작업완료", progress: 100 },
 ];
 function OrderProgress({ navigation, route }) {
+    const [loading, setLoading] = useState(true);
+
     const [progress, setProgress] = useState(0);
     const [status, setStatus] = useState(4);
 
-    useEffect(() => {
-        setProgress(STEP[status - 1].progress);
-    }, [status]);
+    const [order, setOrder] = useState(-1);
 
     useEffect(() => {
-        console.log(route?.params?.order);
+        setLoading(true);
+
         navigation.setOptions({
             headerRight: () => (
                 <Refresh>
@@ -192,7 +164,44 @@ function OrderProgress({ navigation, route }) {
                 </Refresh>
             ),
         });
-    });
+
+        if (route?.params?.orderId) {
+            getOrder(route?.params?.orderId);
+        } else if (route?.params?.order) {
+            console.log(route?.params?.order);
+            setOrder(route?.params?.order);
+        }
+    }, []);
+
+    useEffect(() => {
+        if (CheckLoading({ order })) {
+            setLoading(false);
+        }
+    }, [order]);
+
+    useEffect(() => {
+        setProgress(STEP[status - 1].progress);
+    }, [status]);
+
+    const getOrder = async (id) => {
+        axios
+            .get(SERVER + "/orders/info" + `?id=${id}`)
+            .then(({ data }) => {
+                const { result } = data;
+
+                if (result === VALID) {
+                    const {
+                        data: { order },
+                    } = data;
+
+                    setOrder(order);
+                }
+            })
+            .catch((error) => {
+                showError(error);
+            })
+            .finally(() => {});
+    };
 
     const Item = ({ title, value, center }) => (
         <SItem center={center}>
@@ -249,346 +258,367 @@ function OrderProgress({ navigation, route }) {
         );
     };
     return (
-        <Layout>
-            <Progress>
-                <Image
-                    source={Car}
-                    style={{
-                        width: 40,
-                        height: 33.22,
-                        marginBottom: 10,
-                        left: `${progress - 5}%`,
-                    }}
-                    resizeMode="contain"
-                />
-                <ProgressBar>
-                    <Dots>
-                        {STEP.map((value, index) => (
-                            <View
-                                key={index}
-                                style={{
-                                    alignItems: "center",
-                                }}
-                            >
-                                <Dot done={value.progress <= progress} />
-                                <BoldText
+        <>
+            {loading ? (
+                <LoadingLayout />
+            ) : (
+                <Layout>
+                    <Progress>
+                        <Image
+                            source={Car}
+                            style={{
+                                width: 40,
+                                height: 33.22,
+                                marginBottom: 10,
+                                left: `${progress - 5}%`,
+                            }}
+                            resizeMode="contain"
+                        />
+                        <ProgressBar>
+                            <Dots>
+                                {STEP.map((value, index) => (
+                                    <View
+                                        key={index}
+                                        style={{
+                                            alignItems: "center",
+                                        }}
+                                    >
+                                        <Dot
+                                            done={value.progress <= progress}
+                                        />
+                                        <BoldText
+                                            style={{
+                                                fontSize: 14,
+                                                marginTop: 10,
+                                                color:
+                                                    value.progress <= progress
+                                                        ? color.main
+                                                        : color[
+                                                              "page-lightgrey-text"
+                                                          ],
+                                            }}
+                                        >
+                                            {value.title}
+                                        </BoldText>
+                                    </View>
+                                ))}
+                            </Dots>
+                            <InProgressBar progress={progress} />
+                        </ProgressBar>
+                    </Progress>
+                    {status === 4 ? null : (
+                        <Box>
+                            <BoldText style={{ lineHeight: 25 }}>
+                                {status === 1
+                                    ? "기사님들의 응답을\n기다리고 있습니다…"
+                                    : null}
+                                {status === 2
+                                    ? "기사님이 고객님의 오더를\n예약하였습니다."
+                                    : null}
+                                {status === 3
+                                    ? "기사님이 작업을 시작하였습니다."
+                                    : null}
+                                {/* TODO: status에 따라 문구 바뀜 */}
+                            </BoldText>
+                            {status === 1 ? (
+                                <RegularText
                                     style={{
-                                        fontSize: 14,
+                                        color: color["page-grey-text"],
+                                        fontSize: 15,
                                         marginTop: 10,
-                                        color:
-                                            value.progress <= progress
-                                                ? color.main
-                                                : color["page-lightgrey-text"],
                                     }}
                                 >
-                                    {value.title}
-                                </BoldText>
-                            </View>
-                        ))}
-                    </Dots>
-                    <InProgressBar progress={progress} />
-                </ProgressBar>
-            </Progress>
-            {status === 4 ? null : (
-                <Box>
-                    <BoldText style={{ lineHeight: 25 }}>
-                        {status === 1
-                            ? "기사님들의 응답을\n기다리고 있습니다…"
-                            : null}
-                        {status === 2
-                            ? "기사님이 고객님의 오더를\n예약하였습니다."
-                            : null}
-                        {status === 3
-                            ? "기사님이 작업을 시작하였습니다."
-                            : null}
-                        {/* TODO: status에 따라 문구 바뀜 */}
-                    </BoldText>
-                    {status === 1 ? (
-                        <RegularText
-                            style={{
-                                color: color["page-grey-text"],
-                                fontSize: 15,
-                                marginTop: 10,
-                            }}
-                        >
-                            매칭이 완료될 때까지 시간이 걸릴 수 있습니다.
-                        </RegularText>
+                                    매칭이 완료될 때까지 시간이 걸릴 수
+                                    있습니다.
+                                </RegularText>
+                            ) : null}
+                        </Box>
+                    )}
+                    {status === 1 || status === 2 ? (
+                        <Button
+                            onPress={() => console.log("cancel")}
+                            type="accent"
+                            text="요청 취소"
+                            style={{ marginTop: 20 }}
+                        />
                     ) : null}
-                </Box>
-            )}
-            {status === 1 || status === 2 ? (
-                <Button
-                    onPress={() => console.log("cancel")}
-                    type="accent"
-                    text="요청 취소"
-                    style={{ marginTop: 20 }}
-                />
-            ) : null}
-            {status === 4 ? (
-                <Items style={shadowProps}>
-                    <View style={{ alignItems: "center", paddingTop: 20 }}>
-                        <BoldText>기사님이 작업을 완료했습니다.</BoldText>
-                        <Image
-                            source={RefreshBtn}
-                            resizeMode="contain"
-                            style={{
-                                width: 120,
-                                height: 120,
-                                marginTop: 30,
-                                marginBottom: 30,
-                            }}
-                        />
-                        <RegularText
-                            style={{
-                                fontSize: 20,
-                                textAlign: "center",
-                                lineHeight: 27,
-                            }}
-                        >
-                            작업 내역을 확인하시고{"\n"}작업에 이상이 없을 시
-                            {"\n"}
-                            아래{" "}
-                            <RegularText
-                                style={{
-                                    fontSize: 20,
-                                    color: "#EB1D36",
-                                    textDecorationLine: "underline",
-                                }}
+                    {status === 4 ? (
+                        <Items style={shadowProps}>
+                            <View
+                                style={{ alignItems: "center", paddingTop: 20 }}
                             >
-                                작업 완료 확인 버튼
-                            </RegularText>
-                            을{"\n"}꼭! 눌러주세요
-                        </RegularText>
-                    </View>
-                    <View style={{ flexDirection: "row", marginTop: 30 }}>
-                        <Image
-                            source={require("../../../assets/images/icons/icon_info2.png")}
-                            style={{
-                                width: 17,
-                                height: 17,
-                                marginRight: 5,
-                                marginTop: 2,
-                            }}
-                            resizeMode="contain"
-                        />
-                        <RegularText
-                            style={{
-                                fontSize: 16,
-                                color: color.main,
-                                lineHeight: 23,
-                            }}
-                        >
-                            작업에 문제가 있나요?{"\n"}아래 카톡 상담 버튼을
-                            눌러주세요.
-                        </RegularText>
-                    </View>
-                </Items>
-            ) : null}
-
-            {status === 2 || status === 3 ? (
-                <Items style={shadowProps}>
-                    <DriverTitle>
-                        <Image
-                            source={RefreshBtn}
-                            resizeMode="contain"
-                            style={{ width: 60, height: 60 }}
-                        />
-                        <MediumText style={{ marginTop: 10, marginBottom: 25 }}>
-                            기사님 정보
-                        </MediumText>
-                    </DriverTitle>
-                    <Row around={true}>
-                        <Item
-                            title="기사님 성함"
-                            value="나백진"
-                            center={true}
-                        />
-                        <Item
-                            title="연락처"
-                            value={GetPhoneNumberWithDash(
-                                orderData.directPhone
-                            )}
-                            center={true}
-                        />
-                    </Row>
-                    <Line />
-                    <Row around={true}>
-                        <Item
-                            title="차량 번호"
-                            value="12가 1234"
-                            center={true}
-                        />
-                        <Item
-                            title="차량정보"
-                            value="사다리차 / 5t"
-                            center={true}
-                        />
-                    </Row>
-                    <Line />
-                </Items>
-            ) : null}
-
-            <Items style={shadowProps}>
-                <MediumText>오더 내역</MediumText>
-                <Wrapper>
-                    <Row>
-                        <Item
-                            title="작업 일시"
-                            value={
-                                GetDate(orderData.workDateTime) +
-                                " " +
-                                GetTime(orderData.workDateTime)
-                            }
-                        />
-                    </Row>
-                    <Line />
-                    <Row>
-                        <Item
-                            title="주소"
-                            value={
-                                orderData.address1 +
-                                (orderData.address2
-                                    ? " " + orderData.address2
-                                    : "")
-                            }
-                        />
-                    </Row>
-                    <Line />
-                    <Row>
-                        <Item
-                            title="차량 종류"
-                            value={orderData.vehicleType + "차"}
-                            center={true}
-                        />
-                        <Item
-                            title="작업 종류"
-                            value={orderData.type}
-                            center={true}
-                        />
-                        <Item
-                            title="작업 높이"
-                            value={orderData.floor + "층"}
-                            center={true}
-                        />
-                        <Item
-                            title="작업 종류"
-                            value={orderData.time}
-                            center={true}
-                        />
-                    </Row>
-                    <Line />
-                    <Row around={true}>
-                        <Item
-                            title="연락처"
-                            value={GetPhoneNumberWithDash(orderData.phone)}
-                            center={true}
-                        />
-                        <Item
-                            title="현장 연락처"
-                            value={GetPhoneNumberWithDash(
-                                orderData.directPhone
-                            )}
-                            center={true}
-                        />
-                    </Row>
-                    <Line />
-                    <Row>
-                        <Item
-                            title="특이사항"
-                            value={orderData.memo || "없음"}
-                        />
-                    </Row>
-                    <Line />
-
-                    <Results>
-                        <ResultTitle>
-                            <Title>알테구 이용비</Title>
-                            <Title>포인트 사용</Title>
-                            <Title>
-                                긴급 오더{" "}
+                                <BoldText>
+                                    기사님이 작업을 완료했습니다.
+                                </BoldText>
+                                <Image
+                                    source={RefreshBtn}
+                                    resizeMode="contain"
+                                    style={{
+                                        width: 120,
+                                        height: 120,
+                                        marginTop: 30,
+                                        marginBottom: 30,
+                                    }}
+                                />
+                                <RegularText
+                                    style={{
+                                        fontSize: 20,
+                                        textAlign: "center",
+                                        lineHeight: 27,
+                                    }}
+                                >
+                                    작업 내역을 확인하시고{"\n"}작업에 이상이
+                                    없을 시{"\n"}
+                                    아래{" "}
+                                    <RegularText
+                                        style={{
+                                            fontSize: 20,
+                                            color: "#EB1D36",
+                                            textDecorationLine: "underline",
+                                        }}
+                                    >
+                                        작업 완료 확인 버튼
+                                    </RegularText>
+                                    을{"\n"}꼭! 눌러주세요
+                                </RegularText>
+                            </View>
+                            <View
+                                style={{ flexDirection: "row", marginTop: 30 }}
+                            >
+                                <Image
+                                    source={require("../../../assets/images/icons/icon_info2.png")}
+                                    style={{
+                                        width: 17,
+                                        height: 17,
+                                        marginRight: 5,
+                                        marginTop: 2,
+                                    }}
+                                    resizeMode="contain"
+                                />
                                 <RegularText
                                     style={{
                                         fontSize: 16,
-                                        color: "#EB1D36",
+                                        color: color.main,
+                                        lineHeight: 23,
                                     }}
                                 >
-                                    (25%)
+                                    작업에 문제가 있나요?{"\n"}아래 카톡 상담
+                                    버튼을 눌러주세요.
                                 </RegularText>
-                            </Title>
-                        </ResultTitle>
-                        <ResultValue>
-                            <Price price={numberWithComma(orderData.price)} />
-                            <Price price={"- " + numberWithComma(0)} />
-                            <Price
-                                price={
-                                    orderData.emergency
-                                        ? numberWithComma(
-                                              orderData.price * 0.25
-                                          )
-                                        : 0
-                                }
-                            />
-                        </ResultValue>
-                    </Results>
-                    <Total>
-                        <RegularText
-                            style={{
-                                fontSize: 16,
-                            }}
-                        >
-                            총 결제 금액
-                        </RegularText>
-                        <BoldText
-                            style={{
-                                fontSize: 20,
-                                color: color.main,
-                                marginLeft: 30,
-                            }}
-                        >
-                            {numberWithComma(orderData.price)}
-                            <BoldText
-                                style={{
-                                    fontSize: 14,
-                                    color: color.main,
-                                }}
-                            >
-                                {" "}
-                                AP
-                            </BoldText>
-                        </BoldText>
-                    </Total>
-                    <PointContainer>
-                        <Point>
-                            <RegularText
-                                style={{
-                                    fontSize: 14,
-                                    color: "white",
-                                }}
-                            >
-                                적립 예정 포인트{"    "}
-                                <BoldText
+                            </View>
+                        </Items>
+                    ) : null}
+
+                    {status === 2 || status === 3 ? (
+                        <Items style={shadowProps}>
+                            <DriverTitle>
+                                <Image
+                                    source={RefreshBtn}
+                                    resizeMode="contain"
+                                    style={{ width: 60, height: 60 }}
+                                />
+                                <MediumText
+                                    style={{ marginTop: 10, marginBottom: 25 }}
+                                >
+                                    기사님 정보
+                                </MediumText>
+                            </DriverTitle>
+                            <Row around={true}>
+                                <Item
+                                    title="기사님 성함"
+                                    value="나백진"
+                                    center={true}
+                                />
+                                <Item
+                                    title="연락처"
+                                    value={GetPhoneNumberWithDash(
+                                        order.directPhone
+                                    )}
+                                    center={true}
+                                />
+                            </Row>
+                            <Line />
+                            <Row around={true}>
+                                <Item
+                                    title="차량 번호"
+                                    value="12가 1234"
+                                    center={true}
+                                />
+                                <Item
+                                    title="차량정보"
+                                    value="사다리차 / 5t"
+                                    center={true}
+                                />
+                            </Row>
+                            <Line />
+                        </Items>
+                    ) : null}
+
+                    <Items style={shadowProps}>
+                        <MediumText>오더 내역</MediumText>
+                        <Wrapper>
+                            <Row>
+                                <Item
+                                    title="작업 일시"
+                                    value={
+                                        GetDate(order.workDateTime) +
+                                        " " +
+                                        GetTime(order.workDateTime)
+                                    }
+                                />
+                            </Row>
+                            <Line />
+                            <Row>
+                                <Item
+                                    title="주소"
+                                    value={
+                                        order.address1 +
+                                        (order.address2
+                                            ? " " + order.address2
+                                            : "")
+                                    }
+                                />
+                            </Row>
+                            <Line />
+                            <Row>
+                                <Item
+                                    title="차량 종류"
+                                    value={order.vehicleType + "차"}
+                                    center={true}
+                                />
+                                <Item
+                                    title="작업 종류"
+                                    value={order.type}
+                                    center={true}
+                                />
+                                <Item
+                                    title="작업 높이"
+                                    value={order.floor + "층"}
+                                    center={true}
+                                />
+                                <Item
+                                    title="작업 종류"
+                                    value={order.time}
+                                    center={true}
+                                />
+                            </Row>
+                            <Line />
+                            <Row around={true}>
+                                <Item
+                                    title="연락처"
+                                    value={GetPhoneNumberWithDash(order.phone)}
+                                    center={true}
+                                />
+                                <Item
+                                    title="현장 연락처"
+                                    value={GetPhoneNumberWithDash(
+                                        order.directPhone
+                                    )}
+                                    center={true}
+                                />
+                            </Row>
+                            <Line />
+                            <Row>
+                                <Item
+                                    title="특이사항"
+                                    value={order.memo || "없음"}
+                                />
+                            </Row>
+                            <Line />
+
+                            <Results>
+                                <ResultTitle>
+                                    <Title>알테구 이용비</Title>
+                                    <Title>포인트 사용</Title>
+                                    <Title>
+                                        긴급 오더{" "}
+                                        <RegularText
+                                            style={{
+                                                fontSize: 16,
+                                                color: "#EB1D36",
+                                            }}
+                                        >
+                                            (25%)
+                                        </RegularText>
+                                    </Title>
+                                </ResultTitle>
+                                <ResultValue>
+                                    <Price
+                                        price={numberWithComma(order.price)}
+                                    />
+                                    <Price price={"- " + numberWithComma(0)} />
+                                    <Price
+                                        price={
+                                            order.emergency
+                                                ? numberWithComma(
+                                                      order.price * 0.25
+                                                  )
+                                                : 0
+                                        }
+                                    />
+                                </ResultValue>
+                            </Results>
+                            <Total>
+                                <RegularText
                                     style={{
                                         fontSize: 16,
-                                        color: "white",
                                     }}
                                 >
-                                    {numberWithComma(orderData.price * 0.1)}
+                                    총 결제 금액
+                                </RegularText>
+                                <BoldText
+                                    style={{
+                                        fontSize: 20,
+                                        color: color.main,
+                                        marginLeft: 30,
+                                    }}
+                                >
+                                    {numberWithComma(order.price)}
                                     <BoldText
                                         style={{
-                                            fontSize: 12,
-                                            color: "white",
+                                            fontSize: 14,
+                                            color: color.main,
                                         }}
                                     >
                                         {" "}
                                         AP
                                     </BoldText>
                                 </BoldText>
-                            </RegularText>
-                        </Point>
-                    </PointContainer>
-                </Wrapper>
-            </Items>
-        </Layout>
+                            </Total>
+                            <PointContainer>
+                                <Point>
+                                    <RegularText
+                                        style={{
+                                            fontSize: 14,
+                                            color: "white",
+                                        }}
+                                    >
+                                        적립 예정 포인트{"    "}
+                                        <BoldText
+                                            style={{
+                                                fontSize: 16,
+                                                color: "white",
+                                            }}
+                                        >
+                                            {numberWithComma(order.price * 0.1)}
+                                            <BoldText
+                                                style={{
+                                                    fontSize: 12,
+                                                    color: "white",
+                                                }}
+                                            >
+                                                {" "}
+                                                AP
+                                            </BoldText>
+                                        </BoldText>
+                                    </RegularText>
+                                </Point>
+                            </PointContainer>
+                        </Wrapper>
+                    </Items>
+                </Layout>
+            )}
+        </>
     );
 }
 
