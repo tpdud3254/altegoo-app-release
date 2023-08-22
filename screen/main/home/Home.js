@@ -275,9 +275,12 @@ function Home({ navigation, route }) {
                         data: { order },
                     } = data;
 
-                    console.log(order[0]);
                     setOrders(
-                        Filter({ data: order, period: PERIOD[period - 1] })
+                        Filter({
+                            data: order,
+                            period: PERIOD[period - 1],
+                            orderBy: "createdAt",
+                        })
                     );
                 } else {
                     setOrders([]);

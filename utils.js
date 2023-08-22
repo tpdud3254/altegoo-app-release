@@ -835,9 +835,12 @@ export const CheckLoading = (data) => {
     return true;
 };
 
-export const Filter = ({ data, period }) => {
+export const Filter = ({ data, period, orderBy }) => {
     console.log("기간 : ", period);
 
+    if (period === "전체 기간") {
+        return data;
+    }
     const today = new Date();
     const ago = new Date();
 
@@ -847,16 +850,27 @@ export const Filter = ({ data, period }) => {
         ago.setMonth(today.getMonth() - 1);
     } else if (period === "3개월") {
         ago.setMonth(today.getMonth() - 3);
+    } else if (period === "6개월") {
+        ago.setMonth(today.getMonth() - 6);
     }
 
     const result = [];
-    data.map((value) => {
-        const dateTime = new Date(value.createdAt);
+    if (orderBy === "createdAt")
+        data.map((value) => {
+            const dateTime = new Date(value.createdAt);
 
-        if (dateTime >= ago) {
-            result.push(value);
-        }
-    });
+            if (dateTime >= ago) {
+                result.push(value);
+            }
+        });
+    else if (orderBy === "dateTime")
+        data.map((value) => {
+            const dateTime = new Date(value.dateTime);
+
+            if (dateTime >= ago) {
+                result.push(value);
+            }
+        });
 
     return result;
 };

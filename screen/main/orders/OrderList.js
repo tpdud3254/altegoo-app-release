@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { Image, View } from "react-native";
 import styled from "styled-components/native";
 import BoldText from "../../../component/text/BoldText";
@@ -9,6 +9,12 @@ import { color } from "../../../styles";
 import Layout from "../../../component/layout/Layout";
 import { shadowProps } from "../../../component/Shadow";
 import { Order } from "../../../component/order/OrderComponent";
+import UserContext from "../../../context/UserContext";
+import { CheckLoading, Filter, getAsyncStorageToken } from "../../../utils";
+import axios from "axios";
+import { SERVER, VALID } from "../../../constant";
+import LoadingLayout from "../../../component/layout/LoadingLayout";
+import SelectPeriod from "../../../component/selectBox/SelectPeriod";
 
 const HeaderContainer = styled.View`
     background-color: white;
@@ -53,119 +59,105 @@ const Orders = styled.View`
     margin-top: 15px;
 `;
 
-const orderData = [
-    {
-        acceptUser: 55,
-        address: "",
-        address1: "서울 관악구 신림동 1623-3",
-        address2: null,
-        bothType: null,
-        createdAt: "2023-05-12T07:56:39.900Z",
-        detailAddress1: null,
-        detailAddress2: null,
-        directPhone: "01032655452",
-        emergency: false,
-        floor: 8,
-        id: 119,
-        memo: null,
-        orderReservation: [],
-        orderStatusId: 3,
-        otherAddress: null,
-        otherFloor: null,
-        phone: "01032655452",
-        point: 9000,
-        price: 60000,
-        pushStatus: null,
-        quantity: null,
-        regionId: 1,
-        registUser: { id: 56 },
-        simpleAddress1: "서울 관악구",
-        simpleAddress2: null,
-        time: "하루",
-        type: "올림",
-        userId: 56,
-        vehicleType: "스카이",
-        volumeType: "time",
-        workDateTime: "2023-05-13T08:00:00.000Z",
-    },
-    {
-        acceptUser: 55,
-        address: "",
-        address1: "서울 관악구 신림동 1623-3",
-        address2: null,
-        bothType: null,
-        createdAt: "2023-05-12T07:56:39.900Z",
-        detailAddress1: null,
-        detailAddress2: null,
-        directPhone: "01032655452",
-        emergency: false,
-        floor: 8,
-        id: 119,
-        memo: null,
-        orderReservation: [],
-        orderStatusId: 5,
-        otherAddress: null,
-        otherFloor: null,
-        phone: "01032655452",
-        point: 9000,
-        price: 60000,
-        pushStatus: null,
-        quantity: null,
-        regionId: 1,
-        registUser: { id: 56 },
-        simpleAddress1: "서울 관악구",
-        simpleAddress2: null,
-        time: "하루",
-        type: "올림",
-        userId: 56,
-        vehicleType: "스카이",
-        volumeType: "time",
-        workDateTime: "2023-05-13T08:00:00.000Z",
-    },
-    {
-        acceptUser: 55,
-        address: "",
-        address1: "서울 관악구 신림동 1623-3",
-        address2: null,
-        bothType: null,
-        createdAt: "2023-05-12T07:56:39.900Z",
-        detailAddress1: null,
-        detailAddress2: null,
-        directPhone: "01032655452",
-        emergency: false,
-        floor: 8,
-        id: 119,
-        memo: null,
-        orderReservation: [],
-        orderStatusId: 1,
-        otherAddress: null,
-        otherFloor: null,
-        phone: "01032655452",
-        point: 9000,
-        price: 60000,
-        pushStatus: null,
-        quantity: null,
-        regionId: 1,
-        registUser: { id: 56 },
-        simpleAddress1: "서울 관악구",
-        simpleAddress2: null,
-        time: "하루",
-        type: "올림",
-        userId: 56,
-        vehicleType: "스카이",
-        volumeType: "time",
-        workDateTime: "2023-05-13T08:00:00.000Z",
-    },
-];
+const PERIOD = ["1개월", "3개월", "6개월", "전체 기간"];
 
-function OrderList({ navigation }) {
-    const orders = 1;
+function OrderList({ navigation, route }) {
+    const { info } = useContext(UserContext);
+
+    const [loading, setLoading] = useState(true);
+
+    const [period, setPeriod] = useState(1);
+    const [orders, setOrders] = useState(-1);
+    const [sortedData, setSortedData] = useState(-1);
+    const [scheduledOrderCount, setScheduledOrderCount] = useState(-1);
 
     useEffect(() => {
         navigation.setOptions({
-            header: () => <Header />,
+            header: Header,
         });
     });
+
+    useEffect(() => {
+        setLoading(true);
+        getOrders(); //작업리스트
+    }, [route?.params?.refresh]);
+
+    useEffect(() => {
+        if (CheckLoading({ orders, scheduledOrderCount, sortedData })) {
+            setLoading(false);
+        }
+    }, [orders, scheduledOrderCount, sortedData]);
+
+    useEffect(() => {
+        getOrders();
+    }, [period]);
+
+    const getOrders = async () => {
+        axios
+            .get(SERVER + "/orders/mylist/all", {
+                headers: {
+                    auth: await getAsyncStorageToken(),
+                },
+            })
+            .then(({ data }) => {
+                const { result } = data;
+
+                if (result === VALID) {
+                    const {
+                        data: { order },
+                    } = data;
+
+                    console.log(order[0]);
+                    const filterd = Filter({
+                        data: order,
+                        period: PERIOD[period - 1],
+                        orderBy: "dateTime",
+                    });
+                    setOrders(filterd);
+                    setSortedData(getSortedOrders(filterd));
+                    setScheduledOrderCount(getScheduledOrderCount(filterd));
+                } else {
+                    setOrders([]);
+                    setSortedData({});
+                    setScheduledOrderCount(0);
+                }
+            })
+            .catch((error) => {
+                showError(error);
+            })
+            .finally(() => {});
+    };
+
+    const getSortedOrders = (orders) => {
+        const result = {};
+
+        orders.map((order) => {
+            const dateTime = new Date(order.dateTime);
+
+            const key = `${dateTime
+                .getFullYear()
+                .toString()
+                .substring(2, 4)}년 ${dateTime.getMonth() + 1}월`;
+
+            if (!result[key]) result[key] = [];
+
+            result[key].push(order);
+        });
+
+        return result;
+    };
+
+    const getScheduledOrderCount = (orders) => {
+        let count = 0;
+
+        orders.map((order) => {
+            if (order.orderStatusId === 1 || order.orderStatusId === 2) {
+                count = count + 1;
+            }
+        });
+
+        return count;
+    };
 
     const Header = () => {
         return (
@@ -176,28 +168,19 @@ function OrderList({ navigation }) {
                         style={{ width: 20, height: 20, marginRight: 5 }}
                     />
                     <BoldText style={{ fontSize: 16 }}>
-                        1건
+                        {scheduledOrderCount}건
                         <RegularText style={{ fontSize: 16 }}>
                             {" "}
                             예정
                         </RegularText>
                     </BoldText>
                 </HaederWrapper>
-                {false ? (
+                {true ? (
                     <HaederWrapper style={{ justifyContent: "center" }}>
-                        <Select>
-                            <MediumText
-                                style={{
-                                    fontSize: 15,
-                                }}
-                            >
-                                전체 기간
-                            </MediumText>
-                            <Image
-                                source={require("../../../assets/images/icons/allow_down.png")}
-                                style={{ width: 21, height: 12 }}
-                            />
-                        </Select>
+                        <SelectPeriod
+                            data={PERIOD}
+                            onSelect={(index) => setPeriod(index + 1)}
+                        />
                     </HaederWrapper>
                 ) : (
                     <View
@@ -250,52 +233,45 @@ function OrderList({ navigation }) {
     };
 
     return (
-        <Layout>
-            {orders === 0 ? null : (
-                <>
-                    <Item>
-                        <MediumText
-                            style={{
-                                textAlign: "center",
-                                paddingBottom: 17,
-                                marginTop: 20,
-                            }}
-                        >
-                            23년 6월
-                        </MediumText>
-                        <Wrapper style={shadowProps}>
-                            <Orders>
-                                <Order.Items>
-                                    {orderData.map((order, index) => (
-                                        <Order.Item key={index} data={order} />
-                                    ))}
-                                </Order.Items>
-                            </Orders>
-                        </Wrapper>
-                    </Item>
-                    <Item>
-                        <MediumText
-                            style={{
-                                textAlign: "center",
-                                paddingBottom: 17,
-                                marginTop: 20,
-                            }}
-                        >
-                            23년 6월
-                        </MediumText>
-                        <Wrapper style={shadowProps}>
-                            <Orders>
-                                <Order.Items>
-                                    {orderData.map((order, index) => (
-                                        <Order.Item key={index} data={order} />
-                                    ))}
-                                </Order.Items>
-                            </Orders>
-                        </Wrapper>
-                    </Item>
-                </>
+        <>
+            {loading ? (
+                <LoadingLayout />
+            ) : (
+                <Layout>
+                    {orders === -1 || orders.length === 0 ? null : (
+                        <>
+                            {Object.keys(sortedData).map((value, index) => (
+                                <Item key={index}>
+                                    <MediumText
+                                        style={{
+                                            textAlign: "center",
+                                            paddingBottom: 17,
+                                            marginTop: 20,
+                                        }}
+                                    >
+                                        {value}
+                                    </MediumText>
+                                    <Wrapper style={shadowProps}>
+                                        <Orders>
+                                            <Order.Items>
+                                                {sortedData[value].map(
+                                                    (order, index) => (
+                                                        <Order.Item
+                                                            key={index}
+                                                            data={order}
+                                                        />
+                                                    )
+                                                )}
+                                            </Order.Items>
+                                        </Orders>
+                                    </Wrapper>
+                                </Item>
+                            ))}
+                        </>
+                    )}
+                </Layout>
             )}
-        </Layout>
+        </>
     );
 }
 
