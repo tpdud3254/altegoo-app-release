@@ -75,11 +75,21 @@ function OrderList({ navigation, route }) {
         navigation.setOptions({
             header: Header,
         });
-    });
+    }, []);
 
     useEffect(() => {
         setLoading(true);
         getOrders(); //작업리스트
+
+        //TODO: home도 이렇게 바꾸기
+        const focusSubscription = navigation.addListener("focus", () => {
+            setLoading(true);
+            getOrders();
+        });
+
+        return () => {
+            focusSubscription();
+        };
     }, [route?.params?.refresh]);
 
     useEffect(() => {

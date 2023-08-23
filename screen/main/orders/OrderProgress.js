@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { Image, View } from "react-native";
 import styled from "styled-components/native";
 import BoldText from "../../../component/text/BoldText";
@@ -15,14 +15,19 @@ import {
     GetDate,
     GetPhoneNumberWithDash,
     GetTime,
+    getAsyncStorageToken,
     numberWithComma,
     showError,
+    showMessage,
 } from "../../../utils";
 import LoadingLayout from "../../../component/layout/LoadingLayout";
 import axios from "axios";
 import { SERVER, VALID } from "../../../constant";
+import UserContext from "../../../context/UserContext";
+import DriverImage from "../../../assets/images/icons/img_driver.png";
+import DoneImage from "../../../assets/images/icons/img_order_end.png";
 
-const Refresh = styled.View`
+const Refresh = styled.TouchableOpacity`
     flex-direction: row;
     align-items: center;
     margin-right: 15px;
@@ -128,16 +133,18 @@ const DriverTitle = styled.View`
 `;
 
 const STEP = [
-    { title: "오더요청", progress: 20 },
+    { title: "오더요청", progress: 17 },
     { title: "예약완료", progress: 40 },
     { title: "작업시작", progress: 60 },
-    { title: "작업완료", progress: 100 },
+    { title: "작업완료", progress: 84 },
 ];
+
 function OrderProgress({ navigation, route }) {
+    const { info } = useContext(UserContext);
     const [loading, setLoading] = useState(true);
 
     const [progress, setProgress] = useState(0);
-    const [status, setStatus] = useState(4);
+    const [status, setStatus] = useState(-1);
 
     const [order, setOrder] = useState(-1);
 
@@ -146,7 +153,7 @@ function OrderProgress({ navigation, route }) {
 
         navigation.setOptions({
             headerRight: () => (
-                <Refresh>
+                <Refresh onPress={refresh}>
                     <MediumText
                         style={{
                             fontSize: 15,
@@ -174,33 +181,107 @@ function OrderProgress({ navigation, route }) {
     }, []);
 
     useEffect(() => {
-        if (CheckLoading({ order })) {
-            setLoading(false);
+        if (CheckLoading({ order, status })) {
+            if (status === 1) setLoading(false);
+            if (status > 1 && order.acceptUserData) setLoading(false);
         }
-    }, [order]);
+    }, [order, status]);
 
     useEffect(() => {
-        setProgress(STEP[status - 1].progress);
+        if (status === -1) return;
+        if (status === 5) setProgress(100);
+        else setProgress(STEP[status - 1].progress);
     }, [status]);
+
+    const refresh = () => {
+        setLoading(true);
+        setOrder(-1);
+        getOrder(route?.params?.orderId);
+    };
 
     const getOrder = async (id) => {
         axios
-            .get(SERVER + "/orders/info" + `?id=${id}`)
+            .get(SERVER + "/orders/info", { params: { id: id } })
             .then(({ data }) => {
                 const { result } = data;
 
                 if (result === VALID) {
                     const {
-                        data: { order },
+                        data: { order: orderData },
                     } = data;
 
-                    setOrder(order);
+                    console.log(orderData);
+                    setOrder(orderData);
+                    setStatus(getStatus(orderData.orderStatusId));
+                    if (getStatus(orderData.orderStatusId) > 1) {
+                        getAcceptUser(orderData);
+                    }
                 }
             })
             .catch((error) => {
                 showError(error);
             })
             .finally(() => {});
+    };
+
+    const getAcceptUser = async (data) => {
+        try {
+            const response = await axios.get(SERVER + "/users/user", {
+                params: { id: data.acceptUser },
+            });
+
+            const {
+                data: { result },
+            } = response;
+
+            if (result === VALID) {
+                const {
+                    data: {
+                        data: { user },
+                    },
+                } = response;
+                console.log(user);
+
+                setOrder({ ...data, acceptUserData: user });
+            } else {
+                const {
+                    data: { msg },
+                } = response;
+
+                console.log(msg);
+            }
+        } catch (error) {
+            console.log(error);
+        }
+    };
+
+    const cancelOrder = async () => {
+        axios
+            .delete(SERVER + "/orders/delete", {
+                data: { orderId: route?.params?.orderId, userId: info.id },
+                headers: {
+                    auth: await getAsyncStorageToken(),
+                },
+            })
+            .then(({ data }) => {
+                const { result } = data;
+
+                console.log("cancelOrder : ", result);
+                showMessage("요청한 오더가 취소되었습니다.");
+                navigation.goBack();
+            })
+            .catch((error) => {
+                showError(error);
+            })
+            .finally(() => {});
+    };
+
+    const getStatus = (statusId) => {
+        if (statusId === 1) return 1;
+        else if (statusId === 2) return 2;
+        else if (statusId === 3 || statusId === 4) return 3;
+        else if (statusId === 5) return 4;
+        else return 5;
     };
 
     const Item = ({ title, value, center }) => (
@@ -262,7 +343,14 @@ function OrderProgress({ navigation, route }) {
             {loading ? (
                 <LoadingLayout />
             ) : (
-                <Layout>
+                <Layout
+                    bottomButtonProps={
+                        status === 4 && {
+                            title: "작업 완료 확인",
+                            onPress: () => console.log("ok"), //TODO: 작업 로직 }),
+                        }
+                    }
+                >
                     <Progress>
                         <Image
                             source={Car}
@@ -270,7 +358,7 @@ function OrderProgress({ navigation, route }) {
                                 width: 40,
                                 height: 33.22,
                                 marginBottom: 10,
-                                left: `${progress - 5}%`,
+                                left: status === 5 ? "90%" : `${progress - 5}%`,
                             }}
                             resizeMode="contain"
                         />
@@ -306,7 +394,7 @@ function OrderProgress({ navigation, route }) {
                             <InProgressBar progress={progress} />
                         </ProgressBar>
                     </Progress>
-                    {status === 4 ? null : (
+                    {status === 4 || status === 5 ? null : (
                         <Box>
                             <BoldText style={{ lineHeight: 25 }}>
                                 {status === 1
@@ -318,7 +406,6 @@ function OrderProgress({ navigation, route }) {
                                 {status === 3
                                     ? "기사님이 작업을 시작하였습니다."
                                     : null}
-                                {/* TODO: status에 따라 문구 바뀜 */}
                             </BoldText>
                             {status === 1 ? (
                                 <RegularText
@@ -336,13 +423,13 @@ function OrderProgress({ navigation, route }) {
                     )}
                     {status === 1 || status === 2 ? (
                         <Button
-                            onPress={() => console.log("cancel")}
+                            onPress={cancelOrder}
                             type="accent"
                             text="요청 취소"
                             style={{ marginTop: 20 }}
                         />
                     ) : null}
-                    {status === 4 ? (
+                    {status === 4 || status === 5 ? (
                         <Items style={shadowProps}>
                             <View
                                 style={{ alignItems: "center", paddingTop: 20 }}
@@ -351,11 +438,11 @@ function OrderProgress({ navigation, route }) {
                                     기사님이 작업을 완료했습니다.
                                 </BoldText>
                                 <Image
-                                    source={RefreshBtn}
+                                    source={DoneImage}
                                     resizeMode="contain"
                                     style={{
-                                        width: 120,
-                                        height: 120,
+                                        width: 160,
+                                        height: 160,
                                         marginTop: 30,
                                         marginBottom: 30,
                                     }}
@@ -413,9 +500,9 @@ function OrderProgress({ navigation, route }) {
                         <Items style={shadowProps}>
                             <DriverTitle>
                                 <Image
-                                    source={RefreshBtn}
+                                    source={DriverImage}
                                     resizeMode="contain"
-                                    style={{ width: 60, height: 60 }}
+                                    style={{ width: 63, height: 63 }}
                                 />
                                 <MediumText
                                     style={{ marginTop: 10, marginBottom: 25 }}
@@ -426,13 +513,13 @@ function OrderProgress({ navigation, route }) {
                             <Row around={true}>
                                 <Item
                                     title="기사님 성함"
-                                    value="나백진"
+                                    value={order?.acceptUserData?.name}
                                     center={true}
                                 />
                                 <Item
                                     title="연락처"
                                     value={GetPhoneNumberWithDash(
-                                        order.directPhone
+                                        order?.acceptUserData?.phone
                                     )}
                                     center={true}
                                 />
@@ -441,12 +528,23 @@ function OrderProgress({ navigation, route }) {
                             <Row around={true}>
                                 <Item
                                     title="차량 번호"
-                                    value="12가 1234"
+                                    value={
+                                        order?.acceptUserData?.vehicle[0].number
+                                    }
                                     center={true}
                                 />
                                 <Item
                                     title="차량정보"
-                                    value="사다리차 / 5t"
+                                    value={`${
+                                        order?.acceptUserData?.vehicle[0].type
+                                            .type
+                                    }차 / ${
+                                        order?.acceptUserData?.vehicle[0].floor
+                                            ? order?.acceptUserData?.vehicle[0]
+                                                  .floor.floor
+                                            : order?.acceptUserData?.vehicle[0]
+                                                  .weight.weight
+                                    }`}
                                     center={true}
                                 />
                             </Row>
@@ -461,47 +559,144 @@ function OrderProgress({ navigation, route }) {
                                 <Item
                                     title="작업 일시"
                                     value={
-                                        GetDate(order.workDateTime) +
+                                        GetDate(order.dateTime) +
                                         " " +
-                                        GetTime(order.workDateTime)
+                                        GetTime(order.dateTime)
                                     }
                                 />
                             </Row>
                             <Line />
-                            <Row>
-                                <Item
-                                    title="주소"
-                                    value={
-                                        order.address1 +
-                                        (order.address2
-                                            ? " " + order.address2
-                                            : "")
-                                    }
-                                />
-                            </Row>
+                            {order.direction !== "양사" ||
+                            order.vehicleType === "스카이차" ? (
+                                <Row>
+                                    <Item
+                                        title="주소"
+                                        value={
+                                            order.address1 +
+                                            " " +
+                                            order.detailAddress1
+                                        }
+                                    />
+                                </Row>
+                            ) : (
+                                <>
+                                    <Row>
+                                        <Item
+                                            title="내림 주소"
+                                            value={
+                                                order.address1 +
+                                                " " +
+                                                order.detailAddress1
+                                            }
+                                        />
+                                    </Row>
+                                    <Line />
+                                    <Row>
+                                        <Item
+                                            title="올림 주소"
+                                            value={
+                                                order.address2 +
+                                                " " +
+                                                order.detailAddress2
+                                            }
+                                        />
+                                    </Row>
+                                </>
+                            )}
                             <Line />
-                            <Row>
-                                <Item
-                                    title="차량 종류"
-                                    value={order.vehicleType + "차"}
-                                    center={true}
-                                />
-                                <Item
-                                    title="작업 종류"
-                                    value={order.type}
-                                    center={true}
-                                />
-                                <Item
-                                    title="작업 높이"
-                                    value={order.floor + "층"}
-                                    center={true}
-                                />
-                                <Item
-                                    title="작업 종류"
-                                    value={order.time}
-                                    center={true}
-                                />
-                            </Row>
+                            {() => {
+                                const d = {
+                                    direction: null,
+                                    downFloor: null,
+                                    floor: "5층",
+                                    quantity: null,
+                                    time: "반나절",
+                                    upFloor: null,
+                                    volume: "시간",
+                                };
+                            }}
+                            {order.vehicleType === "스카이차" ? (
+                                <Row around>
+                                    <Item
+                                        title="차량 종류"
+                                        value={order.vehicleType}
+                                        center={true}
+                                    />
+                                    <Item
+                                        title="작업 높이"
+                                        value={order.floor}
+                                        center={true}
+                                    />
+                                    <Item
+                                        title="작업 시간"
+                                        value={order.time}
+                                        center={true}
+                                    />
+                                </Row>
+                            ) : order.direction !== "양사" ? (
+                                <Row>
+                                    <Item
+                                        title="차량 종류"
+                                        value={order.vehicleType}
+                                        center={true}
+                                    />
+                                    <Item
+                                        title="작업 종류"
+                                        value={order.direction}
+                                        center={true}
+                                    />
+                                    <Item
+                                        title="작업 높이"
+                                        value={order.floor}
+                                        center={true}
+                                    />
+                                    <Item
+                                        title={
+                                            order.volume === "물량"
+                                                ? "작업 물량"
+                                                : "작업 시간"
+                                        }
+                                        value={
+                                            order.volume === "물량"
+                                                ? order.quantity
+                                                : order.time
+                                        }
+                                        center={true}
+                                    />
+                                </Row>
+                            ) : (
+                                <Row>
+                                    <Item
+                                        title="차량 종류"
+                                        value={order.vehicleType}
+                                        center={true}
+                                    />
+                                    <Item
+                                        title="내림 층수"
+                                        value={order.downFloor}
+                                        center={true}
+                                    />
+                                    <Item
+                                        title="올림 층수"
+                                        value={order.upFloor}
+                                        center={true}
+                                    />
+                                    <Item
+                                        title={
+                                            order.volume === "물량"
+                                                ? "작업 물량"
+                                                : "작업 시간"
+                                        }
+                                        value={
+                                            order.volume === "물량"
+                                                ? order.quantity
+                                                : order.time
+                                        }
+                                        center={true}
+                                    />
+                                </Row>
+                            )}
+
                             <Line />
                             <Row around={true}>
                                 <Item
@@ -511,9 +706,13 @@ function OrderProgress({ navigation, route }) {
                                 />
                                 <Item
                                     title="현장 연락처"
-                                    value={GetPhoneNumberWithDash(
+                                    value={
                                         order.directPhone
-                                    )}
+                                            ? GetPhoneNumberWithDash(
+                                                  order.directPhone
+                                              )
+                                            : "없음"
+                                    }
                                     center={true}
                                 />
                             </Row>
@@ -546,15 +745,16 @@ function OrderProgress({ navigation, route }) {
                                     <Price
                                         price={numberWithComma(order.price)}
                                     />
-                                    <Price price={"- " + numberWithComma(0)} />
                                     <Price
                                         price={
-                                            order.emergency
-                                                ? numberWithComma(
-                                                      order.price * 0.25
-                                                  )
-                                                : 0
+                                            "- " +
+                                            numberWithComma(order.usePoint)
                                         }
+                                    />
+                                    <Price
+                                        price={numberWithComma(
+                                            order.emergencyPrice
+                                        )}
                                     />
                                 </ResultValue>
                             </Results>
@@ -573,7 +773,7 @@ function OrderProgress({ navigation, route }) {
                                         marginLeft: 30,
                                     }}
                                 >
-                                    {numberWithComma(order.price)}
+                                    {numberWithComma(order.totalPrice)}
                                     <BoldText
                                         style={{
                                             fontSize: 14,
@@ -600,7 +800,7 @@ function OrderProgress({ navigation, route }) {
                                                 color: "white",
                                             }}
                                         >
-                                            {numberWithComma(order.price * 0.1)}
+                                            {numberWithComma(order.savePoint)}
                                             <BoldText
                                                 style={{
                                                     fontSize: 12,

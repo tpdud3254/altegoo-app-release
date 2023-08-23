@@ -86,7 +86,7 @@ export const Order = {
         };
 
         const goToOrderProgress = () => {
-            navigation.navigate("OrderProgress", { order: data });
+            navigation.navigate("OrderProgress", { orderId: data.id });
         };
         return (
             <ItemContainer onPress={goToOrderProgress}>

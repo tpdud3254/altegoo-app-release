@@ -22,6 +22,7 @@ function KakaoButton() {
     const navigation = useNavigation();
     const goToKakaoChat = () => {
         console.log("kakao");
+        //TODO: http://pf.kakao.com/_QxgmlG
     };
 
     return (
