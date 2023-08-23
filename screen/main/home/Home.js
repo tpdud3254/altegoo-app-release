@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useRef, useState } from "react";
 import UserContext from "../../../context/UserContext";
-import { ORDINARY, VALID } from "../../../constant";
+import { DRIVER, ORDINARY, VALID } from "../../../constant";
 import axios from "axios";
 import { SERVER } from "../../../constant";
 import {
@@ -215,6 +215,7 @@ function Home({ navigation, route }) {
 
     const [point, setPoint] = useState(-1);
     const [orders, setOrders] = useState(-1);
+    const [acceptOrders, setAcceptOrders] = useState(-1);
     const [period, setPeriod] = useState(1);
 
     const bannerRef = useRef();
@@ -225,11 +226,19 @@ function Home({ navigation, route }) {
         setLoading(true);
         getPoint(); //포인트
         getOrders(); //작업리스트
+
+        if (info.userType === DRIVER) getAcceptOrders();
     }, [route?.params?.refresh]);
 
     useEffect(() => {
-        if (CheckLoading({ point, orders })) {
-            setLoading(false);
+        if (info.userType === DRIVER) {
+            if (CheckLoading({ point, orders, acceptOrders })) {
+                setLoading(false);
+            }
+        } else {
+            if (CheckLoading({ point, orders })) {
+                setLoading(false);
+            }
         }
     }, [point, orders]);
 
@@ -291,8 +300,44 @@ function Home({ navigation, route }) {
             })
             .finally(() => {});
     };
+
+    const getAcceptOrders = async () => {
+        axios
+            .get(SERVER + "/orders/accept", {
+                headers: {
+                    auth: await getAsyncStorageToken(),
+                },
+            })
+            .then(({ data }) => {
+                const { result } = data;
+
+                if (result === VALID) {
+                    const {
+                        data: { order },
+                    } = data;
+
+                    console.log("acceptOrders : ", order);
+                    setAcceptOrders(order || []);
+                } else {
+                    setAcceptOrders([]);
+                }
+            })
+            .catch((error) => {
+                showError(error);
+            })
+            .finally(() => {});
+    };
     const goToPoint = () => {
         navigation.navigate("SettingNavigator", { screen: "PointMain" });
+    };
+
+    const goToPointCharge = () => {
+        navigation.navigate("SettingNavigator", { screen: "ChargePoint" });
+    };
+
+    const goToKakaoChat = () => {
+        console.log("kakao");
+        //TODO: http://pf.kakao.com/_QxgmlG
     };
 
     const renderIntro = ({ item }) => (
@@ -327,12 +372,18 @@ function Home({ navigation, route }) {
                                 >
                                     안녕하세요! {info.name}님.
                                 </BoldText>
-                                <View style={{ flexDirection: "row" }}>
+                                <View
+                                    style={{
+                                        flexDirection: "row",
+                                    }}
+                                >
                                     {info.userTypeId === 2 ? (
-                                        <TouchableOpacity>
+                                        <TouchableOpacity
+                                            onPress={goToKakaoChat}
+                                        >
                                             {/* TODO: 카카오톡으로 수정 */}
                                             <Image
-                                                source={require("../../../assets/images/icons/icon_info2.png")}
+                                                source={require("../../../assets/images/icons/icon_kakao.png")}
                                                 style={{
                                                     width: 30,
                                                     height: 30,
@@ -374,7 +425,7 @@ function Home({ navigation, route }) {
                                         </BoldText>
                                     </PointButton>
                                     {info.userTypeId === 2 ? (
-                                        <ChargeButton>
+                                        <ChargeButton onPress={goToPointCharge}>
                                             <Image
                                                 source={require("../../../assets/images/icons/icon_charge.png")}
                                                 style={{
@@ -440,27 +491,41 @@ function Home({ navigation, route }) {
                 </Header>
             </Wrapper>
         </Item> */}
-                    {info.userTypeId === 2 ? (
-                        <Item>
-                            <Wrapper style={shadowProps} border={true}>
-                                <Header>
-                                    <MediumText
-                                        style={{
-                                            fontSize: 18,
-                                            marginTop: 5,
-                                        }}
-                                    >
-                                        {false ? "예약된 작업" : "진행중 작업"}
-                                    </MediumText>
-                                </Header>
-                                <Orders>
-                                    <Order.Items>
-                                        <Order.Item data={orderData[0]} />
-                                    </Order.Items>
-                                </Orders>
-                            </Wrapper>
-                        </Item>
-                    ) : null}
+                    {info.userTypeId === 2 && acceptOrders.length > 0
+                        ? acceptOrders.map((order, index) => {
+                              //TODO: 예약된 작업 한꺼번에 진행중 작업ㅎ ㅏㄴ꺼번에
+                              return (
+                                  <Item key={index}>
+                                      <Wrapper
+                                          style={shadowProps}
+                                          border={true}
+                                      >
+                                          <Header>
+                                              <MediumText
+                                                  style={{
+                                                      fontSize: 18,
+                                                      marginTop: 5,
+                                                  }}
+                                              >
+                                                  {order.orderStatusId === 2
+                                                      ? "예약된 작업"
+                                                      : null}
+                                                  {order.orderStatusId === 3 ||
+                                                  order.orderStatusId === 4
+                                                      ? "진행중 작업"
+                                                      : null}
+                                              </MediumText>
+                                          </Header>
+                                          <Orders>
+                                              <Order.Items>
+                                                  <Order.Item data={order} />
+                                              </Order.Items>
+                                          </Orders>
+                                      </Wrapper>
+                                  </Item>
+                              );
+                          })
+                        : null}
                     <Item>
                         <Wrapper style={shadowProps}>
                             <Header>
