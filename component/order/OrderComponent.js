@@ -85,11 +85,12 @@ export const Order = {
             );
         };
 
-        const goToOrderProgress = () => {
-            navigation.navigate("OrderProgress", { orderId: data.id });
+        const goToOrderDetails = () => {
+            // navigation.navigate("OrderDetails", { orderId: data.id });
+            navigation.navigate("OrderDetails", { order: data });
         };
         return (
-            <ItemContainer onPress={goToOrderProgress}>
+            <ItemContainer onPress={goToOrderDetails}>
                 <Row>
                     <LightText style={{ marginBottom: 5 }}>
                         {GetDate(data.dateTime)}

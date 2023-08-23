@@ -240,7 +240,7 @@ function Home({ navigation, route }) {
                 setLoading(false);
             }
         }
-    }, [point, orders]);
+    }, [point, orders, acceptOrders]);
 
     useEffect(() => {
         getOrders();
