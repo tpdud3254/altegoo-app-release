@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useRef, useState } from "react";
 import UserContext from "../../../context/UserContext";
-import { DRIVER, ORDINARY, VALID } from "../../../constant";
+import { DRIVER, VALID } from "../../../constant";
 import axios from "axios";
 import { SERVER } from "../../../constant";
 import {
@@ -11,8 +11,6 @@ import {
     showError,
     showMessage,
 } from "../../../utils";
-import HeaderLeft from "../../../component/HeaderLeft";
-import HeaderRight from "../../../component/HeaderRight";
 import {
     FlatList,
     Image,
@@ -27,7 +25,6 @@ import Layout, { LAYOUT_PADDING_X } from "../../../component/layout/Layout";
 import BoldText from "../../../component/text/BoldText";
 import { shadowProps } from "../../../component/Shadow";
 import RegularText from "../../../component/text/RegularText";
-import RightArrow from "../../../assets/images/icons/arrow_right_s.png";
 import { Order } from "../../../component/order/OrderComponent";
 import { Notification } from "../../../component/Notification";
 import LoginContext from "../../../context/LoginContext";
@@ -71,15 +68,6 @@ const Header = styled.View`
     align-items: center;
     justify-content: space-between;
 `;
-const Select = styled.TouchableOpacity`
-    background-color: #f4f4f4;
-    flex-direction: row;
-    align-items: center;
-    justify-content: space-between;
-    padding: 9px 10px 9px 17px;
-    border-radius: 10px;
-    width: 110px;
-`;
 const Orders = styled.View`
     margin-top: 30px;
 `;
@@ -88,111 +76,6 @@ const NoOrder = styled.View`
     padding: 40px;
     margin-bottom: 10px;
 `;
-
-const orderData = [
-    {
-        acceptUser: 55,
-        address: "",
-        address1: "서울 관악구 신림동 1623-3",
-        address2: null,
-        bothType: null,
-        createdAt: "2023-05-12T07:56:39.900Z",
-        detailAddress1: null,
-        detailAddress2: null,
-        directPhone: "01032655452",
-        emergency: false,
-        floor: 8,
-        id: 119,
-        memo: null,
-        orderReservation: [],
-        orderStatusId: 3,
-        otherAddress: null,
-        otherFloor: null,
-        phone: "01032655452",
-        point: 9000,
-        price: 60000,
-        pushStatus: null,
-        quantity: null,
-        regionId: 1,
-        registUser: { id: 56 },
-        simpleAddress1: "서울 관악구",
-        simpleAddress2: null,
-        time: "하루",
-        type: "올림",
-        userId: 56,
-        vehicleType: "스카이",
-        volumeType: "time",
-        workDateTime: "2023-05-13T08:00:00.000Z",
-    },
-    {
-        acceptUser: 55,
-        address: "",
-        address1: "서울 관악구 신림동 1623-3",
-        address2: null,
-        bothType: null,
-        createdAt: "2023-05-12T07:56:39.900Z",
-        detailAddress1: null,
-        detailAddress2: null,
-        directPhone: "01032655452",
-        emergency: false,
-        floor: 8,
-        id: 119,
-        memo: null,
-        orderReservation: [],
-        orderStatusId: 5,
-        otherAddress: null,
-        otherFloor: null,
-        phone: "01032655452",
-        point: 9000,
-        price: 60000,
-        pushStatus: null,
-        quantity: null,
-        regionId: 1,
-        registUser: { id: 56 },
-        simpleAddress1: "서울 관악구",
-        simpleAddress2: null,
-        time: "하루",
-        type: "올림",
-        userId: 56,
-        vehicleType: "스카이",
-        volumeType: "time",
-        workDateTime: "2023-05-13T08:00:00.000Z",
-    },
-    {
-        acceptUser: 55,
-        address: "",
-        address1: "서울 관악구 신림동 1623-3",
-        address2: null,
-        bothType: null,
-        createdAt: "2023-05-12T07:56:39.900Z",
-        detailAddress1: null,
-        detailAddress2: null,
-        directPhone: "01032655452",
-        emergency: false,
-        floor: 8,
-        id: 119,
-        memo: null,
-        orderReservation: [],
-        orderStatusId: 1,
-        otherAddress: null,
-        otherFloor: null,
-        phone: "01032655452",
-        point: 9000,
-        price: 60000,
-        pushStatus: null,
-        quantity: null,
-        regionId: 1,
-        registUser: { id: 56 },
-        simpleAddress1: "서울 관악구",
-        simpleAddress2: null,
-        time: "하루",
-        type: "올림",
-        userId: 56,
-        vehicleType: "스카이",
-        volumeType: "time",
-        workDateTime: "2023-05-13T08:00:00.000Z",
-    },
-];
 
 const bannerData = [
     {
@@ -518,7 +401,10 @@ function Home({ navigation, route }) {
                                           </Header>
                                           <Orders>
                                               <Order.Items>
-                                                  <Order.Item data={order} />
+                                                  <Order.Item
+                                                      data={order}
+                                                      nextPage="DriverOrderProgress"
+                                                  />
                                               </Order.Items>
                                           </Orders>
                                       </Wrapper>
@@ -559,6 +445,7 @@ function Home({ navigation, route }) {
                                             <Order.Item
                                                 key={index}
                                                 data={order}
+                                                nextPage="OrderProgress"
                                             />
                                         ))}
                                     </Order.Items>

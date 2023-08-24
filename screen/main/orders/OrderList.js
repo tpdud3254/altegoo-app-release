@@ -269,6 +269,7 @@ function OrderList({ navigation, route }) {
                                                         <Order.Item
                                                             key={index}
                                                             data={order}
+                                                            nextPage="OrderProgress"
                                                         />
                                                     )
                                                 )}

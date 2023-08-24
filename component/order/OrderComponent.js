@@ -20,7 +20,7 @@ export const Order = {
     Items: ({ children }) => {
         return <View>{children}</View>;
     },
-    Item: ({ data }) => {
+    Item: ({ data, nextPage }) => {
         const navigation = useNavigation();
         const Badge = ({ status }) => {
             let text = "";
@@ -88,9 +88,15 @@ export const Order = {
         const goToOrderDetails = () => {
             // navigation.navigate("OrderDetails", { orderId: data.id });
             navigation.navigate("OrderDetails", { order: data });
+            navigation.navigate("OrderProgress", { orderId: data.id });
         };
+
+        const goToPage = () => {
+            navigation.navigate(nextPage, { orderId: data.id });
+        };
+
         return (
-            <ItemContainer onPress={goToOrderDetails}>
+            <ItemContainer onPress={goToPage}>
                 <Row>
                     <LightText style={{ marginBottom: 5 }}>
                         {GetDate(data.dateTime)}

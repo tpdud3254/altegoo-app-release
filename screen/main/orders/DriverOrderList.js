@@ -319,27 +319,17 @@ function DriverOrderList({ navigation }) {
                             <Orders>
                                 <Order.Items>
                                     {orderData.map((order, index) => (
-                                        <Order.Item key={index} data={order} />
-                                    ))}
-                                </Order.Items>
-                            </Orders>
-                        </Wrapper>
-                    </Item>
-                    <Item>
-                        <MediumText
-                            style={{
-                                textAlign: "center",
-                                paddingBottom: 17,
-                                marginTop: 20,
-                            }}
-                        >
-                            23년 6월
-                        </MediumText>
-                        <Wrapper style={shadowProps}>
-                            <Orders>
-                                <Order.Items>
-                                    {orderData.map((order, index) => (
-                                        <Order.Item key={index} data={order} />
+                                        <Order.Item
+                                            key={index}
+                                            data={order}
+                                            nextPage={
+                                                menu === 2
+                                                    ? "OrderProgress"
+                                                    : order.orderStatusId === 1
+                                                    ? "OrderDetails"
+                                                    : "DriverOrderProgress"
+                                            }
+                                        />
                                     ))}
                                 </Order.Items>
                             </Orders>
