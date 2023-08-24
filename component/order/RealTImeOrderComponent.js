@@ -86,11 +86,11 @@ export const Order = {
                     emergency={data.emergency}
                 >
                     <Icon>
-                        {data.type === "올림" ? (
+                        {data.direction === "올림" ? (
                             <IconImage
                                 source={require("../../assets/images/icons/icon_lift_up_ON.png")}
                             />
-                        ) : data.type === "내림" ? (
+                        ) : data.direction === "내림" ? (
                             <IconImage
                                 source={require("../../assets/images/icons/icon_lift_down_ON.png")}
                             />
@@ -100,12 +100,26 @@ export const Order = {
                             />
                         )}
                         <MediumText style={{ fontSize: 14, color: color.main }}>
-                            {data.type}
+                            {data.vehicleType === "스카이차"
+                                ? "양사"
+                                : data.direction}
                         </MediumText>
                     </Icon>
                     <Wrapper>
                         <Row>
-                            <BoldText>{`${data.vehicleType}차 / ${data.time} / ${data.floor}층`}</BoldText>
+                            <BoldText>
+                                {data.vehicleType === "스카이차"
+                                    ? `${data.vehicleType} / ${data.time} / ${data.floor}`
+                                    : `${data.vehicleType} / ${
+                                          data.volume === "시간"
+                                              ? data.time
+                                              : data.quantity
+                                      } / ${
+                                          data.direction === "양사"
+                                              ? data.upFloor
+                                              : data.floor
+                                      }`}
+                            </BoldText>
                         </Row>
                         <Row>
                             <RegularText
@@ -119,11 +133,11 @@ export const Order = {
                         <Row>
                             <RegularText style={{ fontSize: 15 }}>
                                 {`${GetDate(
-                                    data.workDateTime,
+                                    data.dateTime,
                                     "long"
-                                )} (${GetDayOfWeek(
-                                    data.workDateTime
-                                )}) ${GetTime(data.workDateTime)}`}
+                                )} (${GetDayOfWeek(data.dateTime)}) ${GetTime(
+                                    data.dateTime
+                                )}`}
                             </RegularText>
                         </Row>
                         <Row
@@ -146,7 +160,10 @@ export const Order = {
                                         fontSize: 15,
                                     }}
                                 >
-                                    {" " + numberWithComma(data.point || 0)}
+                                    {" " +
+                                        numberWithComma(
+                                            data.price + data.emergencyPrice
+                                        )}
                                     <BoldText
                                         style={{
                                             fontSize: 12,
@@ -168,7 +185,7 @@ export const Order = {
                                         fontSize: 15,
                                     }}
                                 >
-                                    {" " + numberWithComma(data.point || 0)}
+                                    {" " + numberWithComma(data.savePoint || 0)}
                                     <BoldText
                                         style={{
                                             fontSize: 12,

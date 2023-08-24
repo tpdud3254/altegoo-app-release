@@ -1,9 +1,10 @@
 import React, { useContext, useEffect, useRef, useState } from "react";
 import UserContext from "../../../context/UserContext";
-import { ORDINARY } from "../../../constant";
+import { ORDINARY, VALID } from "../../../constant";
 import axios from "axios";
 import { SERVER } from "../../../constant";
 import {
+    CheckLoading,
     getAsyncStorageToken,
     numberWithComma,
     showError,
@@ -31,8 +32,9 @@ import LoginContext from "../../../context/LoginContext";
 import { Row } from "../../../component/Row";
 import RefreshBtn from "../../../assets/images/icons/btn_Refresh.png";
 import { Order } from "../../../component/order/RealTImeOrderComponent";
+import LoadingLayout from "../../../component/layout/LoadingLayout";
 
-const Refresh = styled.View`
+const Refresh = styled.TouchableOpacity`
     flex-direction: row;
     align-items: center;
     margin-right: 15px;
@@ -190,88 +192,56 @@ const orderData = [
 ];
 
 function RealTimeOrder({ navigation }) {
-    const { width } = useWindowDimensions();
     const { info } = useContext(UserContext);
+
+    const [loading, setLoading] = useState(true);
+    const [orders, setOrders] = useState(-1);
+    const [acceptOrder, setAcceptOrder] = useState(-1);
+
     const [point, setPoint] = useState(0);
-    const [refresh, setRefresh] = useState(false);
+
     const bannerRef = useRef();
     const { firstLogin, setFirstLogin } = useContext(LoginContext); //TODO: 앱 처음 로그인 시 가이드 말풍선 만들기
     const [showGuide, setShowGuide] = useState(false);
 
-    const orders = 1;
     useEffect(() => {
-        if (info.userType !== ORDINARY) {
-            navigation.setOptions({
-                headerRight: () => <HeaderRight />,
-            });
-        }
-        getPoint(); //포인트가져오기
+        setLoading(true);
 
-        // getTest();
+        getOrders();
+        getAcceptOrders();
     }, []);
 
-    const getTest = async () => {
-        axios
-            .get(SERVER + "/users/test", {
-                headers: {
-                    auth: await getAsyncStorageToken(),
-                },
-            })
-            .then(({ data }) => {
-                console.log(data);
-                // const {
-                //     result,
-                //     data: { point },
-                // } = data;
-                // console.log("result: ", result);
-                // console.log("point: ", point);
-                // if (info.userType !== ORDINARY) {
-                //     navigation.setOptions({
-                //         headerLeft: () => (
-                //             <HeaderLeft
-                //                 onPress={goToPoint}
-                //                 name={info.name}
-                //                 point={point?.curPoint}
-                //             />
-                //         ),
-                //     });
-                // } else {
-                //     setPoint(point?.curPoint);
-                // }
-            })
-            .catch((error) => {
-                showError(error);
-            })
-            .finally(() => {});
+    useEffect(() => {
+        if (CheckLoading({ orders, acceptOrder })) {
+            setLoading(false);
+        }
+    }, [orders, acceptOrder]);
+
+    const refresh = () => {
+        setLoading(true);
+        setOrders(-1);
+
+        getOrders();
     };
-
-    const getPoint = async () => {
+    const getOrders = async () => {
         axios
-            .get(SERVER + "/users/point", {
+            .get(SERVER + "/orders/realtime", {
                 headers: {
                     auth: await getAsyncStorageToken(),
                 },
             })
             .then(({ data }) => {
-                const {
-                    result,
-                    data: { point },
-                } = data;
-                console.log("result: ", result);
-                console.log("point: ", point);
+                const { result } = data;
 
-                if (info.userType !== ORDINARY) {
-                    navigation.setOptions({
-                        headerLeft: () => (
-                            <HeaderLeft
-                                onPress={goToPoint}
-                                name={info.name}
-                                point={point?.curPoint}
-                            />
-                        ),
-                    });
+                if (result === VALID) {
+                    const {
+                        data: { order },
+                    } = data;
+
+                    console.log("orders : ", order);
+                    setOrders(order || []);
                 } else {
-                    setPoint(point?.curPoint);
+                    setOrders([]);
                 }
             })
             .catch((error) => {
@@ -280,102 +250,152 @@ function RealTimeOrder({ navigation }) {
             .finally(() => {});
     };
 
-    const goToPoint = () => {
-        navigation.navigate("SettingNavigator", { screen: "PointNavigator" });
+    const getAcceptOrders = async () => {
+        axios
+            .get(SERVER + "/orders/accept", {
+                headers: {
+                    auth: await getAsyncStorageToken(),
+                },
+            })
+            .then(({ data }) => {
+                const { result } = data;
+
+                if (result === VALID) {
+                    const {
+                        data: { order },
+                    } = data;
+
+                    console.log("acceptOrders : ", order[order.length - 1]);
+                    if (order.length > 0)
+                        setAcceptOrder(order[order.length - 1]);
+                    else setAcceptOrder(0);
+                } else {
+                    setAcceptOrder(0);
+                }
+            })
+            .catch((error) => {
+                showError(error);
+            })
+            .finally(() => {});
     };
+
+    const goToDriverProgress = () => {
+        navigation.navigate("DriverOrderProgress", { orderId: acceptOrder.id });
+    };
+
     return (
-        <Layout headerShown={false} registBtnShown={true}>
-            <ItemRow>
-                <BoldText
-                    style={{
-                        fontSize: 23,
-                    }}
-                >
-                    143 건의 실시간 오더
-                </BoldText>
-                <Row>
-                    <Refresh>
-                        <MediumText
+        <>
+            {loading ? (
+                <LoadingLayout />
+            ) : (
+                <Layout headerShown={false} registBtnShown={true}>
+                    <ItemRow>
+                        <BoldText
                             style={{
-                                fontSize: 15,
-                                color: color.blue,
-                                marginRight: 3,
+                                fontSize: 23,
                             }}
                         >
-                            새로고침
-                        </MediumText>
-                        <Image
-                            source={RefreshBtn}
-                            resizeMode="contain"
-                            style={{ width: 27, height: 27 }}
-                        />
-                    </Refresh>
+                            {orders && orders !== -1 ? orders.length : "0"}건의
+                            실시간 오더
+                        </BoldText>
+                        <Row>
+                            <Refresh onPress={refresh}>
+                                <MediumText
+                                    style={{
+                                        fontSize: 15,
+                                        color: color.blue,
+                                        marginRight: 3,
+                                    }}
+                                >
+                                    새로고침
+                                </MediumText>
+                                <Image
+                                    source={RefreshBtn}
+                                    resizeMode="contain"
+                                    style={{ width: 27, height: 27 }}
+                                />
+                            </Refresh>
 
-                    <Notification />
-                </Row>
-            </ItemRow>
-            <Item>
-                <Noti>
-                    <Row>
-                        <Image
-                            source={require("../../../assets/images/icons/icon_info1.png")}
-                            style={{ width: 24, height: 24, marginRight: 7 }}
-                        />
-                        <MediumText style={{ fontSize: 16, color: "white" }}>
-                            현재 진행중인 작업이 있습니다.
-                        </MediumText>
-                    </Row>
-                    <Shortcut>
-                        <MediumText style={{ fontSize: 14, color: color.blue }}>
-                            바로가기
-                        </MediumText>
-                    </Shortcut>
-                </Noti>
-            </Item>
-            <ItemRow style={{ justifyContent: "flex-end" }}>
-                <Select>
-                    <MediumText
-                        style={{
-                            fontSize: 15,
-                        }}
-                    >
-                        전체 지역
-                    </MediumText>
-                    <Image
-                        source={require("../../../assets/images/icons/allow_down.png")}
-                        style={{ width: 21, height: 12 }}
-                    />
-                </Select>
-                <Select>
-                    <MediumText
-                        style={{
-                            fontSize: 15,
-                        }}
-                    >
-                        시간 순
-                    </MediumText>
-                    <Image
-                        source={require("../../../assets/images/icons/allow_down.png")}
-                        style={{ width: 21, height: 12 }}
-                    />
-                </Select>
-            </ItemRow>
-            {true ? (
-                <Item>
-                    <Orders>
-                        <Order.Items>
-                            {orderData.map((order, index) => (
-                                <Order.Item key={index} data={order} />
-                            ))}
-                        </Order.Items>
-                    </Orders>
-                </Item>
-            ) : (
-                <NoOrder>
-                    <RegularText>등록된 오더가 없습니다.</RegularText>
-                </NoOrder>
+                            <Notification />
+                        </Row>
+                    </ItemRow>
+                    {acceptOrder ? (
+                        <Item>
+                            <Noti>
+                                <Row>
+                                    <Image
+                                        source={require("../../../assets/images/icons/icon_info1.png")}
+                                        style={{
+                                            width: 24,
+                                            height: 24,
+                                            marginRight: 7,
+                                        }}
+                                    />
+                                    <MediumText
+                                        style={{ fontSize: 16, color: "white" }}
+                                    >
+                                        현재 진행중인 작업이 있습니다.
+                                    </MediumText>
+                                </Row>
+                                <Shortcut onPress={goToDriverProgress}>
+                                    <MediumText
+                                        style={{
+                                            fontSize: 14,
+                                            color: color.blue,
+                                        }}
+                                    >
+                                        바로가기
+                                    </MediumText>
+                                </Shortcut>
+                            </Noti>
+                        </Item>
+                    ) : null}
+                    <ItemRow style={{ justifyContent: "flex-end" }}>
+                        {/* <Select>
+                            <MediumText
+                                style={{
+                                    fontSize: 15,
+                                }}
+                            >
+                                전체 지역
+                            </MediumText>
+                            <Image
+                                source={require("../../../assets/images/icons/allow_down.png")}
+                                style={{ width: 21, height: 12 }}
+                            />
+                        </Select> */}
+                        <Select>
+                            <MediumText
+                                style={{
+                                    fontSize: 15,
+                                }}
+                            >
+                                시간 순
+                            </MediumText>
+                            <Image
+                                source={require("../../../assets/images/icons/allow_down.png")}
+                                style={{ width: 21, height: 12 }}
+                            />
+                        </Select>
+                    </ItemRow>
+                    {true ? (
+                        <Item>
+                            <Orders>
+                                <Order.Items>
+                                    {orders.map((order, index) => (
+                                        <Order.Item key={index} data={order} />
+                                    ))}
+                                </Order.Items>
+                            </Orders>
+                        </Item>
+                    ) : (
+                        <NoOrder>
+                            <RegularText>등록된 오더가 없습니다.</RegularText>
+                        </NoOrder>
+                    )}
+                </Layout>
             )}
-        </Layout>
+        </>
     );
 }
 
