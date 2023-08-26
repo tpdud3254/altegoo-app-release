@@ -696,7 +696,6 @@ function OrderProgress({ navigation, route }) {
                                     />
                                 </Row>
                             )}
-
                             <Line />
                             <Row around={true}>
                                 <Item
