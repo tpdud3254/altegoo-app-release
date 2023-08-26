@@ -14,7 +14,7 @@ import { CheckLoading, Filter, getAsyncStorageToken } from "../../../utils";
 import axios from "axios";
 import { SERVER, VALID } from "../../../constant";
 import LoadingLayout from "../../../component/layout/LoadingLayout";
-import SelectPeriod from "../../../component/selectBox/SelectPeriod";
+import SelectFilter from "../../../component/selectBox/SelectFilter";
 
 const HeaderContainer = styled.View`
     background-color: white;
@@ -187,7 +187,7 @@ function OrderList({ navigation, route }) {
                 </HaederWrapper>
                 {true ? (
                     <HaederWrapper style={{ justifyContent: "center" }}>
-                        <SelectPeriod
+                        <SelectFilter
                             data={PERIOD}
                             onSelect={(index) => setPeriod(index + 1)}
                         />

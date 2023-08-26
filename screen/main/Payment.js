@@ -91,6 +91,8 @@ function Payment({ navigation, route }) {
             simpleAddress1: registInfo.simpleAddress1 || null,
             simpleAddress2: registInfo.simpleAddress2 || null,
             region: registInfo.region || null,
+            latitude: registInfo.latitude.toString() || "0",
+            longitude: registInfo.longitude.toString() || "0",
             phone: info.phone || null,
             directPhone: registInfo.directPhone || null,
             emergency: registInfo.emergency || false,

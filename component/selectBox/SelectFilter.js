@@ -1,10 +1,4 @@
-import {
-    View,
-    Image,
-    TouchableOpacity,
-    TouchableWithoutFeedback,
-    ScrollView,
-} from "react-native";
+import { Image, TouchableWithoutFeedback, ScrollView } from "react-native";
 import styled from "styled-components/native";
 import MediumText from "../text/MediumText";
 import { color } from "../../styles";
@@ -48,7 +42,7 @@ const Option = styled.TouchableOpacity`
     padding-bottom: 20px;
 `;
 
-function SelectPeriod({ onSelect, data, width, selectedIndex }) {
+function SelectFilter({ onSelect, data, width, selectedIndex }) {
     const [showOptions, setShowOptions] = useState(false);
     const [selected, setSelected] = useState(0);
 
@@ -65,9 +59,9 @@ function SelectPeriod({ onSelect, data, width, selectedIndex }) {
     };
 
     const clickOption = (index) => {
+        hide();
         onSelect(index);
         setSelected(index);
-        hide();
     };
 
     return (
@@ -135,4 +129,4 @@ function SelectPeriod({ onSelect, data, width, selectedIndex }) {
     );
 }
 
-export default SelectPeriod;
+export default SelectFilter;

@@ -1,38 +1,29 @@
 import React, { useContext, useEffect, useRef, useState } from "react";
 import UserContext from "../../../context/UserContext";
-import { ORDINARY, VALID } from "../../../constant";
+import { VALID } from "../../../constant";
 import axios from "axios";
 import { SERVER } from "../../../constant";
 import {
     CheckLoading,
     getAsyncStorageToken,
-    numberWithComma,
+    getDistance,
     showError,
 } from "../../../utils";
-import HeaderLeft from "../../../component/HeaderLeft";
-import HeaderRight from "../../../component/HeaderRight";
-import {
-    FlatList,
-    Image,
-    TouchableOpacity,
-    View,
-    useWindowDimensions,
-} from "react-native";
+import { Image } from "react-native";
 import styled from "styled-components/native";
 import MediumText from "../../../component/text/MediumText";
 import { color } from "../../../styles";
-import Layout, { LAYOUT_PADDING_X } from "../../../component/layout/Layout";
+import Layout from "../../../component/layout/Layout";
 import BoldText from "../../../component/text/BoldText";
-import { shadowProps } from "../../../component/Shadow";
 import RegularText from "../../../component/text/RegularText";
-import RightArrow from "../../../assets/images/icons/arrow_right_s.png";
-
+import * as Location from "expo-location";
 import { Notification } from "../../../component/Notification";
 import LoginContext from "../../../context/LoginContext";
 import { Row } from "../../../component/Row";
 import RefreshBtn from "../../../assets/images/icons/btn_Refresh.png";
 import { Order } from "../../../component/order/RealTImeOrderComponent";
 import LoadingLayout from "../../../component/layout/LoadingLayout";
+import SelectFilter from "../../../component/selectBox/SelectFilter";
 
 const Refresh = styled.TouchableOpacity`
     flex-direction: row;
@@ -50,16 +41,6 @@ const ItemRow = styled(Item)`
     align-items: center;
 `;
 
-const Select = styled.TouchableOpacity`
-    background-color: #f4f4f4;
-    flex-direction: row;
-    align-items: center;
-    justify-content: space-between;
-    padding: 9px 10px 9px 17px;
-    border-radius: 10px;
-    width: 110px;
-    margin-left: 10px;
-`;
 const Orders = styled.View``;
 const NoOrder = styled.View`
     justify-content: center;
@@ -86,110 +67,17 @@ const Shortcut = styled.TouchableOpacity`
     border-radius: 7px;
 `;
 
-const orderData = [
-    {
-        acceptUser: 55,
-        address: "",
-        address1: "서울 관악구 신림동 1623-3",
-        address2: null,
-        bothType: null,
-        createdAt: "2023-05-12T07:56:39.900Z",
-        detailAddress1: null,
-        detailAddress2: null,
-        directPhone: "01032655452",
-        emergency: true,
-        floor: 8,
-        id: 119,
-        memo: null,
-        orderReservation: [],
-        orderStatusId: 1,
-        otherAddress: null,
-        otherFloor: null,
-        phone: "01032655452",
-        point: 9000,
-        price: 60000,
-        pushStatus: null,
-        quantity: null,
-        regionId: 1,
-        registUser: { id: 56 },
-        simpleAddress1: "서울 관악구",
-        simpleAddress2: null,
-        time: "하루",
-        type: "올림",
-        userId: 56,
-        vehicleType: "스카이",
-        volumeType: "time",
-        workDateTime: "2023-05-13T08:00:00.000Z",
-    },
-    {
-        acceptUser: 55,
-        address: "",
-        address1: "서울 관악구 신림동 1623-3",
-        address2: null,
-        bothType: null,
-        createdAt: "2023-05-12T07:56:39.900Z",
-        detailAddress1: null,
-        detailAddress2: null,
-        directPhone: "01032655452",
-        emergency: true,
-        floor: 8,
-        id: 119,
-        memo: null,
-        orderReservation: [],
-        orderStatusId: 5,
-        otherAddress: null,
-        otherFloor: null,
-        phone: "01032655452",
-        point: 9000,
-        price: 60000,
-        pushStatus: null,
-        quantity: null,
-        regionId: 1,
-        registUser: { id: 56 },
-        simpleAddress1: "서울 관악구",
-        simpleAddress2: null,
-        time: "하루",
-        type: "양사",
-        userId: 56,
-        vehicleType: "스카이",
-        volumeType: "time",
-        workDateTime: "2023-05-14T08:00:00.000Z",
-    },
-    {
-        acceptUser: 55,
-        address: "",
-        address1: "서울 관악구 신림동 1623-3",
-        address2: null,
-        bothType: null,
-        createdAt: "2023-05-12T07:56:39.900Z",
-        detailAddress1: null,
-        detailAddress2: null,
-        directPhone: "01032655452",
-        emergency: false,
-        floor: 8,
-        id: 119,
-        memo: null,
-        orderReservation: [],
-        orderStatusId: 1,
-        otherAddress: null,
-        otherFloor: null,
-        phone: "01032655452",
-        point: 9000,
-        price: 60000,
-        pushStatus: null,
-        quantity: null,
-        regionId: 1,
-        registUser: { id: 56 },
-        simpleAddress1: "서울 관악구",
-        simpleAddress2: null,
-        time: "하루",
-        type: "내림",
-        userId: 56,
-        vehicleType: "스카이",
-        volumeType: "time",
-        workDateTime: "2023-05-13T08:00:00.000Z",
-    },
+const REGION = [
+    "전체 지역",
+    "서울",
+    "인천",
+    "김포, 부천, 파주, 고양, 동두천, 연천",
+    "의정부, 양주, 구리, 남양주, 포천, 가평",
+    "광명, 시흥, 안산, 안양, 과천, 의왕, 군포, 수원, 오산, 화성, 평택",
+    "성남, 하남, 광주, 용인, 안성, 이천, 여주, 양평",
 ];
+
+const FILTER = ["시간 순", "거리 순"];
 
 function RealTimeOrder({ navigation }) {
     const { info } = useContext(UserContext);
@@ -197,32 +85,56 @@ function RealTimeOrder({ navigation }) {
     const [loading, setLoading] = useState(true);
     const [orders, setOrders] = useState(-1);
     const [acceptOrder, setAcceptOrder] = useState(-1);
+    const [filteredOrders, setFilteredOrders] = useState(-1);
 
-    const [point, setPoint] = useState(0);
-
-    const bannerRef = useRef();
-    const { firstLogin, setFirstLogin } = useContext(LoginContext); //TODO: 앱 처음 로그인 시 가이드 말풍선 만들기
-    const [showGuide, setShowGuide] = useState(false);
+    const [filter, setFilter] = useState(1);
+    const [curLatitude, setCurLatitude] = useState(0);
+    const [curLongitude, setCurLongitude] = useState(0);
 
     useEffect(() => {
+        getCurrentLocation();
         setLoading(true);
+
+        setOrders(-1);
+        setFilteredOrders(-1);
+        setFilter(1);
 
         getOrders();
         getAcceptOrders();
     }, []);
 
     useEffect(() => {
-        if (CheckLoading({ orders, acceptOrder })) {
+        if (CheckLoading({ orders, acceptOrder, filteredOrders })) {
             setLoading(false);
         }
-    }, [orders, acceptOrder]);
+
+        console.log("orders : ", orders);
+        console.log("filteredOrders : ", filteredOrders);
+    }, [orders, acceptOrder, filteredOrders]);
 
     const refresh = () => {
+        getCurrentLocation();
         setLoading(true);
+
         setOrders(-1);
+        setFilteredOrders(-1);
+        setFilter(1);
 
         getOrders();
+        getAcceptOrders();
     };
+
+    const getCurrentLocation = async () => {
+        const location = await Location.getCurrentPositionAsync();
+
+        const {
+            coords: { latitude, longitude },
+        } = location;
+
+        setCurLatitude(latitude);
+        setCurLongitude(longitude);
+    };
+
     const getOrders = async () => {
         axios
             .get(SERVER + "/orders/realtime", {
@@ -240,6 +152,7 @@ function RealTimeOrder({ navigation }) {
 
                     console.log("orders : ", order);
                     setOrders(order || []);
+                    setDistanceFilter(order);
                 } else {
                     setOrders([]);
                 }
@@ -277,6 +190,38 @@ function RealTimeOrder({ navigation }) {
                 showError(error);
             })
             .finally(() => {});
+    };
+
+    const setDistanceFilter = (orders) => {
+        console.log(curLatitude, curLongitude);
+        const filteredList = [];
+
+        orders.map((order) => {
+            const distance = getDistance(
+                Number(curLatitude),
+                Number(curLongitude),
+                Number(order.latitude),
+                Number(order.longitude)
+            );
+
+            order.distance = distance;
+
+            filteredList.push(order);
+        });
+
+        for (let i = 0; i < filteredList.length - 1; i++) {
+            for (let j = 1; j < filteredList.length - i; j++) {
+                if (filteredList[j - 1].distance > filteredList[j].distance) {
+                    let temp = filteredList[j - 1];
+                    filteredList[j - 1] = filteredList[j];
+                    filteredList[j] = temp;
+                }
+            }
+        }
+
+        console.log("filter : ", filteredList);
+
+        setFilteredOrders(filteredList);
     };
 
     const goToDriverProgress = () => {
@@ -351,48 +296,61 @@ function RealTimeOrder({ navigation }) {
                         </Item>
                     ) : null}
                     <ItemRow style={{ justifyContent: "flex-end" }}>
-                        {/* <Select>
-                            <MediumText
-                                style={{
-                                    fontSize: 15,
-                                }}
-                            >
-                                전체 지역
-                            </MediumText>
-                            <Image
-                                source={require("../../../assets/images/icons/allow_down.png")}
-                                style={{ width: 21, height: 12 }}
-                            />
-                        </Select> */}
-                        <Select>
-                            <MediumText
-                                style={{
-                                    fontSize: 15,
-                                }}
-                            >
-                                시간 순
-                            </MediumText>
-                            <Image
-                                source={require("../../../assets/images/icons/allow_down.png")}
-                                style={{ width: 21, height: 12 }}
-                            />
-                        </Select>
+                        {/* <SelectFilter
+                            data={REGION}
+                            // onSelect={(index) => setPeriod(index + 1)}
+                        /> */}
+                        <SelectFilter
+                            data={FILTER}
+                            onSelect={(index) => setFilter(index + 1)}
+                        />
                     </ItemRow>
-                    {true ? (
-                        <Item>
-                            <Orders>
-                                <Order.Items>
-                                    {orders.map((order, index) => (
-                                        <Order.Item key={index} data={order} />
-                                    ))}
-                                </Order.Items>
-                            </Orders>
-                        </Item>
-                    ) : (
-                        <NoOrder>
-                            <RegularText>등록된 오더가 없습니다.</RegularText>
-                        </NoOrder>
-                    )}
+
+                    {filter === 1 && orders !== -1 ? (
+                        orders !== -1 && orders.length > 0 ? (
+                            <Item>
+                                <Orders>
+                                    <Order.Items>
+                                        {orders.map((order, index) => (
+                                            <Order.Item
+                                                key={index}
+                                                data={order}
+                                            />
+                                        ))}
+                                    </Order.Items>
+                                </Orders>
+                            </Item>
+                        ) : (
+                            <NoOrder>
+                                <RegularText>
+                                    등록된 오더가 없습니다.
+                                </RegularText>
+                            </NoOrder>
+                        )
+                    ) : null}
+
+                    {filter === 2 && filteredOrders !== -1 ? (
+                        filteredOrders !== -1 && filteredOrders.length > 0 ? (
+                            <Item>
+                                <Orders>
+                                    <Order.Items>
+                                        {filteredOrders.map((order, index) => (
+                                            <Order.Item
+                                                key={index}
+                                                data={order}
+                                            />
+                                        ))}
+                                    </Order.Items>
+                                </Orders>
+                            </Item>
+                        ) : (
+                            <NoOrder>
+                                <RegularText>
+                                    등록된 오더가 없습니다.
+                                </RegularText>
+                            </NoOrder>
+                        )
+                    ) : null}
                 </Layout>
             )}
         </>

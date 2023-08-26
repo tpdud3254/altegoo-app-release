@@ -165,7 +165,7 @@ const CheckOrderPrice = ({ navigation }) => {
             application_id: PAYMENT_APP_ID,
             price: sendData.price + sendData.tax,
             order_name: registInfo.vehicleType + " 이용비 결제",
-            order_id: info.userId + "_" + Date.now(),
+            order_id: info.id + "_" + Date.now(),
             user: {
                 username: info.name,
                 phone: info.phone,

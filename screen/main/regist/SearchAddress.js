@@ -11,6 +11,7 @@ import TextInput from "../../../component/input/TextInput";
 import { Box } from "../../../component/box/Box";
 import { TouchableOpacity } from "react-native";
 import { GetOrderOption, showErrorMessage } from "../../../utils";
+import axios from "axios";
 
 const Item = styled.View`
     margin-bottom: 35px;
@@ -115,7 +116,7 @@ function SearchAddress({ route, navigation }) {
 
         return null;
     };
-    const onNextStep = (data) => {
+    const onNextStep = async (data) => {
         const { detailAddress1, detailAddress2 } = data;
 
         const regionId = getRegion(
@@ -128,6 +129,31 @@ function SearchAddress({ route, navigation }) {
             return;
         }
 
+        let latitude = null;
+        let longitude = null;
+        try {
+            const res = await axios.get(
+                `https://dapi.kakao.com/v2/local/search/address.json?query=${route?.params?.selectAddress1?.address}`,
+                {
+                    headers: {
+                        Authorization:
+                            "KakaoAK 86e0df46fbae745bb4c658276b280088",
+                    },
+                }
+            );
+
+            const {
+                data: { documents },
+            } = res;
+
+            console.log(documents);
+
+            latitude = documents[0].y;
+            longitude = documents[0].x;
+        } catch (error) {
+            console.log(error);
+            return;
+        }
         if (registInfo.direction === DIRECTION[2]) {
             setRegistInfo({
                 address1: route?.params?.selectAddress1?.address,
@@ -137,6 +163,8 @@ function SearchAddress({ route, navigation }) {
                 simpleAddress2: `${route?.params?.selectAddress2?.sido} ${route?.params?.selectAddress2?.sigungu}`,
                 detailAddress2,
                 region: regionId,
+                latitude,
+                longitude,
                 ...registInfo,
             });
         } else {
@@ -148,6 +176,8 @@ function SearchAddress({ route, navigation }) {
                 simpleAddress2: null,
                 detailAddress2: null,
                 region: regionId,
+                latitude,
+                longitude,
                 ...registInfo,
             });
         }

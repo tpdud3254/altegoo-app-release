@@ -29,7 +29,7 @@ import { Order } from "../../../component/order/OrderComponent";
 import { Notification } from "../../../component/Notification";
 import LoginContext from "../../../context/LoginContext";
 import { Row } from "../../../component/Row";
-import SelectPeriod from "../../../component/selectBox/SelectPeriod";
+import SelectFilter from "../../../component/selectBox/SelectFilter";
 import LoadingLayout from "../../../component/layout/LoadingLayout";
 
 const Item = styled.View`
@@ -111,6 +111,18 @@ function Home({ navigation, route }) {
         getOrders(); //작업리스트
 
         if (info.userType === DRIVER) getAcceptOrders();
+
+        const focusSubscription = navigation.addListener("focus", () => {
+            setLoading(true);
+            getPoint(); //포인트
+            getOrders(); //작업리스트
+
+            if (info.userType === DRIVER) getAcceptOrders();
+        });
+
+        return () => {
+            focusSubscription();
+        };
     }, [route?.params?.refresh]);
 
     useEffect(() => {
@@ -422,7 +434,7 @@ function Home({ navigation, route }) {
                                 >
                                     최근 등록한 작업
                                 </MediumText>
-                                <SelectPeriod
+                                <SelectFilter
                                     data={PERIOD}
                                     onSelect={(index) => setPeriod(index + 1)}
                                 />

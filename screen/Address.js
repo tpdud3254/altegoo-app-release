@@ -13,9 +13,7 @@ function Address({ navigation, route }) {
         const sigungu = data.sigungu;
 
         if (route?.params?.addressIndex || route?.params?.addressIndex >= 0) {
-            console.log("a");
             if (route?.params?.addressIndex === 0) {
-                console.log("b");
                 navigation.navigate(REGIST_NAV[2], {
                     ...route?.params,
                     selectAddress1: { address, sido, sigungu },
