@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { Image, View } from "react-native";
 import styled from "styled-components/native";
 import LightText from "../text/LightText";
@@ -9,6 +9,7 @@ import { color } from "../../styles";
 import { useNavigation } from "@react-navigation/native";
 import BoldText from "../text/BoldText";
 import { PopupWithButtons } from "../PopupWithButtons";
+import UserContext from "../../context/UserContext";
 
 const ItemContainer = styled.TouchableOpacity`
     flex-direction: row;
@@ -62,13 +63,22 @@ export const Order = {
         return <View>{children}</View>;
     },
     Item: ({ data }) => {
+        const { info } = useContext(UserContext);
         const navigation = useNavigation();
         const [isPopupShown, setIsPopupShown] = useState(false);
 
         const goToOrderProgress = () => {
             if (data.orderStatusId === 1)
-                navigation.navigate("OrderDetails", { order: data });
-            else navigation.navigate("DriverOrderProgress", { order: data });
+                navigation.navigate("OrderDetails", { orderId: data.id });
+            else {
+                if (data.acceptUser === info.id) {
+                    navigation.navigate("DriverOrderProgress", {
+                        orderId: data.id,
+                    });
+                } else {
+                    navigation.navigate("OrderDetails", { orderId: data.id });
+                }
+            }
         };
 
         const showPopup = () => {

@@ -85,12 +85,6 @@ export const Order = {
             );
         };
 
-        const goToOrderDetails = () => {
-            // navigation.navigate("OrderDetails", { orderId: data.id });
-            navigation.navigate("OrderDetails", { order: data });
-            navigation.navigate("OrderProgress", { orderId: data.id });
-        };
-
         const goToPage = () => {
             navigation.navigate(nextPage, { orderId: data.id });
         };
