@@ -108,9 +108,6 @@ function RealTimeOrder({ navigation }) {
         if (CheckLoading({ orders, acceptOrder, filteredOrders })) {
             setLoading(false);
         }
-
-        console.log("orders : ", orders);
-        console.log("filteredOrders : ", filteredOrders);
     }, [orders, acceptOrder, filteredOrders]);
 
     const refresh = () => {
@@ -170,6 +167,7 @@ function RealTimeOrder({ navigation }) {
                 headers: {
                     auth: await getAsyncStorageToken(),
                 },
+                params: { orderStatusArr: [2, 3, 4] },
             })
             .then(({ data }) => {
                 const { result } = data;
