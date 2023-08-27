@@ -274,42 +274,39 @@ function OrderProgress({ navigation, route }) {
                 showError(error);
             })
             .finally(() => {});
-
-        // try {
-        //     const response = await axios.patch(
-        //         SERVER + "/works/remove",
-        //         {
-        //             id: route?.params?.orderId
-        //         },
-        //         {
-        //             headers: {
-        //                 auth: await getAsyncStorageToken(),
-        //             },
-        //         }
-        //     );
-
-        //     const {
-        //         data: { result },
-        //     } = response;
-
-        //     if (result === VALID) {
-        //         const {
-        //             data: {
-        //                 data: { list },
-        //             },
-        //         } = response;
-
-        //         console.log(list);
-
-        //         console.log("cancelOrder : ", result);
-        //     showMessage("요청한 오더가 취소되었습니다.");
-        //     navigation.goBack();
-        //     }
-        // } catch (error) {
-        //     showError(error);
-        // }
     };
 
+    const confirmOrder = async () => {
+        axios
+            .patch(
+                SERVER + "/works/order/confirm",
+                {
+                    id: order.id,
+                },
+                {
+                    headers: {
+                        auth: await getAsyncStorageToken(),
+                    },
+                }
+            )
+            .then(({ data }) => {
+                const {
+                    result,
+                    data: { list },
+                } = data;
+
+                console.log(data);
+                showMessage("작업 완료 확인이 완료되었습니다.");
+                navigation.goBack();
+                if (result === VALID) {
+                    setStatus(5);
+                }
+            })
+            .catch((error) => {
+                showError(error);
+            })
+            .finally(() => {});
+    };
     const getStatus = (statusId) => {
         if (statusId === 1) return 1;
         else if (statusId === 2) return 2;
@@ -381,7 +378,7 @@ function OrderProgress({ navigation, route }) {
                     bottomButtonProps={
                         status === 4 && {
                             title: "작업 완료 확인",
-                            onPress: () => console.log("ok"), //TODO: 작업 로직 }),
+                            onPress: confirmOrder,
                         }
                     }
                 >

@@ -880,7 +880,7 @@ export const GoToOrderPage = (info, order) => {
         //기사일 경우
         if (order.registUser.id === info.id) {
             //내가 올린 작업인 경우
-            if (order.orderStatusId === 5 || order.orderStatusId === 6) {
+            if (order.orderStatusId === 6) {
                 //완료된 작업인 경우
                 return "OrderDetails";
             } else {
@@ -905,7 +905,7 @@ export const GoToOrderPage = (info, order) => {
         }
     } else {
         //일반, 기업일 경우
-        if (order.orderStatusId === 5 || order.orderStatusId === 6) {
+        if (order.orderStatusId === 6) {
             //완료된 작업인 경우
             return "OrderDetails";
         } else {

@@ -14,7 +14,9 @@ import {
     GetDate,
     GetPhoneNumberWithDash,
     GetTime,
+    getAsyncStorageToken,
     numberWithComma,
+    showMessage,
 } from "../../../utils";
 import WebView from "react-native-webview";
 import UserContext from "../../../context/UserContext";
@@ -22,6 +24,7 @@ import axios from "axios";
 import { SERVER, VALID } from "../../../constant";
 import LoadingLayout from "../../../component/layout/LoadingLayout";
 import DoneImage from "../../../assets/images/icons/img_order_end.png";
+import { CommonActions } from "@react-navigation/native";
 
 const Progress = styled.View`
     margin-bottom: 30px;
@@ -199,6 +202,106 @@ function DriverOrderProgress({ navigation, route }) {
         else return 4;
     };
 
+    const setCancelOrder = async (orderId) => {
+        axios
+            .patch(
+                SERVER + "/works/order/cancel",
+                {
+                    id: orderId,
+                },
+                {
+                    headers: {
+                        auth: await getAsyncStorageToken(),
+                    },
+                }
+            )
+            .then(({ data }) => {
+                const {
+                    result,
+                    data: { list },
+                } = data;
+                console.log("result: ", result);
+
+                if (result === VALID) {
+                    showMessage("작업 예약이 취소되었습니다.");
+                    navigation.goBack();
+                }
+                //TODO: 나중에 효율적으로 바꾸기
+            })
+            .catch((error) => {
+                showError(error);
+            })
+            .finally(() => {});
+    };
+
+    const setStartOrder = async (orderId) => {
+        axios
+            .patch(
+                SERVER + "/works/order/start",
+                {
+                    id: orderId,
+                },
+                {
+                    headers: {
+                        auth: await getAsyncStorageToken(),
+                    },
+                }
+            )
+            .then(({ data }) => {
+                const {
+                    result,
+                    data: { list },
+                } = data;
+                console.log("list: ", list);
+
+                //TODO: 나중에 효율적으로 바꾸기
+                list.map((resultOrder, index) => {
+                    if (resultOrder.id === order.id) {
+                        setOrder(resultOrder);
+                        setStatus(getStatus(resultOrder.orderStatusId));
+                    }
+                });
+            })
+            .catch((error) => {
+                showError(error);
+            })
+            .finally(() => {});
+    };
+
+    const setDoneOrder = async (orderId) => {
+        axios
+            .patch(
+                SERVER + "/works/order/done",
+                {
+                    id: orderId,
+                },
+                {
+                    headers: {
+                        auth: await getAsyncStorageToken(),
+                    },
+                }
+            )
+            .then(({ data }) => {
+                const {
+                    result,
+                    data: { list },
+                } = data;
+                console.log("list: ", list);
+                //TODO: 나중에 효율적으로 바꾸기
+                list.map((resultOrder, index) => {
+                    if (resultOrder.id === order.id) {
+                        setOrder(resultOrder);
+                        setStatus(getStatus(resultOrder.orderStatusId));
+                    }
+                });
+            })
+            .catch((error) => {
+                showError(error);
+            })
+            .finally(() => {
+                onClose();
+            });
+    };
     const Item = ({ title, value, center, onClick }) => (
         <SItem center={center}>
             <RegularText
@@ -267,6 +370,17 @@ function DriverOrderProgress({ navigation, route }) {
         );
     };
 
+    const goToHome = () => {
+        navigation.dispatch(
+            CommonActions.reset({
+                index: 1,
+                routes: [{ name: "Home" }],
+            })
+        );
+
+        navigation.navigate("Home", { refresh: true });
+    };
+
     return (
         <>
             {loading ? (
@@ -276,7 +390,9 @@ function DriverOrderProgress({ navigation, route }) {
                     scroll={status === 4 ? false : true}
                     kakaoBtnShown={status === 4 ? true : false}
                     bottomButtonProps={
-                        status === 4 ? { title: "홈으로" } : null
+                        status === 4
+                            ? { title: "홈으로", onPress: goToHome }
+                            : null
                     }
                     touchableElement={() => (
                         <View>
@@ -386,7 +502,7 @@ function DriverOrderProgress({ navigation, route }) {
                             )}
                             {status === 1 ? (
                                 <Button
-                                    onPress={() => console.log("cancel")}
+                                    onPress={() => setCancelOrder(order.id)}
                                     type="accent"
                                     text="예약 취소"
                                     style={{ marginTop: 20 }}
@@ -394,7 +510,7 @@ function DriverOrderProgress({ navigation, route }) {
                             ) : null}
                             {status === 2 ? (
                                 <Button
-                                    onPress={() => console.log("cancel")}
+                                    onPress={() => setStartOrder(order.id)}
                                     type="accent"
                                     text="작업 시작"
                                     style={{
@@ -405,7 +521,7 @@ function DriverOrderProgress({ navigation, route }) {
                             ) : null}
                             {status === 3 ? (
                                 <Button
-                                    onPress={() => console.log("cancel")}
+                                    onPress={() => setDoneOrder(order.id)}
                                     type="accent"
                                     text="작업 완료"
                                     style={{
