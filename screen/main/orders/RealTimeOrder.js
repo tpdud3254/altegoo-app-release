@@ -102,6 +102,22 @@ function RealTimeOrder({ navigation }) {
 
         getOrders();
         getAcceptOrders();
+
+        const focusSubscription = navigation.addListener("focus", () => {
+            getCurrentLocation();
+            setLoading(true);
+
+            setOrders(-1);
+            setFilteredOrders(-1);
+            setFilter(1);
+
+            getOrders();
+            getAcceptOrders();
+        });
+
+        return () => {
+            focusSubscription();
+        };
     }, []);
 
     useEffect(() => {

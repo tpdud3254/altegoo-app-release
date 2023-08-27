@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import { Image, View } from "react-native";
 import styled from "styled-components/native";
 import BoldText from "../../../component/text/BoldText";
@@ -15,6 +15,7 @@ import {
     GetDate,
     GetPhoneNumberWithDash,
     GetTime,
+    getAsyncStorageToken,
     numberWithComma,
     showError,
 } from "../../../utils";
@@ -23,6 +24,7 @@ import { PopupWithButtons } from "../../../component/PopupWithButtons";
 import axios from "axios";
 import { SERVER, VALID } from "../../../constant";
 import LoadingLayout from "../../../component/layout/LoadingLayout";
+import UserContext from "../../../context/UserContext";
 
 const Wrapper = styled.View`
     margin-bottom: 10px;
@@ -69,6 +71,7 @@ const BottomButtonContainer = styled.View`
 `;
 function OrderDetails({ navigation, route }) {
     const webViewRef = useRef();
+    const { info } = useContext(UserContext);
     const [loading, setLoading] = useState(true);
 
     const [order, setOrder] = useState(-1);
@@ -76,6 +79,8 @@ function OrderDetails({ navigation, route }) {
     const [progress, setProgress] = useState(0.0);
 
     const [isPopupShown, setIsPopupShown] = useState(false);
+    const [buttonType, setButtonType] = useState(1);
+    const [buttonText, setButtonText] = useState("");
 
     const sendMessage = (data) => {
         webViewRef.current.postMessage(data);
@@ -93,8 +98,62 @@ function OrderDetails({ navigation, route }) {
     useEffect(() => {
         if (CheckLoading({ order })) {
             setLoading(false);
+            getButtonType();
+            getButtonText();
         }
     }, [order]);
+
+    const getButtonType = () => {
+        if (order.orderStatusId === 1) {
+            setButtonType(1);
+        } else {
+            if (order.acceptUser === info.id) {
+                setButtonType(2);
+            } else {
+                if (order.orderReservation.length === 0) {
+                    setButtonType(3);
+                } else {
+                    let isMyReservation = false;
+                    order.orderReservation.map((value) => {
+                        if (value.userId === info.id) {
+                            isMyReservation = true;
+                        }
+                    });
+
+                    if (isMyReservation) setButtonType(4);
+                    else setButtonType(3);
+                }
+            }
+        }
+    };
+
+    const getButtonText = () => {
+        if (order.orderStatusId === 1) {
+            if (order.emergency) {
+                setButtonText("긴급 예약하기");
+            } else {
+                setButtonText("예약하기");
+            }
+        } else {
+            if (order.acceptUser === info.id) {
+                setButtonText("예약 취소하기");
+            } else {
+                if (order.orderReservation.length === 0) {
+                    setButtonText("예약대기 하기");
+                } else {
+                    let isMyReservation = false;
+                    order.orderReservation.map((value) => {
+                        if (value.userId === info.id) {
+                            isMyReservation = true;
+                        }
+                    });
+
+                    if (isMyReservation) setButtonText("예약대기 취소");
+                    else setButtonText("예약대기 하기");
+                }
+            }
+        }
+    };
 
     const getOrder = async (id) => {
         axios
@@ -110,6 +169,155 @@ function OrderDetails({ navigation, route }) {
                     console.log(orderData);
                     setOrder(orderData);
                 }
+            })
+            .catch((error) => {
+                showError(error);
+            })
+            .finally(() => {});
+    };
+
+    const onButtonClick = () => {
+        if (buttonType === 1) {
+            //예약하기
+            setAcceptOrder(order.id);
+        } else if (buttonType === 2) {
+            //예약취소하기
+            setCancelOrder(order.id);
+        } else if (buttonType === 3) {
+            //예약대기하기
+            setReserveOrder(order.id);
+        } else if (buttonType === 4) {
+            //예약대기취소하기
+            setCancelReservation(order.id);
+        }
+        hidePopup();
+    };
+
+    const setAcceptOrder = async (orderId) => {
+        try {
+            const response = await axios.patch(
+                SERVER + "/works/order/accept",
+                {
+                    id: orderId,
+                },
+                {
+                    headers: {
+                        auth: await getAsyncStorageToken(),
+                    },
+                }
+            );
+
+            const {
+                data: { result },
+            } = response;
+
+            if (result === VALID) {
+                const {
+                    data: {
+                        data: { list },
+                    },
+                } = response;
+
+                list.map((resultOrder) => {
+                    if (resultOrder.id === order.id) {
+                        setOrder(resultOrder);
+                    }
+                });
+                //TODO: 나중에 효율적으로 바꾸기
+            } else {
+                const {
+                    data: { msg },
+                } = response;
+
+                console.log(msg);
+            }
+        } catch (error) {
+            console.log(error);
+        }
+    };
+
+    const setCancelOrder = async (orderId) => {
+        axios
+            .patch(
+                SERVER + "/works/order/cancel",
+                {
+                    id: orderId,
+                },
+                {
+                    headers: {
+                        auth: await getAsyncStorageToken(),
+                    },
+                }
+            )
+            .then(({ data }) => {
+                const {
+                    result,
+                    data: { list },
+                } = data;
+                console.log("result: ", result);
+                list.map((resultOrder, index) => {
+                    if (resultOrder.id === order.id) {
+                        setOrder(resultOrder);
+                    }
+                });
+                //TODO: 나중에 효율적으로 바꾸기
+            })
+            .catch((error) => {
+                showError(error);
+            })
+            .finally(() => {});
+    };
+
+    const setReserveOrder = async (orderId) => {
+        axios
+            .patch(
+                SERVER + "/works/order/reservation",
+                {
+                    id: orderId,
+                },
+                {
+                    headers: {
+                        auth: await getAsyncStorageToken(),
+                    },
+                }
+            )
+            .then(({ data }) => {
+                const {
+                    result,
+                    data: { list },
+                } = data;
+                list.map((resultOrder, index) => {
+                    if (resultOrder.id === order.id) {
+                        setOrder(resultOrder);
+                    }
+                });
+                //TODO: 나중에 효율적으로 바꾸기
+            })
+            .catch((error) => {
+                showError(error);
+            })
+            .finally(() => {});
+    };
+
+    const setCancelReservation = async (orderId) => {
+        axios
+            .delete(SERVER + "/works/order/reservation", {
+                data: { id: orderId },
+                headers: {
+                    auth: await getAsyncStorageToken(),
+                },
+            })
+            .then(({ data }) => {
+                const {
+                    result,
+                    data: { list },
+                } = data;
+                list.map((resultOrder, index) => {
+                    if (resultOrder.id === order.id) {
+                        setOrder(resultOrder);
+                    }
+                });
+                //TODO: 나중에 효율적으로 바꾸기
             })
             .catch((error) => {
                 showError(error);
@@ -250,7 +458,7 @@ function OrderDetails({ navigation, route }) {
                     touchableElement={Map}
                     bottomButtonProps={{
                         onPress: showPopup,
-                        title: order.emergency ? "긴급 예약 하기" : "예약하기",
+                        title: buttonText,
                         customButton:
                             order.orderStatusId > 4 ? <BottomButton /> : null,
                     }}
@@ -425,7 +633,7 @@ function OrderDetails({ navigation, route }) {
                     <PopupWithButtons
                         visible={isPopupShown}
                         onTouchOutside={hidePopup}
-                        onClick={hidePopup}
+                        onClick={onButtonClick}
                         negativeButtonLabel="취소"
                     >
                         <RegularText
@@ -439,18 +647,31 @@ function OrderDetails({ navigation, route }) {
                                 paddingBottom: 15,
                             }}
                         >
-                            예약을 진행하시겠습니까?{"\n"}예약 후{" "}
-                            <RegularText
-                                style={{
-                                    fontSize: 22,
-                                    textDecorationLine: "underline",
-                                    color: color.main,
-                                }}
-                            >
-                                내 작업
-                            </RegularText>{" "}
-                            메뉴에서{"\n"}
-                            확인할 수 있습니다.
+                            {buttonType === 1 ? (
+                                <>
+                                    {order.emergency ? "긴급 " : ""}예약을
+                                    진행하시겠습니까?{"\n"}예약 후{" "}
+                                    <RegularText
+                                        style={{
+                                            fontSize: 22,
+                                            textDecorationLine: "underline",
+                                            color: color.main,
+                                        }}
+                                    >
+                                        내 작업
+                                    </RegularText>{" "}
+                                    메뉴에서{"\n"} 확인할 수 있습니다.
+                                </>
+                            ) : null}
+                            {buttonType === 2 ? (
+                                <>예약을 취소하시겠습니까?</>
+                            ) : null}
+                            {buttonType === 3 ? (
+                                <>예약 대기를 진행하시겠습니까?</>
+                            ) : null}
+                            {buttonType === 4 ? (
+                                <>예약 대기를 취소하시겠습니까?</>
+                            ) : null}
                         </RegularText>
                     </PopupWithButtons>
                 </Layout>
