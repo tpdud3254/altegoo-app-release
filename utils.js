@@ -302,7 +302,7 @@ export const checkPosition = async (location) => {
             if (list.length > 0) {
                 list.map((order) => {
                     const now = new Date();
-                    const compareDate = new Date(order.workDateTime);
+                    const compareDate = new Date(order.dateTime);
                     if (now > compareDate) {
                         return;
                     }

@@ -117,13 +117,15 @@ export default function MainNavigator() {
             );
         //TODO: wake lock 추가 (https://www.npmjs.com/package/react-native-android-wake-lock?activeTab=readme)
 
-        //init
-        setAcceptOrderList([]);
-        setRegistOrderList([]);
-        setLoading(true);
+        // //init
+        // setAcceptOrderList([]);
+        // setRegistOrderList([]);
+        // setLoading(true);
 
-        //작업 예약 중인 리스트 먼저 받아오기
-        getAcceptOrderList();
+        // //작업 예약 중인 리스트 먼저 받아오기
+        // getAcceptOrderList();
+
+        setLoading(false);
 
         return () => {
             if (
@@ -298,7 +300,7 @@ export default function MainNavigator() {
                         />
                     ) : null}
 
-                    {acceptOrderList.length > 0 ? (
+                    {/* {acceptOrderList.length > 0 ? (
                         <Stack.Screen
                             name="IntroOrderProgress"
                             component={OrderProgress}
@@ -319,7 +321,7 @@ export default function MainNavigator() {
                                 orderData: { ...registOrderList[0] },
                             }}
                         />
-                    ) : null}
+                    ) : null} */}
                     <Stack.Screen
                         name="TabsNavigator"
                         component={TabsNavigator}

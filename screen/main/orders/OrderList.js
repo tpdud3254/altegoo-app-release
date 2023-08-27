@@ -10,7 +10,12 @@ import Layout from "../../../component/layout/Layout";
 import { shadowProps } from "../../../component/Shadow";
 import { Order } from "../../../component/order/OrderComponent";
 import UserContext from "../../../context/UserContext";
-import { CheckLoading, Filter, getAsyncStorageToken } from "../../../utils";
+import {
+    CheckLoading,
+    Filter,
+    getAsyncStorageToken,
+    showMessage,
+} from "../../../utils";
 import axios from "axios";
 import { SERVER, VALID } from "../../../constant";
 import LoadingLayout from "../../../component/layout/LoadingLayout";
@@ -61,7 +66,7 @@ const Orders = styled.View`
 
 const PERIOD = ["1개월", "3개월", "6개월", "전체 기간"];
 
-function OrderList({ navigation, route }) {
+function OrderList({ navigation }) {
     const { info } = useContext(UserContext);
 
     const [loading, setLoading] = useState(true);
@@ -81,7 +86,6 @@ function OrderList({ navigation, route }) {
         setLoading(true);
         getOrders(); //작업리스트
 
-        //TODO: home도 이렇게 바꾸기
         const focusSubscription = navigation.addListener("focus", () => {
             setLoading(true);
             getOrders();
@@ -90,7 +94,7 @@ function OrderList({ navigation, route }) {
         return () => {
             focusSubscription();
         };
-    }, [route?.params?.refresh]);
+    }, []);
 
     useEffect(() => {
         if (CheckLoading({ orders, scheduledOrderCount, sortedData })) {
@@ -236,7 +240,9 @@ function OrderList({ navigation, route }) {
                 )}
 
                 <HaederWrapper style={{ justifyContent: "flex-end" }}>
-                    <Notification />
+                    <Notification
+                        onPress={() => showMessage("지원 예정 기능입니다.")}
+                    />
                 </HaederWrapper>
             </HeaderContainer>
         );

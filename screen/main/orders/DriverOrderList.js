@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { Image, View } from "react-native";
 import styled from "styled-components/native";
 import BoldText from "../../../component/text/BoldText";
@@ -9,6 +9,18 @@ import { color } from "../../../styles";
 import Layout from "../../../component/layout/Layout";
 import { shadowProps } from "../../../component/Shadow";
 import { Order } from "../../../component/order/OrderComponent";
+import UserContext from "../../../context/UserContext";
+import {
+    CheckLoading,
+    Filter,
+    getAsyncStorageToken,
+    showError,
+    showMessage,
+} from "../../../utils";
+import axios from "axios";
+import { SERVER, VALID } from "../../../constant";
+import SelectFilter from "../../../component/selectBox/SelectFilter";
+import LoadingLayout from "../../../component/layout/LoadingLayout";
 
 const HeaderContainer = styled.View`
     background-color: white;
@@ -32,7 +44,7 @@ const HeaderItem = styled.View`
     width: 110px;
 `;
 
-const HeaderTab = styled.View`
+const HeaderTab = styled.TouchableOpacity`
     width: 50%;
     align-items: center;
     margin-top: 25px;
@@ -174,15 +186,183 @@ const orderData = [
     },
 ];
 
+const PERIOD = ["1개월", "3개월", "6개월", "전체 기간"];
+
 function DriverOrderList({ navigation }) {
-    const [menu, setManu] = useState(1);
-    const orders = 1;
+    const { info } = useContext(UserContext);
+
+    const [loading, setLoading] = useState(true);
+
+    const [period, setPeriod] = useState(1);
+    const [orders, setOrders] = useState(-1);
+    const [accpetOrders, setAcceptOrders] = useState(-1);
+    const [sortedOrders, setSortedOrders] = useState(-1);
+    const [sortedAccpetOrders, setSortedAccpetOrders] = useState(-1);
+    const [scheduledOrderCount, setScheduledOrderCount] = useState(-1);
+    const [scheduledAcceptOrderCount, setScheduledAcceptOrderCount] =
+        useState(-1);
+
+    const [menu, setMenu] = useState(1);
 
     useEffect(() => {
         navigation.setOptions({
-            header: () => <Header />,
+            header: Header,
         });
     });
+
+    useEffect(() => {
+        setLoading(true);
+        getOrders(); //작업리스트
+        getAcceptOrders();
+
+        const focusSubscription = navigation.addListener("focus", () => {
+            setLoading(true);
+            getOrders();
+            getAcceptOrders();
+        });
+
+        return () => {
+            focusSubscription();
+        };
+    }, []);
+
+    useEffect(() => {
+        if (
+            CheckLoading({
+                orders,
+                accpetOrders,
+                sortedOrders,
+                sortedAccpetOrders,
+                scheduledOrderCount,
+                scheduledAcceptOrderCount,
+            })
+        ) {
+            setLoading(false);
+        }
+    }, [
+        orders,
+        accpetOrders,
+        sortedOrders,
+        sortedAccpetOrders,
+        scheduledOrderCount,
+        scheduledAcceptOrderCount,
+    ]);
+
+    useEffect(() => {
+        if (menu === 1) getOrders();
+        else getAcceptOrders();
+    }, [period]);
+
+    useEffect(() => {
+        setPeriod(1);
+    }, [menu]);
+
+    const getOrders = async () => {
+        axios
+            .get(SERVER + "/orders/mylist/all", {
+                headers: {
+                    auth: await getAsyncStorageToken(),
+                },
+            })
+            .then(({ data }) => {
+                const { result } = data;
+
+                if (result === VALID) {
+                    const {
+                        data: { order },
+                    } = data;
+
+                    console.log(order[0]);
+                    const filterd = Filter({
+                        data: order,
+                        period: PERIOD[period - 1],
+                        orderBy: "dateTime",
+                    });
+                    setOrders(filterd);
+                    setSortedOrders(getSortedOrders(filterd));
+                    setScheduledOrderCount(getScheduledOrderCount(filterd));
+                } else {
+                    setOrders([]);
+                    setSortedOrders({});
+                    setScheduledOrderCount(0);
+                }
+            })
+            .catch((error) => {
+                showError(error);
+            })
+            .finally(() => {});
+    };
+
+    const getAcceptOrders = async () => {
+        axios
+            .get(SERVER + "/orders/accept", {
+                headers: {
+                    auth: await getAsyncStorageToken(),
+                },
+            })
+            .then(({ data }) => {
+                const { result } = data;
+
+                if (result === VALID) {
+                    const {
+                        data: { order },
+                    } = data;
+
+                    console.log("acceptOrders : ", order);
+
+                    const filterd = Filter({
+                        data: order,
+                        period: PERIOD[period - 1],
+                        orderBy: "dateTime",
+                    });
+
+                    setAcceptOrders(filterd);
+                    setSortedAccpetOrders(getSortedOrders(filterd));
+                    setScheduledAcceptOrderCount(
+                        getScheduledOrderCount(filterd)
+                    );
+                } else {
+                    setAcceptOrders([]);
+                    setSortedAccpetOrders({});
+                    setScheduledAcceptOrderCount(0);
+                }
+            })
+            .catch((error) => {
+                console.log(error);
+                showError(error);
+            })
+            .finally(() => {});
+    };
+    const getSortedOrders = (orders) => {
+        const result = {};
+
+        orders.map((order) => {
+            const dateTime = new Date(order.dateTime);
+
+            const key = `${dateTime
+                .getFullYear()
+                .toString()
+                .substring(2, 4)}년 ${dateTime.getMonth() + 1}월`;
+
+            if (!result[key]) result[key] = [];
+
+            result[key].push(order);
+        });
+
+        return result;
+    };
+
+    const getScheduledOrderCount = (orders) => {
+        let count = 0;
+
+        orders.map((order) => {
+            if (order.orderStatusId === 1 || order.orderStatusId === 2) {
+                count = count + 1;
+            }
+        });
+
+        return count;
+    };
 
     const Header = () => {
         return (
@@ -194,7 +374,10 @@ function DriverOrderList({ navigation }) {
                             style={{ width: 20, height: 20, marginRight: 5 }}
                         />
                         <BoldText style={{ fontSize: 16 }}>
-                            1건
+                            {menu === 1
+                                ? scheduledAcceptOrderCount
+                                : scheduledOrderCount}
+                            건
                             <RegularText style={{ fontSize: 16 }}>
                                 {" "}
                                 예정
@@ -203,19 +386,10 @@ function DriverOrderList({ navigation }) {
                     </HeaderItem>
                     {true ? (
                         <HeaderItem style={{ justifyContent: "center" }}>
-                            <Select>
-                                <MediumText
-                                    style={{
-                                        fontSize: 15,
-                                    }}
-                                >
-                                    전체 기간
-                                </MediumText>
-                                <Image
-                                    source={require("../../../assets/images/icons/allow_down.png")}
-                                    style={{ width: 21, height: 12 }}
-                                />
-                            </Select>
+                            <SelectFilter
+                                data={PERIOD}
+                                onSelect={(index) => setPeriod(index + 1)}
+                            />
                         </HeaderItem>
                     ) : (
                         <View
@@ -262,11 +436,13 @@ function DriverOrderList({ navigation }) {
                         </View>
                     )}
                     <HeaderItem style={{ justifyContent: "flex-end" }}>
-                        <Notification />
+                        <Notification
+                            onPress={() => showMessage("지원 예정 기능입니다.")}
+                        />
                     </HeaderItem>
                 </HeaderWrapper>
                 <HeaderWrapper>
-                    <HeaderTab>
+                    <HeaderTab onPress={() => setMenu(1)}>
                         <HeaderTabText selected={menu === 1}>
                             {menu === 1 ? (
                                 <BoldText style={{ color: color.main }}>
@@ -281,7 +457,7 @@ function DriverOrderList({ navigation }) {
                             )}
                         </HeaderTabText>
                     </HeaderTab>
-                    <HeaderTab>
+                    <HeaderTab onPress={() => setMenu(2)}>
                         <HeaderTabText selected={menu === 2}>
                             {menu === 2 ? (
                                 <BoldText style={{ color: color.main }}>
@@ -302,42 +478,106 @@ function DriverOrderList({ navigation }) {
     };
 
     return (
-        <Layout>
-            {orders === 0 ? null : (
-                <>
-                    <Item>
-                        <MediumText
-                            style={{
-                                textAlign: "center",
-                                paddingBottom: 17,
-                                marginTop: 20,
-                            }}
-                        >
-                            23년 6월
-                        </MediumText>
-                        <Wrapper style={shadowProps}>
-                            <Orders>
-                                <Order.Items>
-                                    {orderData.map((order, index) => (
-                                        <Order.Item
-                                            key={index}
-                                            data={order}
-                                            nextPage={
-                                                menu === 2
-                                                    ? "OrderProgress"
-                                                    : order.orderStatusId === 1
-                                                    ? "OrderDetails"
-                                                    : "DriverOrderProgress"
-                                            }
-                                        />
-                                    ))}
-                                </Order.Items>
-                            </Orders>
-                        </Wrapper>
-                    </Item>
-                </>
+        <>
+            {loading ? (
+                <LoadingLayout />
+            ) : (
+                <Layout>
+                    {menu === 1 ? (
+                        accpetOrders === -1 ||
+                        accpetOrders.length === 0 ? null : (
+                            <>
+                                {Object.keys(sortedAccpetOrders).map(
+                                    (value, index) => (
+                                        <Item key={index}>
+                                            <MediumText
+                                                style={{
+                                                    textAlign: "center",
+                                                    paddingBottom: 17,
+                                                    marginTop: 20,
+                                                }}
+                                            >
+                                                {value}
+                                            </MediumText>
+                                            <Wrapper style={shadowProps}>
+                                                <Orders>
+                                                    <Order.Items>
+                                                        {sortedAccpetOrders[
+                                                            value
+                                                        ].map(
+                                                            (order, index) => (
+                                                                <Order.Item
+                                                                    key={index}
+                                                                    data={order}
+                                                                    nextPage={
+                                                                        order.orderStatusId ===
+                                                                            1 ||
+                                                                        order.orderStatusId ===
+                                                                            6
+                                                                            ? "OrderDetails"
+                                                                            : "DriverOrderProgress"
+                                                                    }
+                                                                />
+                                                            )
+                                                        )}
+                                                    </Order.Items>
+                                                </Orders>
+                                            </Wrapper>
+                                        </Item>
+                                    )
+                                )}
+                            </>
+                        )
+                    ) : null}
+
+                    {menu === 2 ? (
+                        orders === -1 || orders.length === 0 ? null : (
+                            <>
+                                {Object.keys(sortedOrders).map(
+                                    (value, index) => (
+                                        <Item key={index}>
+                                            <MediumText
+                                                style={{
+                                                    textAlign: "center",
+                                                    paddingBottom: 17,
+                                                    marginTop: 20,
+                                                }}
+                                            >
+                                                {value}
+                                            </MediumText>
+                                            <Wrapper style={shadowProps}>
+                                                <Orders>
+                                                    <Order.Items>
+                                                        {sortedOrders[
+                                                            value
+                                                        ].map(
+                                                            (order, index) => (
+                                                                <Order.Item
+                                                                    key={index}
+                                                                    data={order}
+                                                                    nextPage={
+                                                                        order.orderStatusId ===
+                                                                            1 ||
+                                                                        order.orderStatusId ===
+                                                                            6
+                                                                            ? "OrderDetails"
+                                                                            : "OrderProgress"
+                                                                    }
+                                                                />
+                                                            )
+                                                        )}
+                                                    </Order.Items>
+                                                </Orders>
+                                            </Wrapper>
+                                        </Item>
+                                    )
+                                )}
+                            </>
+                        )
+                    ) : null}
+                </Layout>
             )}
-        </Layout>
+        </>
     );
 }
 
