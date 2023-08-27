@@ -6,6 +6,7 @@ import { SERVER } from "../../../constant";
 import {
     CheckLoading,
     Filter,
+    GoToOrderPage,
     getAsyncStorageToken,
     numberWithComma,
     showError,
@@ -422,7 +423,10 @@ function Home({ navigation, route }) {
                                               <Order.Items>
                                                   <Order.Item
                                                       data={order}
-                                                      nextPage="DriverOrderProgress"
+                                                      nextPage={GoToOrderPage(
+                                                          info,
+                                                          order
+                                                      )}
                                                   />
                                               </Order.Items>
                                           </Orders>
@@ -464,7 +468,10 @@ function Home({ navigation, route }) {
                                             <Order.Item
                                                 key={index}
                                                 data={order}
-                                                nextPage="OrderProgress"
+                                                nextPage={GoToOrderPage(
+                                                    info,
+                                                    order
+                                                )}
                                             />
                                         ))}
                                     </Order.Items>

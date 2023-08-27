@@ -1,6 +1,6 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Toast } from "react-native-toast-message/lib/src/Toast";
-import { SERVER, TOKEN, VALID } from "./constant";
+import { DRIVER, SERVER, TOKEN, VALID } from "./constant";
 import * as Speech from "expo-speech";
 import axios from "axios";
 
@@ -873,4 +873,44 @@ export const Filter = ({ data, period, orderBy }) => {
         });
 
     return result;
+};
+
+export const GoToOrderPage = (info, order) => {
+    if (info.userType === DRIVER) {
+        //기사일 경우
+        if (order.registUser.id === info.id) {
+            //내가 올린 작업인 경우
+            if (order.orderStatusId === 5 || order.orderStatusId === 6) {
+                //완료된 작업인 경우
+                return "OrderDetails";
+            } else {
+                //완료된 작업이 아닌 경우
+                return "OrderProgress";
+            }
+        } else {
+            //내가 올린 작업이 아닌 경우
+            if (order.orderStatusId === 1) {
+                //작업 요청 상태일 경우
+                return "OrderDetails";
+            } else {
+                //나머지 상태일 경우
+                if (order.acceptUser === info.id) {
+                    //작업자가 나인 경우
+                    return "DriverOrderProgress";
+                } else {
+                    //작업자가 내가 아닌 경우
+                    return "OrderDetails";
+                }
+            }
+        }
+    } else {
+        //일반, 기업일 경우
+        if (order.orderStatusId === 5 || order.orderStatusId === 6) {
+            //완료된 작업인 경우
+            return "OrderDetails";
+        } else {
+            //완료된 작업이 아닌 경우
+            return "OrderProgress";
+        }
+    }
 };

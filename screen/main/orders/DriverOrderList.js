@@ -13,6 +13,7 @@ import UserContext from "../../../context/UserContext";
 import {
     CheckLoading,
     Filter,
+    GoToOrderPage,
     getAsyncStorageToken,
     showError,
     showMessage,
@@ -509,14 +510,10 @@ function DriverOrderList({ navigation }) {
                                                                 <Order.Item
                                                                     key={index}
                                                                     data={order}
-                                                                    nextPage={
-                                                                        order.orderStatusId ===
-                                                                            1 ||
-                                                                        order.orderStatusId ===
-                                                                            6
-                                                                            ? "OrderDetails"
-                                                                            : "DriverOrderProgress"
-                                                                    }
+                                                                    nextPage={GoToOrderPage(
+                                                                        info,
+                                                                        order
+                                                                    )}
                                                                 />
                                                             )
                                                         )}
@@ -555,14 +552,10 @@ function DriverOrderList({ navigation }) {
                                                                 <Order.Item
                                                                     key={index}
                                                                     data={order}
-                                                                    nextPage={
-                                                                        order.orderStatusId ===
-                                                                            1 ||
-                                                                        order.orderStatusId ===
-                                                                            6
-                                                                            ? "OrderDetails"
-                                                                            : "OrderProgress"
-                                                                    }
+                                                                    nextPage={GoToOrderPage(
+                                                                        info,
+                                                                        order
+                                                                    )}
                                                                 />
                                                             )
                                                         )}

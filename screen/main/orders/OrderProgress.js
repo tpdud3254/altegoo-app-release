@@ -274,6 +274,40 @@ function OrderProgress({ navigation, route }) {
                 showError(error);
             })
             .finally(() => {});
+
+        // try {
+        //     const response = await axios.patch(
+        //         SERVER + "/works/remove",
+        //         {
+        //             id: route?.params?.orderId
+        //         },
+        //         {
+        //             headers: {
+        //                 auth: await getAsyncStorageToken(),
+        //             },
+        //         }
+        //     );
+
+        //     const {
+        //         data: { result },
+        //     } = response;
+
+        //     if (result === VALID) {
+        //         const {
+        //             data: {
+        //                 data: { list },
+        //             },
+        //         } = response;
+
+        //         console.log(list);
+
+        //         console.log("cancelOrder : ", result);
+        //     showMessage("요청한 오더가 취소되었습니다.");
+        //     navigation.goBack();
+        //     }
+        // } catch (error) {
+        //     showError(error);
+        // }
     };
 
     const getStatus = (statusId) => {

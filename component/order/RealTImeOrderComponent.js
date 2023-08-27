@@ -2,7 +2,13 @@ import React, { useContext, useState } from "react";
 import { Image, View } from "react-native";
 import styled from "styled-components/native";
 import LightText from "../text/LightText";
-import { GetDate, GetDayOfWeek, GetTime, numberWithComma } from "../../utils";
+import {
+    GetDate,
+    GetDayOfWeek,
+    GetTime,
+    GoToOrderPage,
+    numberWithComma,
+} from "../../utils";
 import MediumText from "../text/MediumText";
 import RegularText from "../text/RegularText";
 import { color } from "../../styles";
@@ -68,17 +74,8 @@ export const Order = {
         const [isPopupShown, setIsPopupShown] = useState(false);
 
         const goToOrderProgress = () => {
-            if (data.orderStatusId === 1)
-                navigation.navigate("OrderDetails", { orderId: data.id });
-            else {
-                if (data.acceptUser === info.id) {
-                    navigation.navigate("DriverOrderProgress", {
-                        orderId: data.id,
-                    });
-                } else {
-                    navigation.navigate("OrderDetails", { orderId: data.id });
-                }
-            }
+            const page = GoToOrderPage(info, data);
+            navigation.navigate(page, { orderId: data.id });
         };
 
         const showPopup = () => {

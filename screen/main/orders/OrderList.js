@@ -13,6 +13,7 @@ import UserContext from "../../../context/UserContext";
 import {
     CheckLoading,
     Filter,
+    GoToOrderPage,
     getAsyncStorageToken,
     showMessage,
 } from "../../../utils";
@@ -275,7 +276,10 @@ function OrderList({ navigation }) {
                                                         <Order.Item
                                                             key={index}
                                                             data={order}
-                                                            nextPage="OrderProgress"
+                                                            nextPage={GoToOrderPage(
+                                                                info,
+                                                                order
+                                                            )}
                                                         />
                                                     )
                                                 )}

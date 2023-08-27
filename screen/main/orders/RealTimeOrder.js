@@ -5,6 +5,7 @@ import axios from "axios";
 import { SERVER } from "../../../constant";
 import {
     CheckLoading,
+    GoToOrderPage,
     getAsyncStorageToken,
     getDistance,
     showError,
@@ -225,7 +226,8 @@ function RealTimeOrder({ navigation }) {
     };
 
     const goToDriverProgress = () => {
-        navigation.navigate("DriverOrderProgress", { orderId: acceptOrder.id });
+        const page = GoToOrderPage(info, acceptOrder);
+        navigation.navigate(page, { orderId: acceptOrder.id });
     };
 
     return (
