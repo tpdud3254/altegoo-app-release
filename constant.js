@@ -1,8 +1,9 @@
-// export const SERVER = "https://altegoo.shop";
-export const SERVER =
-    "https://3714-2001-e60-1094-bd16-1093-f451-a31d-8fe4.ngrok-free.app";
-export const WSS_SERVER =
-    "wss://3714-2001-e60-1094-bd16-1093-f451-a31d-8fe4.ngrok-free.app";
+export const SERVER = "https://altegoo.shop";
+export const WSS_SERVER = "wss://altegoo.shop";
+// export const SERVER =
+//     "https://3714-2001-e60-1094-bd16-1093-f451-a31d-8fe4.ngrok-free.app";
+// export const WSS_SERVER =
+//     "wss://3714-2001-e60-1094-bd16-1093-f451-a31d-8fe4.ngrok-free.app";
 
 export const PAYMENT_SERVER =
     "https://master.d1p7wg3e032x9j.amplifyapp.com/payment";
