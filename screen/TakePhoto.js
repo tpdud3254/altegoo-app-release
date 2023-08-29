@@ -12,6 +12,9 @@ import InfoIcon from "../assets/images/icons/icon_info2.png";
 import { Popup } from "../component/Popup";
 import RegularText from "../component/text/RegularText";
 import Button from "../component/button/Button";
+import { SERVER, VALID } from "../constant";
+import axios from "axios";
+import { getAsyncStorageToken, showErrorMessage } from "../utils";
 
 const Container = styled.View`
     flex: 1;
@@ -68,6 +71,8 @@ function TakePhoto({ navigation, route }) {
     const { info, setInfo } = useContext(UserContext);
     const [showExample, setShowExample] = useState(true);
 
+    const [settingMode, setSettingMode] = useState(false);
+
     const hideModal = () => setShowExample(false);
 
     const getCameraPermissions = async () => {
@@ -89,6 +94,8 @@ function TakePhoto({ navigation, route }) {
     };
 
     useEffect(() => {
+        if (route?.params?.modify) setSettingMode(true);
+
         getCameraPermissions();
         getMediaLibraryPermissions();
     }, []);
@@ -128,6 +135,143 @@ function TakePhoto({ navigation, route }) {
                 : "BusinessLicense"
         );
     };
+
+    const registLicense = async () => {
+        let uploadedUrl = null;
+
+        if (route?.params?.type === "license") {
+            uploadedUrl = await uploadLicense(takenPhoto);
+        } else {
+            uploadedUrl = await uploadVehiclePermission(takenPhoto);
+        }
+
+        try {
+            const response = await axios.post(
+                SERVER +
+                    `/users/setting/${
+                        route?.params?.type === "license"
+                            ? "license"
+                            : "permission"
+                    }`,
+                {
+                    url: uploadedUrl,
+                },
+                {
+                    headers: {
+                        auth: await getAsyncStorageToken(),
+                    },
+                }
+            );
+
+            const {
+                data: { result },
+            } = response;
+
+            if (result === VALID) {
+                const {
+                    data: {
+                        data: { user },
+                    },
+                } = response;
+
+                setInfo(user);
+                navigation.goBack();
+            }
+        } catch (error) {
+            console.log(error);
+            navigation.goBack();
+            showErrorMessage("등록에 실패하였습니다.");
+        }
+    };
+
+    const uploadLicense = (fileName) => {
+        return new Promise((resolve, reject) => {
+            const localUri = fileName;
+            const filename = localUri.split("/").pop();
+            const match = /\.(\w+)$/.exec(filename ?? "");
+            const type = match ? `image/${match[1]}` : `image`;
+            const formData = new FormData();
+            console.log(filename, type);
+            formData.append("file", { uri: localUri, name: filename, type });
+
+            axios
+                .post(
+                    SERVER + "/users/license",
+                    {
+                        formData,
+                    },
+                    {
+                        headers: {
+                            "Content-Type": "multipart/form-data",
+                        },
+                        transformRequest: [
+                            function () {
+                                return formData;
+                            },
+                        ],
+                    }
+                )
+                .then(({ data }) => {
+                    const {
+                        data: { location },
+                        result,
+                    } = data;
+                    if (result === VALID) {
+                        console.log("license url : ", location);
+                        resolve(location);
+                    }
+                })
+                .catch((error) => {
+                    //TODO: showError 함수 삭제
+                    showErrorMessage(error);
+                })
+                .finally(() => {});
+        });
+    };
+
+    const uploadVehiclePermission = (fileName) => {
+        return new Promise((resolve, reject) => {
+            const localUri = fileName;
+            const filename = localUri.split("/").pop();
+            const match = /\.(\w+)$/.exec(filename ?? "");
+            const type = match ? `image/${match[1]}` : `image`;
+            const formData = new FormData();
+            console.log(filename, type);
+            formData.append("file", { uri: localUri, name: filename, type });
+
+            axios
+                .post(
+                    SERVER + "/users/permission",
+                    {
+                        formData,
+                    },
+                    {
+                        headers: {
+                            "Content-Type": "multipart/form-data",
+                        },
+                        transformRequest: [
+                            function () {
+                                return formData;
+                            },
+                        ],
+                    }
+                )
+                .then(({ data }) => {
+                    const {
+                        data: { location },
+                        result,
+                    } = data;
+                    if (result === VALID) {
+                        resolve(location);
+                    }
+                })
+                .catch((error) => {
+                    showErrorMessage(error);
+                })
+                .finally(() => {});
+        });
+    };
+
     const isFocusd = useIsFocused();
 
     return (
@@ -179,10 +323,10 @@ function TakePhoto({ navigation, route }) {
                             text="재촬영"
                         />
                         <Button
-                            onPress={onUpload}
+                            onPress={settingMode ? registLicense : onUpload}
                             type="accent"
                             style={{ width: 140 }}
-                            text="저장"
+                            text={settingMode ? "등록하기" : "저장"}
                         />
                     </PhotoActions>
                 )

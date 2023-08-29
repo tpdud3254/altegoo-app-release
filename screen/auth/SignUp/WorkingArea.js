@@ -3,11 +3,12 @@ import styled from "styled-components/native";
 import UserContext from "../../../context/UserContext";
 import { useNavigation } from "@react-navigation/native";
 import { color } from "../../../styles";
-import { SIGNUP_NAV } from "../../../constant";
+import { SERVER, SIGNUP_NAV, VALID } from "../../../constant";
 import AuthLayout from "../../../component/layout/AuthLayout";
 import RegularText from "../../../component/text/RegularText";
 import { Image, View } from "react-native";
-import { showErrorMessage } from "../../../utils";
+import { getAsyncStorageToken, showErrorMessage } from "../../../utils";
+import axios from "axios";
 
 const Container = styled.View``;
 const Table = styled.View`
@@ -74,16 +75,19 @@ const areaDetailObj = {
     ],
 };
 
-function WorkingArea() {
+function WorkingArea({ route }) {
     const navigation = useNavigation();
     const { info, setInfo } = useContext(UserContext);
     const [selected, setSelected] = useState([]);
 
+    const [settingMode, setSettingMode] = useState(false);
+
     useEffect(() => {
+        if (route?.params?.modify) setSettingMode(true);
         console.log(info);
     }, []);
 
-    const onNext = () => {
+    const onNext = async () => {
         if (selected.length < 1) {
             showErrorMessage("작업 지역을 선택해주세요.");
             return;
@@ -112,6 +116,42 @@ function WorkingArea() {
                 workRegion.push(2);
             }
         });
+
+        if (settingMode) {
+            try {
+                const response = await axios.post(
+                    SERVER + "/users/setting/region",
+                    {
+                        region: workRegion,
+                    },
+                    {
+                        headers: {
+                            auth: await getAsyncStorageToken(),
+                        },
+                    }
+                );
+
+                const {
+                    data: { result },
+                } = response;
+
+                if (result === VALID) {
+                    const {
+                        data: {
+                            data: { user },
+                        },
+                    } = response;
+
+                    setInfo(user);
+                    navigation.goBack();
+                }
+            } catch (error) {
+                console.log(error);
+                navigation.goBack();
+                showErrorMessage("차량 정보 등록에 실패하였습니다.");
+            }
+            return;
+        }
 
         setInfo({ ...info, workRegion });
 
@@ -206,7 +246,7 @@ function WorkingArea() {
     return (
         <AuthLayout
             bottomButtonProps={{
-                title: "다음으로",
+                title: settingMode ? "등록하기" : "다음으로",
                 onPress: onNext,
             }}
         >

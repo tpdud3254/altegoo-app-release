@@ -64,6 +64,24 @@ function MemberInformation({ navigation }) {
         navigation.navigate("SettingRegisterVehicle", { modify: true });
     };
 
+    const goToRegisterRegion = () => {
+        navigation.navigate("SettingWorkingArea", { modify: true });
+    };
+
+    const goToRegisterLicense = () => {
+        navigation.navigate("SettingTakePhoto", {
+            modify: true,
+            type: "license",
+        });
+    };
+
+    const goToRegisterPermission = () => {
+        navigation.navigate("SettingTakePhoto", {
+            modify: true,
+            type: "permission",
+        });
+    };
+
     const Title = ({ children, onPress }) => (
         <View
             style={{
@@ -77,7 +95,7 @@ function MemberInformation({ navigation }) {
         >
             <RegularText style={{ fontSize: 22 }}>{children}</RegularText>
             {onPress ? (
-                <Button onpress={onPress} width={55}>
+                <Button onPress={onPress} width={55}>
                     <MediumText style={{ fontSize: 15 }}>수정</MediumText>
                 </Button>
             ) : null}
@@ -214,29 +232,40 @@ function MemberInformation({ navigation }) {
                                 )}
 
                                 <Line />
-                                <Before
-                                    value="사업자등록증"
-                                    onPress={() => console.log("사업자 등록증")}
-                                />
+                                {info.license ? (
+                                    <Completed value="사업자등록증" />
+                                ) : (
+                                    <Before
+                                        value="사업자등록증"
+                                        onPress={goToRegisterLicense}
+                                    />
+                                )}
+                                {/* TODO: 사업자 등록증 체크
+                                <Checking value="사업자등록증" />
+                                 */}
                                 <Line />
-                                <Before
-                                    title="화물자동차 운송사업 허가증"
-                                    value="허가증"
-                                    onPress={() => console.log("사업자 등록증")}
-                                />
-                                {/* <Checking value="사업자등록증" />
-                                <Completed value="사업자등록증" /> */}
+                                {info.vehiclePermission ? (
+                                    <Completed value="화물자동차 운송사업 허가증" />
+                                ) : (
+                                    <Before
+                                        title="화물자동차 운송사업 허가증"
+                                        value="허가증"
+                                        onPress={goToRegisterPermission}
+                                    />
+                                )}
                             </Items>
                             <Items style={shadowProps}>
-                                <Title onPress={() => console.log("수정")}>
+                                <Title onPress={goToRegisterRegion}>
                                     작업 지역 정보
                                 </Title>
-                                <Item title="1차 지역">
-                                    <MediumText>서울</MediumText>
-                                </Item>
-                                <Item title="2차 지역">
-                                    <MediumText>인천</MediumText>
-                                </Item>
+                                {info.workRegion.map((region, index) => (
+                                    <Item
+                                        title={`${index + 1}차 지역`}
+                                        key={index}
+                                    >
+                                        <MediumText>{region.region}</MediumText>
+                                    </Item>
+                                ))}
                             </Items>
                         </>
                     ) : null}

@@ -22,6 +22,7 @@ import ChangePassword from "../../screen/main/setting/ChangePassword";
 import PaymentDetails from "../../screen/main/setting/PaymentDetails";
 import TakePhoto from "../../screen/TakePhoto";
 import RegisterVehicle from "../../screen/auth/SignUp/RegisterVehicle";
+import WorkingArea from "../../screen/auth/SignUp/WorkingArea";
 
 const Stack = createStackNavigator();
 
@@ -132,6 +133,13 @@ export default function SettingNavigator() {
                 component={RegisterVehicle}
                 options={{
                     title: "내 차 등록",
+                }}
+            />
+            <Stack.Screen
+                name="SettingWorkingArea"
+                component={WorkingArea}
+                options={{
+                    title: "작업 지역 선택",
                 }}
             />
             <Stack.Screen
