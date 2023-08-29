@@ -132,7 +132,7 @@ export default function SignUpNavigator() {
                 component={SignUpComplete}
                 options={{ headerShown: false }}
             />
-            {/* TODO: 나중에 Welcome 컴포넌트 있는 위치로 옮기기 */}
+            {/* TODO: 나중에 안쓰는거,, 다정리하고 코드 정리하고,, 서버 제대로 배워서 다시 해보고,, 디자인 시안이랑 비교해서 누락된 사항들 정리해서 2차개발로빼기 */}
             <Stack.Screen
                 name="TakePhoto"
                 component={TakePhoto}

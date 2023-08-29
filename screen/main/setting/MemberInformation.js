@@ -9,7 +9,7 @@ import LoginContext from "../../../context/LoginContext";
 import Layout from "../../../component/layout/Layout";
 import BoldText from "../../../component/text/BoldText";
 import RegularText from "../../../component/text/RegularText";
-import { GetPhoneNumberWithDash, showErrorMessage } from "../../../utils";
+import { GetPhoneNumberWithDash } from "../../../utils";
 import { color } from "../../../styles";
 import { shadowProps } from "../../../component/Shadow";
 import Arrow from "../../../assets/images/icons/arrow_right_B.png";
@@ -51,10 +51,17 @@ function MemberInformation({ navigation }) {
     const { setIsLoggedIn } = useContext(LoginContext);
     const { info, setInfo } = useContext(UserContext);
 
+    useEffect(() => {
+        console.log("info : ", info);
+    }, []);
     const logout = async () => {
         setIsLoggedIn(false);
         setInfo({});
         await AsyncStorage.removeItem("token");
+    };
+
+    const goToRegisterVehicle = () => {
+        navigation.navigate("SettingRegisterVehicle", { modify: true });
     };
 
     const Title = ({ children, onPress }) => (
@@ -87,7 +94,7 @@ function MemberInformation({ navigation }) {
     const Before = ({ onPress, value, title }) => (
         <View style={{ alignItems: "flex-end", marginBottom: 15 }}>
             <Item title={title ? title : value}>
-                <Button onpress={onPress}>
+                <Button onPress={onPress}>
                     <MediumText style={{ fontSize: 15 }}>등록하기</MediumText>
                 </Button>
             </Item>
@@ -132,10 +139,12 @@ function MemberInformation({ navigation }) {
                     <Items style={shadowProps}>
                         <Title>기본 정보</Title>
                         <Item title="이름">
-                            <MediumText>홍길동</MediumText>
+                            <MediumText>{info.name}</MediumText>
                         </Item>
                         <Item title="휴대전화">
-                            <MediumText>010-1234-5678</MediumText>
+                            <MediumText>
+                                {GetPhoneNumberWithDash(info.phone)}
+                            </MediumText>
                         </Item>
                     </Items>
                     {info.userTypeId === 3 ? (
@@ -163,22 +172,44 @@ function MemberInformation({ navigation }) {
                         <>
                             <Items style={shadowProps}>
                                 <Title>내 차 정보</Title>
-                                {true ? (
+                                {info.vehicle ? (
                                     <>
                                         <Item title="차량 종류">
-                                            <MediumText>사다리차</MediumText>
+                                            <MediumText>
+                                                {info.vehicle[0].type.type}차
+                                            </MediumText>
                                         </Item>
-                                        <Item title="최대작업층">
-                                            <MediumText>100층</MediumText>
-                                        </Item>
+                                        {info.vehicle[0].type.type ===
+                                        "사다리" ? (
+                                            <Item title="최대작업층">
+                                                <MediumText>
+                                                    {
+                                                        info.vehicle[0].floor
+                                                            .floor
+                                                    }
+                                                </MediumText>
+                                            </Item>
+                                        ) : (
+                                            <Item title="최대 물량">
+                                                <MediumText>
+                                                    {
+                                                        info.vehicle[0].weight
+                                                            .weight
+                                                    }
+                                                </MediumText>
+                                            </Item>
+                                        )}
+
                                         <Item title="차량번호">
-                                            <MediumText>12가 1234</MediumText>
+                                            <MediumText>
+                                                {info.vehicle[0].number}
+                                            </MediumText>
                                         </Item>
                                     </>
                                 ) : (
                                     <Before
                                         value="차량 종류"
-                                        onPress={() => console.log("차량 종류")}
+                                        onPress={goToRegisterVehicle}
                                     />
                                 )}
 

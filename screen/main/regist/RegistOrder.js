@@ -317,10 +317,11 @@ function RegistOrder({ navigation }) {
                 disabled: !validation,
             }}
         >
+            {/* TODO: ㅜ추후 추가
             <LastOrder onPress={() => setLastOrder((prev) => !prev)}>
                 <Checkbox checked={lastOrder} />
                 <RegularText>지난 오더 불러오기</RegularText>
-            </LastOrder>
+            </LastOrder> */}
             <Item>
                 <ItemTitle title="1. 어떤 작업이 필요한가요?" />
                 <Wrapper>

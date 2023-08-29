@@ -20,6 +20,8 @@ import ModifyPointAccount from "../../screen/main/setting/point/ModifyPointAccou
 import RecommandedUser from "../../screen/main/setting/RecommandedUser";
 import ChangePassword from "../../screen/main/setting/ChangePassword";
 import PaymentDetails from "../../screen/main/setting/PaymentDetails";
+import TakePhoto from "../../screen/TakePhoto";
+import RegisterVehicle from "../../screen/auth/SignUp/RegisterVehicle";
 
 const Stack = createStackNavigator();
 
@@ -124,6 +126,18 @@ export default function SettingNavigator() {
                 options={{
                     title: "설정",
                 }}
+            />
+            <Stack.Screen
+                name="SettingRegisterVehicle"
+                component={RegisterVehicle}
+                options={{
+                    title: "내 차 등록",
+                }}
+            />
+            <Stack.Screen
+                name="SettingTakePhoto"
+                component={TakePhoto}
+                options={{ headerShown: false }}
             />
         </Stack.Navigator>
     );

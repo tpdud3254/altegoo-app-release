@@ -3,7 +3,7 @@ import styled from "styled-components/native";
 import UserContext from "../../../context/UserContext";
 import { useNavigation } from "@react-navigation/native";
 import { color } from "../../../styles";
-import { SIGNUP_NAV } from "../../../constant";
+import { SERVER, SIGNUP_NAV, VALID } from "../../../constant";
 import AuthLayout from "../../../component/layout/AuthLayout";
 import RegularText from "../../../component/text/RegularText";
 import { useWindowDimensions } from "react-native";
@@ -11,7 +11,12 @@ import { Radio } from "../../../component/radio/Radio";
 import { RadioContainer } from "../../../component/radio/RadioContainer";
 import TextInput from "../../../component/input/TextInput";
 import { useForm } from "react-hook-form";
-import { CheckValidation } from "../../../utils";
+import {
+    CheckValidation,
+    getAsyncStorageToken,
+    showErrorMessage,
+} from "../../../utils";
+import axios from "axios";
 
 const Container = styled.View`
     justify-content: space-between;
@@ -35,7 +40,7 @@ const vehicleType = ["사다리차", "스카이차"];
 const floor = ["1층", "10층", "50층", "100층"]; //TODO: 정책 정하기,db에서 가져오기
 const weight = ["1t", "2.5t", "3.5t", "5t"]; //TODO: 정책 정하기,db에서 가져오기
 
-function RegisterVehicle() {
+function RegisterVehicle({ route }) {
     const navigation = useNavigation();
     const { height: windowHeight } = useWindowDimensions();
     const { info, setInfo } = useContext(UserContext);
@@ -43,7 +48,11 @@ function RegisterVehicle() {
 
     const [validation, setValidation] = useState(false);
 
+    const [settingMode, setSettingMode] = useState(false);
+
     useEffect(() => {
+        if (route?.params?.modify) setSettingMode(true);
+
         console.log(info);
         register("vehicleType");
         register("vehicleNumber");
@@ -64,12 +73,10 @@ function RegisterVehicle() {
     const onNext = (data) => {
         const { vehicleType, vehicleNumber, option } = data;
 
-        const vehicle = {};
+        let vehicle = {};
 
         if (data.skip) {
-            vehicle.type = "";
-            vehicle.number = "";
-            vehicle.option = "";
+            vehicle = null;
         } else {
             vehicle.type = vehicleType;
             vehicle.number = vehicleNumber;
@@ -89,6 +96,57 @@ function RegisterVehicle() {
         navigation.navigate(SIGNUP_NAV[info.userType][curNavIndex + 1]);
     };
 
+    const registVehicle = async (data) => {
+        console.log(data);
+
+        const { vehicleType, vehicleNumber, option } = data;
+
+        let vehicle = {};
+
+        vehicle.type = vehicleType;
+        vehicle.number = vehicleNumber;
+        if (vehicleType === 1) {
+            vehicle.floor = option;
+            vehicle.weight = null;
+        } else {
+            vehicle.floor = null;
+            vehicle.weight = option;
+        }
+
+        try {
+            const response = await axios.post(
+                SERVER + "/users/setting/vehicle",
+                {
+                    vehicle: [vehicle],
+                },
+                {
+                    headers: {
+                        auth: await getAsyncStorageToken(),
+                    },
+                }
+            );
+
+            const {
+                data: { result },
+            } = response;
+
+            if (result === VALID) {
+                const {
+                    data: {
+                        data: { user },
+                    },
+                } = response;
+
+                setInfo(user);
+                navigation.goBack();
+            }
+        } catch (error) {
+            console.log(error);
+            navigation.goBack();
+            showErrorMessage("차량 정보 등록에 실패하였습니다.");
+        }
+    };
+
     const Title = ({ children }) => (
         <RegularText
             style={{
@@ -102,8 +160,10 @@ function RegisterVehicle() {
     return (
         <AuthLayout
             bottomButtonProps={{
-                title: "다음으로",
-                onPress: handleSubmit(onNext),
+                title: settingMode ? "등록하기" : "다음으로",
+                onPress: settingMode
+                    ? handleSubmit(registVehicle)
+                    : handleSubmit(onNext),
                 disabled: !validation,
             }}
         >
@@ -173,17 +233,19 @@ function RegisterVehicle() {
                         />
                     </Item>
                 </Wrapper>
-                <SkipButton onPress={() => onNext({ skip: true })}>
-                    <RegularText
-                        style={{
-                            fontSize: 16,
-                            color: color["page-color-text"],
-                            textDecorationLine: "underline",
-                        }}
-                    >
-                        다음에 할게요
-                    </RegularText>
-                </SkipButton>
+                {settingMode ? null : (
+                    <SkipButton onPress={() => onNext({ skip: true })}>
+                        <RegularText
+                            style={{
+                                fontSize: 16,
+                                color: color["page-color-text"],
+                                textDecorationLine: "underline",
+                            }}
+                        >
+                            다음에 할게요
+                        </RegularText>
+                    </SkipButton>
+                )}
             </Container>
         </AuthLayout>
     );
