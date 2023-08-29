@@ -169,21 +169,30 @@ function MemberInformation({ navigation }) {
                         <Items style={shadowProps}>
                             <Title>회사 정보</Title>
                             <Item title="사업 종류">
-                                <MediumText>가구 계열</MediumText>
+                                <MediumText>
+                                    {info.workCategory.name} 계열
+                                </MediumText>
                             </Item>
                             <Item title="상호명">
-                                <MediumText>(주)모를테구</MediumText>
+                                <MediumText>{info.companyName}</MediumText>
                             </Item>
                             <Item title="담당자">
-                                <MediumText>홍길동</MediumText>
+                                <MediumText>
+                                    {info.companyPersonName}
+                                </MediumText>
                             </Item>
                             <Line />
-                            <Before
-                                value="사업자등록증"
-                                onPress={() => console.log("사업자 등록증")}
-                            />
-                            <Checking value="사업자등록증" />
-                            <Completed value="사업자등록증" />
+                            {info.license ? (
+                                <Completed value="사업자등록증" />
+                            ) : (
+                                <Before
+                                    value="사업자등록증"
+                                    onPress={goToRegisterLicense}
+                                />
+                            )}
+                            {/* TODO: 사업자 등록증 체크
+                                <Checking value="사업자등록증" />
+                                 */}
                         </Items>
                     ) : null}
                     {info.userTypeId === 2 ? (
