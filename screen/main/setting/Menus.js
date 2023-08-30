@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import styled from "styled-components/native";
 import PropTypes from "prop-types";
 import { Image, TouchableOpacity, View } from "react-native";
@@ -9,10 +9,17 @@ import LoginContext from "../../../context/LoginContext";
 import Layout from "../../../component/layout/Layout";
 import BoldText from "../../../component/text/BoldText";
 import RegularText from "../../../component/text/RegularText";
-import { GetPhoneNumberWithDash, showErrorMessage } from "../../../utils";
+import {
+    GetPhoneNumberWithDash,
+    getAsyncStorageToken,
+    numberWithComma,
+    showErrorMessage,
+} from "../../../utils";
 import { color } from "../../../styles";
 import { shadowProps } from "../../../component/Shadow";
 import Arrow from "../../../assets/images/icons/arrow_right_B.png";
+import axios from "axios";
+import { SERVER } from "../../../constant";
 
 const Top = styled.View`
     background-color: white;
@@ -47,7 +54,11 @@ function Menus({ navigation }) {
     const { setIsLoggedIn } = useContext(LoginContext);
     const { info, setInfo } = useContext(UserContext);
 
+    const [point, setPoint] = useState(-1);
+
     useEffect(() => {
+        getPoint(); //포인트
+
         navigation.setOptions({
             header: () => (
                 <Top>
@@ -69,7 +80,39 @@ function Menus({ navigation }) {
                 </Top>
             ),
         });
+
+        const focusSubscription = navigation.addListener("focus", () => {
+            getPoint(); //포인트
+        });
+
+        return () => {
+            focusSubscription();
+        };
     }, []);
+
+    const getPoint = async () => {
+        axios
+            .get(SERVER + "/users/point", {
+                headers: {
+                    auth: await getAsyncStorageToken(),
+                },
+            })
+            .then(({ data }) => {
+                const {
+                    result,
+                    data: { point },
+                } = data;
+                console.log("result: ", result);
+                console.log("point: ", point);
+
+                setPoint(point?.curPoint);
+            })
+            .catch((error) => {
+                setPoint(0);
+                showError(error);
+            })
+            .finally(() => {});
+    };
 
     const goToPage = (pageName) => {
         navigation.navigate("SettingNavigator", {
@@ -90,17 +133,21 @@ function Menus({ navigation }) {
             <Menu onPress={() => goToPage("PointMain")}>
                 <MediumText>
                     포인트 및 쿠폰{"      "}
-                    <MediumText style={{ color: color.main }}>
-                        0{" "}
-                        <MediumText style={{ color: color.main, fontSize: 14 }}>
-                            AP
+                    {point > -1 ? (
+                        <MediumText style={{ color: color.main }}>
+                            {numberWithComma(point)}{" "}
+                            <MediumText
+                                style={{ color: color.main, fontSize: 14 }}
+                            >
+                                AP
+                            </MediumText>
                         </MediumText>
-                    </MediumText>
+                    ) : null}
                 </MediumText>
             </Menu>
-            <Menu onPress={() => goToPage("PaymentDetails")}>
+            {/* <Menu onPress={() => goToPage("PaymentDetails")}>
                 <MediumText>결제내역</MediumText>
-            </Menu>
+            </Menu> */}
             <Menu onPress={() => goToPage("RecommandedUser")}>
                 <MediumText>추천인 정보</MediumText>
             </Menu>

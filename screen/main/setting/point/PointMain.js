@@ -72,14 +72,24 @@ const COUPON_LIST = [
 ];
 
 function PointMain({ navigation }) {
-    const [account, setAccount] = useState({});
     const { info } = useContext(UserContext);
-    const isFocused = useIsFocused();
+
+    const [account, setAccount] = useState({});
     const [couponListVisible, setCouponListVisible] = useState(false);
 
+    const [point, setPoint] = useState(-1);
+
     useEffect(() => {
-        getMyPoint();
-    }, [isFocused]);
+        getPoint(); //포인트
+
+        const focusSubscription = navigation.addListener("focus", () => {
+            getPoint(); //포인트
+        });
+
+        return () => {
+            focusSubscription();
+        };
+    }, []);
 
     const goToPage = (page, data) => {
         navigation.navigate(page, data);
@@ -89,38 +99,28 @@ function PointMain({ navigation }) {
 
     const toggleCouponList = () => setCouponListVisible((prev) => !prev);
 
-    const getMyPoint = async () => {
-        try {
-            const response = await axios.get(SERVER + "/points/my", {
+    const getPoint = async () => {
+        axios
+            .get(SERVER + "/users/point", {
                 headers: {
                     auth: await getAsyncStorageToken(),
                 },
-            });
-
-            console.log(response.data);
-
-            const {
-                data: { result },
-            } = response;
-
-            if (result === VALID) {
+            })
+            .then(({ data }) => {
                 const {
-                    data: {
-                        data: { points },
-                    },
-                } = response;
-                console.log("point info : ", points);
-                setAccount(points);
-            } else {
-                const {
-                    data: { msg },
-                } = response;
+                    result,
+                    data: { point },
+                } = data;
+                console.log("result: ", result);
+                console.log("point: ", point);
 
-                console.log(msg);
-            }
-        } catch (error) {
-            console.log(error);
-        }
+                setPoint(point?.curPoint);
+            })
+            .catch((error) => {
+                setPoint(0);
+                showError(error);
+            })
+            .finally(() => {});
     };
 
     const Line = () => (
@@ -181,7 +181,7 @@ function PointMain({ navigation }) {
                                 fontSize: 16,
                             }}
                         >
-                            150,000
+                            {point > -1 ? numberWithComma(point) : null}
                             <BoldText
                                 style={{
                                     fontSize: 13,
@@ -237,7 +237,7 @@ function PointMain({ navigation }) {
                             </RegularText>
                         </Row>
                     </Button>
-                    <Button>
+                    {/* <Button>
                         <Row>
                             <Image
                                 source={require("../../../../assets/images/icons/icon_taxback.png")}
@@ -256,7 +256,7 @@ function PointMain({ navigation }) {
                                 소득공제
                             </RegularText>
                         </Row>
-                    </Button>
+                    </Button> */}
                 </RowAround>
             </Box>
             <WithdrawalButton onPress={() => goToPage("WithdrawalPoint")}>
@@ -269,13 +269,16 @@ function PointMain({ navigation }) {
                 쿠폰
             </BoldText>
             <Box>
-                <TouchableOpacity onPress={toggleCouponList}>
+                <TouchableOpacity
+                // onPress={toggleCouponList}
+                >
                     <RowBetween>
                         <RegularText style={{ fontSize: 15 }}>
                             보유한 쿠폰
                         </RegularText>
                         <Row>
-                            <BoldText>{COUPON_LIST.length}장</BoldText>
+                            {/* <BoldText>{COUPON_LIST.length}장</BoldText> */}
+                            <BoldText>0장</BoldText>
                             {couponListVisible ? (
                                 <Image
                                     source={require("../../../../assets/images/icons/icon_fullup.png")}
