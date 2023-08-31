@@ -852,6 +852,8 @@ export const Filter = ({ data, period, orderBy }) => {
         ago.setMonth(today.getMonth() - 3);
     } else if (period === "6개월") {
         ago.setMonth(today.getMonth() - 6);
+    } else if (period === "12개월") {
+        ago.setMonth(today.getMonth() - 12);
     }
 
     const result = [];
@@ -866,6 +868,14 @@ export const Filter = ({ data, period, orderBy }) => {
     else if (orderBy === "dateTime")
         data.map((value) => {
             const dateTime = new Date(value.dateTime);
+
+            if (dateTime >= ago) {
+                result.push(value);
+            }
+        });
+    else if (orderBy === "date")
+        data.map((value) => {
+            const dateTime = new Date(value.date);
 
             if (dateTime >= ago) {
                 result.push(value);

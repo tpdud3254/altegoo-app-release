@@ -66,8 +66,8 @@ function SelectFilter({ onSelect, data, width, selectedIndex }) {
 
     return (
         <TouchableWithoutFeedback onPress={hide}>
-            <Container width={width}>
-                <Select onPress={data.length > 0 ? show : null}>
+            <Container>
+                <Select onPress={data.length > 0 ? show : null} width={width}>
                     <MediumText
                         style={{
                             fontSize: 15,
