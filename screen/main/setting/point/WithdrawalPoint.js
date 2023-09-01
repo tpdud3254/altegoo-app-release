@@ -1,10 +1,13 @@
 import React, { useEffect, useState } from "react";
 import styled from "styled-components/native";
-import PropTypes, { number } from "prop-types";
-import { Image, Text, View } from "react-native";
+import { Image, View } from "react-native";
 import MediumText from "../../../../component/text/MediumText";
-import { numberWithComma } from "../../../../utils";
-import SubmitButton from "../../../../component/button/SubmitButton";
+import {
+    CheckLoading,
+    getAsyncStorageToken,
+    numberWithComma,
+    showErrorMessage,
+} from "../../../../utils";
 
 import axios from "axios";
 import { SERVER } from "../../../../constant";
@@ -16,6 +19,7 @@ import { Row, RowBetween } from "../../../../component/Row";
 import { color } from "../../../../styles";
 import Button from "../../../../component/button/Button";
 import TextInput from "../../../../component/input/TextInput";
+import LoadingLayout from "../../../../component/layout/LoadingLayout";
 
 const Box = styled.View`
     background-color: ${color.lightblue};
@@ -34,57 +38,104 @@ const ModifyButton = styled.TouchableOpacity`
     border-radius: 10px;
 `;
 function WithdrawalPoint({ route, navigation }) {
+    const [loading, setLoading] = useState(true);
+
+    const [point, setPoint] = useState(-1);
     const [isExistedAccount, setIsExistedAccount] = useState(true);
-    const [account, setAccount] = useState({});
     const [withdrawalPoint, setWithdrawalPoint] = useState(0);
 
     useEffect(() => {
-        // setAccount(route?.params?.account);
+        getPoint();
+
+        const focusSubscription = navigation.addListener("focus", () => {
+            setPoint(-1);
+            setLoading(true);
+            getPoint(); //포인트
+        });
+
+        return () => {
+            focusSubscription();
+        };
     }, []);
+
+    useEffect(() => {
+        if (CheckLoading({ point })) {
+            setLoading(false);
+        }
+    }, [point]);
+
+    useEffect(() => {
+        if (point === -1) return;
+
+        if (withdrawalPoint > point.curPoint)
+            setWithdrawalPoint(point.curPoint);
+    }, [withdrawalPoint]);
+
+    const refresh = () => {
+        getPoint();
+        setWithdrawalPoint("");
+    };
+
+    const getPoint = async () => {
+        axios
+            .get(SERVER + "/users/point", {
+                headers: {
+                    auth: await getAsyncStorageToken(),
+                },
+            })
+            .then(({ data }) => {
+                const {
+                    result,
+                    data: { point },
+                } = data;
+                console.log("result: ", result);
+                console.log("point: ", point);
+
+                setPoint(point);
+                if (point.accountNumber) setIsExistedAccount(true);
+                else setIsExistedAccount(false);
+            })
+            .catch((error) => {
+                setPoint(0);
+                showError(error);
+            })
+            .finally(() => {});
+    };
 
     const goToPage = (page, data) => {
         navigation.navigate(page, data);
     };
 
-    // const onWithdrawal = () => {
-    //     console.log(withdrawalPoint);
-    //     if (withdrawalPoint > account.curPoint) {
-    //         return;
-    //     }
-    //     setPoint();
-    // };
-    // const setPoint = async (parsed) => {
-    //     try {
-    //         const response = await axios.patch(SERVER + "/admin/points", {
-    //             pointId: account.id,
-    //             points: account.curPoint - withdrawalPoint,
-    //         });
+    const onWithdrawal = () => {
+        console.log(withdrawalPoint);
 
-    //         const {
-    //             data: {
-    //                 data: { points },
-    //                 result,
-    //             },
-    //         } = response;
+        pointwithdrawal();
+    };
+    const pointwithdrawal = async () => {
+        try {
+            const response = await axios.patch(SERVER + "/admin/points", {
+                pointId: point.id,
+                points: point.curPoint - withdrawalPoint,
+            });
 
-    //         console.log(points);
+            const {
+                data: {
+                    data: { points },
+                    result,
+                },
+            } = response;
 
-    //         if (result === VALID) {
-    //             // navigation.navigate("TabsNavigator", {
-    //             //     screen: "SettingNavigator",
-    //             //     params: {
-    //             //         screen: "PointNavigator",
-    //             //         params: {
-    //             //             screen: "PointMain",
-    //             //         },
-    //             //     },
-    //             // });
-    //             navigation.goBack();
-    //         } else console.log(msg);
-    //     } catch (error) {
-    //         console.log(error);
-    //     }
-    // };
+            console.log(points);
+
+            if (result === VALID) {
+                refresh();
+            }
+        } catch (error) {
+            console.log(error);
+            showErrorMessage("포인트 출금에 실패하였습니다.");
+            navigation.goBack();
+        }
+    };
     const Line = () => (
         <View
             style={{
@@ -131,7 +182,9 @@ function WithdrawalPoint({ route, navigation }) {
                 </RegularText>
             </Row>
             <Button
-                onPress={() => goToPage("RegistPointAccount")}
+                onPress={() =>
+                    goToPage("RegistPointAccount", { pointId: point.id })
+                }
                 type="accent"
                 text="계좌등록 하기"
             />
@@ -154,107 +207,137 @@ function WithdrawalPoint({ route, navigation }) {
     );
 
     return (
-        <Layout
-            bottomButtonProps={
-                isExistedAccount
-                    ? {
-                          title: "포인트 출금",
-                          onPress: () => goToPage("ModifyPointAccount"),
-                      }
-                    : null
-            }
-        >
-            {isExistedAccount ? (
-                <>
-                    <Box>
-                        <RowBetween>
-                            <RegularText style={{ fontSize: 15 }}>
-                                출금 가능한 포인트
-                            </RegularText>
-                            <Row>
-                                <Image
-                                    source={require("../../../../assets/images/icons/icon_point.png")}
-                                    style={{
-                                        width: 27,
-                                        height: 27,
-                                        marginRight: 2,
-                                    }}
-                                />
-                                <BoldText
-                                    style={{
-                                        fontSize: 16,
-                                    }}
+        <>
+            {loading ? (
+                <LoadingLayout />
+            ) : (
+                <Layout
+                    bottomButtonProps={
+                        isExistedAccount
+                            ? {
+                                  title: "포인트 출금",
+                                  onPress: onWithdrawal,
+                              }
+                            : null
+                    }
+                >
+                    {isExistedAccount ? (
+                        <>
+                            <Box>
+                                <RowBetween>
+                                    <RegularText style={{ fontSize: 15 }}>
+                                        출금 가능한 포인트
+                                    </RegularText>
+                                    <Row>
+                                        <Image
+                                            source={require("../../../../assets/images/icons/icon_point.png")}
+                                            style={{
+                                                width: 27,
+                                                height: 27,
+                                                marginRight: 2,
+                                            }}
+                                        />
+                                        <BoldText
+                                            style={{
+                                                fontSize: 16,
+                                            }}
+                                        >
+                                            {numberWithComma(point.curPoint)}
+                                            <BoldText
+                                                style={{
+                                                    fontSize: 13,
+                                                }}
+                                            >
+                                                {" "}
+                                                AP
+                                            </BoldText>
+                                        </BoldText>
+                                    </Row>
+                                </RowBetween>
+                                <Line />
+                            </Box>
+                            <Item>
+                                <RowBetween
+                                    style={{ alignItems: "flex-start" }}
                                 >
-                                    150,000
-                                    <BoldText
+                                    <View>
+                                        <Info
+                                            title="은행명"
+                                            value={point.bank}
+                                        />
+                                        <Info
+                                            title="계좌번호"
+                                            value={point.accountNumber}
+                                        />
+                                        <Info
+                                            title="예금주"
+                                            value={point.accountName}
+                                        />
+                                    </View>
+                                    <ModifyButton
+                                        onPress={
+                                            () =>
+                                                goToPage("RegistPointAccount", {
+                                                    pointId: point.id,
+                                                    type: "modify",
+                                                })
+                                            // goToPage("ModifyPointAccount")
+                                        }
+                                    >
+                                        <MediumText
+                                            style={{
+                                                fontSize: 14,
+                                                color: color.main,
+                                            }}
+                                        >
+                                            수정
+                                        </MediumText>
+                                    </ModifyButton>
+                                </RowBetween>
+                            </Item>
+                            <Item>
+                                <TextInput
+                                    title="출금할 포인트"
+                                    placeholder="금액을 입력해주세요."
+                                    returnKeyType="done"
+                                    keyboardType="number-pad"
+                                    value={withdrawalPoint}
+                                    onReset={() => setWithdrawalPoint("")}
+                                    onChangeText={(text) =>
+                                        setWithdrawalPoint(text)
+                                    }
+                                />
+                            </Item>
+                            <Item>
+                                <Row>
+                                    <MediumText
                                         style={{
-                                            fontSize: 13,
+                                            fontSize: 17,
+                                            color: color["page-grey-text"],
                                         }}
                                     >
-                                        {" "}
-                                        AP
+                                        출금 수수료 :{" "}
+                                    </MediumText>
+                                    <BoldText>
+                                        1,000
+                                        <BoldText
+                                            style={{
+                                                fontSize: 14,
+                                            }}
+                                        >
+                                            {" "}
+                                            AP
+                                        </BoldText>
                                     </BoldText>
-                                </BoldText>
-                            </Row>
-                        </RowBetween>
-                        <Line />
-                    </Box>
-                    <Item>
-                        <RowBetween style={{ alignItems: "flex-start" }}>
-                            <View>
-                                <Info title="은행명" value="국민은행" />
-                                <Info title="계좌번호" value="123456789012" />
-                                <Info title="예금주" value="홍길동" />
-                            </View>
-                            <ModifyButton>
-                                <MediumText
-                                    style={{ fontSize: 14, color: color.main }}
-                                >
-                                    수정
-                                </MediumText>
-                            </ModifyButton>
-                        </RowBetween>
-                    </Item>
-                    <Item>
-                        <TextInput
-                            title="출금할 포인트"
-                            placeholder="금액을 입력해주세요."
-                            returnKeyType="done"
-                            keyboardType="number-pad"
-                            // value={watch("phone")}
-                            // onSubmitEditing={() => onNext("password")}
-                            // onReset={() => reset(setValue, "phone")}
-                            // onChangeText={(text) => setValue("phone", text)}
-                        />
-                    </Item>
-                    <Item>
-                        <Row>
-                            <MediumText
-                                style={{
-                                    fontSize: 17,
-                                    color: color["page-grey-text"],
-                                }}
-                            >
-                                출금 수수료 :{" "}
-                            </MediumText>
-                            <BoldText>
-                                0
-                                <BoldText
-                                    style={{
-                                        fontSize: 14,
-                                    }}
-                                >
-                                    {" "}
-                                    AP
-                                </BoldText>
-                            </BoldText>
-                        </Row>
-                    </Item>
-                </>
-            ) : (
-                <NoAccount />
+                                </Row>
+                            </Item>
+                        </>
+                    ) : (
+                        <NoAccount />
+                    )}
+                </Layout>
             )}
-        </Layout>
+        </>
     );
 }
 

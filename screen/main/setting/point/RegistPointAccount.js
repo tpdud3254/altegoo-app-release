@@ -1,17 +1,13 @@
 import React, { useEffect, useRef, useState } from "react";
 import styled from "styled-components/native";
-import PropTypes from "prop-types";
-import { Text, View } from "react-native";
-import FormLayout from "../../../../component/layout/FormLayout";
 import { useForm } from "react-hook-form";
-import SubTitleText from "../../../../component/text/SubTitleText";
-import { Picker } from "@react-native-picker/picker";
-import TitleInputItem from "../../../../component/item/TitleInputItem";
-import SubmitButton from "../../../../component/button/SubmitButton";
-
 import axios from "axios";
 import { SERVER } from "../../../../constant";
-import { getAsyncStorageToken } from "../../../../utils";
+import {
+    CheckValidation,
+    getAsyncStorageToken,
+    showErrorMessage,
+} from "../../../../utils";
 import { VALID } from "../../../../constant";
 import Layout from "../../../../component/layout/Layout";
 import SelectBox from "../../../../component/selectBox/SelectBox";
@@ -51,31 +47,41 @@ const BANK_LIST = [
 
 function RegistPointAccount({ route, navigation }) {
     const [selectedBank, setSelectedBank] = useState(0);
-    const { register, handleSubmit, setValue, watch } = useForm();
+    const { register, handleSubmit, setValue, watch, getValues } = useForm();
 
-    console.log(route?.params);
+    const [validation, setValidation] = useState(false);
+
     const nameRef = useRef();
     useEffect(() => {
-        register("number");
-        register("name");
+        register("bank");
+        register("accountName");
+        register("accountNumber");
     }, []);
 
-    const onNext = (nextOne) => {
-        nextOne?.current?.focus();
-    };
+    useEffect(() => {
+        if (CheckValidation(getValues())) {
+            setValidation(true);
+        } else {
+            setValidation(false);
+        }
+    }, [getValues()]);
 
-    const onValid = async ({ name, number }) => {
-        if (selectedBank === 0 || name === "" || number === "") {
+    const onNext = async (data) => {
+        const { bank, accountName, accountNumber } = data;
+
+        if (!validation) {
+            showErrorMessage("계좌 정보를 입력해주세요.");
             return;
         }
+
         try {
             const response = await axios.post(
                 SERVER + "/points/account/create",
                 {
-                    bank: bank[selectedBank],
-                    accountName: name,
-                    accountNumber: number,
-                    pointId: route?.params?.account.id || null,
+                    bank: BANK_LIST[bank - 1],
+                    accountName,
+                    accountNumber,
+                    pointId: route?.params?.pointId,
                 },
                 {
                     headers: {
@@ -109,6 +115,7 @@ function RegistPointAccount({ route, navigation }) {
             console.log(error);
         }
     };
+
     return (
         <Layout>
             <Container>
@@ -117,9 +124,7 @@ function RegistPointAccount({ route, navigation }) {
                         title="은행 선택"
                         placeholder="은행을 선택하세요."
                         data={BANK_LIST}
-                        // onSelect={(index) =>
-                        //     setValue("workCategory", index + 1)
-                        // }
+                        onSelect={(index) => setValue("bank", index + 1)}
                     />
                 </Wrapper>
                 <Wrapper>
@@ -128,31 +133,31 @@ function RegistPointAccount({ route, navigation }) {
                         placeholder="- 빼고 숫자만 적어주세요."
                         returnKeyType="next"
                         keyboardType="number-pad"
-                        // value={watch("companyName")}
-                        // onChangeText={(text) => setValue("companyName", text)}
-                        // onReset={() => setValue("companyName", "")}
-                        // onSubmitEditing={() =>
-                        //     companyPersonNameRef.current.setFocus()
-                        // }
+                        value={watch("accountNumber")}
+                        onChangeText={(text) => setValue("accountNumber", text)}
+                        onReset={() => setValue("accountNumber", "")}
+                        onSubmitEditing={() => nameRef.current.setFocus()}
                     />
                 </Wrapper>
                 <Wrapper>
                     <TextInput
-                        // ref={companyPersonNameRef}
+                        ref={nameRef}
                         title="예금주"
                         placeholder="예금주 이름을 적어주세요."
                         returnKeyType="done"
-                        // value={watch("companyPersonName")}
-                        // onChangeText={(text) =>
-                        //     setValue("companyPersonName", text)
-                        // }
-                        // onReset={() => setValue("companyPersonName", "")}
+                        value={watch("accountName")}
+                        onChangeText={(text) => setValue("accountName", text)}
+                        onReset={() => setValue("accountName", "")}
                     />
                 </Wrapper>
                 <Button
-                    // onPress={() => goToPage("RegistPointAccount")}
+                    onPress={handleSubmit(onNext)}
                     type="accent"
-                    text="등록하기"
+                    text={
+                        route?.params?.type === "modify"
+                            ? "수정하기"
+                            : "등록하기"
+                    }
                 />
             </Container>
         </Layout>
