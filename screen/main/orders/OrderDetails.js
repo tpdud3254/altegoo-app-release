@@ -1,18 +1,14 @@
 import React, { useContext, useEffect, useRef, useState } from "react";
 import { Image, View } from "react-native";
 import styled from "styled-components/native";
-import BoldText from "../../../component/text/BoldText";
 import RegularText from "../../../component/text/RegularText";
 import MediumText from "../../../component/text/MediumText";
 import { color } from "../../../styles";
 import Layout from "../../../component/layout/Layout";
-import { shadowProps } from "../../../component/Shadow";
-import RefreshBtn from "../../../assets/images/icons/btn_Refresh.png";
-import Car from "../../../assets/images/icons/Procress_car.png";
-import Button from "../../../component/button/Button";
 import {
     CheckLoading,
     GetDate,
+    GetDayOfWeek,
     GetPhoneNumberWithDash,
     GetTime,
     getAsyncStorageToken,
@@ -510,7 +506,12 @@ function OrderDetails({ navigation, route }) {
                     <Wrapper>
                         <Item
                             title="작업 일시"
-                            value="23년 5월 25일 (수) 오전 10:00"
+                            value={`${GetDate(
+                                order.dateTime,
+                                "long"
+                            )} (${GetDayOfWeek(order.dateTime)}) ${GetTime(
+                                order.dateTime
+                            )}`}
                         />
                         {order.vehicleType === "사다리차" &&
                         order.direction === "양사" ? (
