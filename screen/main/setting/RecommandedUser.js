@@ -248,7 +248,7 @@ function RecommandedUser({ route, navigation }) {
                     <Item style={shadowProps}>
                         <RowBetween>
                             <RegularText>내가 추천한 회원</RegularText>
-
+                            {/* 알테구 계정일때, 없을때 추가 */}
                             {myRecommendUser.userTypeId === 2 ? (
                                 <RegularText>
                                     {myRecommendUser.name}
