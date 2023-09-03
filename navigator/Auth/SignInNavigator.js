@@ -5,6 +5,7 @@ import SignIn from "../../screen/auth/SignIn";
 import { FONTS } from "../../constant";
 import { Image } from "react-native";
 import { color } from "../../styles";
+import Certification from "../../screen/main/Certification";
 
 const Stack = createStackNavigator();
 
@@ -47,6 +48,13 @@ export default function SignInNavigator() {
                 component={SetPassword}
                 options={{
                     title: "비밀번호 찾기",
+                }}
+            />
+            <Stack.Screen
+                name="Certification"
+                component={Certification}
+                options={{
+                    title: "본인 인증",
                 }}
             />
         </Stack.Navigator>

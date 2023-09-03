@@ -88,7 +88,8 @@ function SetPassword() {
 
         //TODO: 휴대폰 본인인증 처리
 
-        setAuthCompleted(true);
+        // setAuthCompleted(true);
+        navigation.navigate("Certification");
     };
 
     const onChangePassword = async () => {
@@ -177,7 +178,7 @@ function SetPassword() {
                             onPress={onAuthenticate}
                             type="accent"
                             text="본인 인증하기"
-                            disabled={!validation}
+                            // disabled={!validation}
                         />
                     </>
                 ) : (
