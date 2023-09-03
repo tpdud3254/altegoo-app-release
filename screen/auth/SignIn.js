@@ -19,6 +19,8 @@ import { color } from "../../styles";
 import AuthLayout from "../../component/layout/AuthLayout";
 import TextInput from "../../component/input/TextInput";
 import RegularText from "../../component/text/RegularText";
+import { Popup } from "../../component/Popup";
+import { PopupWithButtons } from "../../component/PopupWithButtons";
 
 const InputContainer = styled.View``;
 
@@ -29,6 +31,13 @@ const InputWrapper = styled.View`
 const FindPassword = styled.View`
     align-items: center;
 `;
+
+const PopupContainer = styled.View`
+    width: 200px;
+    height: 110px;
+    justify-content: center;
+`;
+
 function SignIn() {
     const navigation = useNavigation();
     const { setInfo } = useContext(UserContext);
@@ -37,6 +46,8 @@ function SignIn() {
 
     const [focus, setFocus] = useState("phone");
     const [validation, setValidation] = useState(false);
+
+    const [popupVisible, setPopupVisible] = useState(false);
 
     useEffect(() => {
         register("phone");
@@ -47,6 +58,12 @@ function SignIn() {
         setValidation(checkValidation(watch()));
     }, [watch()]);
 
+    const showPopup = () => {
+        setPopupVisible(true);
+    };
+    const hidePopup = () => {
+        setPopupVisible(false);
+    };
     const onNext = (value) => {
         setFocus(value);
     };
@@ -81,7 +98,8 @@ function SignIn() {
     };
 
     const goToResetPassword = () => {
-        navigation.navigate("SetPassword");
+        navigation.navigate("Certification");
+        hidePopup();
     };
 
     return (
@@ -129,7 +147,7 @@ function SignIn() {
                 </InputWrapper>
             </InputContainer>
             <FindPassword>
-                <TouchableOpacity onPress={goToResetPassword}>
+                <TouchableOpacity onPress={showPopup}>
                     <RegularText
                         style={{
                             fontSize: 16,
@@ -141,6 +159,25 @@ function SignIn() {
                     </RegularText>
                 </TouchableOpacity>
             </FindPassword>
+            <PopupWithButtons
+                visible={popupVisible}
+                onTouchOutside={hidePopup}
+                onClick={goToResetPassword}
+                negativeButtonLabel="취소"
+            >
+                <PopupContainer>
+                    <RegularText
+                        style={{
+                            fontSize: 19,
+                            lineHeight: 30,
+                            textAlign: "center",
+                        }}
+                    >
+                        휴대폰 본인인증이 필요합니다.{"\n"}
+                        진행하시겠습니까?
+                    </RegularText>
+                </PopupContainer>
+            </PopupWithButtons>
         </AuthLayout>
     );
 }
