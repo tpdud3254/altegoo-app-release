@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useRef, useState } from "react";
 import styled from "styled-components/native";
 import UserContext from "../../../context/UserContext";
-import { useNavigation } from "@react-navigation/native";
+import { CommonActions, useNavigation } from "@react-navigation/native";
 import { SERVER, SIGNUP_NAV, VALID } from "../../../constant";
 import AuthLayout from "../../../component/layout/AuthLayout";
 import TextInput from "../../../component/input/TextInput";
@@ -9,42 +9,81 @@ import Button from "../../../component/button/Button";
 import { useForm } from "react-hook-form";
 import { CheckValidation, showError, showErrorMessage } from "../../../utils";
 import axios from "axios";
+import { SafeAreaView, View, useWindowDimensions } from "react-native";
+import { LAYOUT_PADDING_X } from "../../../component/layout/Layout";
+import WebView from "react-native-webview";
 
-const InputContainer = styled.View`
-    margin-top: 30px;
-    margin-bottom: 10px;
-`;
-const InputWrapper = styled.View`
-    margin-bottom: 30px;
-`;
+function Identification({ navigation }) {
+    const webViewRef = useRef();
+    const { width } = useWindowDimensions();
+    const [progress, setProgress] = useState(0.0);
 
-function Identification() {
-    const navigation = useNavigation();
     const { info, setInfo } = useContext(UserContext);
-    const { register, setValue, watch, getValues, handleSubmit } = useForm();
 
-    const [validation, setValidation] = useState(false);
+    const sendMessage = (data) => {
+        webViewRef.current.postMessage(data);
+    };
 
-    const phoneRef = useRef();
+    const errorHandler = ({ nativeEvent }) =>
+        console.log("WebView error: ", nativeEvent);
 
-    useEffect(() => {
-        console.log("info : ", info);
-        register("name");
-        register("phone");
-    }, []);
-
-    useEffect(() => {
-        if (CheckValidation(getValues())) {
-            setValidation(true);
-        } else {
-            setValidation(false);
+    const receiveMessage = async (event) => {
+        console.log("받음");
+        try {
+            const {
+                nativeEvent: { data },
+            } = event;
+            const parsed = JSON.parse(data);
+            console.log("parsed : ", parsed);
+            switch (parsed.result) {
+                case "cancel":
+                    navigation.goBack();
+                    break;
+                case "ok":
+                    console.log(parsed.data);
+                    authenticating(parsed.data);
+                    break;
+                default:
+                    navigation.goBack();
+                    break;
+            }
+        } catch (e) {
+            console.log(e);
+            navigation.goBack();
         }
-    }, [getValues()]);
+    };
 
-    const Authenticating = async (data) => {
-        console.log(data);
+    useEffect(() => {
+        if (progress === 1) {
+            sendMessage(
+                JSON.stringify({
+                    // ...route?.params?.data,
+                    test: true,
+                })
+            );
+        }
+        console.log("progress : ", progress);
+    }, [progress]);
 
-        const { name, phone } = data;
+    const goToPage = (pageName) => {
+        navigation.dispatch(
+            CommonActions.reset({
+                index: 1,
+                routes: [
+                    { name: "SignUp" },
+                    {
+                        name: "Agreements",
+                    },
+                    {
+                        name: pageName,
+                    },
+                ],
+            })
+        );
+    };
+
+    const authenticating = async (data) => {
+        const { name, phone, birth, gender } = data;
 
         try {
             const response = await axios.get(SERVER + "/users/search", {
@@ -59,21 +98,20 @@ function Identification() {
 
             if (result === VALID) {
                 showErrorMessage("이미 존재하는 사용자입니다.");
+                navigation.goBack();
             } else {
-                //TODO: 본인인증 진행 (각 필드 예외처리도 추가하기,)
                 const data = {
                     name,
                     phone,
-                    gender: "남", //TODO: 테스트 코드
-                    birth: "580820", //TODO: 테스트 코드
+                    gender,
+                    birth,
                 };
-                //TODO: 본인인증 진행 후 실명으로 저장
 
                 setInfo({ ...info, ...data });
 
                 const curNavIndex =
                     SIGNUP_NAV[info.userType].indexOf("Identification");
-                navigation.navigate(SIGNUP_NAV[info.userType][curNavIndex + 1]);
+                goToPage(SIGNUP_NAV[info.userType][curNavIndex + 1]);
             }
         } catch (error) {
             console.log(error);
@@ -82,39 +120,71 @@ function Identification() {
     };
 
     return (
-        <AuthLayout>
-            <InputContainer>
-                <InputWrapper>
-                    <TextInput
-                        title="이름"
-                        placeholder="실명입력"
-                        returnKeyType="next"
-                        value={watch("name")}
-                        onChangeText={(text) => setValue("name", text)}
-                        onReset={() => setValue("name", "")}
-                        onSubmitEditing={() => phoneRef.current.setFocus()}
+        // <AuthLayout>
+        //     <InputContainer>
+        //         <InputWrapper>
+        //             <TextInput
+        //                 title="이름"
+        //                 placeholder="실명입력"
+        //                 returnKeyType="next"
+        //                 value={watch("name")}
+        //                 onChangeText={(text) => setValue("name", text)}
+        //                 onReset={() => setValue("name", "")}
+        //                 onSubmitEditing={() => phoneRef.current.setFocus()}
+        //             />
+        //         </InputWrapper>
+        //         <InputWrapper>
+        //             <TextInput
+        //                 ref={phoneRef}
+        //                 title="휴대폰 번호"
+        //                 placeholder="- 없이 숫자만 입력해주세요."
+        //                 keyboardType="number-pad"
+        //                 returnKeyType="done"
+        //                 value={watch("phone")}
+        //                 onChangeText={(text) => setValue("phone", text)}
+        //                 onReset={() => setValue("phone", "")}
+        //             />
+        //         </InputWrapper>
+        //     </InputContainer>
+        //     <Button
+        //         onPress={handleSubmit(authenticating)}
+        //         type="accent"
+        //         text="본인 인증하기"
+        //         disabled={!validation}
+        //     />
+        // </AuthLayout>
+        <View
+            style={{
+                flex: 1,
+                alignItems: "center",
+                justifyContent: "center",
+                marginLeft: -LAYOUT_PADDING_X,
+                marginRight: -LAYOUT_PADDING_X,
+            }}
+        >
+            <SafeAreaView style={{ flex: 1 }}>
+                <View
+                    style={{
+                        height: 700,
+                        flex: 1,
+                    }}
+                >
+                    <WebView
+                        ref={webViewRef}
+                        style={{ width: width, height: 700, flex: 1 }}
+                        source={{
+                            uri: "https://master.d1p7wg3e032x9j.amplifyapp.com/certification",
+                        }}
+                        javaScriptEnabled={true}
+                        onError={errorHandler}
+                        onMessage={receiveMessage}
+                        onLoadProgress={(event) => {
+                            setProgress(event.nativeEvent.progress);
+                        }}
                     />
-                </InputWrapper>
-                <InputWrapper>
-                    <TextInput
-                        ref={phoneRef}
-                        title="휴대폰 번호"
-                        placeholder="- 없이 숫자만 입력해주세요."
-                        keyboardType="number-pad"
-                        returnKeyType="done"
-                        value={watch("phone")}
-                        onChangeText={(text) => setValue("phone", text)}
-                        onReset={() => setValue("phone", "")}
-                    />
-                </InputWrapper>
-            </InputContainer>
-            <Button
-                onPress={handleSubmit(Authenticating)}
-                type="accent"
-                text="본인 인증하기"
-                disabled={!validation}
-            />
-        </AuthLayout>
+                </View>
+            </SafeAreaView>
+        </View>
     );
 }
 

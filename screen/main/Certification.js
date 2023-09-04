@@ -5,7 +5,7 @@ import { WebView } from "react-native-webview";
 import { LAYOUT_PADDING_X } from "../../component/layout/Layout";
 import { CommonActions } from "@react-navigation/native";
 
-function Certification({ navigation, route }) {
+function Certification({ navigation }) {
     const webViewRef = useRef();
     const { width } = useWindowDimensions();
     const [progress, setProgress] = useState(0.0);
@@ -31,18 +31,8 @@ function Certification({ navigation, route }) {
                     break;
                 case "ok":
                     console.log(parsed.data);
-                    navigation.dispatch(
-                        CommonActions.reset({
-                            index: 1,
-                            routes: [
-                                { name: "SignIn" },
-                                {
-                                    name: "SetPassword",
-                                    params: { cerfifyData: parsed.data },
-                                },
-                            ],
-                        })
-                    );
+                    goToPage();
+
                     break;
                 default:
                     navigation.goBack();
@@ -66,6 +56,20 @@ function Certification({ navigation, route }) {
         console.log("progress : ", progress);
     }, [progress]);
 
+    const goToPage = () => {
+        navigation.dispatch(
+            CommonActions.reset({
+                index: 1,
+                routes: [
+                    { name: "SignIn" },
+                    {
+                        name: "SetPassword",
+                        params: { cerfifyData: parsed.data },
+                    },
+                ],
+            })
+        );
+    };
     return (
         <View
             style={{
@@ -89,8 +93,6 @@ function Certification({ navigation, route }) {
                         style={{ width: width, height: 700, flex: 1 }}
                         source={{
                             uri: "https://master.d1p7wg3e032x9j.amplifyapp.com/certification",
-                            // uri: PAYMENT_SERVER,
-                            // uri: "https://www.naver.com/",
                         }}
                         javaScriptEnabled={true}
                         onError={errorHandler}

@@ -75,7 +75,7 @@ export default function SignUpNavigator() {
                 name="Identification"
                 component={Identification}
                 options={{
-                    title: "본인 인증",
+                    headerShown: false,
                 }}
             />
             <Stack.Screen
