@@ -3,15 +3,11 @@ import { createStackNavigator } from "@react-navigation/stack";
 import React, { useContext } from "react";
 import Home from "../../screen/main/home/Home";
 import { useNavigation } from "@react-navigation/native";
-import WorkSchedule from "../../screen/main/schedule/WorkSchedule";
-import RegistDone from "../../screen/main/regist/RegistDone";
 import UserContext from "../../context/UserContext";
 import { COMPANY, DRIVER, NORMAL, ORDINARY, PERSON } from "../../constant";
 import RegistNavigator from "./RegistNavigator";
 import SettingNavigator from "./SettingNavigator";
 import TabIcon from "../../component/icon/TabIcons";
-import MyOrderList from "../../screen/main/myOrders/MyOrderList";
-import MyOrdinaryOrderList from "../../screen/main/myOrders/MyOrdinaryOrderList";
 import BoldText from "../../component/text/BoldText";
 import OrderList from "../../screen/main/orders/OrderList";
 import RealTimeOrder from "../../screen/main/orders/RealTimeOrder";
@@ -152,21 +148,7 @@ export default function TabsNavigator({ route }) {
                             component={Home}
                             initialParams={{ refresh: route?.params?.refresh }}
                         /> */}
-                        {/* <Tabs.Screen
-                            name="MyOrderList"
-                            options={{
-                                headerTitle: "내 작업",
-                                tabBarIcon: ({ focused, color, size }) => (
-                                    <TabIcon
-                                        iconName="list"
-                                        size={27}
-                                        focused={focused}
-                                        iconText="내 작업"
-                                    />
-                                ),
-                            }}
-                            component={MyOrderList}
-                        />
+                        {/*
                         <Tabs.Screen
                             name="TabRegistWork"
                             options={{

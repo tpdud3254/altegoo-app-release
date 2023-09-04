@@ -154,42 +154,6 @@ function Menus({ navigation }) {
             <Menu onPress={() => goToPage("ChangePassword")}>
                 <MediumText>비밀번호 변경</MediumText>
             </Menu>
-            {/* <TouchableOpacity
-                onPress={() => {
-                    navigation.navigate("ModifyUserInfo");
-                }}
-            >
-                <MediumText>회원정보수정</MediumText> ㅅTODO: 추후변경
-                <MediumText>회원정보</MediumText>
-            </TouchableOpacity>
-            <TouchableOpacity
-                onPress={() => {
-                    navigation.navigate("PointNavigator");
-                }}
-            >
-                <MediumText>포인트</MediumText>
-            </TouchableOpacity>
-            <TouchableOpacity
-            // onPress={() => {
-            //     navigation.navigate("Events");
-            // }}
-            >
-                <MediumText>이벤트</MediumText>
-            </TouchableOpacity>
-            <TouchableOpacity
-                onPress={() => {
-                    navigation.navigate("Setting");
-                }}
-            >
-                <MediumText>설정</MediumText>
-            </TouchableOpacity>
-            <TouchableOpacity
-            // onPress={() => {
-            //     navigation.navigate("BlockUser");
-            // }}
-            >
-                <MediumText>부정당회원</MediumText>
-            </TouchableOpacity> */}
         </Layout>
     );
 }

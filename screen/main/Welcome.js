@@ -68,9 +68,6 @@ function Welcome() {
         } else if (pageName === "Setting") {
             navigation.navigate("TabsNavigator", {
                 screen: "SettingNavigator",
-                params: {
-                    screen: "ModifyUserInfo",
-                },
             });
         } else {
             navigation.navigate("TabsNavigator");

@@ -1,13 +1,8 @@
 import React, { useContext, useEffect, useRef, useState } from "react";
-import styled from "styled-components/native";
 import UserContext from "../../../context/UserContext";
-import { CommonActions, useNavigation } from "@react-navigation/native";
+import { CommonActions } from "@react-navigation/native";
 import { SERVER, SIGNUP_NAV, VALID } from "../../../constant";
-import AuthLayout from "../../../component/layout/AuthLayout";
-import TextInput from "../../../component/input/TextInput";
-import Button from "../../../component/button/Button";
-import { useForm } from "react-hook-form";
-import { CheckValidation, showError, showErrorMessage } from "../../../utils";
+import { showError, showErrorMessage } from "../../../utils";
 import axios from "axios";
 import { SafeAreaView, View, useWindowDimensions } from "react-native";
 import { LAYOUT_PADDING_X } from "../../../component/layout/Layout";

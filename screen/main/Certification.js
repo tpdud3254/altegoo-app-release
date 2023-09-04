@@ -1,7 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import { View, SafeAreaView, useWindowDimensions } from "react-native";
 import { WebView } from "react-native-webview";
-
 import { LAYOUT_PADDING_X } from "../../component/layout/Layout";
 import { CommonActions } from "@react-navigation/native";
 

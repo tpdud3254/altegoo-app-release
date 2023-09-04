@@ -1,11 +1,5 @@
 import { createStackNavigator } from "@react-navigation/stack";
 import React from "react";
-import { Ionicons } from "@expo/vector-icons";
-import BlockUser from "../../screen/main/setting/BlockUser";
-import Events from "../../screen/main/setting/Events";
-import ModifyUserInfo from "../../screen/main/setting/ModifyUserInfo";
-import Setting from "../../screen/main/setting/Setting";
-import PointNavigator from "./PointNavigator";
 import Menus from "../../screen/main/setting/Menus";
 import { FONTS } from "../../constant";
 import { color } from "../../styles";
@@ -104,28 +98,6 @@ export default function SettingNavigator() {
                 component={PaymentDetails}
                 options={{
                     title: "결제 내역",
-                }}
-            />
-            <Stack.Screen
-                name="Events"
-                component={Events}
-                options={{
-                    title: "이벤트",
-                }}
-            />
-            <Stack.Screen
-                name="ModifyUserInfo"
-                component={ModifyUserInfo}
-                options={{
-                    title: "회원 정보",
-                    // title: "회원 정보 수정", TODO: 수정으로 변경
-                }}
-            />
-            <Stack.Screen
-                name="Setting"
-                component={Setting}
-                options={{
-                    title: "설정",
                 }}
             />
             <Stack.Screen

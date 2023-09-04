@@ -5,9 +5,6 @@ import LoadingLayout from "../../component/layout/LoadingLayout";
 import { FONTS, VALID } from "../../constant";
 import LoginContext from "../../context/LoginContext";
 import Charge from "../../screen/main/Charge";
-import CompleteOrder from "../../screen/main/CompleteOrder";
-// import OrderProgress from "../../screen/main/OrderProgress";
-import OrdinaryOrderDetail from "../../screen/main/OrdinaryOrderDetail";
 import Payment from "../../screen/main/Payment";
 import Welcome from "../../screen/main/Welcome";
 import { SERVER } from "../../constant";
@@ -82,6 +79,7 @@ export default function MainNavigator() {
                 );
             });
 
+        //TODO: 나중에 푸시 처리하기
         responseListener.current =
             Notifications.addNotificationResponseReceivedListener(
                 (response) => {
@@ -101,11 +99,7 @@ export default function MainNavigator() {
                         } else if (pushData.screen === "Home") {
                             navigation.navigate("TabsNavigator");
                             //TODO: 리프레쉬
-                        } else if (
-                            pushData.screen === "OrderProgress" ||
-                            pushData.screen === "OrderProgress" ||
-                            pushData.screen === "CompleteOrder"
-                        ) {
+                        } else if (pushData.screen === "OrderProgress") {
                             navigation.navigate(pushData.screen, {
                                 orderData: pushData.order,
                             });
@@ -300,28 +294,6 @@ export default function MainNavigator() {
                         />
                     ) : null}
 
-                    {/* {acceptOrderList.length > 0 ? (
-                        <Stack.Screen
-                            name="IntroOrderProgress"
-                            component={OrderProgress}
-                            initialParams={{
-                                orderData: { ...acceptOrderList[0] },
-                            }}
-                        />
-                    ) : null}
-
-                    {registOrderList.length > 0 ? (
-                        <Stack.Screen
-                            name="IntroCompleteOrder"
-                            component={CompleteOrder}
-                            options={{
-                                title: "작업 완료 요청",
-                            }}
-                            initialParams={{
-                                orderData: { ...registOrderList[0] },
-                            }}
-                        />
-                    ) : null} */}
                     <Stack.Screen
                         name="TabsNavigator"
                         component={TabsNavigator}
@@ -357,32 +329,6 @@ export default function MainNavigator() {
                         name="SettingNavigator"
                         component={SettingNavigator}
                         options={{ headerShown: false }}
-                    />
-                    {/* <Stack.Screen
-                        name="OrderProgress"
-                        component={OrderProgress}
-                        options={{
-                            headerShown: true,
-                            headerTitleAlign: "center",
-                        }}
-                    /> */}
-                    <Stack.Screen
-                        name="CompleteOrder"
-                        component={CompleteOrder}
-                        options={{
-                            title: "작업 완료 요청",
-                            headerShown: true,
-                            headerTitleAlign: "center",
-                        }}
-                    />
-                    <Stack.Screen
-                        name="OrdinaryOrderDetail"
-                        component={OrdinaryOrderDetail}
-                        options={{
-                            title: "상세 보기",
-                            headerShown: true,
-                            headerTitleAlign: "center",
-                        }}
                     />
                     {/* <Stack.Screen
                         name="Payment"
