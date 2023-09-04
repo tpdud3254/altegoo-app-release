@@ -46,7 +46,6 @@ const BANK_LIST = [
 ];
 
 function RegistPointAccount({ route, navigation }) {
-    const [selectedBank, setSelectedBank] = useState(0);
     const { register, handleSubmit, setValue, watch, getValues } = useForm();
 
     const [validation, setValidation] = useState(false);

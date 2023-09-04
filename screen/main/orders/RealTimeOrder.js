@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useRef, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import UserContext from "../../../context/UserContext";
 import { VALID } from "../../../constant";
 import axios from "axios";
@@ -19,7 +19,6 @@ import BoldText from "../../../component/text/BoldText";
 import RegularText from "../../../component/text/RegularText";
 import * as Location from "expo-location";
 import { Notification } from "../../../component/Notification";
-import LoginContext from "../../../context/LoginContext";
 import { Row } from "../../../component/Row";
 import RefreshBtn from "../../../assets/images/icons/btn_Refresh.png";
 import { Order } from "../../../component/order/RealTImeOrderComponent";
@@ -315,7 +314,7 @@ function RealTimeOrder({ navigation }) {
                         {/* <SelectFilter
                             data={REGION}
                             // onSelect={(index) => setPeriod(index + 1)}
-                        /> */}
+                        /> TODO: 작업 지역 필터 추가*/}
                         <SelectFilter
                             data={FILTER}
                             onSelect={(index) => setFilter(index + 1)}

@@ -1,6 +1,6 @@
 import { createStackNavigator } from "@react-navigation/stack";
 import React, { useContext } from "react";
-import { FONTS, ORDINARY, PERSON } from "../../constant";
+import { FONTS } from "../../constant";
 import UserContext from "../../context/UserContext";
 import SignUp from "../../screen/auth/SignUp/SignUp";
 import TakePhoto from "../../screen/TakePhoto";

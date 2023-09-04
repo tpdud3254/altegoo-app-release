@@ -123,14 +123,20 @@ function OrderList({ navigation }) {
                     } = data;
 
                     console.log(order[0]);
-                    const filterd = Filter({
-                        data: order,
-                        period: PERIOD[period - 1],
-                        orderBy: "dateTime",
-                    });
-                    setOrders(filterd);
-                    setSortedData(getSortedOrders(filterd));
-                    setScheduledOrderCount(getScheduledOrderCount(filterd));
+                    if (order.length === 0) {
+                        setOrders([]);
+                        setSortedData({});
+                        setScheduledOrderCount(0);
+                    } else {
+                        const filterd = Filter({
+                            data: order,
+                            period: PERIOD[period - 1],
+                            orderBy: "dateTime",
+                        });
+                        setOrders(filterd);
+                        setSortedData(getSortedOrders(filterd));
+                        setScheduledOrderCount(getScheduledOrderCount(filterd));
+                    }
                 } else {
                     setOrders([]);
                     setSortedData({});

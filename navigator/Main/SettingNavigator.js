@@ -1,6 +1,5 @@
 import { createStackNavigator } from "@react-navigation/stack";
 import React from "react";
-import Menus from "../../screen/main/setting/Menus";
 import { FONTS } from "../../constant";
 import { color } from "../../styles";
 import { Image } from "react-native";
@@ -10,7 +9,6 @@ import PointBreakdown from "../../screen/main/setting/point/PointBreakdown";
 import ChargePoint from "../../screen/main/setting/point/ChargePoint";
 import WithdrawalPoint from "../../screen/main/setting/point/WithdrawalPoint";
 import RegistPointAccount from "../../screen/main/setting/point/RegistPointAccount";
-import ModifyPointAccount from "../../screen/main/setting/point/ModifyPointAccount";
 import RecommandedUser from "../../screen/main/setting/RecommandedUser";
 import ChangePassword from "../../screen/main/setting/ChangePassword";
 import PaymentDetails from "../../screen/main/setting/PaymentDetails";
@@ -77,11 +75,6 @@ export default function SettingNavigator() {
                 name="RegistPointAccount"
                 component={RegistPointAccount}
                 options={{ title: "계좌등록" }}
-            />
-            <Stack.Screen
-                name="ModifyPointAccount"
-                component={ModifyPointAccount}
-                options={{ title: "계좌수정" }}
             />
             <Stack.Screen
                 name="RecommandedUser"

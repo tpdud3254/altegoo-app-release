@@ -1,9 +1,7 @@
 import React, { useEffect, useState } from "react";
 import styled from "styled-components/native";
-import PropTypes from "prop-types";
 import {
     Image,
-    Text,
     TouchableOpacity,
     View,
     useWindowDimensions,
@@ -22,7 +20,6 @@ import {
     getAsyncStorageToken,
     numberWithComma,
     showError,
-    showErrorMessage,
 } from "../../../../utils";
 import RegularText from "../../../../component/text/RegularText";
 import { color } from "../../../../styles";
@@ -31,17 +28,6 @@ import axios from "axios";
 import { SERVER } from "../../../../constant";
 import LoadingLayout from "../../../../component/layout/LoadingLayout";
 
-const Select = styled.TouchableOpacity`
-    background-color: #f4f4f4;
-    flex-direction: row;
-    align-items: center;
-    justify-content: space-between;
-    padding: 9px 10px 9px 17px;
-    border-radius: 10px;
-    width: 45%;
-    margin-left: 10px;
-`;
-
 const Box = styled.View`
     background-color: white;
     padding: 25px 23px;
@@ -49,30 +35,6 @@ const Box = styled.View`
     margin-bottom: 20px;
     border-radius: 11px;
 `;
-
-const LIST = [
-    {
-        date: "23.07.25 월요일",
-        value: "사다리차 작업 요청",
-        point: "2000",
-        balance: "900000",
-        type: "적립",
-    },
-    {
-        date: "23.07.25 월요일",
-        value: "사다리차 작업 요청",
-        point: "2000",
-        balance: "900000",
-        type: "사용",
-    },
-    {
-        date: "23.07.25 월요일",
-        value: "사다리차 작업 요청",
-        point: "2000",
-        balance: "900000",
-        type: "적립",
-    },
-];
 
 const PERIOD = ["최근 6개월", "최근 12개월"];
 const FILTER = ["전체 내역", "적립", "사용", "출금", "충전"];

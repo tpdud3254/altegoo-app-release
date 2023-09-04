@@ -275,13 +275,11 @@ function WithdrawalPoint({ route, navigation }) {
                                         />
                                     </View>
                                     <ModifyButton
-                                        onPress={
-                                            () =>
-                                                goToPage("RegistPointAccount", {
-                                                    pointId: point.id,
-                                                    type: "modify",
-                                                })
-                                            // goToPage("ModifyPointAccount")
+                                        onPress={() =>
+                                            goToPage("RegistPointAccount", {
+                                                pointId: point.id,
+                                                type: "modify",
+                                            })
                                         }
                                     >
                                         <MediumText

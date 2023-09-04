@@ -1,11 +1,8 @@
 import React, { useContext, useEffect, useState } from "react";
 import styled from "styled-components/native";
-import PropTypes from "prop-types";
-import { Image, TouchableOpacity, View } from "react-native";
+import { Image, View } from "react-native";
 import MediumText from "../../../component/text/MediumText";
 import UserContext from "../../../context/UserContext";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import LoginContext from "../../../context/LoginContext";
 import Layout from "../../../component/layout/Layout";
 import BoldText from "../../../component/text/BoldText";
 import RegularText from "../../../component/text/RegularText";
@@ -13,7 +10,6 @@ import {
     GetPhoneNumberWithDash,
     getAsyncStorageToken,
     numberWithComma,
-    showErrorMessage,
 } from "../../../utils";
 import { color } from "../../../styles";
 import { shadowProps } from "../../../component/Shadow";
@@ -51,7 +47,6 @@ const SMenu = styled.TouchableOpacity`
     justify-content: space-between;
 `;
 function Menus({ navigation }) {
-    const { setIsLoggedIn } = useContext(LoginContext);
     const { info, setInfo } = useContext(UserContext);
 
     const [point, setPoint] = useState(-1);
@@ -147,7 +142,7 @@ function Menus({ navigation }) {
             </Menu>
             {/* <Menu onPress={() => goToPage("PaymentDetails")}>
                 <MediumText>결제내역</MediumText>
-            </Menu> */}
+            </Menu> TODO: 결제내역 추가*/}
             <Menu onPress={() => goToPage("RecommandedUser")}>
                 <MediumText>추천인 정보</MediumText>
             </Menu>

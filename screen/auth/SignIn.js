@@ -19,8 +19,6 @@ import { color } from "../../styles";
 import AuthLayout from "../../component/layout/AuthLayout";
 import TextInput from "../../component/input/TextInput";
 import RegularText from "../../component/text/RegularText";
-import { Popup } from "../../component/Popup";
-import { PopupWithButtons } from "../../component/PopupWithButtons";
 
 const InputContainer = styled.View``;
 

@@ -4,7 +4,6 @@ import { FlatList, useWindowDimensions } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { color } from "../styles";
 import Button from "../component/button/Button";
-import * as Notifications from "expo-notifications";
 
 const imagePath = [
     require(`../assets/images/intro/img_01.png`),

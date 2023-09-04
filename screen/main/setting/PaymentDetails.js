@@ -1,7 +1,6 @@
 import React from "react";
 import styled from "styled-components/native";
-import PropTypes from "prop-types";
-import { Image, Text, TouchableOpacity, View } from "react-native";
+import { Image, TouchableOpacity, View } from "react-native";
 import Layout from "../../../component/layout/Layout";
 import MediumText from "../../../component/text/MediumText";
 import { Row, RowAround, RowBetween } from "../../../component/Row";
@@ -55,6 +54,7 @@ const LIST = [
     },
 ];
 function PaymentDetails() {
+    // TODO: 추후 추가
     const Title = ({ children }) => (
         <BoldText style={{ fontSize: 26, marginBottom: 30 }}>
             {children}

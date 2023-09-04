@@ -1,8 +1,6 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components/native";
-import DefaultLayout from "../../../component/layout/DefaultLayout";
 import { color } from "../../../styles";
-import Logo from "../../../component/logo/Logo";
 import MediumText from "../../../component/text/MediumText";
 import { BackHandler, Image, View, useWindowDimensions } from "react-native";
 import RegistContext from "../../../context/RegistContext";
@@ -21,13 +19,7 @@ const Container = styled.View`
     margin-top: 80px;
     align-items: center;
 `;
-const Header = styled.View``;
 
-const WelcomeImage = styled.Image`
-    width: 100%;
-    height: 400px;
-    margin-top: -50px;
-`;
 const Bottom = styled.View`
     /* margin-top: 55px; */
     margin-bottom: 10px;
@@ -150,6 +142,7 @@ function RegistCompleted({ navigation, route }) {
                         }}
                     >
                         2023.05.25{"  "}16:42
+                        {/* TODO: 날짜 수정 */}
                     </RegularText>
                     <Image
                         source={require("../../../assets/images/regist_done.png")}

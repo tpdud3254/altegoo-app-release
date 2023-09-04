@@ -1,18 +1,15 @@
 import React, { useContext, useEffect } from "react";
 import styled from "styled-components/native";
-import PropTypes from "prop-types";
 import { Image, TouchableOpacity, View } from "react-native";
 import MediumText from "../../../component/text/MediumText";
 import UserContext from "../../../context/UserContext";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import LoginContext from "../../../context/LoginContext";
 import Layout from "../../../component/layout/Layout";
-import BoldText from "../../../component/text/BoldText";
 import RegularText from "../../../component/text/RegularText";
 import { GetPhoneNumberWithDash } from "../../../utils";
 import { color } from "../../../styles";
 import { shadowProps } from "../../../component/Shadow";
-import Arrow from "../../../assets/images/icons/arrow_right_B.png";
 import LightText from "../../../component/text/LightText";
 import { Row } from "../../../component/Row";
 

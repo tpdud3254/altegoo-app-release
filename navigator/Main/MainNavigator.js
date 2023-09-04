@@ -44,8 +44,6 @@ const Stack = createStackNavigator();
 export default function MainNavigator() {
     const [loading, setLoading] = useState(true);
     const { firstLogin } = useContext(LoginContext);
-    const [acceptOrderList, setAcceptOrderList] = useState([]);
-    const [registOrderList, setRegistOrderList] = useState([]);
     const notificationListener = useRef();
     const responseListener = useRef();
     const navigation = useNavigation();
@@ -111,14 +109,6 @@ export default function MainNavigator() {
             );
         //TODO: wake lock 추가 (https://www.npmjs.com/package/react-native-android-wake-lock?activeTab=readme)
 
-        // //init
-        // setAcceptOrderList([]);
-        // setRegistOrderList([]);
-        // setLoading(true);
-
-        // //작업 예약 중인 리스트 먼저 받아오기
-        // getAcceptOrderList();
-
         setLoading(false);
 
         return () => {
@@ -163,96 +153,6 @@ export default function MainNavigator() {
         return token;
     };
 
-    const getAcceptOrderList = async () => {
-        try {
-            const response = await axios.get(SERVER + "/works/mylist/accept", {
-                headers: {
-                    auth: await getAsyncStorageToken(),
-                },
-            });
-
-            // console.log(response.data);
-
-            const {
-                data: { result },
-            } = response;
-
-            if (result === VALID) {
-                const {
-                    data: {
-                        data: { list },
-                    },
-                } = response;
-
-                console.log(list);
-                const newList = [];
-                list.map((order, index) => {
-                    if (
-                        order.orderStatusId === 2 ||
-                        order.orderStatusId === 3 ||
-                        order.orderStatusId === 4
-                    ) {
-                        newList.push(order);
-                    }
-                });
-
-                setAcceptOrderList(newList);
-
-                console.log("acceptOrderList : ", newList);
-                if (newList.length < 1) getRegistOrderList();
-                else setLoading(false);
-            } else {
-                const {
-                    data: { msg },
-                } = response;
-
-                console.log(msg);
-                getRegistOrderList();
-            }
-        } catch (error) {
-            console.log(error);
-            getRegistOrderList();
-        }
-    };
-
-    const getRegistOrderList = async () => {
-        try {
-            const response = await axios.get(SERVER + "/works/mylist/regist", {
-                headers: {
-                    auth: await getAsyncStorageToken(),
-                },
-            });
-
-            // console.log(response.data);
-
-            const {
-                data: { result },
-            } = response;
-
-            if (result === VALID) {
-                const {
-                    data: {
-                        data: { list },
-                    },
-                } = response;
-
-                console.log("registlist:", list);
-
-                setRegistOrderList(list);
-                setLoading(false);
-            } else {
-                const {
-                    data: { msg },
-                } = response;
-
-                console.log(msg);
-                setLoading(false);
-            }
-        } catch (error) {
-            console.log(error);
-            setLoading(false);
-        }
-    };
     return (
         <>
             {loading ? (

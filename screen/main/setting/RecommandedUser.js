@@ -1,6 +1,5 @@
 import React, { useContext, useEffect, useRef, useState } from "react";
 import styled from "styled-components/native";
-import PropTypes from "prop-types";
 import UserContext from "../../../context/UserContext";
 import Layout, { LAYOUT_PADDING_X } from "../../../component/layout/Layout";
 import { Row, RowBetween } from "../../../component/Row";
@@ -14,7 +13,6 @@ import axios from "axios";
 import {
     CheckLoading,
     getAsyncStorageToken,
-    showError,
     showErrorMessage,
 } from "../../../utils";
 import LoadingLayout from "../../../component/layout/LoadingLayout";

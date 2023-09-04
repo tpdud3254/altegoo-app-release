@@ -4,10 +4,10 @@ import UserContext from "../../../context/UserContext";
 import { useNavigation } from "@react-navigation/native";
 import { SERVER, VALID } from "../../../constant";
 import LoginContext from "../../../context/LoginContext";
-import Loading from "../../../component/Loading";
 import * as Location from "expo-location";
 import axios from "axios";
 import { setAsyncStorageToken, showErrorMessage } from "../../../utils";
+import LoadingLayout from "../../../component/layout/LoadingLayout";
 
 const Container = styled.View`
     align-items: center;
@@ -243,7 +243,7 @@ function SignUpComplete() {
 
     return (
         <Container>
-            <Loading />
+            <LoadingLayout />
         </Container>
     );
 }

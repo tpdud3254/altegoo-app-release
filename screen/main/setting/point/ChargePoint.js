@@ -1,11 +1,8 @@
 import React, { useContext, useState } from "react";
 import styled from "styled-components/native";
-import PropTypes from "prop-types";
-import { Image, Text, TouchableOpacity, View } from "react-native";
-import PlainButton from "../../../../component/button/PlainButton";
+import { Image, TouchableOpacity } from "react-native";
 import MediumText from "../../../../component/text/MediumText";
 import { color } from "../../../../styles";
-import SubTitleText from "../../../../component/text/SubTitleText";
 import UserContext from "../../../../context/UserContext";
 import { PAYMENT_APP_ID } from "@env";
 import Layout from "../../../../component/layout/Layout";

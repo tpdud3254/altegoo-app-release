@@ -1,21 +1,13 @@
 import React, { useContext, useEffect, useState } from "react";
 import styled from "styled-components/native";
-import PropTypes from "prop-types";
-import { Image, Text, TouchableOpacity, View } from "react-native";
-import SubTitleText from "../../../../component/text/SubTitleText";
-import MediumText from "../../../../component/text/MediumText";
-import SubmitButton from "../../../../component/button/SubmitButton";
+import { Image, TouchableOpacity, View } from "react-native";
 import UserContext from "../../../../context/UserContext";
 import { getAsyncStorageToken, numberWithComma } from "../../../../utils";
-import PlainButton from "../../../../component/button/PlainButton";
 import axios from "axios";
 import { SERVER } from "../../../../constant";
-import { VALID } from "../../../../constant";
-import { useIsFocused } from "@react-navigation/native";
 import Layout from "../../../../component/layout/Layout";
 import LightText from "../../../../component/text/LightText";
 import BoldText from "../../../../component/text/BoldText";
-
 import RegularText from "../../../../component/text/RegularText";
 import { Row, RowAround, RowBetween } from "../../../../component/Row";
 import { color } from "../../../../styles";
@@ -47,18 +39,6 @@ const Dot = styled.View`
     background-color: ${color.main};
     border-radius: 5px;
 `;
-const point = {
-    accountName: null,
-    accountNumber: null,
-    accruedPoint: 0,
-    addPoint: 0,
-    bank: null,
-    curPoint: 0,
-    id: 56,
-    subtractPoint: 0,
-    userId: 56,
-    withdrawalPoint: 0,
-};
 
 const COUPON_LIST = [
     {
@@ -237,6 +217,7 @@ function PointMain({ navigation }) {
                             </RegularText>
                         </Row>
                     </Button>
+                    {/* TODO: 소득공제,, */}
                     {/* <Button>
                         <Row>
                             <Image
@@ -264,7 +245,7 @@ function PointMain({ navigation }) {
                     포인트 출금하기
                 </BoldText>
             </WithdrawalButton>
-            {/* TODO: 기사일경우 차트 추가,,ㅋㅋㅋㅋㅋ 존나 어이없네 */}
+            {/* TODO: 기사일경우 차트 추가,,? */}
             <BoldText style={{ marginTop: 30, marginBottom: 10 }}>
                 쿠폰
             </BoldText>
@@ -272,6 +253,7 @@ function PointMain({ navigation }) {
                 <TouchableOpacity
                 // onPress={toggleCouponList}
                 >
+                    {/* TODO: 쿠폰기능 추가 */}
                     <RowBetween>
                         <RegularText style={{ fontSize: 15 }}>
                             보유한 쿠폰
