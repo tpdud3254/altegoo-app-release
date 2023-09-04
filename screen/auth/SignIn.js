@@ -47,8 +47,6 @@ function SignIn() {
     const [focus, setFocus] = useState("phone");
     const [validation, setValidation] = useState(false);
 
-    const [popupVisible, setPopupVisible] = useState(false);
-
     useEffect(() => {
         register("phone");
         register("password");
@@ -58,12 +56,6 @@ function SignIn() {
         setValidation(checkValidation(watch()));
     }, [watch()]);
 
-    const showPopup = () => {
-        setPopupVisible(true);
-    };
-    const hidePopup = () => {
-        setPopupVisible(false);
-    };
     const onNext = (value) => {
         setFocus(value);
     };
@@ -99,7 +91,6 @@ function SignIn() {
 
     const goToResetPassword = () => {
         navigation.navigate("Certification");
-        hidePopup();
     };
 
     return (
@@ -147,7 +138,7 @@ function SignIn() {
                 </InputWrapper>
             </InputContainer>
             <FindPassword>
-                <TouchableOpacity onPress={showPopup}>
+                <TouchableOpacity onPress={goToResetPassword}>
                     <RegularText
                         style={{
                             fontSize: 16,
@@ -159,25 +150,6 @@ function SignIn() {
                     </RegularText>
                 </TouchableOpacity>
             </FindPassword>
-            <PopupWithButtons
-                visible={popupVisible}
-                onTouchOutside={hidePopup}
-                onClick={goToResetPassword}
-                negativeButtonLabel="취소"
-            >
-                <PopupContainer>
-                    <RegularText
-                        style={{
-                            fontSize: 19,
-                            lineHeight: 30,
-                            textAlign: "center",
-                        }}
-                    >
-                        휴대폰 본인인증이 필요합니다.{"\n"}
-                        진행하시겠습니까?
-                    </RegularText>
-                </PopupContainer>
-            </PopupWithButtons>
         </AuthLayout>
     );
 }

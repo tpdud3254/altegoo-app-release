@@ -54,7 +54,7 @@ export default function SignInNavigator() {
                 name="Certification"
                 component={Certification}
                 options={{
-                    title: "본인 인증",
+                    headerShown: false,
                 }}
             />
         </Stack.Navigator>
