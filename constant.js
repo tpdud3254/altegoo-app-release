@@ -14,7 +14,7 @@ export const ORDINARY = "ORDINARY";
 export const SPECIAL = "SPECIAL";
 export const PERSON = "PERSON";
 
-//TODO: 상수 전환
+//TODO: 상수 전환 안쓰는거 삭제
 export const NORMAL = "NORMAL";
 export const DRIVER = "DRIVER";
 export const COMPANY = "COMPANY";

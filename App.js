@@ -122,7 +122,7 @@ export default function App() {
         "SpoqaHanSansNeo-Thin": require("./assets/fonts/SpoqaHanSansNeo-Thin.otf"),
     });
     //TODO: font 수정
-
+    //TODO: 안쓰는 asset 수정
     useEffect(() => {
         async function prepare() {
             try {
