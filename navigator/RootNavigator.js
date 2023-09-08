@@ -9,6 +9,7 @@ import UserContext from "../context/UserContext";
 import LoadingLayout from "../component/layout/LoadingLayout";
 import { VALID } from "../constant";
 import { getAsyncStorageToken, showError } from "../utils";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export default function RootNavigator() {
     const [loading, setLoading] = useState(false);
@@ -33,6 +34,7 @@ export default function RootNavigator() {
                         }
                     })
                     .catch((error) => {
+                        console.log(error);
                         showError(error);
                         setLoading(true);
                         setIsLoggedIn(false);
