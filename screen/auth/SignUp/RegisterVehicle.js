@@ -12,11 +12,13 @@ import { RadioContainer } from "../../../component/radio/RadioContainer";
 import TextInput from "../../../component/input/TextInput";
 import { useForm } from "react-hook-form";
 import {
+    CheckLoading,
     CheckValidation,
     getAsyncStorageToken,
     showErrorMessage,
 } from "../../../utils";
 import axios from "axios";
+import LoadingLayout from "../../../component/layout/LoadingLayout";
 
 const Container = styled.View`
     justify-content: space-between;
@@ -37,8 +39,6 @@ const SkipButton = styled.TouchableOpacity`
 `;
 
 const vehicleType = ["사다리차", "스카이차"];
-const floor = ["1층", "10층", "50층", "100층"]; //TODO: 정책 정하기,db에서 가져오기
-const weight = ["1t", "2.5t", "3.5t", "5t"]; //TODO: 정책 정하기,db에서 가져오기
 
 function RegisterVehicle({ route }) {
     const navigation = useNavigation();
@@ -46,6 +46,10 @@ function RegisterVehicle({ route }) {
     const { info, setInfo } = useContext(UserContext);
     const { register, setValue, watch, getValues, handleSubmit } = useForm();
 
+    const [floor, setFloor] = useState(-1);
+    const [weight, setWeight] = useState(-1);
+
+    const [loading, setLoading] = useState(true);
     const [validation, setValidation] = useState(false);
 
     const [settingMode, setSettingMode] = useState(false);
@@ -60,7 +64,21 @@ function RegisterVehicle({ route }) {
 
         setValue("vehicleType", 1);
         setValue("option", 1);
+
+        getVehicleFloor();
+        getVehicleWeight();
     }, []);
+
+    useEffect(() => {
+        if (
+            CheckLoading({
+                floor,
+                weight,
+            })
+        ) {
+            setLoading(false);
+        }
+    }, [floor, weight]);
 
     useEffect(() => {
         if (CheckValidation(getValues())) {
@@ -70,6 +88,66 @@ function RegisterVehicle({ route }) {
         }
     }, [getValues()]);
 
+    const getVehicleFloor = async () => {
+        try {
+            const response = await axios.get(SERVER + "/admin/vehicle/floor");
+
+            const {
+                data: {
+                    data: { vehicleFloor },
+                },
+            } = response;
+            console.log("getvehicle floor : ", vehicleFloor);
+
+            if (vehicleFloor.length === 0) {
+                setFloor([
+                    "5층 이하",
+                    "6~10층",
+                    "11~15층",
+                    "16~20층",
+                    "21~25층",
+                    "26층 이상",
+                ]);
+            } else {
+                const floordata = [];
+
+                vehicleFloor.map((value) => {
+                    floordata.push(value.floor);
+                });
+
+                setFloor(floordata);
+            }
+        } catch (error) {
+            console.log(error);
+        }
+    };
+
+    const getVehicleWeight = async () => {
+        try {
+            const response = await axios.get(SERVER + "/admin/vehicle/weight");
+
+            const {
+                data: {
+                    data: { vehicleWeight },
+                },
+            } = response;
+            console.log("getvehicle weight : ", vehicleWeight);
+
+            if (vehicleWeight.length === 0) {
+                setWeight(["1t", "2.5t", "3.5t", "5t", "17t", "19.5t"]);
+            } else {
+                const weightData = [];
+
+                vehicleWeight.map((value) => {
+                    weightData.push(value.weight);
+                });
+
+                setWeight(weightData);
+            }
+        } catch (error) {
+            console.log(error);
+        }
+    };
     const onNext = (data) => {
         const { vehicleType, vehicleNumber, option } = data;
 
@@ -158,96 +236,120 @@ function RegisterVehicle({ route }) {
         </RegularText>
     );
     return (
-        <AuthLayout
-            bottomButtonProps={{
-                title: settingMode ? "등록하기" : "다음으로",
-                onPress: settingMode
-                    ? handleSubmit(registVehicle)
-                    : handleSubmit(onNext),
-                disabled: !validation,
-            }}
-        >
-            <Container height={windowHeight}>
-                <Wrapper>
-                    <Item>
-                        <Title>차량 종류를 선택하세요.</Title>
-                        <RadioContainer>
-                            {vehicleType.map((value, index) => (
-                                <Radio
-                                    key={index}
-                                    value={value}
-                                    selected={
-                                        watch("vehicleType") === index + 1
+        <>
+            {loading ? (
+                <LoadingLayout />
+            ) : (
+                <AuthLayout
+                    bottomButtonProps={{
+                        title: settingMode ? "등록하기" : "다음으로",
+                        onPress: settingMode
+                            ? handleSubmit(registVehicle)
+                            : handleSubmit(onNext),
+                        disabled: !validation,
+                    }}
+                >
+                    <Container height={windowHeight}>
+                        <Wrapper>
+                            <Item>
+                                <Title>차량 종류를 선택하세요.</Title>
+                                <RadioContainer>
+                                    {vehicleType.map((value, index) => (
+                                        <Radio
+                                            key={index}
+                                            value={value}
+                                            selected={
+                                                watch("vehicleType") ===
+                                                index + 1
+                                            }
+                                            onSelect={() =>
+                                                setValue(
+                                                    "vehicleType",
+                                                    index + 1
+                                                )
+                                            }
+                                        />
+                                    ))}
+                                </RadioContainer>
+                            </Item>
+                            {watch("vehicleType") !== 1 ? (
+                                <Item>
+                                    <Title>차량 옵션</Title>
+                                    <RadioContainer>
+                                        {weight.map((value, index) => (
+                                            <Radio
+                                                key={index}
+                                                value={value}
+                                                selected={
+                                                    watch("option") ===
+                                                    index + 1
+                                                }
+                                                onSelect={() =>
+                                                    setValue(
+                                                        "option",
+                                                        index + 1
+                                                    )
+                                                }
+                                            />
+                                        ))}
+                                    </RadioContainer>
+                                </Item>
+                            ) : (
+                                <Item>
+                                    <Title>최대 작업 층수</Title>
+                                    <RadioContainer>
+                                        {floor.map((value, index) => (
+                                            <Radio
+                                                key={index}
+                                                value={value}
+                                                selected={
+                                                    watch("option") ===
+                                                    index + 1
+                                                }
+                                                onSelect={() =>
+                                                    setValue(
+                                                        "option",
+                                                        index + 1
+                                                    )
+                                                }
+                                            />
+                                        ))}
+                                    </RadioContainer>
+                                </Item>
+                            )}
+
+                            <Item>
+                                <Title>차량번호</Title>
+                                <TextInput
+                                    placeholder="12가1234"
+                                    returnKeyType="done"
+                                    value={watch("vehicleNumber")}
+                                    onChangeText={(text) =>
+                                        setValue("vehicleNumber", text)
                                     }
-                                    onSelect={() =>
-                                        setValue("vehicleType", index + 1)
+                                    onReset={() =>
+                                        setValue("vehicleNumber", "")
                                     }
                                 />
-                            ))}
-                        </RadioContainer>
-                    </Item>
-                    {watch("vehicleType") !== 1 ? (
-                        <Item>
-                            <Title>차량 옵션</Title>
-                            <RadioContainer>
-                                {weight.map((value, index) => (
-                                    <Radio
-                                        key={index}
-                                        value={value}
-                                        selected={watch("option") === index + 1}
-                                        onSelect={() =>
-                                            setValue("option", index + 1)
-                                        }
-                                    />
-                                ))}
-                            </RadioContainer>
-                        </Item>
-                    ) : (
-                        <Item>
-                            <Title>최대 작업 층수</Title>
-                            <RadioContainer>
-                                {floor.map((value, index) => (
-                                    <Radio
-                                        key={index}
-                                        value={value}
-                                        selected={watch("option") === index + 1}
-                                        onSelect={() =>
-                                            setValue("option", index + 1)
-                                        }
-                                    />
-                                ))}
-                            </RadioContainer>
-                        </Item>
-                    )}
-
-                    <Item>
-                        <Title>차량번호</Title>
-                        <TextInput
-                            placeholder="12가1234"
-                            returnKeyType="done"
-                            value={watch("vehicleNumber")}
-                            onChangeText={(text) =>
-                                setValue("vehicleNumber", text)
-                            }
-                            onReset={() => setValue("vehicleNumber", "")}
-                        />
-                    </Item>
-                </Wrapper>
-                {settingMode ? null : (
-                    <SkipButton onPress={() => onNext({ skip: true })}>
-                        <RegularText
-                            style={{
-                                fontSize: 16,
-                                color: color["page-color-text"],
-                                textDecorationLine: "underline",
-                            }}
-                        >
-                            다음에 할게요
-                        </RegularText>
-                    </SkipButton>
-                )}
-            </Container>
-        </AuthLayout>
+                            </Item>
+                        </Wrapper>
+                        {settingMode ? null : (
+                            <SkipButton onPress={() => onNext({ skip: true })}>
+                                <RegularText
+                                    style={{
+                                        fontSize: 16,
+                                        color: color["page-color-text"],
+                                        textDecorationLine: "underline",
+                                    }}
+                                >
+                                    다음에 할게요
+                                </RegularText>
+                            </SkipButton>
+                        )}
+                    </Container>
+                </AuthLayout>
+            )}
+        </>
     );
 }
 
