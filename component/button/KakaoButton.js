@@ -2,14 +2,7 @@ import React from "react";
 import { Image, View } from "react-native";
 import styled from "styled-components/native";
 import useWindowDimensions from "react-native/Libraries/Utilities/useWindowDimensions";
-import { useNavigation } from "@react-navigation/native";
-
-export const ButtonContainer = styled.View`
-    flex-direction: row;
-    align-items: center;
-    justify-content: space-between;
-    z-index: 100;
-`;
+import * as Linking from "expo-linking";
 
 const Container = styled.TouchableOpacity`
     position: absolute;
@@ -19,21 +12,25 @@ const Container = styled.TouchableOpacity`
 
 function KakaoButton() {
     const { height } = useWindowDimensions();
-    const navigation = useNavigation();
     const goToKakaoChat = () => {
-        console.log("kakao");
-        //TODO: http://pf.kakao.com/_QxgmlG
+        Linking.openURL("http://pf.kakao.com/_QxgmlG");
     };
 
     return (
         <View style={{ height: height, position: "absolute", width: "100%" }}>
-            <Container onPress={goToKakaoChat}>
+            <Container
+                onPress={goToKakaoChat}
+                style={{
+                    width: 170,
+                    height: 80,
+                    bottom: 140,
+                }}
+            >
                 <Image
                     style={{
                         resizeMode: "contain",
                         width: 170,
                         height: 80,
-                        bottom: 80,
                     }}
                     source={require(`../../assets/images/icons/btn_kakao_help.png`)}
                 />

@@ -32,6 +32,7 @@ import LoginContext from "../../../context/LoginContext";
 import { Row } from "../../../component/Row";
 import SelectFilter from "../../../component/selectBox/SelectFilter";
 import LoadingLayout from "../../../component/layout/LoadingLayout";
+import * as Linking from "expo-linking";
 
 const Item = styled.View`
     width: 100%;
@@ -232,8 +233,7 @@ function Home({ navigation, route }) {
     };
 
     const goToKakaoChat = () => {
-        console.log("kakao");
-        //TODO: http://pf.kakao.com/_QxgmlG
+        Linking.openURL("http://pf.kakao.com/_QxgmlG");
     };
 
     const renderIntro = ({ item }) => (
