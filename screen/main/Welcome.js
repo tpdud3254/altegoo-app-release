@@ -67,7 +67,7 @@ function Welcome() {
             navigation.navigate("TabsNavigator", { screen: "TabRegistWork" });
         } else if (pageName === "Setting") {
             navigation.navigate("TabsNavigator", {
-                screen: "SettingNavigator",
+                screen: "Menus",
             });
         } else {
             navigation.navigate("TabsNavigator");
