@@ -82,7 +82,7 @@ const Orders = styled.View`
     margin-top: 15px;
 `;
 
-const PERIOD = ["1개월", "3개월", "6개월", "전체 기간"];
+const PERIOD = ["1개월", "3개월", "6개월", "12개월"];
 
 function DriverOrderList({ navigation }) {
     const { info } = useContext(UserContext);
