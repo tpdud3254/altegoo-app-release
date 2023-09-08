@@ -7,7 +7,7 @@ export default {
         icon: "./assets/icon.png",
         userInterfaceStyle: "light",
         splash: {
-            image: "./assets/splash5.png",
+            image: "./assets/splash6.png",
             resizeMode: "cover",
             backgroundColor: "#ffffff",
         },
@@ -40,7 +40,7 @@ export default {
         package: "com.gng.altegoo",
         versionCode: 1,
         adaptiveIcon: {
-            foregroundImage: "./assets/adaptive-icon.png",
+            foregroundImage: "./assets/app_icon.png",
             backgroundColor: "#FFFFFF",
         },
     },
