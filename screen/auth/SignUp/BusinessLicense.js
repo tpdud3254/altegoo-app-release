@@ -193,7 +193,7 @@ function BusinessLicense() {
                         <PointText>작업 등록</PointText>및{" "}
                         <PointText>작업 승인</PointText>을{"\n"}
                         위해서 반드시 필요합니다.{"\n"}
-                        {"\n"}준비가 되는대로{"\n"}첨부해주시면 검토후{"\n"}
+                        {"\n"}준비가 되는대로{"\n"}첨부해주시면 검토 후{"\n"}
                         승인해드립니다.
                     </RegularText>
                 </PopupContainer>
