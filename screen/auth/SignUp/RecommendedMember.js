@@ -11,7 +11,7 @@ import TextInput from "../../../component/input/TextInput";
 import { Image, Keyboard } from "react-native";
 import { shadowProps } from "../../../component/Shadow";
 import { useForm } from "react-hook-form";
-import { showError } from "../../../utils";
+import { GetPhoneNumberWithDash, showError } from "../../../utils";
 import axios from "axios";
 
 const Container = styled.View`
@@ -75,7 +75,7 @@ function RecommendedMember() {
     }, []);
 
     useEffect(() => {
-        if (!isExist) setValue("recommendedMember", "99999");
+        if (!isExist) setValue("recommendedMember", "99999999999");
         else setValue("recommendedMember", "");
     }, [isExist]);
 
@@ -88,6 +88,9 @@ function RecommendedMember() {
     }, [selectedUserId]);
 
     useEffect(() => {
+        if (!isExist) {
+            return;
+        }
         const phone = getValues("recommendedMember");
 
         if (phone && phone.length > 10) {
@@ -168,7 +171,13 @@ function RecommendedMember() {
                         placeholder="추천할 회원님의 연락처를 입력하세요."
                         keyboardType="number-pad"
                         returnKeyType="done"
-                        value={watch("recommendedMember")}
+                        value={
+                            isExist
+                                ? watch("recommendedMember")
+                                : GetPhoneNumberWithDash(
+                                      watch("recommendedMember")
+                                  )
+                        }
                         onChangeText={(text) =>
                             setValue("recommendedMember", text)
                         }
