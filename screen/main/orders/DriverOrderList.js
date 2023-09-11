@@ -271,7 +271,11 @@ function DriverOrderList({ navigation }) {
                         />
                         <BoldText style={{ fontSize: 16 }}>
                             {menu === 1
-                                ? scheduledAcceptOrderCount
+                                ? scheduledAcceptOrderCount < 0
+                                    ? 0
+                                    : scheduledAcceptOrderCount
+                                : scheduledOrderCount < 0
+                                ? 0
                                 : scheduledOrderCount}
                             건
                             <RegularText style={{ fontSize: 16 }}>
