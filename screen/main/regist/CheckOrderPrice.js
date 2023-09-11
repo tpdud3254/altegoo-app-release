@@ -100,8 +100,21 @@ const CheckOrderPrice = ({ navigation }) => {
         const usePoint = watch("usePoint");
 
         if (usePoint && usePoint > 0) {
-            if (usePoint > pointData.curPoint)
+            if (usePoint > pointData.curPoint) {
                 setValue("usePoint", pointData.curPoint.toString());
+                return;
+            }
+
+            const { price, emergencyPrice } = getValues();
+
+            const priceNum = Number(price) || 0;
+            const emergencyPriceNum = Number(emergencyPrice) || 0;
+
+            const total = priceNum + emergencyPriceNum;
+
+            if (usePoint > total) {
+                setValue("usePoint", total.toString());
+            }
         }
     }, [watch("usePoint")]);
 
@@ -162,7 +175,7 @@ const CheckOrderPrice = ({ navigation }) => {
         //TODO: 결제
         const paymentData = {
             application_id: PAYMENT_APP_ID,
-            price: sendData.price + sendData.tax,
+            price: sendData.totalPrice + sendData.tax,
             order_name: registInfo.vehicleType + " 이용비 결제",
             order_id: info.id + "_" + Date.now(),
             user: {
