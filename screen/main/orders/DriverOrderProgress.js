@@ -185,9 +185,70 @@ function DriverOrderProgress({ navigation, route }) {
                     } = data;
 
                     console.log(order);
-                    setOrder(order);
-                    setStatus(getStatus(order.orderStatusId));
+                    if (order.orderStatusId === 2) {
+                        checkStartOrder(order);
+                    } else {
+                        setOrder(order);
+                        setStatus(getStatus(order.orderStatusId));
+                    }
                 }
+            })
+            .catch((error) => {
+                showError(error);
+            })
+            .finally(() => {});
+    };
+
+    const checkStartOrder = (order) => {
+        if (order.orderStatusId !== 2) return;
+
+        const now = new Date();
+        const orderDateTime = new Date(order.dateTime);
+
+        if (orderDateTime > now) {
+            const diffSec = orderDateTime.getTime() - now.getTime();
+            const diffMin = diffSec / (60 * 1000);
+
+            console.log("last time : ", diffMin);
+            if (diffMin <= 10) {
+                setStartMoving(order.id);
+            } else {
+                setOrder(order);
+                setStatus(getStatus(order.orderStatusId));
+            }
+        } else {
+            setOrder(order);
+            setStatus(getStatus(order.orderStatusId));
+        }
+    };
+
+    const setStartMoving = async (orderId) => {
+        axios
+            .patch(
+                SERVER + "/works/order/move",
+                {
+                    id: orderId,
+                },
+                {
+                    headers: {
+                        auth: await getAsyncStorageToken(),
+                    },
+                }
+            )
+            .then(({ data }) => {
+                const {
+                    result,
+                    data: { list },
+                } = data;
+                console.log("list: ", list);
+
+                //TODO: 나중에 효율적으로 바꾸기
+                list.map((resultOrder, index) => {
+                    if (resultOrder.id === orderId) {
+                        setOrder(resultOrder);
+                        setStatus(getStatus(resultOrder.orderStatusId));
+                    }
+                });
             })
             .catch((error) => {
                 showError(error);
