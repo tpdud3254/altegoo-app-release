@@ -23,11 +23,7 @@ function Address({ navigation, route }) {
                     ...route?.params,
                     selectAddress2: { address, sido, sigungu },
                 });
-        } //TODO:각 상세주소로 포커스 이동하게 하기
-        // Toast.show({
-        //   type: "errorToast", //TODO: normal toast로 변경
-        //   props: "상세 주소를 입력해주세요.",
-        // });
+        }
     };
     const YourView = () => (
         <Postcode

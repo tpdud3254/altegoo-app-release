@@ -29,7 +29,7 @@ const CameraButton = styled.TouchableOpacity`
     background-color: ${color["image-area-background"]};
 `;
 
-// TODO: cancle -> cancel로 바꾸기;;;
+// DEVELOP: cancle -> cancel로 바꾸기;;;
 const License = styled.View`
     width: 250px;
     height: 333px;

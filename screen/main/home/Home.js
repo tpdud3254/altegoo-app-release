@@ -104,7 +104,7 @@ function Home({ navigation, route }) {
     const [period, setPeriod] = useState(1);
 
     const bannerRef = useRef();
-    const { firstLogin, setFirstLogin } = useContext(LoginContext); //TODO: 앱 처음 로그인 시 가이드 말풍선 만들기
+    const { firstLogin, setFirstLogin } = useContext(LoginContext); //NEXT: 앱 처음 로그인 시 가이드 말풍선 만들기
     const [showGuide, setShowGuide] = useState(false);
 
     useEffect(() => {
@@ -277,7 +277,6 @@ function Home({ navigation, route }) {
                                         <TouchableOpacity
                                             onPress={goToKakaoChat}
                                         >
-                                            {/* TODO: 카카오톡으로 수정 */}
                                             <Image
                                                 source={require("../../../assets/images/icons/icon_kakao.png")}
                                                 style={{
@@ -354,7 +353,8 @@ function Home({ navigation, route }) {
                         </>
                     )}
                 >
-                    {/* <Item>
+                    {/*NEXT: 홈> 추천인 수익
+                    <Item>
             <Wrapper style={shadowProps}>
                 <Header>
                     <MediumText>

@@ -145,7 +145,7 @@ function VehicleLicense() {
                             />
                             <CancelButton onPress={deleteLicense}>
                                 <Image
-                                    style={{ width: 30, height: 30 }} //TODO: 안드에서 확인해보기
+                                    style={{ width: 30, height: 30 }}
                                     source={require("../../../assets/images/icons/btn_del_s.png")}
                                 />
                             </CancelButton>
@@ -190,7 +190,6 @@ function VehicleLicense() {
                             textAlign: "center",
                         }}
                     >
-                        {/* TODO: 문구 */}
                         화물자동차{"\n"}운송사업 허가증은{"\n"}
                         <PointText>작업 등록</PointText>및{" "}
                         <PointText>작업 승인</PointText>을{"\n"}

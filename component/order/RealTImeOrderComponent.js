@@ -208,7 +208,7 @@ export const Order = {
                             setOrder(resultOrder);
                         }
                     });
-                    //TODO: 나중에 효율적으로 바꾸기
+                    //DEVELOP: 나중에 효율적으로 바꾸기
                 } else {
                     const {
                         data: { msg },
@@ -245,7 +245,7 @@ export const Order = {
                             setOrder(resultOrder);
                         }
                     });
-                    //TODO: 나중에 효율적으로 바꾸기
+                    //DEVELOP: 나중에 효율적으로 바꾸기
                 })
                 .catch((error) => {
                     showError(error);
@@ -276,7 +276,7 @@ export const Order = {
                             setOrder(resultOrder);
                         }
                     });
-                    //TODO: 나중에 효율적으로 바꾸기
+                    //DEVELOP: 나중에 효율적으로 바꾸기
                 })
                 .catch((error) => {
                     showError(error);
@@ -302,7 +302,7 @@ export const Order = {
                             setOrder(resultOrder);
                         }
                     });
-                    //TODO: 나중에 효율적으로 바꾸기
+                    //DEVELOP: 나중에 효율적으로 바꾸기
                 })
                 .catch((error) => {
                     showError(error);

@@ -128,7 +128,7 @@ export default Payment;
 
 
  try {
-            const response = await axios.get(SERVER + "/users/special/count", {
+            const response = await axios.get(SERVER + "/users/dirver/count", {
                 headers: {
                     auth: await getAsyncStorageToken(),
                 },

@@ -219,7 +219,7 @@ function OrderDetails({ navigation, route }) {
                         setOrder(resultOrder);
                     }
                 });
-                //TODO: 나중에 효율적으로 바꾸기
+                //DEVELOP: 나중에 효율적으로 바꾸기
             } else {
                 const {
                     data: { msg },
@@ -256,7 +256,7 @@ function OrderDetails({ navigation, route }) {
                         setOrder(resultOrder);
                     }
                 });
-                //TODO: 나중에 효율적으로 바꾸기
+                //DEVELOP: 나중에 효율적으로 바꾸기
             })
             .catch((error) => {
                 showError(error);
@@ -287,7 +287,7 @@ function OrderDetails({ navigation, route }) {
                         setOrder(resultOrder);
                     }
                 });
-                //TODO: 나중에 효율적으로 바꾸기
+                //DEVELOP: 나중에 효율적으로 바꾸기
             })
             .catch((error) => {
                 showError(error);
@@ -313,7 +313,7 @@ function OrderDetails({ navigation, route }) {
                         setOrder(resultOrder);
                     }
                 });
-                //TODO: 나중에 효율적으로 바꾸기
+                //DEVELOP: 나중에 효율적으로 바꾸기
             })
             .catch((error) => {
                 showError(error);

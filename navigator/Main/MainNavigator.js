@@ -26,8 +26,8 @@ import SettingNavigator from "./SettingNavigator";
 Location.watchPositionAsync(
     {
         accuracy: Location.Accuracy.High,
-        timeInterval: 1000 * 10, //TODO: 나중에 수치 변경
-        distanceInterval: 1000, //TODO: 나중에 수치 변경
+        timeInterval: 1000 * 10, //TEST: 나중에 수치 변경
+        distanceInterval: 1000, //TEST: 나중에 수치 변경
     },
     async (position) => {
         const {
@@ -91,7 +91,7 @@ export default function MainNavigator() {
                             response.notification.request.content.data;
 
                         if (pushData.screen === "NoticeDetail") {
-                            //TODO: 공지 추가
+                            //NEXT: 공지 추가
                             console.log(pushData.noticeId);
                             // navigation.navigate("NoticeDetail");
                         } else if (pushData.screen === "Home") {
@@ -107,7 +107,7 @@ export default function MainNavigator() {
                     }
                 }
             );
-        //TODO: wake lock 추가 (https://www.npmjs.com/package/react-native-android-wake-lock?activeTab=readme)
+        //NEXT: wake lock 추가 (https://www.npmjs.com/package/react-native-android-wake-lock?activeTab=readme)
 
         setLoading(false);
 

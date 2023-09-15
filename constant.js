@@ -1,20 +1,13 @@
-export const SERVER = "https://altegoo.shop";
-export const WSS_SERVER = "wss://altegoo.shop";
-// export const SERVER =
-//     "https://3714-2001-e60-1094-bd16-1093-f451-a31d-8fe4.ngrok-free.app";
-// export const WSS_SERVER =
-//     "wss://3714-2001-e60-1094-bd16-1093-f451-a31d-8fe4.ngrok-free.app";
+// export const SERVER = "https://altegoo.shop";
+// export const WSS_SERVER = "wss://altegoo.shop";
+export const SERVER = "https://b4df-121-66-109-244.ngrok-free.app";
+export const WSS_SERVER = "wss://b4df-121-66-109-244.ngrok-free.app";
 
 export const PAYMENT_SERVER =
     "https://master.d1p7wg3e032x9j.amplifyapp.com/payment";
 
 export const VALID = "VALID";
 
-export const ORDINARY = "ORDINARY";
-export const SPECIAL = "SPECIAL";
-export const PERSON = "PERSON";
-
-//TODO: 상수 전환 안쓰는거 삭제
 export const NORMAL = "NORMAL";
 export const DRIVER = "DRIVER";
 export const COMPANY = "COMPANY";

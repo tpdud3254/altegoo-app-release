@@ -193,7 +193,6 @@ function SearchAddress({ route, navigation }) {
         );
     };
 
-    // TODO: 경기도, 인천, 서울 이외에는 막기
     return (
         <Layout
             scroll={false}

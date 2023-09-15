@@ -53,7 +53,7 @@ function createSocket() {
         }
     };
 
-    //TODO: 서버 쪽 연결 끊기고 다시 연결 되었을 때 여러개 연결되는거 fix (tts메세지에 인덱스를 붙여서 해당 인덱스가 이미 실행되었으면 실행안하게?)
+    //BUG: 서버 쪽 연결 끊기고 다시 연결 되었을 때 여러개 연결되는거 fix (tts메세지에 인덱스를 붙여서 해당 인덱스가 이미 실행되었으면 실행안하게?)
 }
 
 const WEB_SOCKET_TASK = "WEB_SOCKET_TASK";
@@ -121,8 +121,7 @@ export default function App() {
         "SpoqaHanSansNeo-Regular": require("./assets/fonts/SpoqaHanSansNeo-Regular.otf"),
         "SpoqaHanSansNeo-Thin": require("./assets/fonts/SpoqaHanSansNeo-Thin.otf"),
     });
-    //TODO: font 수정
-    //TODO: 안쓰는 asset 수정
+
     useEffect(() => {
         async function prepare() {
             try {

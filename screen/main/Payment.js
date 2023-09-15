@@ -44,7 +44,7 @@ function Payment({ navigation, route }) {
             switch (parsed.handle) {
                 case "error":
                     Alert.alert("결제 오류입니다. 다시 시도해주세요.");
-                    //TODO: 안됨
+                    //EJECT: 안됨 / eject 후 적용 (결제)
                     navigation.navigate(REGIST_NAV[4]);
                     // navigation.goBack();
                     break;
@@ -69,7 +69,7 @@ function Payment({ navigation, route }) {
             console.log("e!!");
         }
     };
-    //TODO: eject후 ,,
+    //EJECT: eject 후 적용 (결제)
 
     const registWork = async (data) => {
         console.log("parsed payment data : ", data);
@@ -132,7 +132,7 @@ function Payment({ navigation, route }) {
                 navigation.navigate(REGIST_NAV[6], { orderId: order.id });
                 return;
                 //포인트 차감
-                //TODO: admin 말고 다른거 파서 포인트 내역도 남기기
+                //EJECT: 포인트 내역도 남기기
 
                 if (route?.params?.data?.curPoint > 0) {
                     try {

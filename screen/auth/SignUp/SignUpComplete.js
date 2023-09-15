@@ -35,7 +35,7 @@ function SignUpComplete() {
         });
 
         try {
-            //TODO: 연동 부분 이렇게 바꾸기
+            //DEVELOP: 연동 부분 이렇게 바꾸기
             const response = await axios.get(
                 `https://dapi.kakao.com/v2/local/geo/coord2address.json?x=${longitude}&y=${latitude}`,
                 {
@@ -158,7 +158,7 @@ function SignUpComplete() {
                     }
                 })
                 .catch((error) => {
-                    //TODO: showError 함수 삭제
+                    //DEVELOP: showError 함수 삭제
                     showErrorMessage(error);
                 })
                 .finally(() => {});

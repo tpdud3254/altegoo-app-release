@@ -187,7 +187,7 @@ function MemberInformation({ navigation }) {
                                     onPress={goToRegisterLicense}
                                 />
                             )}
-                            {/* TODO: 사업자 등록증 체크
+                            {/* NEXT: 사업자 등록증 체크
                                 <Checking value="사업자등록증" />
                                  */}
                         </Items>
@@ -246,7 +246,7 @@ function MemberInformation({ navigation }) {
                                         onPress={goToRegisterLicense}
                                     />
                                 )}
-                                {/* TODO: 사업자 등록증 체크
+                                {/* NEXT: 사업자 등록증 체크
                                 <Checking value="사업자등록증" />
                                  */}
                                 <Line />

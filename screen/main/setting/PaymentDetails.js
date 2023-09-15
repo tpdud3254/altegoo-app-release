@@ -54,7 +54,7 @@ const LIST = [
     },
 ];
 function PaymentDetails() {
-    // TODO: 추후 추가
+    // NEXT: 추후 추가
     const Title = ({ children }) => (
         <BoldText style={{ fontSize: 26, marginBottom: 30 }}>
             {children}

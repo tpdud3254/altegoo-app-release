@@ -50,14 +50,14 @@ function RegistCompleted({ navigation, route }) {
     const [userCount, setUserCount] = useState(0);
 
     useEffect(() => {
-        BackHandler.addEventListener("hardwareBackPress", () => goToHome()); //TODO: 뒤로가기 안됨
+        BackHandler.addEventListener("hardwareBackPress", () => goToHome()); //BUG: 뒤로가기 안됨
 
-        getSpecialUserCount();
+        getDriverCount();
     });
 
-    const getSpecialUserCount = async () => {
+    const getDriverCount = async () => {
         try {
-            const response = await axios.get(SERVER + "/users/special/count", {
+            const response = await axios.get(SERVER + "/users/driver/count", {
                 headers: {
                     auth: await getAsyncStorageToken(),
                 },
@@ -142,7 +142,7 @@ function RegistCompleted({ navigation, route }) {
                         }}
                     >
                         2023.05.25{"  "}16:42
-                        {/* TODO: 날짜 수정 */}
+                        {/* BUG: 날짜 수정 */}
                     </RegularText>
                     <Image
                         source={require("../../../assets/images/regist_done.png")}

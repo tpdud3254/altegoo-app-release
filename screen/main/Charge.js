@@ -66,7 +66,7 @@ function Charge({ navigation, route }) {
             console.log("e!!");
         }
     };
-    //TODO: eject후 ,,
+    //EJECT: eject 후 적용 (결제)
     const setPoint = async (parsed) => {
         try {
             const response = await axios.patch(SERVER + "/admin/points", {

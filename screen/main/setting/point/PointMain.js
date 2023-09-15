@@ -217,7 +217,7 @@ function PointMain({ navigation }) {
                             </RegularText>
                         </Row>
                     </Button>
-                    {/* TODO: 소득공제,, */}
+                    {/* NEXT: 소득공제 */}
                     {/* <Button>
                         <Row>
                             <Image
@@ -245,7 +245,7 @@ function PointMain({ navigation }) {
                     포인트 출금하기
                 </BoldText>
             </WithdrawalButton>
-            {/* TODO: 기사일경우 차트 추가,,? */}
+            {/* NEXT: 기사일경우 차트*/}
             <BoldText style={{ marginTop: 30, marginBottom: 10 }}>
                 쿠폰
             </BoldText>
@@ -253,7 +253,7 @@ function PointMain({ navigation }) {
                 <TouchableOpacity
                 // onPress={toggleCouponList}
                 >
-                    {/* TODO: 쿠폰기능 추가 */}
+                    {/* NEXT: 쿠폰기능 추가 */}
                     <RowBetween>
                         <RegularText style={{ fontSize: 15 }}>
                             보유한 쿠폰

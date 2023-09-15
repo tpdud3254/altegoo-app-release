@@ -172,7 +172,7 @@ const CheckOrderPrice = ({ navigation }) => {
         setRegistInfo({ ...prevInfo, ...sendData });
 
         console.log("info : ", info);
-        //TODO: 결제
+        //EJECT: 결제
         const paymentData = {
             application_id: PAYMENT_APP_ID,
             price: sendData.totalPrice + sendData.tax,
@@ -205,7 +205,7 @@ const CheckOrderPrice = ({ navigation }) => {
         navigation.navigate("Payment", { data });
     };
 
-    //TODO: 쿠폰사용 포함
+    //NEXT: 쿠폰사용 포함
     return (
         <Layout
             bottomButtonProps={{

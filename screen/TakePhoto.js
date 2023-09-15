@@ -222,7 +222,7 @@ function TakePhoto({ navigation, route }) {
                     }
                 })
                 .catch((error) => {
-                    //TODO: showError 함수 삭제
+                    //DEVELOP: erroe 관련 toast 다시,,
                     showErrorMessage(error);
                 })
                 .finally(() => {});

@@ -80,7 +80,7 @@ const DIRECTION_IMAGE = [
         on: require(`../../../assets/images/icons/icon_lift_both_ON.png`),
         off: require(`../../../assets/images/icons/icon_lift_both_OFF.png`),
     },
-]; //TODO: db에서 가져오기
+]; //DEVELOP: db에서 가져오기
 
 function RegistOrder({ navigation }) {
     const { info } = useContext(UserContext);
@@ -97,7 +97,7 @@ function RegistOrder({ navigation }) {
 
     const [validation, setValidation] = useState(false);
 
-    const [price, setPrice] = useState(0); //TODO: 수정
+    const [price, setPrice] = useState(0);
     const [consultation, setConsultation] = useState(false);
 
     const [isPopupShown, setIsPopupShown] = useState(false);
@@ -109,7 +109,7 @@ function RegistOrder({ navigation }) {
         }
     }, [vehicleType, floor, time]);
 
-    //TODO: 예상 운임 협의 어떻게 처리할지
+    //TODO: 예상 운임 협의인 경우 고객센터로 문의하라고 팝업창 띄워주고 진행 X
     useEffect(() => {
         //유효성 검사
         const check = {
@@ -317,7 +317,7 @@ function RegistOrder({ navigation }) {
                 disabled: !validation,
             }}
         >
-            {/* TODO: ㅜ추후 추가
+            {/* NEXT: 지난오더 불러오기
             <LastOrder onPress={() => setLastOrder((prev) => !prev)}>
                 <Checkbox checked={lastOrder} />
                 <RegularText>지난 오더 불러오기</RegularText>
