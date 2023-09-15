@@ -13,7 +13,12 @@ import RegularText from "../../../component/text/RegularText";
 import { shadowProps } from "../../../component/Shadow";
 import Dialog, { DialogContent } from "react-native-popup-dialog";
 import RNDateTimePicker from "@react-native-community/datetimepicker";
-import { GetDate, GetOrderOption, GetTime } from "../../../utils";
+import {
+    GetDate,
+    GetOrderOption,
+    GetTime,
+    showErrorMessage,
+} from "../../../utils";
 
 LocaleConfig.locales["fr"] = CALENDAR_LOCALES;
 LocaleConfig.defaultLocale = "fr";
@@ -120,6 +125,13 @@ function SelectDateTime({ navigation }) {
         sendDateTime.setMinutes(min);
 
         console.log(sendDateTime);
+
+        const now = new Date();
+
+        if (now >= sendDateTime) {
+            showErrorMessage("현재 시각 이후로 선택해 주세요.");
+            return;
+        }
 
         setRegistInfo({ ...registInfo, dateTime: sendDateTime });
 
