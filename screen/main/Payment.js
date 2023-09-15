@@ -15,7 +15,7 @@ import { PAYMENT_APP_ID } from "@env";
 import { PAYMENT_SERVER, REGIST_NAV, SERVER, VALID } from "../../constant";
 import axios from "axios";
 
-import { getAsyncStorageToken, showError } from "../../utils";
+import { getAsyncStorageToken, showError, showMessage } from "../../utils";
 import RegistContext from "../../context/RegistContext";
 
 function Payment({ navigation, route }) {
@@ -48,10 +48,9 @@ function Payment({ navigation, route }) {
                     navigation.navigate(REGIST_NAV[4]);
                     // navigation.goBack();
                     break;
-                case "cancle":
-                    Alert.alert("결제를 취소하였습니다.");
-                    navigation.navigate(REGIST_NAV[4]);
-                    // navigation.goBack();
+                case "cancel":
+                    showMessage("결제가 취소되었습니다.");
+                    navigation.goBack();
                     break;
                 case "issued":
                     await registWork(parsed);
