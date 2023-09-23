@@ -763,45 +763,61 @@ export const GetLadderPrice = (floor, volume, quantity, time) => {
     return calc * 10000;
 };
 
-export const GetSkyPrice = (floor, time) => {
+export const GetSkyPrice = (option, time) => {
     let calc = 0;
 
-    if (floor >= 2 && floor <= 7) {
-        if (time === 1) calc = calc + 20;
-        else if (time === 2) calc = calc + 15 + 20;
-        else if (time === 3) calc = calc + 15 * 2 + 20;
-        else if (time === 4) calc = calc + 15 * 3 + 20;
-        else if (time === 5) calc = calc + 40;
-        else if (time === 6) calc = calc + 60;
-    } else if (floor >= 8 && floor <= 11) {
-        if (time === 1) calc = calc + 35;
-        else if (time === 2) calc = calc + 20 + 35;
-        else if (time === 3) calc = calc + 20 * 2 + 35;
-        else if (time === 4) calc = calc + 20 * 3 + 35;
-        else if (time === 5) calc = calc + 50;
-        else if (time === 6) calc = calc + 70;
-    } else if (floor >= 12 && floor <= 14) {
+    if (option === 1) {
+        if (time === 1) calc = calc + 30;
+        else if (time === 2) calc = calc + 15 + 30;
+        else if (time === 3) calc = calc + 15 * 2 + 30;
+        else if (time === 4) calc = calc + 40;
+        else if (time === 5) calc = calc + 60;
+        else if (time === 6) calc = calc + 1200;
+    } else if (option === 2) {
+        if (time === 1) calc = calc + 30;
+        else if (time === 2) calc = calc + 15 + 30;
+        else if (time === 3) calc = calc + 15 * 2 + 30;
+        else if (time === 4) calc = calc + 40;
+        else if (time === 5) calc = calc + 60;
+        else if (time === 6) calc = calc + 1200;
+    } else if (option === 3) {
+        if (time === 1) calc = calc + 30;
+        else if (time === 2) calc = calc + 15 + 30;
+        else if (time === 3) calc = calc + 15 * 2 + 30;
+        else if (time === 4) calc = calc + 40;
+        else if (time === 5) calc = calc + 60;
+        else if (time === 6) calc = calc + 1200;
+    } else if (option === 4) {
         if (time === 1) calc = calc + 40;
         else if (time === 2) calc = calc + 20 + 40;
         else if (time === 3) calc = calc + 20 * 2 + 40;
-        else if (time === 4) calc = calc + 20 * 3 + 40;
+        else if (time === 4) calc = calc + 50;
         else if (time === 5) calc = calc + 70;
-        else if (time === 6) calc = calc + 90;
-    } else if (floor >= 15 && floor <= 17) {
-        if (time === 1) calc = calc + 0;
-        else if (time === 2) calc = calc + 30 + 0;
-        else if (time === 3) calc = calc + 30 * 2 + 0;
-        else if (time === 4) calc = calc + 30 * 3 + 0;
+        else if (time === 6) calc = calc + 1400;
+    } else if (option === 5) {
+        if (time === 1) calc = calc + 50;
+        else if (time === 2) calc = calc + 25 + 50;
+        else if (time === 3) calc = calc + 25 * 2 + 50;
+        else if (time === 4) calc = calc + 70;
         else if (time === 5) calc = calc + 90;
-        else if (time === 6) calc = calc + 130;
-    } else if (floor >= 18 && floor <= 20) {
-        if (time === 1) calc = calc + 0;
-        else if (time === 2) calc = calc + 40 + 0;
-        else if (time === 3) calc = calc + 40 * 2 + 0;
-        else if (time === 4) calc = calc + 40 * 3 + 0;
-        else if (time === 5) calc = calc + 130;
-        else if (time === 6) calc = calc + 180;
-    } else if (floor === 21) return "consultation";
+        else if (time === 6) calc = calc + 1600;
+    } else if (option === 6) {
+        if (time === 4) calc = calc + 90;
+        else if (time === 5) calc = calc + 120;
+        else if (time === 6) calc = calc + 2000;
+    } else if (option === 7) {
+        if (time === 4) calc = calc + 130;
+        else if (time === 5) calc = calc + 180;
+        else if (time === 6) calc = calc + 2800;
+    } else if (option === 8) {
+        if (time === 4) calc = calc + 60;
+        else if (time === 5) calc = calc + 80;
+        else if (time === 6) return "consultation";
+    } else if (option === 9) {
+        if (time === 4) calc = calc + 80;
+        else if (time === 5) calc = calc + 100;
+        else if (time === 6) return "consultation";
+    }
 
     return calc * 10000;
 };
