@@ -5,9 +5,11 @@ import { color } from "../../../styles";
 import RegistContext from "../../../context/RegistContext";
 import {
     DIRECTION,
-    FLOOR,
+    LADDER_FLOOR,
     QUANTITY,
     REGIST_NAV,
+    SKY_OPTION,
+    SKY_TIME,
     TIME,
     VEHICLE,
     VOLUME,
@@ -214,7 +216,7 @@ function RegistOrder({ navigation }) {
             ...(vehicleType === 1 && {
                 direction: DIRECTION[direction - 1],
                 ...((direction === 1 || direction === 2) && {
-                    floor: floor > 25 ? "26층 이상" : floor + "층",
+                    floor: floor > 24 ? "25층 이상" : floor + "층",
                 }),
                 ...(direction === 3 && {
                     downFloor: downFloor > 25 ? "26층 이상" : downFloor + "층",
@@ -225,7 +227,7 @@ function RegistOrder({ navigation }) {
                 ...(volume === 2 && { time: TIME[time - 1] }),
             }),
             ...(vehicleType === 2 && {
-                floor: floor > 20 ? "21층 이상" : floor + "층",
+                floor: SKY_OPTION[floor - 1],
                 volume: VOLUME[1],
                 time: TIME[time - 1],
             }),
@@ -408,46 +410,7 @@ function RegistOrder({ navigation }) {
                         </Wrapper>
                     </Item>
                     <Item>
-                        <ItemTitle title="3. 작업의 높이는 어떻게 되나요?" />
-                        {direction !== 3 ? (
-                            <Wrapper>
-                                <SelectBox
-                                    placeholder="층 수 선택"
-                                    data={FLOOR[vehicleType - 1]}
-                                    onSelect={(index) => setFloor(index + 2)}
-                                />
-                            </Wrapper>
-                        ) : (
-                            <Wrapper>
-                                <View style={{ marginBottom: 20 }}>
-                                    <Row>
-                                        <Box text="내림" />
-                                        <SelectBox
-                                            width="71%"
-                                            placeholder="층 수 선택"
-                                            data={FLOOR[vehicleType - 1]}
-                                            onSelect={(index) =>
-                                                setDownFloor(index + 2)
-                                            }
-                                        />
-                                    </Row>
-                                </View>
-                                <Row>
-                                    <Box text="올림" />
-                                    <SelectBox
-                                        width="71%"
-                                        placeholder="층 수 선택"
-                                        data={FLOOR[vehicleType - 1]}
-                                        onSelect={(index) =>
-                                            setUpFloor(index + 2)
-                                        }
-                                    />
-                                </Row>
-                            </Wrapper>
-                        )}
-                    </Item>
-                    <Item bottomSpace="40">
-                        <ItemTitle title="4. 작업의 물량 혹은 시간은 어떻게 되나요?" />
+                        <ItemTitle title="3. 작업의 물량 혹은 시간은 어떻게 되나요?" />
                         <Wrapper>
                             <Row>
                                 <SelectBox
@@ -489,16 +452,81 @@ function RegistOrder({ navigation }) {
                             </Row>
                         </Wrapper>
                     </Item>
+                    <Item bottomSpace="40">
+                        <ItemTitle title="4. 작업의 높이는 어떻게 되나요?" />
+                        {direction !== 3 ? (
+                            <Wrapper>
+                                <SelectBox
+                                    placeholder="층 수 선택"
+                                    data={
+                                        vehicleType === 1
+                                            ? volume
+                                                ? LADDER_FLOOR[volume - 1]
+                                                : []
+                                            : SKY_OPTION
+                                    }
+                                    onSelect={(index) => setFloor(index + 2)}
+                                />
+                            </Wrapper>
+                        ) : (
+                            <Wrapper>
+                                <View style={{ marginBottom: 20 }}>
+                                    <Row>
+                                        <Box text="내림" />
+                                        <SelectBox
+                                            width="71%"
+                                            placeholder="층 수 선택"
+                                            data={
+                                                vehicleType === 1
+                                                    ? volume
+                                                        ? LADDER_FLOOR[
+                                                              volume - 1
+                                                          ]
+                                                        : []
+                                                    : SKY_OPTION
+                                            }
+                                            onSelect={(index) =>
+                                                setDownFloor(index + 2)
+                                            }
+                                        />
+                                    </Row>
+                                </View>
+                                <Row>
+                                    <Box text="올림" />
+                                    <SelectBox
+                                        width="71%"
+                                        placeholder="층 수 선택"
+                                        data={
+                                            vehicleType === 1
+                                                ? volume
+                                                    ? LADDER_FLOOR[volume - 1]
+                                                    : []
+                                                : SKY_OPTION
+                                        }
+                                        onSelect={(index) =>
+                                            setUpFloor(index + 2)
+                                        }
+                                    />
+                                </Row>
+                            </Wrapper>
+                        )}
+                    </Item>
                 </>
             ) : (
                 <>
                     <Item>
-                        <ItemTitle title="2. 작업의 높이는 어떻게 되나요?" />
+                        <ItemTitle title="2. 작업의 톤 수는 어떻게 되나요?" />
                         <Wrapper>
                             <SelectBox
-                                placeholder="층 수 선택"
-                                data={FLOOR[vehicleType - 1]}
-                                onSelect={(index) => setFloor(index + 2)}
+                                placeholder="톤 수 선택"
+                                data={
+                                    vehicleType === 1
+                                        ? volume
+                                            ? LADDER_FLOOR[volume - 1]
+                                            : []
+                                        : SKY_OPTION
+                                }
+                                onSelect={(index) => setFloor(index + 1)}
                             />
                         </Wrapper>
                     </Item>
@@ -508,7 +536,13 @@ function RegistOrder({ navigation }) {
                             <Row>
                                 <SelectBox
                                     placeholder="시간 선택"
-                                    data={TIME}
+                                    data={
+                                        floor
+                                            ? floor <= 6
+                                                ? SKY_TIME[1]
+                                                : SKY_TIME[0]
+                                            : []
+                                    }
                                     onSelect={(index) => setTime(index + 1)}
                                 />
                             </Row>

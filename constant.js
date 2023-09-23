@@ -1,7 +1,7 @@
 // export const SERVER = "https://altegoo.shop";
 // export const WSS_SERVER = "wss://altegoo.shop";
-export const SERVER = "https://b4df-121-66-109-244.ngrok-free.app";
-export const WSS_SERVER = "wss://b4df-121-66-109-244.ngrok-free.app";
+export const SERVER = "https://51b7-118-235-4-241.ngrok-free.app";
+export const WSS_SERVER = "wss://51b7-118-235-4-241.ngrok-free.app";
 
 export const PAYMENT_SERVER =
     "https://master.d1p7wg3e032x9j.amplifyapp.com/payment";
@@ -58,7 +58,34 @@ export const FONTS = {
 
 export const VEHICLE = ["사다리차", "스카이차"];
 export const DIRECTION = ["내림", "올림", "양사"];
-export const FLOOR = [
+export const LADDER_FLOOR = [
+    [
+        "2층",
+        "3층",
+        "4층",
+        "5층",
+        "6층",
+        "7층",
+        "8층",
+        "9층",
+        "10층",
+        "11층",
+        "12층",
+        "13층",
+        "14층",
+        "15층",
+        "16층",
+        "17층",
+        "18층",
+        "19층",
+        "20층",
+        "21층",
+        "22층",
+        "23층",
+        "24층",
+        ,
+        "25층 이상",
+    ],
     [
         "2층",
         "3층",
@@ -86,39 +113,34 @@ export const FLOOR = [
         "25층",
         "26층 이상",
     ],
-    [
-        "2층",
-        "3층",
-        "4층",
-        "5층",
-        "6층",
-        "7층",
-        "8층",
-        "9층",
-        "10층",
-        "11층",
-        "12층",
-        "13층",
-        "14층",
-        "15층",
-        "16층",
-        "17층",
-        "18층",
-        "19층",
-        "20층",
-        "21층 이상",
-    ],
 ];
-export const VOLUME = ["물량", "시간"];
-export const QUANTITY = [
-    "가구/가전 1개",
-    "용달 1대",
+
+export const SKY_OPTION = [
+    "1톤",
+    "2.5톤",
+    "3.5톤",
     "5톤",
-    "6톤",
-    "7.5톤",
-    "10톤",
+    "8.5톤",
+    "17.5톤",
+    "19.5톤",
+    "굴절3.5톤",
+    "굴절5톤",
 ];
-export const TIME = ["1시간", "2시간", "3시간", "4시간", "반나절", "하루"];
+
+export const VOLUME = ["물량", "시간"];
+export const QUANTITY = ["1톤 (샷시, 현장)", "5톤", "6톤", "7.5톤", "8.5~10톤"];
+export const TIME = [
+    "간단",
+    "1시간",
+    "2시간",
+    "3시간",
+    "반나절(4시간)",
+    "하루",
+];
+export const SKY_TIME = [
+    ["반나절(4시간)", "하루(8시간)", "월대"],
+    ["1시간", "2시간", "3시간", "반나절(4시간)", "하루(8시간)", "월대"],
+];
 
 export const CALENDAR_LOCALES = {
     monthNames: [
