@@ -125,7 +125,7 @@ function TakePhoto({ navigation, route }) {
             route?.params?.type === "vehicle"
                 ? { vehiclePermissionUrl: takenPhoto }
                 : { licenseUrl: takenPhoto };
-        setInfo({ ...newData, ...info });
+        setInfo({ ...info, ...newData });
 
         goBack();
     };
