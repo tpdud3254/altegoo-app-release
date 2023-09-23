@@ -59,6 +59,10 @@ function RegistCompleted({ navigation, route }) {
         setDateTime(`${date} ${time}`);
 
         getDriverCount();
+
+        return () => {
+            BackHandler.removeEventListener("hardwareBackPress");
+        };
     });
 
     const getDriverCount = async () => {

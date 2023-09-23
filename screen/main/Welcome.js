@@ -59,7 +59,11 @@ function Welcome() {
 
     useEffect(() => {
         BackHandler.addEventListener("hardwareBackPress", onNextStep); //BUG: 뒤로가기 안됨
-    });
+
+        return () => {
+            BackHandler.removeEventListener("hardwareBackPress");
+        };
+    }, []);
 
     const goToPage = (pageName) => {
         console.log(pageName);
