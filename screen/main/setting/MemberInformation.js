@@ -175,7 +175,9 @@ function MemberInformation({ navigation }) {
                             </Item>
                             <Item title="담당자">
                                 <MediumText>
-                                    {info.companyPersonName}
+                                    {info.companyPersonName
+                                        ? info.companyPersonName
+                                        : "없음"}
                                 </MediumText>
                             </Item>
                             <Line />
