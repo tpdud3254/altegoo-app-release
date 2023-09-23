@@ -217,8 +217,7 @@ function DriverOrderProgress({ navigation, route }) {
                 setStatus(getStatus(order.orderStatusId));
             }
         } else {
-            setOrder(order);
-            setStatus(getStatus(order.orderStatusId));
+            setStartMoving(order.id);
         }
     };
 
