@@ -131,11 +131,15 @@ function TakePhoto({ navigation, route }) {
     };
 
     const goBack = () => {
-        navigation.navigate(
-            route?.params?.type === "vehicle"
-                ? "VehicleLicense"
-                : "BusinessLicense"
-        );
+        if (settingMode) {
+            navigation.goBack();
+        } else {
+            navigation.navigate(
+                route?.params?.type === "vehicle"
+                    ? "VehicleLicense"
+                    : "BusinessLicense"
+            );
+        }
     };
 
     const registLicense = async () => {
