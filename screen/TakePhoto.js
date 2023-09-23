@@ -15,6 +15,7 @@ import Button from "../component/button/Button";
 import { SERVER, VALID } from "../constant";
 import axios from "axios";
 import { getAsyncStorageToken, showErrorMessage } from "../utils";
+import LoadingLayout from "../component/layout/LoadingLayout";
 
 const Container = styled.View`
     flex: 1;
@@ -72,6 +73,7 @@ function TakePhoto({ navigation, route }) {
     const [showExample, setShowExample] = useState(true);
 
     const [settingMode, setSettingMode] = useState(false);
+    const [uploading, setUploading] = useState(false);
 
     const hideModal = () => setShowExample(false);
 
@@ -137,6 +139,7 @@ function TakePhoto({ navigation, route }) {
     };
 
     const registLicense = async () => {
+        setUploading(true);
         let uploadedUrl = null;
 
         if (route?.params?.type === "license") {
@@ -181,6 +184,8 @@ function TakePhoto({ navigation, route }) {
             console.log(error);
             navigation.goBack();
             showErrorMessage("등록에 실패하였습니다.");
+        } finally {
+            setUploading(false);
         }
     };
 
@@ -276,102 +281,114 @@ function TakePhoto({ navigation, route }) {
 
     return (
         <Container>
-            {isFocusd ? <StatusBar hidden={true} /> : null}
-            {isFocusd ? (
-                granted && mediaLibraryGranted ? (
-                    takenPhoto === "" ? (
-                        <Camera
-                            style={{ flex: 1 }}
-                            type={cameraType}
-                            ref={camera}
-                            onCameraReady={onCameraReady}
-                            autoFocus="on"
-                        >
-                            <CloseBtn onPress={goBack}>
-                                <Ionicons
-                                    name="close"
-                                    color="white"
-                                    size={40}
+            {uploading ? (
+                <LoadingLayout />
+            ) : (
+                <>
+                    {isFocusd ? <StatusBar hidden={true} /> : null}
+                    {isFocusd ? (
+                        granted && mediaLibraryGranted ? (
+                            takenPhoto === "" ? (
+                                <Camera
+                                    style={{ flex: 1 }}
+                                    type={cameraType}
+                                    ref={camera}
+                                    onCameraReady={onCameraReady}
+                                    autoFocus="on"
+                                >
+                                    <CloseBtn onPress={goBack}>
+                                        <Ionicons
+                                            name="close"
+                                            color="white"
+                                            size={40}
+                                        />
+                                    </CloseBtn>
+                                </Camera>
+                            ) : (
+                                <Image
+                                    source={{ uri: takenPhoto }}
+                                    style={{ flex: 1 }}
                                 />
-                            </CloseBtn>
-                        </Camera>
-                    ) : (
-                        <Image
-                            source={{ uri: takenPhoto }}
-                            style={{ flex: 1 }}
-                        />
-                    )
-                ) : null
-            ) : null}
+                            )
+                        ) : null
+                    ) : null}
 
-            {granted ? (
-                takenPhoto === "" ? (
-                    <Actions>
-                        <TakePhotoBtn onPress={takePhoto}>
-                            <Ionicons
-                                name="camera"
-                                size={50}
-                                color={color.main}
-                            />
-                        </TakePhotoBtn>
-                    </Actions>
-                ) : (
-                    <PhotoActions>
-                        <Button
-                            onPress={onDismiss}
-                            style={{ width: 140 }}
-                            text="재촬영"
-                        />
-                        <Button
-                            onPress={settingMode ? registLicense : onUpload}
-                            type="accent"
-                            style={{ width: 140 }}
-                            text={settingMode ? "등록하기" : "저장"}
-                        />
-                    </PhotoActions>
-                )
-            ) : null}
-            <Popup
-                visible={showExample}
-                onTouchOutside={hideModal}
-                onClick={hideModal}
-            >
-                <PopupTitle>
-                    <Image
-                        source={InfoIcon}
-                        style={{ width: 20, height: 20 }}
-                    />
-                    <RegularText
-                        style={{ marginLeft: 5, marginRight: 5, fontSize: 20 }}
+                    {granted ? (
+                        takenPhoto === "" ? (
+                            <Actions>
+                                <TakePhotoBtn onPress={takePhoto}>
+                                    <Ionicons
+                                        name="camera"
+                                        size={50}
+                                        color={color.main}
+                                    />
+                                </TakePhotoBtn>
+                            </Actions>
+                        ) : (
+                            <PhotoActions>
+                                <Button
+                                    onPress={onDismiss}
+                                    style={{ width: 140 }}
+                                    text="재촬영"
+                                />
+                                <Button
+                                    onPress={
+                                        settingMode ? registLicense : onUpload
+                                    }
+                                    type="accent"
+                                    style={{ width: 140 }}
+                                    text={settingMode ? "등록하기" : "저장"}
+                                />
+                            </PhotoActions>
+                        )
+                    ) : null}
+                    <Popup
+                        visible={showExample}
+                        onTouchOutside={hideModal}
+                        onClick={hideModal}
                     >
-                        사진 예시
-                    </RegularText>
-                    <Image
-                        source={InfoIcon}
-                        style={{ width: 20, height: 20 }}
-                    />
-                </PopupTitle>
-                <MediumText
-                    style={{
-                        color: color["page-grey-text"],
-                        textAlign: "center",
-                    }}
-                >
-                    다음과 같이 촬영해주세요.
-                </MediumText>
-                <LicenseExample>
-                    <Image
-                        style={{
-                            resizeMode: "contain",
-                            width: 300,
-                            height: 400,
-                            borderColor: "#dddddd",
-                            borderWidth: 1,
-                        }}
-                        source={require(`../assets/images/license.png`)}
-                    />
-                </LicenseExample>
-            </Popup>
+                        <PopupTitle>
+                            <Image
+                                source={InfoIcon}
+                                style={{ width: 20, height: 20 }}
+                            />
+                            <RegularText
+                                style={{
+                                    marginLeft: 5,
+                                    marginRight: 5,
+                                    fontSize: 20,
+                                }}
+                            >
+                                사진 예시
+                            </RegularText>
+                            <Image
+                                source={InfoIcon}
+                                style={{ width: 20, height: 20 }}
+                            />
+                        </PopupTitle>
+                        <MediumText
+                            style={{
+                                color: color["page-grey-text"],
+                                textAlign: "center",
+                            }}
+                        >
+                            다음과 같이 촬영해주세요.
+                        </MediumText>
+                        <LicenseExample>
+                            <Image
+                                style={{
+                                    resizeMode: "contain",
+                                    width: 300,
+                                    height: 400,
+                                    borderColor: "#dddddd",
+                                    borderWidth: 1,
+                                }}
+                                source={require(`../assets/images/license.png`)}
+                            />
+                        </LicenseExample>
+                    </Popup>
+                </>
+            )}
         </Container>
     );
 }
