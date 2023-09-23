@@ -47,7 +47,7 @@ function CompanyInfomation() {
     }, []);
 
     useEffect(() => {
-        if (CheckValidation(getValues())) {
+        if (CheckValidation(getValues("workCategory", "companyName"))) {
             setValidation(true);
         } else {
             setValidation(false);
@@ -62,7 +62,7 @@ function CompanyInfomation() {
         const infoData = {
             workCategory,
             companyName,
-            companyPersonName,
+            companyPersonName: companyPersonName || null,
         };
 
         setInfo({ ...info, ...infoData });
