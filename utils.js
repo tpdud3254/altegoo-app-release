@@ -474,12 +474,11 @@ export const GetLadderPrice = (floor, volume, quantity, time) => {
     if (floor >= 2 && floor <= 5) {
         if (volume === 1) {
             //물량
-            if (quantity === 1) calc = calc + 7;
-            else if (quantity === 2) calc = calc + 10;
-            else if (quantity === 3) calc = calc + 12;
-            else if (quantity === 4) calc = calc + 15;
-            else if (quantity === 5) calc = calc + 18;
-            else if (quantity === 6) calc = calc + 21;
+            if (quantity === 1) calc = calc + 12;
+            else if (quantity === 2) calc = calc + 15;
+            else if (quantity === 3) calc = calc + 18;
+            else if (quantity === 4) calc = calc + 21;
+            else if (quantity === 5) calc = calc + 24;
         } else if (volume === 2) {
             //시간
             if (time === 1) calc = calc + 10;
@@ -492,12 +491,11 @@ export const GetLadderPrice = (floor, volume, quantity, time) => {
     } else if (floor >= 6 && floor <= 7) {
         if (volume === 1) {
             //물량
-            if (quantity === 1) calc = calc + 8;
-            else if (quantity === 2) calc = calc + 11;
-            else if (quantity === 3) calc = calc + 13;
-            else if (quantity === 4) calc = calc + 16;
-            else if (quantity === 5) calc = calc + 19;
-            else if (quantity === 6) calc = calc + 22;
+            if (quantity === 1) calc = calc + 13;
+            else if (quantity === 2) calc = calc + 16;
+            else if (quantity === 3) calc = calc + 19;
+            else if (quantity === 4) calc = calc + 22;
+            else if (quantity === 5) calc = calc + 25;
         } else if (volume === 2) {
             //시간
             if (time === 1) calc = calc + 11;
@@ -510,12 +508,11 @@ export const GetLadderPrice = (floor, volume, quantity, time) => {
     } else if (floor >= 8 && floor <= 9) {
         if (volume === 1) {
             //물량
-            if (quantity === 1) calc = calc + 9;
-            else if (quantity === 2) calc = calc + 12;
-            else if (quantity === 3) calc = calc + 14;
-            else if (quantity === 4) calc = calc + 17;
-            else if (quantity === 5) calc = calc + 20;
-            else if (quantity === 6) calc = calc + 23;
+            if (quantity === 1) calc = calc + 14;
+            else if (quantity === 2) calc = calc + 17;
+            else if (quantity === 3) calc = calc + 20;
+            else if (quantity === 4) calc = calc + 23;
+            else if (quantity === 5) calc = calc + 26;
         } else if (volume === 2) {
             //시간
             if (time === 1) calc = calc + 12;
@@ -528,12 +525,11 @@ export const GetLadderPrice = (floor, volume, quantity, time) => {
     } else if (floor >= 10 && floor <= 11) {
         if (volume === 1) {
             //물량
-            if (quantity === 1) calc = calc + 10;
-            else if (quantity === 2) calc = calc + 13;
-            else if (quantity === 3) calc = calc + 15;
-            else if (quantity === 4) calc = calc + 18;
-            else if (quantity === 5) calc = calc + 21;
-            else if (quantity === 6) calc = calc + 24;
+            if (quantity === 1) calc = calc + 15;
+            else if (quantity === 2) calc = calc + 18;
+            else if (quantity === 3) calc = calc + 21;
+            else if (quantity === 4) calc = calc + 24;
+            else if (quantity === 5) calc = calc + 27;
         } else if (volume === 2) {
             //시간
             if (time === 1) calc = calc + 13;
@@ -546,12 +542,11 @@ export const GetLadderPrice = (floor, volume, quantity, time) => {
     } else if (floor >= 12 && floor <= 13) {
         if (volume === 1) {
             //물량
-            if (quantity === 1) calc = calc + 11;
-            else if (quantity === 2) calc = calc + 14;
-            else if (quantity === 3) calc = calc + 16;
-            else if (quantity === 4) calc = calc + 19;
-            else if (quantity === 5) calc = calc + 22;
-            else if (quantity === 6) calc = calc + 25;
+            if (quantity === 1) calc = calc + 16;
+            else if (quantity === 2) calc = calc + 19;
+            else if (quantity === 3) calc = calc + 22;
+            else if (quantity === 4) calc = calc + 25;
+            else if (quantity === 5) calc = calc + 28;
         } else if (volume === 2) {
             //시간
             if (time === 1) calc = calc + 14;
@@ -564,12 +559,11 @@ export const GetLadderPrice = (floor, volume, quantity, time) => {
     } else if (floor === 14) {
         if (volume === 1) {
             //물량
-            if (quantity === 1) calc = calc + 12;
-            else if (quantity === 2) calc = calc + 15;
-            else if (quantity === 3) calc = calc + 17;
-            else if (quantity === 4) calc = calc + 21;
-            else if (quantity === 5) calc = calc + 25;
-            else if (quantity === 6) calc = calc + 29;
+            if (quantity === 1) calc = calc + 17;
+            else if (quantity === 2) calc = calc + 20;
+            else if (quantity === 3) calc = calc + 23;
+            else if (quantity === 4) calc = calc + 26;
+            else if (quantity === 5) calc = calc + 29;
         } else if (volume === 2) {
             //시간
             if (time === 1) calc = calc + 15;
@@ -582,12 +576,11 @@ export const GetLadderPrice = (floor, volume, quantity, time) => {
     } else if (floor === 15) {
         if (volume === 1) {
             //물량
-            if (quantity === 1) calc = calc + 13;
-            else if (quantity === 2) calc = calc + 16;
-            else if (quantity === 3) calc = calc + 18;
-            else if (quantity === 4) calc = calc + 22;
-            else if (quantity === 5) calc = calc + 26;
-            else if (quantity === 6) calc = calc + 30;
+            if (quantity === 1) calc = calc + 18;
+            else if (quantity === 2) calc = calc + 21;
+            else if (quantity === 3) calc = calc + 24;
+            else if (quantity === 4) calc = calc + 27;
+            else if (quantity === 5) calc = calc + 30;
         } else if (volume === 2) {
             //시간
             if (time === 1) calc = calc + 16;
@@ -600,12 +593,11 @@ export const GetLadderPrice = (floor, volume, quantity, time) => {
     } else if (floor === 16) {
         if (volume === 1) {
             //물량
-            if (quantity === 1) calc = calc + 14;
-            else if (quantity === 2) calc = calc + 17;
-            else if (quantity === 3) calc = calc + 19;
-            else if (quantity === 4) calc = calc + 23;
-            else if (quantity === 5) calc = calc + 27;
-            else if (quantity === 6) calc = calc + 31;
+            if (quantity === 1) calc = calc + 19;
+            else if (quantity === 2) calc = calc + 22;
+            else if (quantity === 3) calc = calc + 25;
+            else if (quantity === 4) calc = calc + 28;
+            else if (quantity === 5) calc = calc + 31;
         } else if (volume === 2) {
             //시간
             if (time === 1) calc = calc + 17;
@@ -618,12 +610,11 @@ export const GetLadderPrice = (floor, volume, quantity, time) => {
     } else if (floor === 17) {
         if (volume === 1) {
             //물량
-            if (quantity === 1) calc = calc + 15;
-            else if (quantity === 2) calc = calc + 18;
-            else if (quantity === 3) calc = calc + 20;
-            else if (quantity === 4) calc = calc + 24;
-            else if (quantity === 5) calc = calc + 28;
-            else if (quantity === 6) calc = calc + 32;
+            if (quantity === 1) calc = calc + 20;
+            else if (quantity === 2) calc = calc + 23;
+            else if (quantity === 3) calc = calc + 26;
+            else if (quantity === 4) calc = calc + 29;
+            else if (quantity === 5) calc = calc + 32;
         } else if (volume === 2) {
             //시간
             if (time === 1) calc = calc + 18;
@@ -636,12 +627,11 @@ export const GetLadderPrice = (floor, volume, quantity, time) => {
     } else if (floor === 18) {
         if (volume === 1) {
             //물량
-            if (quantity === 1) calc = calc + 16;
-            else if (quantity === 2) calc = calc + 19;
-            else if (quantity === 3) calc = calc + 22;
-            else if (quantity === 4) calc = calc + 26;
-            else if (quantity === 5) calc = calc + 30;
-            else if (quantity === 6) calc = calc + 34;
+            if (quantity === 1) calc = calc + 22;
+            else if (quantity === 2) calc = calc + 25;
+            else if (quantity === 3) calc = calc + 28;
+            else if (quantity === 4) calc = calc + 31;
+            else if (quantity === 5) calc = calc + 34;
         } else if (volume === 2) {
             //시간
             if (time === 1) calc = calc + 20;
@@ -654,12 +644,11 @@ export const GetLadderPrice = (floor, volume, quantity, time) => {
     } else if (floor === 19) {
         if (volume === 1) {
             //물량
-            if (quantity === 1) calc = calc + 18;
-            else if (quantity === 2) calc = calc + 19;
-            else if (quantity === 3) calc = calc + 24;
-            else if (quantity === 4) calc = calc + 28;
-            else if (quantity === 5) calc = calc + 32;
-            else if (quantity === 6) calc = calc + 36;
+            if (quantity === 1) calc = calc + 23;
+            else if (quantity === 2) calc = calc + 26;
+            else if (quantity === 3) calc = calc + 29;
+            else if (quantity === 4) calc = calc + 32;
+            else if (quantity === 5) calc = calc + 35;
         } else if (volume === 2) {
             //시간
             if (time === 1) calc = calc + 22;
@@ -672,12 +661,11 @@ export const GetLadderPrice = (floor, volume, quantity, time) => {
     } else if (floor === 20) {
         if (volume === 1) {
             //물량
-            if (quantity === 1) calc = calc + 21;
-            else if (quantity === 2) calc = calc + 23;
-            else if (quantity === 3) calc = calc + 26;
-            else if (quantity === 4) calc = calc + 30;
-            else if (quantity === 5) calc = calc + 34;
-            else if (quantity === 6) calc = calc + 38;
+            if (quantity === 1) calc = calc + 25;
+            else if (quantity === 2) calc = calc + 28;
+            else if (quantity === 3) calc = calc + 31;
+            else if (quantity === 4) calc = calc + 34;
+            else if (quantity === 5) calc = calc + 37;
         } else if (volume === 2) {
             //시간
             if (time === 1) calc = calc + 24;
@@ -690,12 +678,11 @@ export const GetLadderPrice = (floor, volume, quantity, time) => {
     } else if (floor === 21) {
         if (volume === 1) {
             //물량
-            if (quantity === 1) calc = calc + 23;
-            else if (quantity === 2) calc = calc + 26;
-            else if (quantity === 3) calc = calc + 29;
-            else if (quantity === 4) calc = calc + 34;
+            if (quantity === 1) calc = calc + 28;
+            else if (quantity === 2) calc = calc + 31;
+            else if (quantity === 3) calc = calc + 33;
+            else if (quantity === 4) calc = calc + 36;
             else if (quantity === 5) calc = calc + 39;
-            else if (quantity === 6) calc = calc + 44;
         } else if (volume === 2) {
             //시간
             if (time === 1) calc = calc + 27;
@@ -708,12 +695,11 @@ export const GetLadderPrice = (floor, volume, quantity, time) => {
     } else if (floor === 22) {
         if (volume === 1) {
             //물량
-            if (quantity === 1) calc = calc + 26;
-            else if (quantity === 2) calc = calc + 39;
-            else if (quantity === 3) calc = calc + 32;
-            else if (quantity === 4) calc = calc + 37;
+            if (quantity === 1) calc = calc + 31;
+            else if (quantity === 2) calc = calc + 34;
+            else if (quantity === 3) calc = calc + 36;
+            else if (quantity === 4) calc = calc + 39;
             else if (quantity === 5) calc = calc + 42;
-            else if (quantity === 6) calc = calc + 47;
         } else if (volume === 2) {
             //시간
             if (time === 1) calc = calc + 30;
@@ -726,12 +712,11 @@ export const GetLadderPrice = (floor, volume, quantity, time) => {
     } else if (floor === 23) {
         if (volume === 1) {
             //물량
-            if (quantity === 1) calc = calc + 29;
-            else if (quantity === 2) calc = calc + 32;
-            else if (quantity === 3) calc = calc + 35;
-            else if (quantity === 4) calc = calc + 40;
+            if (quantity === 1) calc = calc + 34;
+            else if (quantity === 2) calc = calc + 37;
+            else if (quantity === 3) calc = calc + 39;
+            else if (quantity === 4) calc = calc + 42;
             else if (quantity === 5) calc = calc + 45;
-            else if (quantity === 6) calc = calc + 50;
         } else if (volume === 2) {
             //시간
             if (time === 1) calc = calc + 33;
@@ -745,7 +730,11 @@ export const GetLadderPrice = (floor, volume, quantity, time) => {
         calc = calc + 31;
         if (volume === 1) {
             //물량
-            return "consultation";
+            if (quantity === 1) calc = calc + 37;
+            else if (quantity === 2) calc = calc + 40;
+            else if (quantity === 3) calc = calc + 42;
+            else if (quantity === 4) calc = calc + 45;
+            else if (quantity === 5) calc = calc + 49;
         } else if (volume === 2) {
             //시간
             if (time === 1) calc = calc + 37;
