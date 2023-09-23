@@ -242,7 +242,7 @@ function DriverOrderProgress({ navigation, route }) {
                 } = data;
                 console.log("list: ", list);
 
-                //TODO: 나중에 효율적으로 바꾸기
+                //DEVELOP: 나중에 효율적으로 바꾸기
                 list.map((resultOrder, index) => {
                     if (resultOrder.id === orderId) {
                         setOrder(resultOrder);
@@ -287,7 +287,7 @@ function DriverOrderProgress({ navigation, route }) {
                     showMessage("작업 예약이 취소되었습니다.");
                     navigation.goBack();
                 }
-                //TODO: 나중에 효율적으로 바꾸기
+                //DEVELOP: 나중에 효율적으로 바꾸기
             })
             .catch((error) => {
                 showError(error);
@@ -315,7 +315,7 @@ function DriverOrderProgress({ navigation, route }) {
                 } = data;
                 console.log("list: ", list);
 
-                //TODO: 나중에 효율적으로 바꾸기
+                //DEVELOP: 나중에 효율적으로 바꾸기
                 list.map((resultOrder, index) => {
                     if (resultOrder.id === order.id) {
                         setOrder(resultOrder);
@@ -348,7 +348,7 @@ function DriverOrderProgress({ navigation, route }) {
                     data: { list },
                 } = data;
                 console.log("list: ", list);
-                //TODO: 나중에 효율적으로 바꾸기
+                //DEVELOP: 나중에 효율적으로 바꾸기
                 list.map((resultOrder, index) => {
                     if (resultOrder.id === order.id) {
                         setOrder(resultOrder);
