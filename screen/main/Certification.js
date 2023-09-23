@@ -30,7 +30,7 @@ function Certification({ navigation }) {
                     break;
                 case "ok":
                     console.log(parsed.data);
-                    goToPage();
+                    goToPage(parsed.data);
 
                     break;
                 default:
@@ -55,7 +55,7 @@ function Certification({ navigation }) {
         console.log("progress : ", progress);
     }, [progress]);
 
-    const goToPage = () => {
+    const goToPage = (data) => {
         navigation.dispatch(
             CommonActions.reset({
                 index: 1,
@@ -63,7 +63,7 @@ function Certification({ navigation }) {
                     { name: "SignIn" },
                     {
                         name: "SetPassword",
-                        params: { cerfifyData: parsed.data },
+                        params: { cerfifyData: data },
                     },
                 ],
             })
