@@ -131,7 +131,7 @@ export const GetTime = (dateTime, mode = "short") => {
 };
 
 export const GetAmpm = (hours) => {
-    return hours === 0 ? "오전" : hours > 12 ? "오후" : "오전";
+    return hours === 0 ? "오전" : hours >= 12 ? "오후" : "오전";
 };
 
 export const getWorkTime = (dateTime, mode) => {
