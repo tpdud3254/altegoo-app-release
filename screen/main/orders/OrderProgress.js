@@ -635,17 +635,7 @@ function OrderProgress({ navigation, route }) {
                                 </>
                             )}
                             <Line />
-                            {() => {
-                                const d = {
-                                    direction: null,
-                                    downFloor: null,
-                                    floor: "5층",
-                                    quantity: null,
-                                    time: "반나절",
-                                    upFloor: null,
-                                    volume: "시간",
-                                };
-                            }}
+
                             {order.vehicleType === "스카이차" ? (
                                 <Row around>
                                     <Item
