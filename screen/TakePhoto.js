@@ -113,7 +113,7 @@ function TakePhoto({ navigation, route }) {
             });
 
             setTakenPhoto(uri);
-            const asset = await MediaLibrary.createAssetAsync(uri);
+            // const asset = await MediaLibrary.createAssetAsync(uri);
             await MediaLibrary.saveToLibraryAsync(uri);
         }
     };
