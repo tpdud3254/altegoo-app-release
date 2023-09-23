@@ -3,10 +3,9 @@ import styled from "styled-components/native";
 import { color } from "../../../styles";
 import MediumText from "../../../component/text/MediumText";
 import { BackHandler, Image, View, useWindowDimensions } from "react-native";
-import RegistContext from "../../../context/RegistContext";
 import { SERVER } from "../../../constant";
 import axios from "axios";
-import { getAsyncStorageToken } from "../../../utils";
+import { GetDate, GetTime, getAsyncStorageToken } from "../../../utils";
 import { VALID } from "../../../constant";
 import Layout from "../../../component/layout/Layout";
 import BoldText from "../../../component/text/BoldText";
@@ -48,9 +47,16 @@ const AccentButton = styled(Button)`
 function RegistCompleted({ navigation, route }) {
     const { width: windowWidth } = useWindowDimensions();
     const [userCount, setUserCount] = useState(0);
+    const [dateTime, setDateTime] = useState("");
 
     useEffect(() => {
         BackHandler.addEventListener("hardwareBackPress", () => goToHome()); //BUG: 뒤로가기 안됨
+
+        const orderDateTime = new Date(route?.params?.dateTime);
+        const date = GetDate(orderDateTime);
+        const time = GetTime(orderDateTime);
+
+        setDateTime(`${date} ${time}`);
 
         getDriverCount();
     });
@@ -141,8 +147,7 @@ function RegistCompleted({ navigation, route }) {
                             marginBottom: 20,
                         }}
                     >
-                        2023.05.25{"  "}16:42
-                        {/* BUG: 날짜 수정 */}
+                        {dateTime}
                     </RegularText>
                     <Image
                         source={require("../../../assets/images/regist_done.png")}

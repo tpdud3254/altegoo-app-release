@@ -128,7 +128,10 @@ function Payment({ navigation, route }) {
                     },
                 } = response;
 
-                navigation.navigate(REGIST_NAV[6], { orderId: order.id });
+                navigation.navigate(REGIST_NAV[6], {
+                    orderId: order.id,
+                    dateTime: order.dateTime,
+                });
                 return;
                 //포인트 차감
                 //EJECT: 포인트 내역도 남기기
