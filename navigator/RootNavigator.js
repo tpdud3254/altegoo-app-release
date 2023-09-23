@@ -16,6 +16,7 @@ export default function RootNavigator() {
     const { isLoggedIn, setIsLoggedIn } = useContext(LoginContext);
     const { setInfo } = useContext(UserContext);
 
+    //TODO: 로그인 정보 못가져오면 그냥 로그인 화면으로 나가게끔 처리
     useEffect(() => {
         async function getStorage() {
             const token = await getAsyncStorageToken();
