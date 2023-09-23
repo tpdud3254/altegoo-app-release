@@ -8,13 +8,6 @@ import { COMPANY } from "../../constant";
 import { PopupWithButtons } from "../PopupWithButtons";
 import RegularText from "../text/RegularText";
 
-export const ButtonContainer = styled.View`
-    flex-direction: row;
-    align-items: center;
-    justify-content: space-between;
-    z-index: 100;
-`;
-
 const Container = styled.TouchableOpacity`
     position: absolute;
     bottom: 0px;
@@ -53,11 +46,19 @@ function RegistButton() {
 
     return (
         <View style={{ height: height, position: "absolute", width: "100%" }}>
-            <Container onPress={goToRegist} windowHeight={height}>
+            <Container
+                onPress={goToRegist}
+                style={{
+                    width: 170,
+                    height: 80,
+                    bottom: 70,
+                }}
+            >
                 <Image
                     style={{
                         resizeMode: "contain",
                         width: 170,
+                        height: 80,
                     }}
                     source={require(`../../assets/images/icons/btn_upload_work.png`)}
                 />
