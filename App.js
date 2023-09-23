@@ -166,6 +166,7 @@ export default function App() {
     }, []);
 
     const askLocationPermission = async () => {
+        //TODO: 권한 관련 로직 수정 (권한없으면 진행안되고 앱 종료,,,)
         const { granted: foregroundGranted } =
             await Location.requestForegroundPermissionsAsync();
         const { granted: backgroundGranted } =
