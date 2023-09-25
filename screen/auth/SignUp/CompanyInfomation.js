@@ -47,7 +47,13 @@ function CompanyInfomation() {
     }, []);
 
     useEffect(() => {
-        if (CheckValidation(getValues("workCategory", "companyName"))) {
+        const values = getValues();
+        const data = {
+            workCategory: values.workCategory,
+            companyName: values.companyName,
+        };
+
+        if (CheckValidation(data)) {
             setValidation(true);
         } else {
             setValidation(false);
