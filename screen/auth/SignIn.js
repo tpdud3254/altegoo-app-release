@@ -148,6 +148,10 @@ function SignIn() {
                     </RegularText>
                 </TouchableOpacity>
             </FindPassword>
+
+            <TouchableOpacity>
+                <RegularText>테스트 버튼</RegularText>
+            </TouchableOpacity>
         </AuthLayout>
     );
 }
