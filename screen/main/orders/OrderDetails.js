@@ -11,6 +11,7 @@ import {
     GetDayOfWeek,
     GetPhoneNumberWithDash,
     GetTime,
+    GoToKakaoNavi,
     getAsyncStorageToken,
     numberWithComma,
     showError,
@@ -524,7 +525,11 @@ function OrderDetails({ navigation, route }) {
                                         order.detailAddress1
                                     }
                                     button={
-                                        <ItemButton>
+                                        <ItemButton
+                                            onPress={() =>
+                                                GoToKakaoNavi(order.address1)
+                                            }
+                                        >
                                             <Image
                                                 source={require(`../../../assets/images/icons/icon_location.png`)}
                                                 style={{
@@ -543,7 +548,11 @@ function OrderDetails({ navigation, route }) {
                                         order.detailAddress2
                                     }
                                     button={
-                                        <ItemButton>
+                                        <ItemButton
+                                            onPress={() =>
+                                                GoToKakaoNavi(order.address2)
+                                            }
+                                        >
                                             <Image
                                                 source={require(`../../../assets/images/icons/icon_location.png`)}
                                                 style={{
@@ -562,7 +571,11 @@ function OrderDetails({ navigation, route }) {
                                     order.address1 + " " + order.detailAddress1
                                 }
                                 button={
-                                    <ItemButton>
+                                    <ItemButton
+                                        onPress={() =>
+                                            GoToKakaoNavi(order.address1)
+                                        }
+                                    >
                                         <Image
                                             source={require(`../../../assets/images/icons/icon_location.png`)}
                                             style={{ width: 26, height: 26 }}

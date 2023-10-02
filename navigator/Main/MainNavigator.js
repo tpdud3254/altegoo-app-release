@@ -22,7 +22,6 @@ import RegistNavigator from "./RegistNavigator";
 import OrderDetails from "../../screen/main/orders/OrderDetails";
 import DriverOrderProgress from "../../screen/main/orders/DriverOrderProgress";
 import SettingNavigator from "./SettingNavigator";
-import KakaoNavi from "../../screen/main/KakaoNavi";
 
 Location.watchPositionAsync(
     {
@@ -238,13 +237,6 @@ export default function MainNavigator() {
                             title: "결제하기",
                             headerShown: false,
                             headerTitleAlign: "center",
-                        }}
-                    />
-                    <Stack.Screen
-                        name="KakaoNavi"
-                        component={KakaoNavi}
-                        options={{
-                            headerShown: false,
                         }}
                     />
                 </Stack.Navigator>

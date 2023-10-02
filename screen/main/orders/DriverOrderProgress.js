@@ -14,6 +14,7 @@ import {
     GetDate,
     GetPhoneNumberWithDash,
     GetTime,
+    GoToKakaoNavi,
     getAsyncStorageToken,
     numberWithComma,
     showMessage,
@@ -730,7 +731,13 @@ function DriverOrderProgress({ navigation, route }) {
                                                             " " +
                                                             order.detailAddress1}
                                                     </RegularText>
-                                                    <ItemButton>
+                                                    <ItemButton
+                                                        onPress={() =>
+                                                            GoToKakaoNavi(
+                                                                order.address1
+                                                            )
+                                                        }
+                                                    >
                                                         <Image
                                                             source={require(`../../../assets/images/icons/icon_location.png`)}
                                                             style={{
@@ -767,7 +774,13 @@ function DriverOrderProgress({ navigation, route }) {
                                                             " " +
                                                             order.detailAddress2}
                                                     </RegularText>
-                                                    <ItemButton>
+                                                    <ItemButton
+                                                        onPress={() =>
+                                                            GoToKakaoNavi(
+                                                                order.address2
+                                                            )
+                                                        }
+                                                    >
                                                         <Image
                                                             source={require(`../../../assets/images/icons/icon_location.png`)}
                                                             style={{
@@ -806,7 +819,13 @@ function DriverOrderProgress({ navigation, route }) {
                                                         " " +
                                                         order.detailAddress1}
                                                 </RegularText>
-                                                <ItemButton>
+                                                <ItemButton
+                                                    onPress={() =>
+                                                        GoToKakaoNavi(
+                                                            order.address1
+                                                        )
+                                                    }
+                                                >
                                                     <Image
                                                         source={require(`../../../assets/images/icons/icon_location.png`)}
                                                         style={{

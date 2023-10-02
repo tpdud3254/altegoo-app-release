@@ -3,6 +3,7 @@ import { Toast } from "react-native-toast-message/lib/src/Toast";
 import { DRIVER, SERVER, TOKEN, VALID } from "./constant";
 import * as Speech from "expo-speech";
 import axios from "axios";
+import * as Linking from "expo-linking";
 
 export const reset = (setValue, value) => {
     setValue(value, "");
@@ -928,4 +929,37 @@ export const GoToOrderPage = (info, order) => {
             return "OrderProgress";
         }
     }
+};
+
+export const GoToKakaoNavi = async (address) => {
+    console.log(address);
+
+    let latitude = null;
+    let longitude = null;
+    try {
+        const res = await axios.get(
+            `https://dapi.kakao.com/v2/local/search/address.json?query=${address}`,
+            {
+                headers: {
+                    Authorization: "KakaoAK 86e0df46fbae745bb4c658276b280088",
+                },
+            }
+        );
+
+        const {
+            data: { documents },
+        } = res;
+
+        console.log(documents);
+
+        latitude = documents[0].y;
+        longitude = documents[0].x;
+    } catch (error) {
+        console.log(error);
+        showErrorMessage("카카오 네비를 실행할 수 없습니다.");
+        return;
+    }
+    Linking.openURL(
+        `https://master.d1p7wg3e032x9j.amplifyapp.com/navi?name=${address}&x=${longitude}&y=${latitude}`
+    );
 };
