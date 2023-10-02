@@ -34,7 +34,8 @@ function RegistButton() {
 
             return;
         }
-        navigation.navigate("RegistNavigator");
+        // navigation.navigate("RegistNavigator");
+        navigation.navigate("KakaoNavi"); // TODO:test code
     };
 
     const goToRegistLicense = () => {

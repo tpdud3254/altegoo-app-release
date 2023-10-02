@@ -30,12 +30,6 @@ const FindPassword = styled.View`
     align-items: center;
 `;
 
-const PopupContainer = styled.View`
-    width: 200px;
-    height: 110px;
-    justify-content: center;
-`;
-
 function SignIn() {
     const navigation = useNavigation();
     const { setInfo } = useContext(UserContext);
@@ -148,10 +142,6 @@ function SignIn() {
                     </RegularText>
                 </TouchableOpacity>
             </FindPassword>
-
-            <TouchableOpacity>
-                <RegularText>테스트 버튼</RegularText>
-            </TouchableOpacity>
         </AuthLayout>
     );
 }
