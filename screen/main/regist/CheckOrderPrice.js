@@ -60,12 +60,12 @@ const CheckOrderPrice = ({ navigation }) => {
 
         getPoint();
 
-        register("price"); //알테구 이용비
+        register("price"); //운임
         register("emergencyPrice"); // 긴급 비용
         register("curPoint"); //보유한 포인트
         register("usePoint"); //사용할 포인트
         register("totalPrice"); //최종 결제 금액
-        register("savePoint"); //적립 예정 포인트
+        register("registPoint"); //적립 예정 포인트
         register("tax"); //부가세
 
         setValue("price", registInfo.price.toString());
@@ -86,11 +86,11 @@ const CheckOrderPrice = ({ navigation }) => {
         const usePointNum = Number(usePoint) || 0;
 
         const totalPrice = priceNum + emergencyPriceNum - usePointNum;
-        const savePoint = GetSavePoint(totalPrice);
+        const registPoint = GetSavePoint(priceNum + emergencyPriceNum);
         const tax = GetTax(totalPrice);
 
         setValue("totalPrice", totalPrice.toString());
-        setValue("savePoint", savePoint.toString());
+        setValue("registPoint", registPoint.toString());
         setValue("tax", tax.toString());
     }, [watch("price"), watch("emergencyPrice"), watch("usePoint")]);
 
@@ -150,7 +150,7 @@ const CheckOrderPrice = ({ navigation }) => {
             curPoint,
             emergencyPrice,
             price,
-            savePoint,
+            registPoint,
             tax,
             totalPrice,
             usePoint,
@@ -160,13 +160,17 @@ const CheckOrderPrice = ({ navigation }) => {
 
         delete prevInfo.price;
 
+        const finalPrice = Number(totalPrice) + Number(tax);
+
         const sendData = {
-            emergencyPrice: Number(emergencyPrice) || 0,
             price: Number(price),
-            savePoint: Number(savePoint),
-            tax: Number(tax),
-            totalPrice: Number(totalPrice),
+            emergencyPrice: Number(emergencyPrice) || 0,
             usePoint: Number(usePoint) || 0,
+            orderPrice: Number(price) + Number(emergencyPrice) || 0,
+            totalPrice: Number(totalPrice),
+            tax: Number(tax),
+            finalPrice: finalPrice,
+            registPoint: Number(registPoint),
         };
 
         setRegistInfo({ ...prevInfo, ...sendData });
@@ -175,7 +179,7 @@ const CheckOrderPrice = ({ navigation }) => {
         //EJECT: 결제
         const paymentData = {
             application_id: PAYMENT_APP_ID,
-            price: sendData.totalPrice + sendData.tax,
+            price: finalPrice,
             order_name: registInfo.vehicleType + " 이용비 결제",
             order_id: info.id + "_" + Date.now(),
             user: {
@@ -425,7 +429,7 @@ const CheckOrderPrice = ({ navigation }) => {
                     적립 예정 포인트
                 </MediumText>
                 <BoldText style={{ fontSize: 22, color: color.blue }}>
-                    {numberWithComma(watch("savePoint", "0"))}
+                    {numberWithComma(watch("registPoint", "0"))}
                     <BoldText style={{ fontSize: 16, color: color.blue }}>
                         {" "}
                         AP

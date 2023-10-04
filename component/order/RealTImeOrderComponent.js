@@ -421,10 +421,13 @@ export const Order = {
                                                 fontSize: 15,
                                             }}
                                         >
-                                            {" " +
-                                                numberWithComma(
-                                                    order.savePoint || 0
-                                                )}
+                                            {
+                                                " " +
+                                                    numberWithComma(
+                                                        order.registPoint || 0
+                                                    )
+                                                //TODO: 어떤정보가 보여야되는지 확실히
+                                            }
                                             <BoldText
                                                 style={{
                                                     fontSize: 12,
