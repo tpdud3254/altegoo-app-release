@@ -13,6 +13,7 @@ export const DRIVER = "DRIVER";
 export const COMPANY = "COMPANY";
 
 export const TOKEN = "token";
+export const UID = "UID";
 
 export const SIGNUP_NAV = {
     NORMAL: ["Agreements", "Identification", "EnterPassword", "SignUpComplete"],

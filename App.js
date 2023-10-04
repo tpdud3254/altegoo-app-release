@@ -38,7 +38,7 @@ function createSocket() {
         const parsed = JSON.parse(e.data);
 
         if (parsed.type === "REGIST") {
-            speech(parsed.tts_msg, parsed.exceptionUserId);
+            speech(parsed.tts_msg, parsed.exceptionUserId, parsed.orderId);
         }
     };
 

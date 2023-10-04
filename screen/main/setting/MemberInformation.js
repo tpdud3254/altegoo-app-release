@@ -12,6 +12,7 @@ import { color } from "../../../styles";
 import { shadowProps } from "../../../component/Shadow";
 import LightText from "../../../component/text/LightText";
 import { Row } from "../../../component/Row";
+import { TOKEN, UID } from "../../../constant";
 
 const Continer = styled.View`
     justify-content: space-between;
@@ -54,7 +55,8 @@ function MemberInformation({ navigation }) {
     const logout = async () => {
         setIsLoggedIn(false);
         setInfo({});
-        await AsyncStorage.removeItem("token");
+        await AsyncStorage.removeItem(TOKEN);
+        await AsyncStorage.removeItem(UID);
     };
 
     const goToRegisterVehicle = () => {

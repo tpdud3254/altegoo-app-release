@@ -6,7 +6,11 @@ import { SERVER, VALID } from "../../../constant";
 import LoginContext from "../../../context/LoginContext";
 import * as Location from "expo-location";
 import axios from "axios";
-import { setAsyncStorageToken, showErrorMessage } from "../../../utils";
+import {
+    SetAsyncStorageUid,
+    setAsyncStorageToken,
+    showErrorMessage,
+} from "../../../utils";
 import LoadingLayout from "../../../component/layout/LoadingLayout";
 
 const Container = styled.View`
@@ -228,6 +232,7 @@ function SignUpComplete() {
                 console.log("Token : ", token);
                 setInfo(user);
                 await setAsyncStorageToken(token);
+                await SetAsyncStorageUid(user.id);
                 setIsLoggedIn(true);
                 setFirstLogin(true);
             } else {
