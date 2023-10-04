@@ -49,7 +49,7 @@ export const GetAsyncStorageUid = () => {
 };
 
 export const SetAsyncStorageUid = async (id) => {
-    await AsyncStorage.setItem(UID, id);
+    await AsyncStorage.setItem(UID, id.toString());
 };
 
 export const getAsyncStorageToken = () => {
@@ -252,7 +252,7 @@ export const speech = async (msg, exceptionUserId, orderId) => {
     };
 
     if (!uid) return;
-    if (uid === exceptionUserId) return;
+    if (Number(uid) === Number(exceptionUserId)) return;
 
     const beforeTTS = (await AsyncStorage.getItem("TTS")) || 0;
 

@@ -52,6 +52,7 @@ function MemberInformation({ navigation }) {
     useEffect(() => {
         console.log("info : ", info);
     }, []);
+
     const logout = async () => {
         setIsLoggedIn(false);
         setInfo({});
