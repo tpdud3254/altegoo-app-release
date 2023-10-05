@@ -69,6 +69,7 @@ function Payment({ navigation, route }) {
         }
     };
     //EJECT: eject 후 적용 (결제)
+    //TODO: 가상계좌 제외
 
     const registWork = async (data) => {
         console.log("parsed payment data : ", data);
@@ -117,7 +118,7 @@ function Payment({ navigation, route }) {
                 }
             );
 
-            console.log(response.data);
+            console.log(response);
 
             const {
                 data: { result },

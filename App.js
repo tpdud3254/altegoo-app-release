@@ -24,10 +24,13 @@ SplashScreen.preventAutoHideAsync();
 //TODO: 백그라운드에서 실행되어야할 것들 셋팅
 // location(테스트)
 
+const WEB_SOCKET_TASK = "WEB_SOCKET_TASK";
+const LOCATION_TASK = "LOCATION_TASK";
+
 let ws = null;
 
 function createSocket() {
-    ws = new WebSocket(WSS_SERVER);
+    if (ws === null) ws = new WebSocket(WSS_SERVER);
 
     ws.onopen = (e) => {
         console.log("webSocket connected");
@@ -38,7 +41,7 @@ function createSocket() {
         const parsed = JSON.parse(e.data);
 
         if (parsed.type === "REGIST") {
-            speech(parsed.tts_msg, parsed.exceptionUserId, parsed.orderId);
+            speech(parsed.tts_msg, parsed.exceptionUserId, parsed.tts_id);
         }
     };
 
@@ -48,6 +51,7 @@ function createSocket() {
 
     ws.onclose = (e) => {
         console.log("ws.onclose:", e);
+        ws = null;
         if (e.reason !== "background" && e.reason !== "terminated") {
             setTimeout(() => createSocket(), 1000);
         }
@@ -55,9 +59,6 @@ function createSocket() {
 
     //BUG: 서버 쪽 연결 끊기고 다시 연결 되었을 때 여러개 연결되는거 fix (tts메세지에 인덱스를 붙여서 해당 인덱스가 이미 실행되었으면 실행안하게?)
 }
-
-const WEB_SOCKET_TASK = "WEB_SOCKET_TASK";
-const LOCATION_TASK = "LOCATION_TASK";
 
 Notifications.setNotificationHandler({
     handleNotification: async () => ({
@@ -149,7 +150,7 @@ export default function App() {
                 if (ws) {
                     ws.close(1000, "background");
                 }
-                createSocket();
+                if (ws === null) createSocket();
             } else if (state === "active") {
                 if (ws) {
                     ws.close();
@@ -157,7 +158,7 @@ export default function App() {
             }
         });
 
-        createSocket();
+        if (ws === null) createSocket();
         prepare();
 
         return () => {

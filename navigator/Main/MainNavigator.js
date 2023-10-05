@@ -8,7 +8,7 @@ import Charge from "../../screen/main/Charge";
 import Payment from "../../screen/main/Payment";
 import Welcome from "../../screen/main/Welcome";
 import { SERVER } from "../../constant";
-import { checkPosition, getAsyncStorageToken } from "../../utils";
+import { checkPosition, getAsyncStorageToken, speech } from "../../utils";
 import TabsNavigator from "./TabsNavigator";
 import * as Device from "expo-device";
 import * as Notifications from "expo-notifications";
@@ -71,10 +71,21 @@ export default function MainNavigator() {
 
         notificationListener.current =
             Notifications.addNotificationReceivedListener((notification) => {
+                const {
+                    request: {
+                        content: { data },
+                    },
+                } = notification;
+
+                console.log(notification);
                 console.log(
                     "addNotificationReceivedListener notification : ",
-                    notification
+                    data
                 );
+
+                if (data.type === "REGIST") {
+                    // speech(parsed.tts_msg, parsed.exceptionUserId, parsed.tts_id);
+                }
             });
 
         //TODO: 나중에 푸시 처리하기

@@ -11,6 +11,7 @@ import LoginContext from "../../context/LoginContext";
 import { SERVER } from "../../constant";
 import {
     SetAsyncStorageUid,
+    SetAsyncStorageUserType,
     checkValidation,
     reset,
     setAsyncStorageToken,
@@ -75,6 +76,7 @@ function SignIn() {
                 setInfo(user);
                 await setAsyncStorageToken(token);
                 await SetAsyncStorageUid(user.id);
+                await SetAsyncStorageUserType(user.userTypeId);
                 setIsLoggedIn(true);
             }
         } catch (error) {

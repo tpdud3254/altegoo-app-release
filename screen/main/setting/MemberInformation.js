@@ -12,7 +12,7 @@ import { color } from "../../../styles";
 import { shadowProps } from "../../../component/Shadow";
 import LightText from "../../../component/text/LightText";
 import { Row } from "../../../component/Row";
-import { TOKEN, UID } from "../../../constant";
+import { TOKEN, UID, USER_TYPE } from "../../../constant";
 
 const Continer = styled.View`
     justify-content: space-between;
@@ -58,6 +58,7 @@ function MemberInformation({ navigation }) {
         setInfo({});
         await AsyncStorage.removeItem(TOKEN);
         await AsyncStorage.removeItem(UID);
+        await AsyncStorage.removeItem(USER_TYPE);
     };
 
     const goToRegisterVehicle = () => {

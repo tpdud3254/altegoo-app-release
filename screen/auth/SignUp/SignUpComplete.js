@@ -8,6 +8,7 @@ import * as Location from "expo-location";
 import axios from "axios";
 import {
     SetAsyncStorageUid,
+    SetAsyncStorageUserType,
     setAsyncStorageToken,
     showErrorMessage,
 } from "../../../utils";
@@ -233,6 +234,7 @@ function SignUpComplete() {
                 setInfo(user);
                 await setAsyncStorageToken(token);
                 await SetAsyncStorageUid(user.id);
+                await SetAsyncStorageUserType(user.userTypeId);
                 setIsLoggedIn(true);
                 setFirstLogin(true);
             } else {

@@ -1,6 +1,6 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Toast } from "react-native-toast-message/lib/src/Toast";
-import { DRIVER, SERVER, TOKEN, UID, VALID } from "./constant";
+import { DRIVER, SERVER, TOKEN, UID, USER_TYPE, VALID } from "./constant";
 import * as Speech from "expo-speech";
 import axios from "axios";
 import * as Linking from "expo-linking";
@@ -50,6 +50,14 @@ export const GetAsyncStorageUid = () => {
 
 export const SetAsyncStorageUid = async (id) => {
     await AsyncStorage.setItem(UID, id.toString());
+};
+
+export const GetAsyncStorageUserType = () => {
+    return AsyncStorage.getItem(USER_TYPE);
+};
+
+export const SetAsyncStorageUserType = async (type) => {
+    await AsyncStorage.setItem(USER_TYPE, type.toString());
 };
 
 export const getAsyncStorageToken = () => {
@@ -242,21 +250,28 @@ export const showMessage = (msg) => {
     });
 };
 
-export const speech = async (msg, exceptionUserId, orderId) => {
+export const speech = async (msg, exceptionUserId, ttsId) => {
     const uid = await GetAsyncStorageUid();
+    const userType = await GetAsyncStorageUserType();
+    const token = await getAsyncStorageToken();
 
     const speak = async () => {
+        const beforeTTS = (await AsyncStorage.getItem("TTS")) || 0;
+        console.log(beforeTTS);
+        if (Number(beforeTTS) === Number(ttsId)) return;
         const thingToSay = msg;
         Speech.speak(thingToSay);
-        await AsyncStorage.setItem("TTS", orderId);
+        await AsyncStorage.setItem("TTS", ttsId.toString());
     };
 
+    if (!token) return;
     if (!uid) return;
     if (Number(uid) === Number(exceptionUserId)) return;
-
+    if (Number(userType) !== 2) return;
     const beforeTTS = (await AsyncStorage.getItem("TTS")) || 0;
 
-    if (Number(beforeTTS) === Number(orderId)) return;
+    if (Number(beforeTTS) === Number(ttsId)) return;
+
     speak();
 };
 

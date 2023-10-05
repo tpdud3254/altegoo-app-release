@@ -8,7 +8,12 @@ import { SERVER } from "../constant";
 import UserContext from "../context/UserContext";
 import LoadingLayout from "../component/layout/LoadingLayout";
 import { VALID } from "../constant";
-import { getAsyncStorageToken, showError } from "../utils";
+import {
+    SetAsyncStorageUid,
+    SetAsyncStorageUserType,
+    getAsyncStorageToken,
+    showError,
+} from "../utils";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export default function RootNavigator() {
@@ -31,6 +36,8 @@ export default function RootNavigator() {
                             setInfo(user.user);
                             setLoading(true);
                             setIsLoggedIn(true);
+                            SetAsyncStorageUid(user.user.id);
+                            SetAsyncStorageUserType(user.user.userTypeId);
                         } else {
                             //로그인 정보 가져오지 못할 시 로그인 화면으로 나가게끔 처리
                             setLoading(true);
