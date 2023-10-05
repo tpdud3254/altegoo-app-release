@@ -77,15 +77,10 @@ export default function MainNavigator() {
                     },
                 } = notification;
 
-                console.log(notification);
                 console.log(
                     "addNotificationReceivedListener notification : ",
                     data
                 );
-
-                if (data.type === "REGIST") {
-                    // speech(parsed.tts_msg, parsed.exceptionUserId, parsed.tts_id);
-                }
             });
 
         //TODO: 나중에 푸시 처리하기
