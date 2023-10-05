@@ -146,11 +146,12 @@ export default function App() {
         AppState.addEventListener("change", (state) => {
             console.log("state : ", state);
             console.log("addEventlistner");
+            console.log(ws);
             if (state === "background") {
-                if (ws) {
-                    ws.close(1000, "background");
-                }
-                if (ws === null) createSocket();
+                // if (ws) {
+                //     ws.close(1000, "background");
+                // }
+                // createSocket();
             } else if (state === "active") {
                 if (ws) {
                     ws.close();
@@ -162,7 +163,7 @@ export default function App() {
         prepare();
 
         return () => {
-            ws.close(1000, "terminated");
+            if (ws) ws.close(1000, "terminated");
         };
     }, []);
 
@@ -173,6 +174,14 @@ export default function App() {
         const { granted: backgroundGranted } =
             await Location.requestBackgroundPermissionsAsync();
 
+        console.log(
+            "askLocationPermission foregroundGranted : ",
+            foregroundGranted
+        );
+        console.log(
+            "askLocationPermission backgroundGranted : ",
+            backgroundGranted
+        );
         if (!foregroundGranted || !backgroundGranted) {
             setLocationGranted(false);
         }
@@ -183,14 +192,16 @@ export default function App() {
             const { status: existingStatus } =
                 await Notifications.getPermissionsAsync();
 
+            console.log("askPushPermission existingStatus : ", existingStatus);
             let finalStatus = existingStatus;
             if (existingStatus !== "granted") {
                 const { status } =
                     await Notifications.requestPermissionsAsync();
                 finalStatus = status;
             }
+
+            console.log("askPushPermission finalStatus : ", finalStatus);
             if (finalStatus !== "granted") {
-                alert("Failed to get push token for push notification!");
                 setPushGranted(false);
                 return;
             }
