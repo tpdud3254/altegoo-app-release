@@ -26,6 +26,14 @@ function Payment({ navigation, route }) {
     const { info } = useContext(UserContext);
 
     console.log("payment :", route?.params?.data);
+
+    useEffect(() => {
+        //TODO: 테스트 코드
+        setTimeout(async () => {
+            await registWork();
+        }, 2000);
+    }, []);
+
     const sendMessage = (data) => {
         webViewRef.current.postMessage(data);
     };
