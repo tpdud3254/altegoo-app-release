@@ -87,6 +87,7 @@ export const Order = {
         // 2: 예약 취소하기
         // 3: 예약대기 하기
         // 4: 예약대기 취소
+        // 5: 예약중 (NEXT: 예약대기 우선 삭제)
 
         useEffect(() => {
             setOrder(data);
@@ -116,19 +117,21 @@ export const Order = {
                 if (order.acceptUser === info.id) {
                     setButtonType(2);
                 } else {
-                    if (order.orderReservation.length === 0) {
-                        setButtonType(3);
-                    } else {
-                        let isMyReservation = false;
-                        order.orderReservation.map((value) => {
-                            if (value.userId === info.id) {
-                                isMyReservation = true;
-                            }
-                        });
+                    setButtonType(5);
+                    //NEXT: 예약대기 우선 삭제
+                    // if (order.orderReservation.length === 0) {
+                    //     setButtonType(3);
+                    // } else {
+                    //     let isMyReservation = false;
+                    //     order.orderReservation.map((value) => {
+                    //         if (value.userId === info.id) {
+                    //             isMyReservation = true;
+                    //         }
+                    //     });
 
-                        if (isMyReservation) setButtonType(4);
-                        else setButtonType(3);
-                    }
+                    //     if (isMyReservation) setButtonType(4);
+                    //     else setButtonType(3);
+                    // }
                 }
             }
         };
@@ -144,19 +147,21 @@ export const Order = {
                 if (order.acceptUser === info.id) {
                     return "예약 취소하기";
                 } else {
-                    if (order.orderReservation.length === 0) {
-                        return "예약대기 하기";
-                    } else {
-                        let isMyReservation = false;
-                        order.orderReservation.map((value) => {
-                            if (value.userId === info.id) {
-                                isMyReservation = true;
-                            }
-                        });
+                    return "예약 중";
+                    //NEXT: 예약대기 우선 삭제
+                    // if (order.orderReservation.length === 0) {
+                    //     return "예약대기 하기";
+                    // } else {
+                    //     let isMyReservation = false;
+                    //     order.orderReservation.map((value) => {
+                    //         if (value.userId === info.id) {
+                    //             isMyReservation = true;
+                    //         }
+                    //     });
 
-                        if (isMyReservation) return "예약대기 취소";
-                        else return "예약대기 하기";
-                    }
+                    //     if (isMyReservation) return "예약대기 취소";
+                    //     else return "예약대기 하기";
+                    // }
                 }
             }
         };
@@ -441,7 +446,10 @@ export const Order = {
                                 </Row>
                             </Wrapper>
                         </ItemContainer>
-                        <Button onPress={showPopup} type={buttonType}>
+                        <Button
+                            onPress={buttonType === 5 ? undefined : showPopup}
+                            type={buttonType}
+                        >
                             <MediumText
                                 style={{
                                     color:
