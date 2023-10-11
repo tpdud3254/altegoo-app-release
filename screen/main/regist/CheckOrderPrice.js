@@ -193,22 +193,6 @@ const CheckOrderPrice = ({ navigation }) => {
         navigation.navigate(REGIST_NAV[5], { data: paymentData });
     };
 
-    const gopay = () => {
-        const data = {
-            application_id: PAYMENT_APP_ID,
-            price: price - curPoint,
-            order_name: VEHICLE[vehicleType - 1] + " 이용비 결제",
-            order_id: info.userId + "_" + Date.now(),
-            user: {
-                username: info.userName,
-                phone: info.phone,
-            },
-            curPoint,
-            pointId: 126,
-        };
-        navigation.navigate("Payment", { data });
-    };
-
     //NEXT: 쿠폰사용 포함
     return (
         <Layout
@@ -270,6 +254,8 @@ const CheckOrderPrice = ({ navigation }) => {
                 </Item>
             ) : null}
 
+            {/* 
+            //NEXT: 포인트 결제 일단 삭제
             <Item>
                 <RegularText style={{ marginBottom: 13 }}>포인트</RegularText>
                 <RegularText
@@ -333,7 +319,7 @@ const CheckOrderPrice = ({ navigation }) => {
                         </MediumText>
                     </PointButton>
                 </Row>
-            </Item>
+            </Item> */}
             <Item accent>
                 <MediumText style={{ marginBottom: 25 }}>
                     최종 결제 금액
