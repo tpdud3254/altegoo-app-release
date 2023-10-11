@@ -164,6 +164,8 @@ function AddOtherData({ navigation }) {
     const BottomButton = () => {
         return (
             <BottomButtonContainer>
+                {/* 
+                //NEXT: 긴급오더 일단 삭제
                 <EmergencyButton
                     onPress={handleSubmit((data) =>
                         onNextStep({ ...data, emergency: true })
@@ -174,13 +176,25 @@ function AddOtherData({ navigation }) {
                         style={{ width: 24, height: 24 }}
                     />
                     <BoldText style={{ color: "#EB1D36" }}>긴급오더</BoldText>
-                </EmergencyButton>
+                </EmergencyButton> */}
+                {/* 
+                //NEXT: 긴급오더 일단 삭제
                 <NormalButton
+                    
                     onPress={handleSubmit((data) =>
                         onNextStep({ ...data, emergency: false })
                     )}
                 >
                     <BoldText style={{ color: "white" }}>일반오더</BoldText>
+                </NormalButton> */}
+
+                <NormalButton
+                    style={{ width: "100%" }}
+                    onPress={handleSubmit((data) =>
+                        onNextStep({ ...data, emergency: false })
+                    )}
+                >
+                    <BoldText style={{ color: "white" }}>다음으로</BoldText>
                 </NormalButton>
             </BottomButtonContainer>
         );
@@ -310,6 +324,8 @@ function AddOtherData({ navigation }) {
                 <ItemTitle />
                 <Wrapper>
                     <Line />
+                    {/*
+                    NEXT: 비용 세부 조정 일단 삭제
                     <RegularText style={{ fontSize: 14, marginTop: 7 }}>
                         비용 세부 조정
                     </RegularText>
@@ -346,7 +362,7 @@ function AddOtherData({ navigation }) {
                                 />
                             </TouchableOpacity>
                         </Row>
-                    </View>
+                    </View> */}
                 </Wrapper>
             </Item>
             <Item uninterval>
