@@ -28,6 +28,7 @@ import {
     numberWithComma,
     showMessage,
 } from "../../../utils";
+import * as Linking from "expo-linking";
 
 const LastOrder = styled.TouchableOpacity`
     flex-direction: row;
@@ -199,12 +200,25 @@ function RegistOrder({ navigation }) {
         setLastOrder(false);
     };
 
+    const cancelConsultation = () => {
+        setIsPopupShown(false);
+    };
+
+    const startConsultation = () => {
+        setIsPopupShown(true);
+    };
+
     const getLastOrder = () => {
         setIsPopupShown(false);
         console.log("get last order / use Id : ", info.id);
     };
 
     const onNextStep = () => {
+        if (consultation) {
+            startConsultation();
+            return;
+        }
+
         if (vehicleType === 2 && floor > 14 && time === 1) {
             showMessage("1시간 작업은 2층 ~ 14층 사이만 가능합니다.");
             return;
@@ -308,6 +322,9 @@ function RegistOrder({ navigation }) {
         );
     };
 
+    const goToKakaoChat = () => {
+        Linking.openURL("http://pf.kakao.com/_QxgmlG");
+    };
     return (
         <Layout
             kakaoBtnShown={true}
@@ -550,7 +567,7 @@ function RegistOrder({ navigation }) {
                     </Item>
                 </>
             )}
-            <PopupWithButtons
+            {/* <PopupWithButtons
                 visible={isPopupShown}
                 onTouchOutside={cancelLastOrder}
                 onClick={getLastOrder}
@@ -567,6 +584,26 @@ function RegistOrder({ navigation }) {
                     }}
                 >
                     지난 번에 진행했던{"\n"}내용을 불러옵니다.
+                </RegularText>
+            </PopupWithButtons> */}
+            <PopupWithButtons
+                visible={isPopupShown}
+                onTouchOutside={cancelConsultation}
+                onClick={goToKakaoChat}
+            >
+                <RegularText
+                    style={{
+                        fontSize: 20,
+                        textAlign: "center",
+                        lineHeight: 30,
+                        paddingTop: 15,
+                        paddingLeft: 20,
+                        paddingRight: 20,
+                        paddingBottom: 25,
+                    }}
+                >
+                    예상 운임 협의일 경우 카카오톡 채널을 통해서 진행
+                    가능합니다.{"\n"}카카오톡 채널로 이동하시겠습니까?
                 </RegularText>
             </PopupWithButtons>
         </Layout>
