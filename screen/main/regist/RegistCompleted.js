@@ -63,7 +63,7 @@ function RegistCompleted({ navigation, route }) {
         return () => {
             BackHandler.removeEventListener("hardwareBackPress");
         };
-    });
+    }, []);
 
     const getDriverCount = async () => {
         try {
