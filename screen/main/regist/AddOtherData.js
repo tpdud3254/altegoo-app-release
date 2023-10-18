@@ -110,6 +110,7 @@ function AddOtherData({ navigation }) {
     };
 
     const onNextStep = (data) => {
+        console.log("onnextstep : ", data);
         const { directPhone, emergency, memo, price } = data;
 
         const prevInfo = registInfo;
@@ -122,6 +123,8 @@ function AddOtherData({ navigation }) {
             memo: memo || null,
             price,
         };
+
+        console.log("sendData : ", sendData);
 
         setRegistInfo({ ...prevInfo, ...sendData });
 
@@ -376,6 +379,8 @@ function AddOtherData({ navigation }) {
                         }}
                         placeholder="특이사항을 입력해주세요."
                         cursorColor={color["page-lightgrey-text"]}
+                        value={watch("memo")}
+                        onChangeText={(text) => setValue("memo", text)}
                     />
                 </Wrapper>
             </Item>
