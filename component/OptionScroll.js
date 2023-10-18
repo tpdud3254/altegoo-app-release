@@ -19,18 +19,20 @@ export const OptionScroll = ({ data }) => {
                 horizontal={true}
                 showsHorizontalScrollIndicator={false}
             >
-                {data.map((text, index) => (
-                    <Option key={index}>
-                        <MediumText
-                            style={{
-                                fontSize: 16,
-                                color: color["page-color-text"],
-                            }}
-                        >
-                            {text}
-                        </MediumText>
-                    </Option>
-                ))}
+                {data.map((text, index) =>
+                    text === null ? null : (
+                        <Option key={index}>
+                            <MediumText
+                                style={{
+                                    fontSize: 16,
+                                    color: color["page-color-text"],
+                                }}
+                            >
+                                {text}
+                            </MediumText>
+                        </Option>
+                    )
+                )}
             </ScrollView>
         </View>
     );

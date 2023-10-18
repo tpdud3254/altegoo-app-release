@@ -485,13 +485,28 @@ export const GetOrderOption = (registInfo) => {
 
     Object.keys(registInfo).map((value, index) => {
         data.push(registInfo[value]);
-        if (value === "price")
-            data[index] =
-                data[index] === 0
-                    ? "예상 운임 협의"
-                    : "예상 운임 " + numberWithComma(data[index]) + "AP";
-        if (value === "dateTime")
-            data[index] = GetDate(new Date(data[index]), "long");
+
+        if (
+            value === "address1" ||
+            value === "detailAddress1" ||
+            value === "address2" ||
+            value === "detailAddress2" ||
+            value === "latitud" ||
+            value === "longitude" ||
+            value === "region" ||
+            value === "simpleAddress2" ||
+            value === "volume"
+        )
+            data[index] = null;
+        else {
+            if (value === "price")
+                data[index] =
+                    data[index] === 0
+                        ? "예상 운임 협의"
+                        : "예상 운임 " + numberWithComma(data[index]) + "AP";
+            if (value === "dateTime")
+                data[index] = GetDate(new Date(data[index]), "long");
+        }
     });
 
     return data;
