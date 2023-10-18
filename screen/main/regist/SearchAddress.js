@@ -10,7 +10,7 @@ import RegularText from "../../../component/text/RegularText";
 import TextInput from "../../../component/input/TextInput";
 import { Box } from "../../../component/box/Box";
 import { TouchableOpacity } from "react-native";
-import { GetOrderOption, showErrorMessage } from "../../../utils";
+import { GetOrderOption, reset, showErrorMessage } from "../../../utils";
 import axios from "axios";
 
 const Item = styled.View`
@@ -116,6 +116,7 @@ function SearchAddress({ route, navigation }) {
 
         return null;
     };
+
     const onNextStep = async (data) => {
         const { detailAddress1, detailAddress2 } = data;
 
@@ -146,7 +147,7 @@ function SearchAddress({ route, navigation }) {
                 data: { documents },
             } = res;
 
-            console.log(documents);
+            console.log("kakao map response : ", documents);
 
             latitude = documents[0].y;
             longitude = documents[0].x;
@@ -156,6 +157,7 @@ function SearchAddress({ route, navigation }) {
         }
         if (registInfo.direction === DIRECTION[2]) {
             setRegistInfo({
+                ...registInfo,
                 address1: route?.params?.selectAddress1?.address,
                 simpleAddress1: `${route?.params?.selectAddress1?.sido} ${route?.params?.selectAddress1?.sigungu}`,
                 detailAddress1,
@@ -165,10 +167,10 @@ function SearchAddress({ route, navigation }) {
                 region: regionId,
                 latitude,
                 longitude,
-                ...registInfo,
             });
         } else {
             setRegistInfo({
+                ...registInfo,
                 address1: route?.params?.selectAddress1?.address,
                 simpleAddress1: `${route?.params?.selectAddress1?.sido} ${route?.params?.selectAddress1?.sigungu}`,
                 detailAddress1,
@@ -178,7 +180,6 @@ function SearchAddress({ route, navigation }) {
                 region: regionId,
                 latitude,
                 longitude,
-                ...registInfo,
             });
         }
 
