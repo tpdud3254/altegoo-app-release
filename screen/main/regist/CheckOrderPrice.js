@@ -1,9 +1,9 @@
 import styled from "styled-components/native";
-import Layout from "../../../component/layout/Layout";
+import Layout, { LAYOUT_PADDING_X } from "../../../component/layout/Layout";
 import RegularText from "../../../component/text/RegularText";
 import { color } from "../../../styles";
 import MediumText from "../../../component/text/MediumText";
-import { Image, TextInput, View } from "react-native";
+import { Image, TextInput, View, useWindowDimensions } from "react-native";
 import BoldText from "../../../component/text/BoldText";
 import { REGIST_NAV, SERVER } from "../../../constant";
 import { useContext, useEffect, useState } from "react";
@@ -48,6 +48,7 @@ const PointButton = styled.TouchableOpacity`
 `;
 
 const CheckOrderPrice = ({ navigation }) => {
+    const { width: windowWidth } = useWindowDimensions();
     const { info } = useContext(UserContext);
     const { registInfo, setRegistInfo } = useContext(RegistContext);
 
@@ -329,7 +330,8 @@ const CheckOrderPrice = ({ navigation }) => {
                         style={{
                             fontSize: 15,
                             marginBottom: 8,
-                            width: "25%",
+                            maxWidth: "50%",
+                            marginRight: 10,
                             textAlign: "right",
                         }}
                     >
@@ -339,7 +341,8 @@ const CheckOrderPrice = ({ navigation }) => {
                         style={{
                             fontSize: 16,
                             marginBottom: 8,
-                            width: "25%",
+                            // width: "25%",
+                            maxWidth: "50%",
                             textAlign: "right",
                         }}
                     >
@@ -354,7 +357,7 @@ const CheckOrderPrice = ({ navigation }) => {
                         </RegularText>
                     </RegularText>
                 </Row>
-                <Row>
+                {/* <Row>
                     <RegularText
                         style={{
                             fontSize: 15,
@@ -382,7 +385,7 @@ const CheckOrderPrice = ({ navigation }) => {
                             AP
                         </RegularText>
                     </RegularText>
-                </Row>
+                </Row> */}
                 <View
                     style={{
                         height: 1.5,
@@ -397,11 +400,18 @@ const CheckOrderPrice = ({ navigation }) => {
                         style={{
                             fontSize: 15,
                             marginRight: 20,
+                            maxWidth: windowWidth * 0.3,
                         }}
                     >
-                        총 결제 금액
+                        총 결제 금액{" "}
                     </RegularText>
-                    <BoldText style={{ fontSize: 22, color: color.main }}>
+                    <BoldText
+                        style={{
+                            fontSize: 22,
+                            color: color.main,
+                            maxWidth: windowWidth * 0.7,
+                        }}
+                    >
                         {numberWithComma(watch("totalPrice", "0"))}
                         <BoldText style={{ fontSize: 16, color: color.main }}>
                             {" "}

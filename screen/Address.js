@@ -27,7 +27,7 @@ function Address({ navigation, route }) {
     };
     const YourView = () => (
         <Postcode
-            style={{ width: "100%", height: "100%", paddingTop: 50 }}
+            style={{ width: "100%", height: "100%", paddingTop: "5%" }}
             jsOptions={{ animation: true }}
             onSelected={(data) => onSelected(data)}
         />

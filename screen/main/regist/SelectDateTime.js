@@ -24,6 +24,7 @@ LocaleConfig.locales["fr"] = CALENDAR_LOCALES;
 LocaleConfig.defaultLocale = "fr";
 
 const SelectDateContainer = styled.View`
+    width: 100%;
     background-color: white;
     border-radius: 10px;
 `;
@@ -31,7 +32,8 @@ const SelectDateContainer = styled.View`
 const Notice = styled.View`
     flex-direction: row;
     align-items: center;
-    justify-content: flex-end;
+    padding-left: 10px;
+    margin-top: 10px;
     margin-bottom: 10px;
 `;
 
@@ -41,12 +43,14 @@ const Item = styled.View`
 const Wrapper = styled.View``;
 
 const DialogContainer = styled.View`
-    width: 90%;
+    min-width: 90%;
     align-items: center;
     justify-content: center;
     border-radius: 20px;
-    padding-top: 30px;
-    padding-bottom: 30px;
+    padding-top: 5%;
+    padding-bottom: 5%;
+    padding-left: 3%;
+    padding-right: 3%;
     background-color: white;
     max-height: 500px;
 `;
@@ -352,9 +356,7 @@ function SelectDateTime({ navigation }) {
                         style={{ width: "100%", alignItems: "center" }}
                     >
                         <DialogContainer style={shadowProps}>
-                            <MediumText>
-                                <SelectDate />
-                            </MediumText>
+                            <SelectDate />
                         </DialogContainer>
                     </DialogContent>
                 </Dialog>

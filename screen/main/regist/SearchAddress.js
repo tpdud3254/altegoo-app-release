@@ -9,7 +9,7 @@ import { OptionScroll } from "../../../component/OptionScroll";
 import RegularText from "../../../component/text/RegularText";
 import TextInput from "../../../component/input/TextInput";
 import { Box } from "../../../component/box/Box";
-import { TouchableOpacity } from "react-native";
+import { KeyboardAvoidingView, TouchableOpacity } from "react-native";
 import { GetOrderOption, reset, showErrorMessage } from "../../../utils";
 import axios from "axios";
 
@@ -196,7 +196,7 @@ function SearchAddress({ route, navigation }) {
 
     return (
         <Layout
-            scroll={false}
+            scroll={true}
             kakaoBtnShown={true}
             bottomButtonProps={{
                 onPress: handleSubmit(onNextStep),
@@ -205,10 +205,87 @@ function SearchAddress({ route, navigation }) {
             }}
         >
             <OptionScroll data={optionData} />
-            {registInfo.direction === DIRECTION[2] ? (
-                <>
+            <KeyboardAvoidingView>
+                {registInfo.direction === DIRECTION[2] ? (
+                    <>
+                        <Item>
+                            <ItemTitle title="1. ‘내림’ 주소 입력하기" />
+                            <Wrapper>
+                                <TouchableOpacity
+                                    onPress={() => searchAddress(0)}
+                                    style={{ marginBottom: 15 }}
+                                >
+                                    <Box
+                                        width="100%"
+                                        text={
+                                            route?.params?.selectAddress1
+                                                ?.address || "내림 주소 입력"
+                                        }
+                                        textStyle={{
+                                            color: route?.params?.selectAddress1
+                                                ?.address
+                                                ? color["page-dark-text"]
+                                                : color["page-lightgrey-text"],
+                                        }}
+                                    />
+                                </TouchableOpacity>
+                                <TextInput
+                                    placeholder="상세 주소 입력"
+                                    returnKeyType="done"
+                                    value={watch("detailAddress1")}
+                                    onReset={() =>
+                                        reset(setValue, "detailAddress1")
+                                    }
+                                    onChangeText={(text) =>
+                                        setValue("detailAddress1", text)
+                                    }
+                                />
+                            </Wrapper>
+                        </Item>
+                        <Item>
+                            <ItemTitle title="2. ‘올림’ 주소 입력하기" />
+                            <Wrapper>
+                                <TouchableOpacity
+                                    onPress={() => searchAddress(1)}
+                                    style={{ marginBottom: 15 }}
+                                >
+                                    <Box
+                                        width="100%"
+                                        text={
+                                            route?.params?.selectAddress2
+                                                ?.address || "올림 주소 입력"
+                                        }
+                                        textStyle={{
+                                            color: route?.params?.selectAddress2
+                                                ?.address
+                                                ? color["page-dark-text"]
+                                                : color["page-lightgrey-text"],
+                                        }}
+                                    />
+                                </TouchableOpacity>
+                                <TextInput
+                                    placeholder="상세 주소 입력"
+                                    returnKeyType="done"
+                                    value={watch("detailAddress2")}
+                                    onReset={() =>
+                                        reset(setValue, "detailAddress2")
+                                    }
+                                    onChangeText={(text) =>
+                                        setValue("detailAddress2", text)
+                                    }
+                                />
+                            </Wrapper>
+                        </Item>
+                    </>
+                ) : (
                     <Item>
-                        <ItemTitle title="1. ‘내림’ 주소 입력하기" />
+                        <ItemTitle
+                            title={
+                                registInfo.vehicleType === "스카이차"
+                                    ? "1. 주소 입력하기"
+                                    : `1. ‘${registInfo.direction}’ 주소 입력하기`
+                            }
+                        />
                         <Wrapper>
                             <TouchableOpacity
                                 onPress={() => searchAddress(0)}
@@ -218,7 +295,10 @@ function SearchAddress({ route, navigation }) {
                                     width="100%"
                                     text={
                                         route?.params?.selectAddress1
-                                            ?.address || "내림 주소 입력"
+                                            ?.address ||
+                                        (registInfo.vehicleType === "스카이차"
+                                            ? "주소 입력"
+                                            : `${registInfo.direction} 주소 입력`)
                                     }
                                     textStyle={{
                                         color: route?.params?.selectAddress1
@@ -241,83 +321,8 @@ function SearchAddress({ route, navigation }) {
                             />
                         </Wrapper>
                     </Item>
-                    <Item>
-                        <ItemTitle title="2. ‘올림’ 주소 입력하기" />
-                        <Wrapper>
-                            <TouchableOpacity
-                                onPress={() => searchAddress(1)}
-                                style={{ marginBottom: 15 }}
-                            >
-                                <Box
-                                    width="100%"
-                                    text={
-                                        route?.params?.selectAddress2
-                                            ?.address || "올림 주소 입력"
-                                    }
-                                    textStyle={{
-                                        color: route?.params?.selectAddress2
-                                            ?.address
-                                            ? color["page-dark-text"]
-                                            : color["page-lightgrey-text"],
-                                    }}
-                                />
-                            </TouchableOpacity>
-                            <TextInput
-                                placeholder="상세 주소 입력"
-                                returnKeyType="done"
-                                value={watch("detailAddress2")}
-                                onReset={() =>
-                                    reset(setValue, "detailAddress2")
-                                }
-                                onChangeText={(text) =>
-                                    setValue("detailAddress2", text)
-                                }
-                            />
-                        </Wrapper>
-                    </Item>
-                </>
-            ) : (
-                <Item>
-                    <ItemTitle
-                        title={
-                            registInfo.vehicleType === "스카이차"
-                                ? "1. 주소 입력하기"
-                                : `1. ‘${registInfo.direction}’ 주소 입력하기`
-                        }
-                    />
-                    <Wrapper>
-                        <TouchableOpacity
-                            onPress={() => searchAddress(0)}
-                            style={{ marginBottom: 15 }}
-                        >
-                            <Box
-                                width="100%"
-                                text={
-                                    route?.params?.selectAddress1?.address ||
-                                    (registInfo.vehicleType === "스카이차"
-                                        ? "주소 입력"
-                                        : `${registInfo.direction} 주소 입력`)
-                                }
-                                textStyle={{
-                                    color: route?.params?.selectAddress1
-                                        ?.address
-                                        ? color["page-dark-text"]
-                                        : color["page-lightgrey-text"],
-                                }}
-                            />
-                        </TouchableOpacity>
-                        <TextInput
-                            placeholder="상세 주소 입력"
-                            returnKeyType="done"
-                            value={watch("detailAddress1")}
-                            onReset={() => reset(setValue, "detailAddress1")}
-                            onChangeText={(text) =>
-                                setValue("detailAddress1", text)
-                            }
-                        />
-                    </Wrapper>
-                </Item>
-            )}
+                )}
+            </KeyboardAvoidingView>
         </Layout>
     );
 }

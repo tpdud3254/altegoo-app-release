@@ -123,15 +123,15 @@ function RegistCompleted({ navigation, route }) {
         navigation.dispatch(
             CommonActions.reset({
                 index: 1,
-                routes: [{ name: "Home" }],
+                routes: [{ name: "TabsNavigator" }],
             })
         );
-
-        navigation.navigate("Home", { refresh: true });
+        return true;
+        // navigation.navigate("Home", { refresh: true });
     };
 
     return (
-        <Layout scroll={false}>
+        <Layout scroll={true}>
             <Container>
                 <View style={{ width: "100%", alignItems: "center" }}>
                     <BoldText
@@ -186,6 +186,7 @@ function RegistCompleted({ navigation, route }) {
                             backgroundColor: color["image-area-background"],
                             width: "90%",
                             marginTop: 20,
+                            marginBottom: 20,
                         }}
                     ></View>
                 </View>
