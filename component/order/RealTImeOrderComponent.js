@@ -23,11 +23,14 @@ import { SERVER, VALID } from "../../constant";
 
 const ItemContainer = styled.TouchableOpacity`
     flex-direction: row;
+    /* background-color: ${(props) =>
+        props.emergency ? color["box-color-background"] : color.lightblue}; */
     background-color: ${(props) =>
-        props.emergency ? color["box-color-background"] : color.lightblue};
+        props.emergency ? "#FFC19B50" : color.lightblue};
+    /* NEXT: 사다리차, 스카이차 색 구분되게 수정 */
     padding: 15px;
     border-radius: 16px;
-    border: ${(props) => (props.emergency ? 1 : 0)}px solid #eb1d36;
+    /* border: ${(props) => (props.emergency ? 1 : 0)}px solid #eb1d36; */
     width: 100%;
 `;
 
@@ -325,7 +328,8 @@ export const Order = {
                     <View style={{ marginBottom: 20 }}>
                         <ItemContainer
                             onPress={goToOrderProgress}
-                            emergency={order.emergency}
+                            // emergency={order.emergency} NEXT: 스카이차, 사다리차 색깔구분으로 변경
+                            emergency={order.vehicleType !== "스카이차"}
                         >
                             <Icon>
                                 {order.direction === "올림" ? (
