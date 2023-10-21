@@ -367,6 +367,8 @@ function OrderDetails({ navigation, route }) {
                     onLoadProgress={(event) => {
                         setProgress(event.nativeEvent.progress);
                     }}
+                    androidHardwareAccelerationDisabled={true}
+                    style={{ opacity: 0.99, minHeight: 1 }}
                 />
             </View>
         </View>
