@@ -9,13 +9,20 @@ const Container = styled.View`
     margin-bottom: -10px;
 `;
 
-export const Popup = ({ children, visible, onTouchOutside, onClick }) => {
+export const Popup = ({
+    children,
+    visible,
+    onTouchOutside,
+    onClick,
+    width,
+}) => {
     return (
         <Dialog
             visible={visible}
             onTouchOutside={onTouchOutside}
             onHardwareBackPress={onTouchOutside}
             overlayBackgroundColor="#00000044"
+            width={width ? width : undefined}
             footer={
                 <TouchableOpacity
                     onPress={onClick}

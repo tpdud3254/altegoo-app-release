@@ -117,12 +117,12 @@ function Intro() {
                     <Button
                         onPress={goToSignIn}
                         type="accent"
-                        style={{ width: 185 }}
+                        style={{ width: imageSize * 0.45 }}
                         text="로그인"
                     />
                     <Button
                         onPress={goToSignUp}
-                        style={{ width: 185 }}
+                        style={{ width: imageSize * 0.45 }}
                         text="회원가입"
                     />
                 </Buttons>

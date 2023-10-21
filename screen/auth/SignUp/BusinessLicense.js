@@ -7,18 +7,17 @@ import { SIGNUP_NAV } from "../../../constant";
 import AuthLayout from "../../../component/layout/AuthLayout";
 import RegularText from "../../../component/text/RegularText";
 import MediumText from "../../../component/text/MediumText";
-import { Image, useWindowDimensions } from "react-native";
+import { Image, ScrollView, useWindowDimensions } from "react-native";
 import { Popup } from "../../../component/Popup";
 import BoldText from "../../../component/text/BoldText";
 
 const Container = styled.View`
     justify-content: space-between;
-    height: ${(props) => props.height - 200}px;
 `;
 
 const Wrapper = styled.View`
     align-items: center;
-    margin-top: 70px;
+    margin-top: 10%;
 `;
 const CameraButton = styled.TouchableOpacity`
     width: 250px;
@@ -46,6 +45,7 @@ const CancelButton = styled.TouchableOpacity`
 
 const SkipButton = styled.TouchableOpacity`
     align-items: center;
+    margin-top: 10px;
 `;
 
 const PopupContainer = styled.View`
@@ -127,54 +127,56 @@ function BusinessLicense() {
             }}
         >
             <Container height={windowHeight}>
-                <Wrapper>
-                    {!imageStatus ? (
-                        <CameraButton onPress={takePicture}>
-                            <Image
-                                style={{ width: 60, height: 60 }}
-                                source={require("../../../assets/images/icons/btn_camera.png")}
-                            />
-                        </CameraButton>
-                    ) : (
-                        <License>
-                            <Image
-                                style={{ width: "100%", height: "100%" }}
-                                source={{ uri: info.licenseUrl }}
-                                resizeMode="contain"
-                            />
-                            <CancelButton onPress={deleteLicense}>
+                <ScrollView>
+                    <Wrapper>
+                        {!imageStatus ? (
+                            <CameraButton onPress={takePicture}>
                                 <Image
-                                    style={{ width: 30, height: 30 }}
-                                    source={require("../../../assets/images/icons/btn_del_s.png")}
+                                    style={{ width: 60, height: 60 }}
+                                    source={require("../../../assets/images/icons/btn_camera.png")}
                                 />
-                            </CancelButton>
-                        </License>
-                    )}
+                            </CameraButton>
+                        ) : (
+                            <License>
+                                <Image
+                                    style={{ width: "100%", height: "100%" }}
+                                    source={{ uri: info.licenseUrl }}
+                                    resizeMode="contain"
+                                />
+                                <CancelButton onPress={deleteLicense}>
+                                    <Image
+                                        style={{ width: 30, height: 30 }}
+                                        source={require("../../../assets/images/icons/btn_del_s.png")}
+                                    />
+                                </CancelButton>
+                            </License>
+                        )}
 
-                    <MediumText
-                        style={{
-                            color: color["page-grey-text"],
-                            fontSize: 16,
-                            textAlign: "center",
-                            marginTop: 20,
-                            lineHeight: 24,
-                        }}
-                    >
-                        위 카메라 아이콘을 터치하여{"\n"}사업자 등록증을
-                        촬영하거나 사진첩에서{"\n"}불러와주세요.
-                    </MediumText>
-                </Wrapper>
-                <SkipButton onPress={showPopup}>
-                    <RegularText
-                        style={{
-                            fontSize: 16,
-                            color: color["page-color-text"],
-                            textDecorationLine: "underline",
-                        }}
-                    >
-                        다음에 할게요
-                    </RegularText>
-                </SkipButton>
+                        <MediumText
+                            style={{
+                                color: color["page-grey-text"],
+                                fontSize: 16,
+                                textAlign: "center",
+                                marginTop: 20,
+                                lineHeight: 24,
+                            }}
+                        >
+                            위 카메라 아이콘을 터치하여{"\n"}사업자 등록증을
+                            촬영하거나 사진첩에서{"\n"}불러와주세요.
+                        </MediumText>
+                    </Wrapper>
+                    <SkipButton onPress={showPopup}>
+                        <RegularText
+                            style={{
+                                fontSize: 16,
+                                color: color["page-color-text"],
+                                textDecorationLine: "underline",
+                            }}
+                        >
+                            다음에 할게요
+                        </RegularText>
+                    </SkipButton>
+                </ScrollView>
             </Container>
             <Popup
                 visible={popupVisible}

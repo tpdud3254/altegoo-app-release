@@ -38,6 +38,7 @@ export const Radio = ({ selected, onSelect, value, width }) => {
                     color: selected
                         ? color["page-color-text"]
                         : color["page-black-text"],
+                    maxWidth: "72%",
                 }}
             >
                 {value}

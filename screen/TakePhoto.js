@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useRef, useState } from "react";
 import styled from "styled-components/native";
-import { Image, StatusBar } from "react-native";
+import { Image, StatusBar, useWindowDimensions } from "react-native";
 import { useIsFocused } from "@react-navigation/native";
 import { Camera } from "expo-camera";
 import { Ionicons } from "@expo/vector-icons";
@@ -63,6 +63,7 @@ const LicenseExample = styled.View`
 `;
 
 function TakePhoto({ navigation, route }) {
+    const { width: windowWidth } = useWindowDimensions();
     const camera = useRef();
     const [granted, setGranted] = useState(false);
     const [mediaLibraryGranted, setMediaLibraryGranted] = useState(false);
@@ -332,7 +333,7 @@ function TakePhoto({ navigation, route }) {
                             <PhotoActions>
                                 <Button
                                     onPress={onDismiss}
-                                    style={{ width: 140 }}
+                                    style={{ width: windowWidth * 0.35 }}
                                     text="재촬영"
                                 />
                                 <Button
@@ -340,7 +341,7 @@ function TakePhoto({ navigation, route }) {
                                         settingMode ? registLicense : onUpload
                                     }
                                     type="accent"
-                                    style={{ width: 140 }}
+                                    style={{ width: windowWidth * 0.35 }}
                                     text={settingMode ? "등록하기" : "저장"}
                                 />
                             </PhotoActions>
@@ -350,6 +351,7 @@ function TakePhoto({ navigation, route }) {
                         visible={showExample}
                         onTouchOutside={hideModal}
                         onClick={hideModal}
+                        width={windowWidth * 0.9}
                     >
                         <PopupTitle>
                             <Image
@@ -382,8 +384,8 @@ function TakePhoto({ navigation, route }) {
                             <Image
                                 style={{
                                     resizeMode: "contain",
-                                    width: 300,
-                                    height: 400,
+                                    width: windowWidth * 0.8,
+                                    height: windowWidth * 0.8 * 1.2,
                                     borderColor: "#dddddd",
                                     borderWidth: 1,
                                 }}

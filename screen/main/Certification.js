@@ -6,7 +6,7 @@ import { CommonActions } from "@react-navigation/native";
 
 function Certification({ navigation }) {
     const webViewRef = useRef();
-    const { width } = useWindowDimensions();
+    const { width, height } = useWindowDimensions();
     const [progress, setProgress] = useState(0.0);
 
     const sendMessage = (data) => {
@@ -56,6 +56,7 @@ function Certification({ navigation }) {
     }, [progress]);
 
     const goToPage = (data) => {
+        //TODO: 가입 하지 않은 회원일 경우 뒤로가기
         navigation.dispatch(
             CommonActions.reset({
                 index: 1,
@@ -83,13 +84,12 @@ function Certification({ navigation }) {
             <SafeAreaView style={{ flex: 1 }}>
                 <View
                     style={{
-                        height: 700,
                         flex: 1,
                     }}
                 >
                     <WebView
                         ref={webViewRef}
-                        style={{ width: width, height: 700, flex: 1 }}
+                        style={{ width: width, height: height, flex: 1 }}
                         source={{
                             uri: "https://master.d1p7wg3e032x9j.amplifyapp.com/certification",
                         }}

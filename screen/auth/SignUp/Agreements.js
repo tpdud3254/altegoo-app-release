@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import styled from "styled-components/native";
 import UserContext from "../../../context/UserContext";
 import { useNavigation } from "@react-navigation/native";
@@ -7,8 +7,9 @@ import { SIGNUP_NAV } from "../../../constant";
 import AuthLayout from "../../../component/layout/AuthLayout";
 import RegularText from "../../../component/text/RegularText";
 import MediumText from "../../../component/text/MediumText";
-import { Image, TouchableOpacity } from "react-native";
+import { Image, TouchableOpacity, useWindowDimensions } from "react-native";
 import HorizontalDivider from "../../../component/divider/HorizontalDivider";
+import { LAYOUT_PADDING_X } from "../../../component/layout/Layout";
 
 const termsTexts = [
     "만 14세 이상입니다.",
@@ -54,6 +55,8 @@ const TermsWrapper = styled.View`
     align-items: center;
 `;
 function Agreements() {
+    const { width: windowWidth } = useWindowDimensions();
+    const [containerWidth, setContainerWidth] = useState(null);
     const navigation = useNavigation();
     const { info, setInfo } = useContext(UserContext);
     const [checkArr, setCheckArr] = useState([
@@ -67,6 +70,9 @@ function Agreements() {
     const [blockAllChecked, setBlockAllChecked] = useState(false);
     const [isAgree, setIsAgree] = useState(true);
 
+    useEffect(() => {
+        setContainerWidth(Math.floor(windowWidth - LAYOUT_PADDING_X * 2));
+    }, []);
     const clickAllCheckButton = () => {
         if (!isAllChecked) {
             setIsAllChecked(true);
@@ -184,22 +190,33 @@ function Agreements() {
                     width="100%"
                     color={color["divider-border"]}
                 />
-                <TermsContainer>
+                <TermsContainer style={{ maxWidth: containerWidth }}>
                     {termsTexts.map((text, index) => (
                         <Terms
                             key={index}
                             lastChild={index === termsTexts.length - 1}
+                            style={{ maxWidth: containerWidth }}
                         >
                             <TouchableOpacity
                                 onPress={() =>
                                     clickCheckButton(!checkArr[index], index)
                                 }
+                                style={{ maxWidth: containerWidth }}
                             >
-                                <TermsWrapper>
+                                <TermsWrapper
+                                    style={{ maxWidth: containerWidth }}
+                                >
                                     <Checkbox checked={checkArr[index]} />
-                                    <RegularText>
+                                    <RegularText
+                                        style={{
+                                            maxWidth:
+                                                index === 0 || index === 4
+                                                    ? "100%"
+                                                    : containerWidth * 0.5,
+                                        }}
+                                    >
                                         {text}
-                                        {index < 4 ? " (필수)" : "(선택)"}
+                                        {index < 4 ? " (필수)" : " (선택)"}
                                     </RegularText>
                                 </TermsWrapper>
                             </TouchableOpacity>

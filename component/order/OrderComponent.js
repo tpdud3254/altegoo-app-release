@@ -108,7 +108,8 @@ export const Order = {
                     ) : (
                         <MediumText>{`${data.vehicleType} / ${data.floor} / ${data.time}`}</MediumText>
                     )}
-
+                </Row>
+                <Row>
                     <MediumText>
                         {numberWithComma(data.price)}{" "}
                         <MediumText
