@@ -967,7 +967,7 @@ function DriverOrderProgress({ navigation, route }) {
                                         <ResultTitle>
                                             <Title>알테구 이용비</Title>
 
-                                            <Title>
+                                            {/* <Title>
                                                 긴급 오더{" "}
                                                 <RegularText
                                                     style={{
@@ -977,7 +977,9 @@ function DriverOrderProgress({ navigation, route }) {
                                                 >
                                                     (25%)
                                                 </RegularText>
-                                            </Title>
+                                            </Title> 
+                                            NEXT: 긴급오더 일단 삭제
+                                            */}
                                         </ResultTitle>
                                         <ResultValue>
                                             <Price
@@ -986,11 +988,13 @@ function DriverOrderProgress({ navigation, route }) {
                                                 )}
                                             />
 
-                                            <Price
+                                            {/* <Price
                                                 price={numberWithComma(
                                                     order.emergencyPrice || 0
                                                 )}
-                                            />
+                                            /> 
+                                            NEXT: 긴급오더 일단 삭제
+                                            */}
                                         </ResultValue>
                                     </Results>
                                     <Total>

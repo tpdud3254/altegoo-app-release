@@ -748,7 +748,7 @@ function OrderProgress({ navigation, route }) {
                             <Results>
                                 <ResultTitle>
                                     <Title>알테구 이용비</Title>
-                                    <Title>포인트 사용</Title>
+                                    {/* <Title>포인트 사용</Title>
                                     <Title>
                                         긴급 오더{" "}
                                         <RegularText
@@ -760,12 +760,14 @@ function OrderProgress({ navigation, route }) {
                                             (25%)
                                         </RegularText>
                                     </Title>
+                                    //NEXT: 포인트 이용, 긴급오더 삭제
+                                    */}
                                 </ResultTitle>
                                 <ResultValue>
                                     <Price
                                         price={numberWithComma(order.price)}
                                     />
-                                    <Price
+                                    {/* <Price
                                         price={
                                             "- " +
                                             numberWithComma(order.usePoint)
@@ -775,7 +777,9 @@ function OrderProgress({ navigation, route }) {
                                         price={numberWithComma(
                                             order.emergencyPrice
                                         )}
-                                    />
+                                    /> 
+                                    //NEXT: 포인트 이용, 긴급오더 삭제
+                                    */}
                                 </ResultValue>
                             </Results>
                             <Total>
