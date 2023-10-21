@@ -1,6 +1,6 @@
 import { createStackNavigator } from "@react-navigation/stack";
 import React from "react";
-import { FONTS } from "../../constant";
+import { FONTS, FONT_OFFSET } from "../../constant";
 import { color } from "../../styles";
 import { Image } from "react-native";
 import MemberInformation from "../../screen/main/setting/MemberInformation";
@@ -29,6 +29,7 @@ export default function SettingNavigator() {
                 presentation: "transparentModal",
                 headerTintColor: color["header-title-text"],
                 headerTitleStyle: {
+                    fontSize: 18 + FONT_OFFSET,
                     fontFamily: FONTS.medium,
                 },
                 headerStyle: {

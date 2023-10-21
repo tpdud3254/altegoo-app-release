@@ -19,7 +19,7 @@ import {
     numberWithComma,
 } from "../../../utils";
 import { useForm } from "react-hook-form";
-import { REGIST_NAV } from "../../../constant";
+import { FONT_OFFSET, REGIST_NAV } from "../../../constant";
 import Layout from "../../../component/layout/Layout";
 import BoldText from "../../../component/text/BoldText";
 import RegularText from "../../../component/text/RegularText";
@@ -281,7 +281,7 @@ function AddOtherData({ navigation }) {
                     <Content unpadded>
                         <RNTextInput
                             style={{
-                                fontSize: 18,
+                                fontSize: 18 + FONT_OFFSET,
                                 fontFamily: "SpoqaHanSansNeo-Regular",
                                 color: color["page-black-text"],
                             }}
@@ -373,7 +373,7 @@ function AddOtherData({ navigation }) {
                 <Wrapper>
                     <RNTextInput
                         style={{
-                            fontSize: 18,
+                            fontSize: 18 + FONT_OFFSET,
                             fontFamily: "SpoqaHanSansNeo-Regular",
                             color: color["page-black-text"],
                         }}

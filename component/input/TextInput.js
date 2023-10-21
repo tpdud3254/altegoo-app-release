@@ -14,6 +14,7 @@ import {
     useRef,
     useState,
 } from "react";
+import { FONT_OFFSET } from "../../constant";
 
 const Container = styled.View`
     width: ${(props) => (props.width ? props.width : "100%")};
@@ -78,7 +79,7 @@ const TextInput = forwardRef((props, ref) => {
                     cursorColor={color["page-lightgrey-text"]}
                     style={{
                         width: "90%",
-                        fontSize: 19,
+                        fontSize: 19 + FONT_OFFSET,
                         color: color["page-black-text"],
                         fontFamily: "SpoqaHanSansNeo-Regular",
                         paddingTop: 8,

@@ -5,6 +5,7 @@ import Dialog, {
     DialogContent,
     DialogFooter,
 } from "react-native-popup-dialog";
+import { FONT_OFFSET } from "../constant";
 
 const Container = styled.View`
     padding-top: 20px;
@@ -36,7 +37,7 @@ export const PopupWithButtons = ({
                             marginTop: 1,
                         }}
                         textStyle={{
-                            fontSize: 20,
+                            fontSize: 20 + FONT_OFFSET,
                             fontFamily: "SpoqaHanSansNeo-Bold",
                             color: color["page-black-text"],
                         }}
@@ -50,7 +51,7 @@ export const PopupWithButtons = ({
                             marginTop: 1,
                         }}
                         textStyle={{
-                            fontSize: 20,
+                            fontSize: 20 + FONT_OFFSET,
                             fontFamily: "SpoqaHanSansNeo-Bold",
                             color: "white",
                         }}

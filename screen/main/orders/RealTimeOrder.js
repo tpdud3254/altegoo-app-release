@@ -253,6 +253,7 @@ function RealTimeOrder({ navigation }) {
                         <BoldText
                             style={{
                                 fontSize: 23,
+                                maxWidth: "80%",
                             }}
                         >
                             {orders && orders !== -1 ? orders.length : "0"}건의
@@ -275,7 +276,6 @@ function RealTimeOrder({ navigation }) {
                                     style={{ width: 27, height: 27 }}
                                 />
                             </Refresh>
-
                             <Notification />
                         </Row>
                     </ItemRow>
@@ -292,7 +292,11 @@ function RealTimeOrder({ navigation }) {
                                         }}
                                     />
                                     <MediumText
-                                        style={{ fontSize: 16, color: "white" }}
+                                        style={{
+                                            fontSize: 16,
+                                            color: "white",
+                                            maxWidth: "80%",
+                                        }}
                                     >
                                         현재 진행중인 작업이 있습니다.
                                     </MediumText>

@@ -5,7 +5,7 @@ import { color } from "../../../styles";
 import MediumText from "../../../component/text/MediumText";
 import { Image, TextInput, View, useWindowDimensions } from "react-native";
 import BoldText from "../../../component/text/BoldText";
-import { REGIST_NAV, SERVER } from "../../../constant";
+import { REGIST_NAV, SERVER, FONT_OFFSET } from "../../../constant";
 import { useContext, useEffect, useState } from "react";
 import UserContext from "../../../context/UserContext";
 import RegistContext from "../../../context/RegistContext";
@@ -278,7 +278,7 @@ const CheckOrderPrice = ({ navigation }) => {
                             <TextInput
                                 style={{
                                     width: "90%",
-                                    fontSize: 18,
+                                    fontSize: 18 + FONT_OFFSET,
                                     fontFamily: "SpoqaHanSansNeo-Regular",
                                     color: color["page-black-text"],
                                 }}

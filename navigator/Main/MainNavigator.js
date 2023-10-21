@@ -2,7 +2,7 @@ import { createStackNavigator } from "@react-navigation/stack";
 import axios from "axios";
 import React, { useContext, useEffect, useRef, useState } from "react";
 import LoadingLayout from "../../component/layout/LoadingLayout";
-import { FONTS, VALID } from "../../constant";
+import { FONTS, FONT_OFFSET, VALID } from "../../constant";
 import LoginContext from "../../context/LoginContext";
 import Charge from "../../screen/main/Charge";
 import Payment from "../../screen/main/Payment";
@@ -173,6 +173,7 @@ export default function MainNavigator() {
                         presentation: "transparentModal",
                         headerTintColor: color["header-title-text"],
                         headerTitleStyle: {
+                            fontSize: 18 + FONT_OFFSET,
                             fontFamily: FONTS.medium,
                         },
                         headerStyle: {
@@ -190,7 +191,7 @@ export default function MainNavigator() {
                         ),
                     }}
                 >
-                    {firstLogin || true ? (
+                    {firstLogin ? (
                         <Stack.Screen
                             name="Welcome"
                             component={Welcome}

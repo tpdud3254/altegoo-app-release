@@ -1,6 +1,6 @@
 import { createStackNavigator } from "@react-navigation/stack";
 import React from "react";
-import { FONTS, REGIST_NAV } from "../../constant";
+import { FONTS, FONT_OFFSET, REGIST_NAV } from "../../constant";
 import Address from "../../screen/Address";
 import Payment from "../../screen/main/Payment";
 import AddOtherData from "../../screen/main/regist/AddOtherData";
@@ -25,6 +25,7 @@ export default function RegistNavigator() {
                 presentation: "transparentModal",
                 headerTintColor: color["header-title-text"],
                 headerTitleStyle: {
+                    fontSize: 18 + FONT_OFFSET,
                     fontFamily: FONTS.medium,
                 },
                 headerStyle: {

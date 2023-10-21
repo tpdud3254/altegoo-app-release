@@ -2,7 +2,7 @@ import { createStackNavigator } from "@react-navigation/stack";
 import * as React from "react";
 import SetPassword from "../../screen/auth/SetPassword";
 import SignIn from "../../screen/auth/SignIn";
-import { FONTS } from "../../constant";
+import { FONTS, FONT_OFFSET } from "../../constant";
 import { Image } from "react-native";
 import { color } from "../../styles";
 import Certification from "../../screen/main/Certification";
@@ -19,6 +19,7 @@ export default function SignInNavigator() {
                 presentation: "transparentModal",
                 headerTintColor: color["header-title-text"],
                 headerTitleStyle: {
+                    fontSize: 18 + FONT_OFFSET,
                     fontFamily: FONTS.medium,
                 },
                 headerStyle: {

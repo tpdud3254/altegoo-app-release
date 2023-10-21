@@ -1,6 +1,6 @@
 import { createStackNavigator } from "@react-navigation/stack";
 import React, { useContext } from "react";
-import { FONTS } from "../../constant";
+import { FONTS, FONT_OFFSET } from "../../constant";
 import UserContext from "../../context/UserContext";
 import SignUp from "../../screen/auth/SignUp/SignUp";
 import TakePhoto from "../../screen/TakePhoto";
@@ -31,6 +31,7 @@ export default function SignUpNavigator() {
                 presentation: "transparentModal",
                 headerTintColor: color["header-title-text"],
                 headerTitleStyle: {
+                    fontSize: 18 + FONT_OFFSET,
                     fontFamily: FONTS.medium,
                 },
                 headerStyle: {

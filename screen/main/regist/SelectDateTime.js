@@ -6,7 +6,12 @@ import MediumText from "../../../component/text/MediumText";
 import { AntDesign } from "@expo/vector-icons";
 import styled from "styled-components/native";
 import RegistContext from "../../../context/RegistContext";
-import { CALENDAR_HAND, CALENDAR_LOCALES, REGIST_NAV } from "../../../constant";
+import {
+    CALENDAR_HAND,
+    CALENDAR_LOCALES,
+    FONT_OFFSET,
+    REGIST_NAV,
+} from "../../../constant";
 import Layout from "../../../component/layout/Layout";
 import { OptionScroll } from "../../../component/OptionScroll";
 import RegularText from "../../../component/text/RegularText";
@@ -299,7 +304,7 @@ function SelectDateTime({ navigation }) {
                         </TouchableOpacity>
                     )}
                     theme={{
-                        textDayHeaderFontSize: 18,
+                        textDayHeaderFontSize: 18 + FONT_OFFSET,
                         textDayHeaderFontFamily: "SpoqaHanSansNeo-Regular",
                         textSectionTitleColor: "#777777",
                     }}
