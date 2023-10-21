@@ -5,7 +5,7 @@ import { color } from "../../styles";
 import AuthLayout from "../../component/layout/AuthLayout";
 import RegularText from "../../component/text/RegularText";
 import MediumText from "../../component/text/MediumText";
-import { BackHandler, useWindowDimensions } from "react-native";
+import { BackHandler, ScrollView, useWindowDimensions } from "react-native";
 import BoldText from "../../component/text/BoldText";
 import UserContext from "../../context/UserContext";
 import { GetPhoneNumberWithDash } from "../../utils";
@@ -86,8 +86,8 @@ function Welcome() {
     };
 
     return (
-        <AuthLayout>
-            <Container height={windowHeight}>
+        <Container height={windowHeight}>
+            <AuthLayout>
                 <WelcomeImage
                     style={{
                         resizeMode: "contain",
@@ -193,8 +193,8 @@ function Welcome() {
                         </Button>
                     </BottomButtonWrapper>
                 </Bottom>
-            </Container>
-        </AuthLayout>
+            </AuthLayout>
+        </Container>
     );
 }
 
