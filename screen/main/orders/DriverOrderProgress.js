@@ -621,6 +621,13 @@ function DriverOrderProgress({ navigation, route }) {
                                                     event.nativeEvent.progress
                                                 );
                                             }}
+                                            androidHardwareAccelerationDisabled={
+                                                true
+                                            }
+                                            style={{
+                                                opacity: 0.99,
+                                                minHeight: 1,
+                                            }}
                                         />
                                     </View>
                                 </View>
