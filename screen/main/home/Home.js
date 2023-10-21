@@ -225,7 +225,14 @@ function Home({ navigation, route }) {
             .finally(() => {});
     };
     const goToPoint = () => {
-        navigation.navigate("SettingNavigator", { screen: "PointMain" });
+        // navigation.navigate("SettingNavigator", { screen: "PointMain" }); //TEST: 테스트
+        navigation.navigate("MainNavigator", {
+            screen: "Welcome",
+            // params: {
+            //     orderId: 1295,
+            //     dateTime: "2023-10-21T15:06:00.856Z",
+            // },
+        });
     };
 
     const goToPointCharge = () => {
@@ -264,6 +271,7 @@ function Home({ navigation, route }) {
                                 <BoldText
                                     style={{
                                         fontSize: 23,
+                                        maxWidth: "60%",
                                     }}
                                 >
                                     안녕하세요! {info.name}님.
@@ -441,6 +449,7 @@ function Home({ navigation, route }) {
                                 <MediumText
                                     style={{
                                         fontSize: 18,
+                                        maxWidth: "65%",
                                     }}
                                 >
                                     최근 등록한 작업

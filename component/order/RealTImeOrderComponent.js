@@ -388,12 +388,7 @@ export const Order = {
                                         )}) ${GetTime(order.dateTime)}`}
                                     </RegularText>
                                 </Row>
-                                <Row
-                                    style={{
-                                        justisfyContent: "space-between",
-                                    }}
-                                    lastChild={true}
-                                >
+                                <Row>
                                     <PointButton>
                                         <Image
                                             source={require("../../assets/images/icons/icon_point.png")}
@@ -423,6 +418,13 @@ export const Order = {
                                             </BoldText>
                                         </BoldText>
                                     </PointButton>
+                                </Row>
+                                <Row
+                                    style={{
+                                        justisfyContent: "space-between",
+                                    }}
+                                    lastChild={true}
+                                >
                                     <RegularText
                                         style={{
                                             fontSize: 15,
@@ -437,7 +439,10 @@ export const Order = {
                                             {
                                                 " " +
                                                     numberWithComma(
-                                                        order.registPoint || 0
+                                                        order.price +
+                                                            order.emergencyPrice -
+                                                            order.orderPoint ||
+                                                            0
                                                     )
                                                 //TODO: 어떤정보가 보여야되는지 확실히
                                             }

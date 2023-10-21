@@ -28,7 +28,7 @@ import SelectFilter from "../../../component/selectBox/SelectFilter";
 const Refresh = styled.TouchableOpacity`
     flex-direction: row;
     align-items: center;
-    margin-right: 15px;
+    margin-right: 7%;
 `;
 
 const Item = styled.View`
@@ -253,13 +253,13 @@ function RealTimeOrder({ navigation }) {
                         <BoldText
                             style={{
                                 fontSize: 23,
-                                maxWidth: "80%",
+                                maxWidth: "50%",
                             }}
                         >
                             {orders && orders !== -1 ? orders.length : "0"}건의
                             실시간 오더
                         </BoldText>
-                        <Row>
+                        <Row style={{ maxWidth: "50%" }}>
                             <Refresh onPress={refresh}>
                                 <MediumText
                                     style={{

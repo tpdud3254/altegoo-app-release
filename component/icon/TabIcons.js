@@ -36,6 +36,7 @@ export default function TabIcon({ tabName, focused, iconText }) {
                         ? color["page-color-text"]
                         : color["page-bluegrey-text"],
                     marginTop: 6,
+                    textAlign: "center",
                 }}
             >
                 {iconText}

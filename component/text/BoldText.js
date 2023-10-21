@@ -12,7 +12,7 @@ function BoldText(props) {
                 fontFamily: "SpoqaHanSansNeo-Bold",
                 color: color["page-black-text"],
                 ...props.style,
-                ...(props.style.fontSize && {
+                ...(props?.style?.fontSize && {
                     fontSize: props.style.fontSize + FONT_OFFSET,
                 }),
             }}
