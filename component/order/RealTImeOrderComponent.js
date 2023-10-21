@@ -8,6 +8,8 @@ import {
     GoToOrderPage,
     getAsyncStorageToken,
     numberWithComma,
+    showError,
+    showErrorMessage,
 } from "../../utils";
 import MediumText from "../text/MediumText";
 import RegularText from "../text/RegularText";
@@ -215,11 +217,13 @@ export const Order = {
                     });
                     //DEVELOP: 나중에 효율적으로 바꾸기
                 } else {
-                    const {
-                        data: { msg },
-                    } = response;
+                    if (response?.data) {
+                        const {
+                            data: { msg },
+                        } = response;
 
-                    console.log(msg);
+                        showErrorMessage(msg);
+                    }
                 }
             } catch (error) {
                 console.log(error);
