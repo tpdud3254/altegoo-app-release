@@ -12,12 +12,12 @@ import { GetPhoneNumberWithDash } from "../../utils";
 
 const Container = styled.View`
     justify-content: space-between;
-    height: ${(props) => props.height - 40}px;
+    min-height: ${(props) => props.height - 40}px;
 `;
 
 const WelcomeImage = styled.Image`
     width: 100%;
-    height: 400px;
+    height: 330px;
 `;
 
 const WelcomText = styled.View`
@@ -28,6 +28,8 @@ const Content = styled.View`
     align-items: center;
     padding: 20px 10px;
     border-radius: 15px;
+    margin-top: 10%;
+    margin-bottom: 10%;
 `;
 
 const Bottom = styled.View``;

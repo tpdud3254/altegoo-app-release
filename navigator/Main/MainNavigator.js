@@ -190,7 +190,7 @@ export default function MainNavigator() {
                         ),
                     }}
                 >
-                    {firstLogin ? (
+                    {firstLogin || true ? (
                         <Stack.Screen
                             name="Welcome"
                             component={Welcome}
