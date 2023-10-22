@@ -38,7 +38,7 @@ const HeaderContainer = styled.View`
 const HaederWrapper = styled.View`
     flex-direction: row;
     align-items: center;
-    width: 110px;
+    width: 32%;
 `;
 
 const Item = styled.View`

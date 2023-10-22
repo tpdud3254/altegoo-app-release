@@ -42,7 +42,7 @@ const HeaderWrapper = styled.View`
 const HeaderItem = styled.View`
     flex-direction: row;
     align-items: center;
-    width: 110px;
+    width: 32%;
 `;
 
 const HeaderTab = styled.TouchableOpacity`
@@ -285,7 +285,7 @@ function DriverOrderList({ navigation }) {
                         </BoldText>
                     </HeaderItem>
                     {true ? (
-                        <HeaderItem style={{ justifyContent: "center" }}>
+                        <HeaderItem style={{ justifyContent: "flex-start" }}>
                             <SelectFilter
                                 data={PERIOD}
                                 onSelect={(index) => setPeriod(index + 1)}

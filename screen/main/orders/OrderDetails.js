@@ -15,6 +15,7 @@ import {
     getAsyncStorageToken,
     numberWithComma,
     showError,
+    showErrorMessage,
 } from "../../../utils";
 import WebView from "react-native-webview";
 import { PopupWithButtons } from "../../../component/PopupWithButtons";
@@ -411,10 +412,10 @@ function OrderDetails({ navigation, route }) {
         </Box>
     );
 
-    const Item = ({ title, value, button }) => (
+    const Item = ({ title, value, button = null }) => (
         <ItemContainer>
             <Row>
-                <View>
+                <View style={{ ...(button === null || { maxWidth: "98%" }) }}>
                     <RegularText
                         style={{
                             fontSize: 15,

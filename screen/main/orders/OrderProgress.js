@@ -213,6 +213,7 @@ function OrderProgress({ navigation, route }) {
                     console.log(orderData);
                     setOrder(orderData);
                     setStatus(getStatus(orderData.orderStatusId));
+
                     if (getStatus(orderData.orderStatusId) > 1) {
                         getAcceptUser(orderData);
                     }
@@ -315,7 +316,7 @@ function OrderProgress({ navigation, route }) {
         else return 5;
     };
 
-    const Item = ({ title, value, center }) => (
+    const Item = ({ title, value, center, width }) => (
         <SItem center={center}>
             <RegularText
                 style={{
@@ -326,7 +327,7 @@ function OrderProgress({ navigation, route }) {
             >
                 {title}
             </RegularText>
-            <RegularText>{value}</RegularText>
+            <RegularText style={{ textAlign: "center" }}>{value}</RegularText>
         </SItem>
     );
 
@@ -543,9 +544,10 @@ function OrderProgress({ navigation, route }) {
                             </DriverTitle>
                             <Row around={true}>
                                 <Item
-                                    title="기사님 성함"
+                                    title="성함"
                                     value={order?.acceptUserData?.name}
                                     center={true}
+                                    width="30%"
                                 />
                                 <Item
                                     title="연락처"
@@ -553,6 +555,7 @@ function OrderProgress({ navigation, route }) {
                                         order?.acceptUserData?.phone
                                     )}
                                     center={true}
+                                    width="70%"
                                 />
                             </Row>
                             <Line />
@@ -569,7 +572,7 @@ function OrderProgress({ navigation, route }) {
                                     value={`${
                                         order?.acceptUserData?.vehicle[0].type
                                             .type
-                                    }차 / ${
+                                    }차${"\n"} ${
                                         order?.acceptUserData?.vehicle[0].floor
                                             ? order?.acceptUserData?.vehicle[0]
                                                   .floor.floor
@@ -655,36 +658,41 @@ function OrderProgress({ navigation, route }) {
                                     />
                                 </Row>
                             ) : order.direction !== "양사" ? (
-                                <Row>
-                                    <Item
-                                        title="차량 종류"
-                                        value={order.vehicleType}
-                                        center={true}
-                                    />
-                                    <Item
-                                        title="작업 종류"
-                                        value={order.direction}
-                                        center={true}
-                                    />
-                                    <Item
-                                        title="작업 높이"
-                                        value={order.floor}
-                                        center={true}
-                                    />
-                                    <Item
-                                        title={
-                                            order.volume === "물량"
-                                                ? "작업 물량"
-                                                : "작업 시간"
-                                        }
-                                        value={
-                                            order.volume === "물량"
-                                                ? order.quantity
-                                                : order.time
-                                        }
-                                        center={true}
-                                    />
-                                </Row>
+                                <>
+                                    <Row around>
+                                        <Item
+                                            title="차량 종류"
+                                            value={order.vehicleType}
+                                            center={true}
+                                        />
+                                        <Item
+                                            title="작업 종류"
+                                            value={order.direction}
+                                            center={true}
+                                        />
+                                    </Row>
+                                    <Line />
+                                    <Row around>
+                                        <Item
+                                            title="작업 높이"
+                                            value={order.floor}
+                                            center={true}
+                                        />
+                                        <Item
+                                            title={
+                                                order.volume === "물량"
+                                                    ? "작업 물량"
+                                                    : "작업 시간"
+                                            }
+                                            value={
+                                                order.volume === "물량"
+                                                    ? order.quantity
+                                                    : order.time
+                                            }
+                                            center={true}
+                                        />
+                                    </Row>
+                                </>
                             ) : (
                                 <Row>
                                     <Item
@@ -724,6 +732,9 @@ function OrderProgress({ navigation, route }) {
                                     value={GetPhoneNumberWithDash(order.phone)}
                                     center={true}
                                 />
+                            </Row>
+                            <Line />
+                            <Row around>
                                 <Item
                                     title="현장 연락처"
                                     value={

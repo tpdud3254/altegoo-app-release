@@ -733,7 +733,11 @@ function DriverOrderProgress({ navigation, route }) {
                                                         alignItems: "center",
                                                     }}
                                                 >
-                                                    <RegularText>
+                                                    <RegularText
+                                                        style={{
+                                                            maxWidth: "90%",
+                                                        }}
+                                                    >
                                                         {order.address1 +
                                                             " " +
                                                             order.detailAddress1}
@@ -776,7 +780,11 @@ function DriverOrderProgress({ navigation, route }) {
                                                         alignItems: "center",
                                                     }}
                                                 >
-                                                    <RegularText>
+                                                    <RegularText
+                                                        style={{
+                                                            maxWidth: "90%",
+                                                        }}
+                                                    >
                                                         {order.address2 +
                                                             " " +
                                                             order.detailAddress2}
@@ -821,7 +829,9 @@ function DriverOrderProgress({ navigation, route }) {
                                                     alignItems: "center",
                                                 }}
                                             >
-                                                <RegularText>
+                                                <RegularText
+                                                    style={{ maxWidth: "90%" }}
+                                                >
                                                     {order.address1 +
                                                         " " +
                                                         order.detailAddress1}
@@ -865,36 +875,41 @@ function DriverOrderProgress({ navigation, route }) {
                                             />
                                         </Row>
                                     ) : order.direction !== "양사" ? (
-                                        <Row>
-                                            <Item
-                                                title="차량 종류"
-                                                value={order.vehicleType}
-                                                center={true}
-                                            />
-                                            <Item
-                                                title="작업 종류"
-                                                value={order.direction}
-                                                center={true}
-                                            />
-                                            <Item
-                                                title="작업 높이"
-                                                value={order.floor}
-                                                center={true}
-                                            />
-                                            <Item
-                                                title={
-                                                    order.volume === "물량"
-                                                        ? "작업 물량"
-                                                        : "작업 시간"
-                                                }
-                                                value={
-                                                    order.volume === "물량"
-                                                        ? order.quantity
-                                                        : order.time
-                                                }
-                                                center={true}
-                                            />
-                                        </Row>
+                                        <>
+                                            <Row around>
+                                                <Item
+                                                    title="차량 종류"
+                                                    value={order.vehicleType}
+                                                    center={true}
+                                                />
+                                                <Item
+                                                    title="작업 종류"
+                                                    value={order.direction}
+                                                    center={true}
+                                                />
+                                            </Row>
+                                            <Line />
+                                            <Row around>
+                                                <Item
+                                                    title="작업 높이"
+                                                    value={order.floor}
+                                                    center={true}
+                                                />
+                                                <Item
+                                                    title={
+                                                        order.volume === "물량"
+                                                            ? "작업 물량"
+                                                            : "작업 시간"
+                                                    }
+                                                    value={
+                                                        order.volume === "물량"
+                                                            ? order.quantity
+                                                            : order.time
+                                                    }
+                                                    center={true}
+                                                />
+                                            </Row>
+                                        </>
                                     ) : (
                                         <Row>
                                             <Item
@@ -937,6 +952,9 @@ function DriverOrderProgress({ navigation, route }) {
                                             center={true}
                                             onClick={() => console.log("click")}
                                         />
+                                    </Row>
+                                    <Line />
+                                    <Row around={true}>
                                         <Item
                                             title="현장 연락처"
                                             value={
