@@ -984,6 +984,7 @@ function DriverOrderProgress({ navigation, route }) {
                                     <Results>
                                         <ResultTitle>
                                             <Title>알테구 이용비</Title>
+                                            <Title>부가세 (10%)</Title>
 
                                             {/* <Title>
                                                 긴급 오더{" "}
@@ -1003,6 +1004,11 @@ function DriverOrderProgress({ navigation, route }) {
                                             <Price
                                                 price={numberWithComma(
                                                     order.price
+                                                )}
+                                            />
+                                            <Price
+                                                price={numberWithComma(
+                                                    order.tax
                                                 )}
                                             />
 
@@ -1030,7 +1036,7 @@ function DriverOrderProgress({ navigation, route }) {
                                                 marginLeft: 30,
                                             }}
                                         >
-                                            {numberWithComma(order.totalPrice)}
+                                            {numberWithComma(order.finalPrice)}
                                             <BoldText
                                                 style={{
                                                     fontSize: 14,
@@ -1059,7 +1065,8 @@ function DriverOrderProgress({ navigation, route }) {
                                         >
                                             {
                                                 numberWithComma(
-                                                    order.registPoint
+                                                    order.finalPrice -
+                                                        order.orderPoint
                                                 )
                                                 //TODO: 어떤정보가 보여야되는지 확실히
                                             }

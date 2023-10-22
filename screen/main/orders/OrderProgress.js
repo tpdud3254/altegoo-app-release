@@ -759,6 +759,7 @@ function OrderProgress({ navigation, route }) {
                             <Results>
                                 <ResultTitle>
                                     <Title>알테구 이용비</Title>
+                                    <Title>부가세 (10%)</Title>
                                     {/* <Title>포인트 사용</Title>
                                     <Title>
                                         긴급 오더{" "}
@@ -776,8 +777,11 @@ function OrderProgress({ navigation, route }) {
                                 </ResultTitle>
                                 <ResultValue>
                                     <Price
-                                        price={numberWithComma(order.price)}
+                                        price={numberWithComma(
+                                            order.totalPrice
+                                        )}
                                     />
+                                    <Price price={numberWithComma(order.tax)} />
                                     {/* <Price
                                         price={
                                             "- " +
@@ -808,7 +812,7 @@ function OrderProgress({ navigation, route }) {
                                         marginLeft: 30,
                                     }}
                                 >
-                                    {numberWithComma(order.totalPrice)}
+                                    {numberWithComma(order.finalPrice)}
                                     <BoldText
                                         style={{
                                             fontSize: 14,
