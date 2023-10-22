@@ -134,7 +134,8 @@ function Welcome() {
                         >
                             최초 1회 정회원 가입 없이{"\n"}작업 진행이
                             가능합니다.{"\n"}지금 바로 작업 요청을 확인해
-                            보세요,
+                            보세요.
+                            {/* TODO: 문구 변경 필요 */}
                         </RegularText>
                     ) : info.userTypeId === 3 ? (
                         <RegularText
@@ -145,7 +146,7 @@ function Welcome() {
                                 textAlign: "center",
                             }}
                         >
-                            <BoldText
+                            {/* <BoldText
                                 style={{
                                     fontSize: 20,
                                     color: color["page-color-text"],
@@ -154,7 +155,7 @@ function Welcome() {
                             >
                                 20,000원
                             </BoldText>{" "}
-                            상당의 쿠폰이 발급되었습니다.{"\n"}
+                            상당의 쿠폰이 발급되었습니다.{"\n"} */}
                             간편하고 정확한 사다리차 & 스카이차를
                             {"\n"}지금 바로 이용해 보세요!{"\n"}작업을
                             등록만해도{"\n"}작업운임의 15%가 적립됩니다.
