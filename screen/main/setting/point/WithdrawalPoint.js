@@ -335,18 +335,14 @@ function WithdrawalPoint({ route, navigation }) {
                                     </MediumText>
                                     <BoldText
                                         style={{
-                                            color: color[
-                                                "option-selected-text"
-                                            ],
+                                            color: color["page-color-text"],
                                         }}
                                     >
                                         1,000
                                         <BoldText
                                             style={{
                                                 fontSize: 14,
-                                                color: color[
-                                                    "option-selected-text"
-                                                ],
+                                                color: color["page-color-text"],
                                             }}
                                         >
                                             {" "}
