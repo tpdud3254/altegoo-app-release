@@ -346,7 +346,7 @@ const CheckOrderPrice = ({ navigation }) => {
                             textAlign: "right",
                         }}
                     >
-                        {numberWithComma(watch("totalPrice", "0"))}
+                        {numberWithComma(watch("orderPrice", "0"))}
                         <RegularText
                             style={{
                                 fontSize: 14,
