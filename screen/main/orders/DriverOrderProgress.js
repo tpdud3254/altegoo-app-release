@@ -911,37 +911,43 @@ function DriverOrderProgress({ navigation, route }) {
                                             </Row>
                                         </>
                                     ) : (
-                                        <Row>
-                                            <Item
-                                                title="차량 종류"
-                                                value={order.vehicleType}
-                                                center={true}
-                                            />
-                                            <Item
-                                                title="내림 층수"
-                                                value={order.downFloor}
-                                                center={true}
-                                            />
-                                            <Item
-                                                title="올림 층수"
-                                                value={order.upFloor}
-                                                center={true}
-                                            />
-                                            <Item
-                                                title={
-                                                    order.volume === "물량"
-                                                        ? "작업 물량"
-                                                        : "작업 시간"
-                                                }
-                                                value={
-                                                    order.volume === "물량"
-                                                        ? order.quantity
-                                                        : order.time
-                                                }
-                                                center={true}
-                                            />
-                                        </Row>
+                                        <>
+                                            <Row around>
+                                                <Item
+                                                    title="차량 종류"
+                                                    value={order.vehicleType}
+                                                    center={true}
+                                                />
+                                                <Item
+                                                    title="내림 층수"
+                                                    value={order.downFloor}
+                                                    center={true}
+                                                />
+                                            </Row>
+                                            <Line />
+                                            <Row around>
+                                                <Item
+                                                    title="올림 층수"
+                                                    value={order.upFloor}
+                                                    center={true}
+                                                />
+                                                <Item
+                                                    title={
+                                                        order.volume === "물량"
+                                                            ? "작업 물량"
+                                                            : "작업 시간"
+                                                    }
+                                                    value={
+                                                        order.volume === "물량"
+                                                            ? order.quantity
+                                                            : order.time
+                                                    }
+                                                    center={true}
+                                                />
+                                            </Row>
+                                        </>
                                     )}
+
                                     <Line />
                                     <Row around={true}>
                                         <Item

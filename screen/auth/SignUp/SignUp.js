@@ -72,7 +72,7 @@ const NecessityWrapper = styled.View`
 function SignUp() {
     const navigation = useNavigation();
     const { setInfo } = useContext(UserContext);
-    const [type, setType] = useState(NORMAL);
+    const [type, setType] = useState(COMPANY);
 
     const onNext = () => {
         if (type === "") {
@@ -151,9 +151,9 @@ function SignUp() {
         >
             <Options>
                 <>
-                    <Option type={NORMAL} selected={type === NORMAL} />
-                    <Option type={DRIVER} selected={type === DRIVER} />
                     <Option type={COMPANY} selected={type === COMPANY} />
+                    <Option type={DRIVER} selected={type === DRIVER} />
+                    <Option type={NORMAL} selected={type === NORMAL} />
                 </>
             </Options>
             <Explain>

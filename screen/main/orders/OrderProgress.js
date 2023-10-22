@@ -327,7 +327,7 @@ function OrderProgress({ navigation, route }) {
             >
                 {title}
             </RegularText>
-            <RegularText style={{ textAlign: "center" }}>{value}</RegularText>
+            <RegularText>{value}</RegularText>
         </SItem>
     );
 
@@ -382,6 +382,7 @@ function OrderProgress({ navigation, route }) {
                             onPress: confirmOrder,
                         }
                     }
+                    kakaoBtnShown={true}
                 >
                     <Progress>
                         <Image
@@ -521,7 +522,7 @@ function OrderProgress({ navigation, route }) {
                                         lineHeight: 23,
                                     }}
                                 >
-                                    작업에 문제가 있나요?{"\n"}아래 카톡 상담
+                                    작업에 문제가 있나요?{"\n"}아래 고객센터
                                     버튼을 눌러주세요.
                                 </RegularText>
                             </View>
@@ -694,36 +695,41 @@ function OrderProgress({ navigation, route }) {
                                     </Row>
                                 </>
                             ) : (
-                                <Row>
-                                    <Item
-                                        title="차량 종류"
-                                        value={order.vehicleType}
-                                        center={true}
-                                    />
-                                    <Item
-                                        title="내림 층수"
-                                        value={order.downFloor}
-                                        center={true}
-                                    />
-                                    <Item
-                                        title="올림 층수"
-                                        value={order.upFloor}
-                                        center={true}
-                                    />
-                                    <Item
-                                        title={
-                                            order.volume === "물량"
-                                                ? "작업 물량"
-                                                : "작업 시간"
-                                        }
-                                        value={
-                                            order.volume === "물량"
-                                                ? order.quantity
-                                                : order.time
-                                        }
-                                        center={true}
-                                    />
-                                </Row>
+                                <>
+                                    <Row around>
+                                        <Item
+                                            title="차량 종류"
+                                            value={order.vehicleType}
+                                            center={true}
+                                        />
+                                        <Item
+                                            title="내림 층수"
+                                            value={order.downFloor}
+                                            center={true}
+                                        />
+                                    </Row>
+                                    <Line />
+                                    <Row around>
+                                        <Item
+                                            title="올림 층수"
+                                            value={order.upFloor}
+                                            center={true}
+                                        />
+                                        <Item
+                                            title={
+                                                order.volume === "물량"
+                                                    ? "작업 물량"
+                                                    : "작업 시간"
+                                            }
+                                            value={
+                                                order.volume === "물량"
+                                                    ? order.quantity
+                                                    : order.time
+                                            }
+                                            center={true}
+                                        />
+                                    </Row>
+                                </>
                             )}
                             <Line />
                             <Row around={true}>
@@ -856,6 +862,7 @@ function OrderProgress({ navigation, route }) {
                             </PointContainer>
                         </Wrapper>
                     </Items>
+                    <View style={{ height: 90 }}></View>
                 </Layout>
             )}
         </>
