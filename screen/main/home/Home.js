@@ -225,14 +225,14 @@ function Home({ navigation, route }) {
             .finally(() => {});
     };
     const goToPoint = () => {
-        // navigation.navigate("SettingNavigator", { screen: "PointMain" }); //TEST: 테스트
-        navigation.navigate("MainNavigator", {
-            screen: "Welcome",
-            // params: {
-            //     orderId: 1295,
-            //     dateTime: "2023-10-21T15:06:00.856Z",
-            // },
-        });
+        navigation.navigate("SettingNavigator", { screen: "PointMain" });
+        // navigation.navigate("MainNavigator", {
+        //     screen: "Welcome",
+        //     // params: {
+        //     //     orderId: 1295,
+        //     //     dateTime: "2023-10-21T15:06:00.856Z",
+        //     // },
+        // });
     };
 
     const goToPointCharge = () => {
