@@ -237,29 +237,78 @@ function AddOtherData({ navigation }) {
                     </Content>
                 </Wrapper>
             </Item>
-            <Item uninterval>
-                <ItemTitle title="작업 주소" />
-                <Wrapper>
-                    <Content>
-                        <RegularText>{registInfo.address1}</RegularText>
-                    </Content>
-                </Wrapper>
-            </Item>
-            <Item>
-                <ItemTitle />
-                <Wrapper>
-                    <Content>
-                        <RegularText>{registInfo.detailAddress1}</RegularText>
-                    </Content>
-                </Wrapper>
-            </Item>
+            {registInfo.direction === "양사" ? (
+                <>
+                    <Item uninterval>
+                        <ItemTitle title="내림 주소" />
+                        <Wrapper>
+                            <Content>
+                                <RegularText>{registInfo.address1}</RegularText>
+                            </Content>
+                        </Wrapper>
+                    </Item>
+                    <Item>
+                        <ItemTitle />
+                        <Wrapper>
+                            <Content>
+                                <RegularText>
+                                    {registInfo.detailAddress1}
+                                </RegularText>
+                            </Content>
+                        </Wrapper>
+                    </Item>
+                    <Item uninterval>
+                        <ItemTitle title="올림 주소" />
+                        <Wrapper>
+                            <Content>
+                                <RegularText>{registInfo.address2}</RegularText>
+                            </Content>
+                        </Wrapper>
+                    </Item>
+                    <Item>
+                        <ItemTitle />
+                        <Wrapper>
+                            <Content>
+                                <RegularText>
+                                    {registInfo.detailAddress2}
+                                </RegularText>
+                            </Content>
+                        </Wrapper>
+                    </Item>
+                </>
+            ) : (
+                <>
+                    <Item uninterval>
+                        <ItemTitle title="작업 주소" />
+                        <Wrapper>
+                            <Content>
+                                <RegularText>{registInfo.address1}</RegularText>
+                            </Content>
+                        </Wrapper>
+                    </Item>
+                    <Item>
+                        <ItemTitle />
+                        <Wrapper>
+                            <Content>
+                                <RegularText>
+                                    {registInfo.detailAddress1}
+                                </RegularText>
+                            </Content>
+                        </Wrapper>
+                    </Item>
+                </>
+            )}
+
             <Item>
                 <ItemTitle title="작업 높이" />
                 <Wrapper>
                     <Content>
                         <RegularText>
                             {registInfo.direction === "양사"
-                                ? registInfo.downFloor
+                                ? registInfo.downFloor +
+                                  "(내림) / " +
+                                  registInfo.upFloor +
+                                  "(올림)"
                                 : registInfo.floor}
                         </RegularText>
                     </Content>
