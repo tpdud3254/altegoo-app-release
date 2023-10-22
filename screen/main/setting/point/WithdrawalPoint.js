@@ -7,6 +7,7 @@ import {
     getAsyncStorageToken,
     numberWithComma,
     showErrorMessage,
+    showMessage,
 } from "../../../../utils";
 
 import axios from "axios";
@@ -39,6 +40,8 @@ const ModifyButton = styled.TouchableOpacity`
     width: 25%;
     align-items: center;
 `;
+
+const COMMISSION = 1000;
 function WithdrawalPoint({ route, navigation }) {
     const [loading, setLoading] = useState(true);
 
@@ -111,31 +114,36 @@ function WithdrawalPoint({ route, navigation }) {
     const onWithdrawal = () => {
         console.log(withdrawalPoint);
 
+        if (point.curPoint - COMMISSION - withdrawalPoint < 0) {
+            showErrorMessage("출금 가능한 금액을 확인해주세요.");
+            return;
+        }
         pointwithdrawal();
     };
     const pointwithdrawal = async () => {
         try {
-            const response = await axios.patch(SERVER + "/admin/points", {
-                pointId: point.id,
-                points: point.curPoint - withdrawalPoint,
-            });
-
-            const {
-                data: {
-                    data: { points },
-                    result,
+            const response = await axios.patch(
+                SERVER + "/points/withdrawal",
+                {
+                    pointId: point.id,
+                    curPoint: point.curPoint,
+                    withdrawalPoint: withdrawalPoint,
                 },
-            } = response;
+                {
+                    headers: {
+                        auth: await getAsyncStorageToken(),
+                    },
+                }
+            );
 
-            console.log(points);
-
-            if (result === VALID) {
+            if (response.data.result === VALID) {
+                showMessage("포인트 출금 신청이 완료되었습니다.");
                 refresh();
+            } else {
+                showErrorMessage(response.data.msg);
             }
         } catch (error) {
             console.log(error);
-            showErrorMessage("포인트 출금에 실패하였습니다.");
-            navigation.goBack();
         }
     };
     const Line = () => (
@@ -338,7 +346,8 @@ function WithdrawalPoint({ route, navigation }) {
                                             color: color["page-color-text"],
                                         }}
                                     >
-                                        1,000
+                                        {numberWithComma(COMMISSION)}
+
                                         <BoldText
                                             style={{
                                                 fontSize: 14,

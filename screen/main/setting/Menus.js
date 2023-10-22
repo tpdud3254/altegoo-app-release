@@ -127,7 +127,7 @@ function Menus({ navigation }) {
         <Layout scroll={false}>
             <Menu onPress={() => goToPage("PointMain")}>
                 <MediumText>
-                    포인트 정보{"          "}
+                    포인트 정보{"\n"}
                     {/* 포인트 및 쿠폰 NEXT: 쿠폰 삭제 */}
                     {point > -1 ? (
                         <MediumText style={{ color: color.main }}>

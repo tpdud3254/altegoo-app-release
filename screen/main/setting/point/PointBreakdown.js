@@ -37,7 +37,7 @@ const Box = styled.View`
 `;
 
 const PERIOD = ["최근 6개월", "최근 12개월"];
-const FILTER = ["전체 내역", "적립", "사용", "출금", "충전"];
+const FILTER = ["전체 내역", "적립", "차감", "출금", "충전"];
 
 function PointBreakdown() {
     const { width } = useWindowDimensions();
