@@ -6,6 +6,8 @@ import {
     Alert,
     View,
     SafeAreaView,
+    useWindowDimensions,
+    BackHandler,
 } from "react-native";
 import styled from "styled-components/native";
 import { WebView } from "react-native-webview";
@@ -19,6 +21,7 @@ import { getAsyncStorageToken, showError, showMessage } from "../../utils";
 import RegistContext from "../../context/RegistContext";
 
 function Payment({ navigation, route }) {
+    const { width: windowWidth } = useWindowDimensions();
     const webViewRef = useRef();
     const [progress, setProgress] = useState(0.0);
 
@@ -28,12 +31,24 @@ function Payment({ navigation, route }) {
     console.log("payment :", route?.params?.data);
 
     useEffect(() => {
+        BackHandler.addEventListener("hardwareBackPress", goBack);
+
+        return () => {
+            BackHandler.removeEventListener("hardwareBackPress");
+        };
+    }, []);
+
+    useEffect(() => {
         //TODO: 테스트 코드
         setTimeout(async () => {
             await registWork();
         }, 2000);
     }, []);
 
+    const goBack = () => {
+        navigation.goBack();
+        return true;
+    };
     const sendMessage = (data) => {
         webViewRef.current.postMessage(data);
     };
@@ -211,7 +226,7 @@ function Payment({ navigation, route }) {
                 <View style={{ height: 700 }}>
                     <WebView
                         ref={webViewRef}
-                        containerStyle={{ width: 400, height: 700 }}
+                        containerStyle={{ width: windowWidth, height: 700 }}
                         source={{
                             // uri: "https://master.d1p7wg3e032x9j.amplifyapp.com/payment",
                             uri: PAYMENT_SERVER,
