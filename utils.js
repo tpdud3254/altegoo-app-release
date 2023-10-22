@@ -771,7 +771,6 @@ export const GetLadderPrice = (floor, volume, quantity, time) => {
             else if (time === 6) calc = calc + 95;
         }
     } else if (floor === 24) {
-        calc = calc + 31;
         if (volume === 1) {
             //물량
             if (quantity === 1) calc = calc + 37;
@@ -789,7 +788,6 @@ export const GetLadderPrice = (floor, volume, quantity, time) => {
             else if (time === 6) calc = calc + 100;
         }
     } else if (floor === 25) {
-        calc = calc + 36;
         if (volume === 1) {
             //물량
             return "consultation";
@@ -850,17 +848,17 @@ export const GetSkyPrice = (option, time) => {
         else if (time === 5) calc = calc + 120;
         else if (time === 6) return "consultation";
     } else if (option === 7) {
-        if (time === 4) calc = calc + 130;
-        else if (time === 5) calc = calc + 180;
-        else if (time === 6) return "consultation";
+        if (time === 1) calc = calc + 130;
+        else if (time === 2) calc = calc + 180;
+        else if (time === 3) return "consultation";
     } else if (option === 8) {
-        if (time === 4) calc = calc + 60;
-        else if (time === 5) calc = calc + 80;
-        else if (time === 6) return "consultation";
+        if (time === 1) calc = calc + 60;
+        else if (time === 2) calc = calc + 80;
+        else if (time === 3) return "consultation";
     } else if (option === 9) {
-        if (time === 4) calc = calc + 80;
-        else if (time === 5) calc = calc + 100;
-        else if (time === 6) return "consultation";
+        if (time === 1) calc = calc + 80;
+        else if (time === 2) calc = calc + 100;
+        else if (time === 3) return "consultation";
     }
 
     return calc * 10000;
