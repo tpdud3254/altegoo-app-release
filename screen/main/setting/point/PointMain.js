@@ -143,8 +143,8 @@ function PointMain({ navigation }) {
                 <BoldText>알테구 포인트</BoldText>
             </Header>
             <Box>
-                <RowBetween>
-                    <RegularText style={{ fontSize: 15 }}>
+                <View style={{ alignItems: "center" }}>
+                    <RegularText style={{ fontSize: 15, marginBottom: 10 }}>
                         보유한 출금 가능한 포인트
                     </RegularText>
                     <Row>
@@ -172,7 +172,7 @@ function PointMain({ navigation }) {
                             </BoldText>
                         </BoldText>
                     </Row>
-                </RowBetween>
+                </View>
                 <Line />
                 <RowAround>
                     {info.userTypeId === 2 ? (
@@ -246,21 +246,21 @@ function PointMain({ navigation }) {
                 </BoldText>
             </WithdrawalButton>
             {/* NEXT: 기사일경우 차트*/}
-            <BoldText style={{ marginTop: 30, marginBottom: 10 }}>
+            {/* NEXT: 쿠폰기능 추가 */}
+            {/* <BoldText style={{ marginTop: 30, marginBottom: 10 }}>
                 쿠폰
             </BoldText>
             <Box>
                 <TouchableOpacity
                 // onPress={toggleCouponList}
                 >
-                    {/* NEXT: 쿠폰기능 추가 */}
+                    
                     <RowBetween>
                         <RegularText style={{ fontSize: 15 }}>
                             보유한 쿠폰
                         </RegularText>
                         <Row>
-                            {/* <BoldText>{COUPON_LIST.length}장</BoldText> */}
-                            <BoldText>0장</BoldText>
+                            <BoldText>{COUPON_LIST.length}장</BoldText>
                             {couponListVisible ? (
                                 <Image
                                     source={require("../../../../assets/images/icons/icon_fullup.png")}
@@ -295,7 +295,7 @@ function PointMain({ navigation }) {
                         </>
                     ) : null}
                 </TouchableOpacity>
-            </Box>
+            </Box> */}
         </Layout>
     );
 }

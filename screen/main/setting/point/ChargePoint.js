@@ -10,6 +10,7 @@ import TextInput from "../../../../component/input/TextInput";
 import BoldText from "../../../../component/text/BoldText";
 import { Row, RowBetween } from "../../../../component/Row";
 import RegularText from "../../../../component/text/RegularText";
+import { showMessage } from "../../../../utils";
 
 const Container = styled.View`
     height: 100%;
@@ -69,8 +70,9 @@ function ChargePoint({ route, navigation }) {
             <MediumText style={{ fontSize: 14 }}>{children}</MediumText>
         </Row>
     );
+    //TODO: 포인트 충전 기능
     return (
-        <Layout scroll={false}>
+        <Layout scroll={true}>
             <Container>
                 <TextInput
                     title="충전 포인트 입력"
@@ -82,7 +84,7 @@ function ChargePoint({ route, navigation }) {
                     // onReset={() => reset(setValue, "phone")}
                     // onChangeText={(text) => setValue("phone", text)}
                 />
-                <Button>
+                <Button onPress={() => showMessage("지원 예정 기능입니다.")}>
                     <BoldText style={{ color: color.main }}>
                         포인트 충전하기
                     </BoldText>

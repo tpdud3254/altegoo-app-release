@@ -149,6 +149,8 @@ function PointBreakdown() {
             </LightText>
             <RowBetween style={{ marginBottom: 10 }}>
                 <MediumText>{data.content}</MediumText>
+            </RowBetween>
+            <RowBetween style={{ marginBottom: 10 }}>
                 <BoldText
                     style={{
                         color: data.type === "적립" ? color.blue : "#EB1D36",
@@ -157,8 +159,6 @@ function PointBreakdown() {
                     {numberWithComma(data.point)}
                     <RegularText style={{ fontSize: 14 }}>{"  "}AP</RegularText>
                 </BoldText>
-            </RowBetween>
-            <RowBetween>
                 <RegularText
                     style={{
                         color: data.type === "적립" ? color.blue : "#EB1D36",
@@ -167,6 +167,8 @@ function PointBreakdown() {
                 >
                     {data.type}
                 </RegularText>
+            </RowBetween>
+            <RowBetween>
                 <RegularText style={{ fontSize: 14 }}>
                     잔액{" " + numberWithComma(data.restPoint)}
                     <RegularText style={{ fontSize: 12 }}>{"  "}AP</RegularText>

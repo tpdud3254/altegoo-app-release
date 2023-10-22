@@ -36,6 +36,8 @@ const ModifyButton = styled.TouchableOpacity`
     border: 1px solid ${color.main};
     padding: 10px 18px;
     border-radius: 10px;
+    width: 25%;
+    align-items: center;
 `;
 function WithdrawalPoint({ route, navigation }) {
     const [loading, setLoading] = useState(true);
@@ -197,12 +199,12 @@ function WithdrawalPoint({ route, navigation }) {
                 style={{
                     fontSize: 17,
                     color: color["page-grey-text"],
-                    width: 80,
+                    width: "32%",
                 }}
             >
                 {title} :
             </MediumText>
-            <RegularText>{value}</RegularText>
+            <RegularText style={{ width: "68%" }}>{value}</RegularText>
         </Row>
     );
 
@@ -224,37 +226,43 @@ function WithdrawalPoint({ route, navigation }) {
                     {isExistedAccount ? (
                         <>
                             <Box>
-                                <RowBetween>
-                                    <RegularText style={{ fontSize: 15 }}>
-                                        출금 가능한 포인트
-                                    </RegularText>
-                                    <Row>
-                                        <Image
-                                            source={require("../../../../assets/images/icons/icon_point.png")}
-                                            style={{
-                                                width: 27,
-                                                height: 27,
-                                                marginRight: 2,
-                                            }}
-                                        />
-                                        <BoldText
-                                            style={{
-                                                fontSize: 16,
-                                            }}
-                                        >
-                                            {numberWithComma(point.curPoint)}
+                                <View style={{ alignItems: "center" }}>
+                                    <RowBetween>
+                                        <RegularText style={{ fontSize: 15 }}>
+                                            출금 가능한 포인트
+                                        </RegularText>
+                                    </RowBetween>
+                                    <Line />
+                                    <RowBetween>
+                                        <Row>
+                                            <Image
+                                                source={require("../../../../assets/images/icons/icon_point.png")}
+                                                style={{
+                                                    width: 27,
+                                                    height: 27,
+                                                    marginRight: 2,
+                                                }}
+                                            />
                                             <BoldText
                                                 style={{
-                                                    fontSize: 13,
+                                                    fontSize: 16,
                                                 }}
                                             >
-                                                {" "}
-                                                AP
+                                                {numberWithComma(
+                                                    point.curPoint
+                                                )}
+                                                <BoldText
+                                                    style={{
+                                                        fontSize: 13,
+                                                    }}
+                                                >
+                                                    {" "}
+                                                    AP
+                                                </BoldText>
                                             </BoldText>
-                                        </BoldText>
-                                    </Row>
-                                </RowBetween>
-                                <Line />
+                                        </Row>
+                                    </RowBetween>
+                                </View>
                             </Box>
                             <Item>
                                 <RowBetween
@@ -274,6 +282,14 @@ function WithdrawalPoint({ route, navigation }) {
                                             value={point.accountName}
                                         />
                                     </View>
+                                </RowBetween>
+                                <View
+                                    style={{
+                                        alignItems: "center",
+                                        marginTop: 10,
+                                        marginBottom: 20,
+                                    }}
+                                >
                                     <ModifyButton
                                         onPress={() =>
                                             goToPage("RegistPointAccount", {
@@ -291,8 +307,9 @@ function WithdrawalPoint({ route, navigation }) {
                                             수정
                                         </MediumText>
                                     </ModifyButton>
-                                </RowBetween>
+                                </View>
                             </Item>
+
                             <Item>
                                 <TextInput
                                     title="출금할 포인트"
@@ -316,11 +333,20 @@ function WithdrawalPoint({ route, navigation }) {
                                     >
                                         출금 수수료 :{" "}
                                     </MediumText>
-                                    <BoldText>
+                                    <BoldText
+                                        style={{
+                                            color: color[
+                                                "option-selected-text"
+                                            ],
+                                        }}
+                                    >
                                         1,000
                                         <BoldText
                                             style={{
                                                 fontSize: 14,
+                                                color: color[
+                                                    "option-selected-text"
+                                                ],
                                             }}
                                         >
                                             {" "}
