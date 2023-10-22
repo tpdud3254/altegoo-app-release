@@ -63,7 +63,8 @@ const Wrapper = styled.View`
     background-color: white;
     padding: 16px 16px;
     border-radius: 14px;
-    border: ${(props) => (props.border ? "1" : "0")}px solid ${color.blue};
+    border: ${(props) => (props.border ? "1" : "0")}px solid
+        ${(props) => (props.borderColor ? props.borderColor : color.blue)};
 `;
 const Header = styled.View`
     flex-direction: row;
@@ -100,6 +101,7 @@ function Home({ navigation, route }) {
 
     const [point, setPoint] = useState(-1);
     const [orders, setOrders] = useState(-1);
+    const [completedOrders, setCompletedOrders] = useState(-1);
     const [acceptOrders, setAcceptOrders] = useState(-1);
     const [period, setPeriod] = useState(1);
 
@@ -391,6 +393,45 @@ function Home({ navigation, route }) {
                 </Header>
             </Wrapper>
         </Item> */}
+                    {orders.length > 0
+                        ? orders.map((order, index) => {
+                              if (order.orderStatusId !== 5) return;
+
+                              return (
+                                  <Item key={index}>
+                                      <Wrapper
+                                          style={shadowProps}
+                                          border={true}
+                                          borderColor="#EB1D36"
+                                      >
+                                          <Header>
+                                              <MediumText
+                                                  style={{
+                                                      fontSize: 18,
+                                                      marginTop: 5,
+                                                      color: color.main,
+                                                  }}
+                                              >
+                                                  작업 완료 요청
+                                              </MediumText>
+                                          </Header>
+                                          <Orders>
+                                              <Order.Items>
+                                                  <Order.Item
+                                                      data={order}
+                                                      nextPage={GoToOrderPage(
+                                                          info,
+                                                          order
+                                                      )}
+                                                  />
+                                              </Order.Items>
+                                          </Orders>
+                                      </Wrapper>
+                                  </Item>
+                              );
+                          })
+                        : null}
+
                     {info.userTypeId === 2 && acceptOrders.length > 0
                         ? acceptOrders.map((order, index) => {
                               //TODO: 예약된 작업 한꺼번에 진행중 작업ㅎ ㅏㄴ꺼번에
@@ -439,6 +480,7 @@ function Home({ navigation, route }) {
                               );
                           })
                         : null}
+
                     <Item>
                         <Wrapper style={shadowProps}>
                             <Header>
