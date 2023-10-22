@@ -281,20 +281,16 @@ function Home({ navigation, route }) {
                                         flexDirection: "row",
                                     }}
                                 >
-                                    {info.userTypeId === 2 ? (
-                                        <TouchableOpacity
-                                            onPress={goToKakaoChat}
-                                        >
-                                            <Image
-                                                source={require("../../../assets/images/icons/icon_kakao.png")}
-                                                style={{
-                                                    width: 30,
-                                                    height: 30,
-                                                    marginRight: 13,
-                                                }}
-                                            />
-                                        </TouchableOpacity>
-                                    ) : null}
+                                    <TouchableOpacity onPress={goToKakaoChat}>
+                                        <Image
+                                            source={require("../../../assets/images/icons/icon_kakao.png")}
+                                            style={{
+                                                width: 30,
+                                                height: 30,
+                                                marginRight: 13,
+                                            }}
+                                        />
+                                    </TouchableOpacity>
                                     <Notification
                                         onPress={() =>
                                             showMessage("지원 예정 기능입니다.")
