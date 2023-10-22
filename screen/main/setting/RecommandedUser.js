@@ -16,6 +16,7 @@ import {
     showErrorMessage,
 } from "../../../utils";
 import LoadingLayout from "../../../component/layout/LoadingLayout";
+import BoldText from "../../../component/text/BoldText";
 
 const Tabs = styled.View`
     border-bottom-width: 1px;
@@ -78,7 +79,8 @@ function RecommandedUser({ route, navigation }) {
 
     useEffect(() => {
         getRecommendUser();
-        getMyRecommendUser();
+        if (info.recommendUserId !== 1) getMyRecommendUser();
+        else setMyRecommendUser("altegoo");
     }, []);
 
     useEffect(() => {
@@ -160,12 +162,12 @@ function RecommandedUser({ route, navigation }) {
     };
 
     const TabTitle = ({ title, num }) => (
-        <Row>
+        <View style={{ alignItems: "center", justifyContent: "center" }}>
             <MediumText>{title}</MediumText>
             <MediumText style={{ color: color.main, marginLeft: 5 }}>
                 {num}
             </MediumText>
-        </Row>
+        </View>
     );
 
     const Line = () => {
@@ -244,19 +246,20 @@ function RecommandedUser({ route, navigation }) {
                         )} */}
                     </Item>
                     <Item style={shadowProps}>
-                        <RowBetween>
-                            <RegularText>내가 추천한 회원</RegularText>
-                            {/* 알테구 계정일때, 없을때 추가 */}
-                            {myRecommendUser.userTypeId === 2 ? (
-                                <RegularText>
-                                    {myRecommendUser.name}
-                                </RegularText>
+                        <View style={{ alignItems: "center" }}>
+                            <RegularText style={{ marginBottom: 15 }}>
+                                내가 추천한 회원
+                            </RegularText>
+                            {myRecommendUser === "altegoo" ? (
+                                <BoldText>알테구</BoldText>
+                            ) : myRecommendUser.userTypeId === 2 ? (
+                                <BoldText>{myRecommendUser.name}</BoldText>
                             ) : (
-                                <RegularText>
+                                <BoldText>
                                     {myRecommendUser.companyName}
-                                </RegularText>
+                                </BoldText>
                             )}
-                        </RowBetween>
+                        </View>
                     </Item>
                 </Layout>
             )}
