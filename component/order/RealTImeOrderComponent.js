@@ -10,6 +10,7 @@ import {
     numberWithComma,
     showError,
     showErrorMessage,
+    showMessage,
 } from "../../utils";
 import MediumText from "../text/MediumText";
 import RegularText from "../text/RegularText";
@@ -19,7 +20,7 @@ import BoldText from "../text/BoldText";
 import { PopupWithButtons } from "../PopupWithButtons";
 import UserContext from "../../context/UserContext";
 import axios from "axios";
-import { SERVER, VALID } from "../../constant";
+import { DRIVER, SERVER, VALID } from "../../constant";
 
 const ItemContainer = styled.TouchableOpacity`
     flex-direction: row;
@@ -189,6 +190,15 @@ export const Order = {
         };
 
         const setAcceptOrder = async (orderId) => {
+            if (
+                info.userType === DRIVER &&
+                (!info.license || !info.vehiclePermission)
+            ) {
+                showMessage(
+                    "내 정보 > 회원정보에서 필요한 서류들을 등록해주세요."
+                );
+                return;
+            }
             try {
                 const response = await axios.patch(
                     SERVER + "/works/order/accept",

@@ -16,11 +16,12 @@ import {
     numberWithComma,
     showError,
     showErrorMessage,
+    showMessage,
 } from "../../../utils";
 import WebView from "react-native-webview";
 import { PopupWithButtons } from "../../../component/PopupWithButtons";
 import axios from "axios";
-import { SERVER, VALID } from "../../../constant";
+import { DRIVER, SERVER, VALID } from "../../../constant";
 import LoadingLayout from "../../../component/layout/LoadingLayout";
 import UserContext from "../../../context/UserContext";
 
@@ -202,6 +203,13 @@ function OrderDetails({ navigation, route }) {
     };
 
     const setAcceptOrder = async (orderId) => {
+        if (
+            info.userType === DRIVER &&
+            (!info.license || !info.vehiclePermission)
+        ) {
+            showMessage("내 정보 > 회원정보에서 필요한 서류들을 등록해주세요.");
+            return;
+        }
         try {
             const response = await axios.patch(
                 SERVER + "/works/order/accept",
@@ -415,7 +423,7 @@ function OrderDetails({ navigation, route }) {
     const Item = ({ title, value, button = null }) => (
         <ItemContainer>
             <Row>
-                <View style={{ ...(button === null || { maxWidth: "98%" }) }}>
+                <View style={{ ...(button === null || { maxWidth: "90%" }) }}>
                     <RegularText
                         style={{
                             fontSize: 15,
@@ -428,6 +436,7 @@ function OrderDetails({ navigation, route }) {
                     <RegularText
                         style={{
                             fontSize: 19,
+                            ...(button === null || { maxWidth: "98%" }),
                         }}
                     >
                         {value}

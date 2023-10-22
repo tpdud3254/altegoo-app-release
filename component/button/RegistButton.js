@@ -4,7 +4,7 @@ import styled from "styled-components/native";
 import useWindowDimensions from "react-native/Libraries/Utilities/useWindowDimensions";
 import { useNavigation } from "@react-navigation/native";
 import UserContext from "../../context/UserContext";
-import { COMPANY } from "../../constant";
+import { COMPANY, DRIVER } from "../../constant";
 import { PopupWithButtons } from "../PopupWithButtons";
 import RegularText from "../text/RegularText";
 
@@ -16,7 +16,7 @@ const Container = styled.TouchableOpacity`
 
 function RegistButton() {
     const navigation = useNavigation();
-    const { height } = useWindowDimensions();
+    const { height, width: windowWidth } = useWindowDimensions();
     const { info } = useContext(UserContext);
     const [isPopupShown, setIsPopupShown] = useState(false);
 
@@ -29,7 +29,14 @@ function RegistButton() {
     };
 
     const goToRegist = () => {
-        if (info.userType === COMPANY && !info.license) {
+        if (
+            info.userType === DRIVER &&
+            (!info.license || !info.vehiclePermission)
+        ) {
+            showPopup();
+
+            return;
+        } else if (info.userType === COMPANY && !info.license) {
             showPopup();
 
             return;
@@ -68,6 +75,7 @@ function RegistButton() {
                 onTouchOutside={hidePopup}
                 onClick={goToRegistLicense}
                 negativeButtonLabel="취소"
+                width={windowWidth * 0.8}
             >
                 <RegularText
                     style={{
@@ -80,8 +88,8 @@ function RegistButton() {
                         paddingBottom: 15,
                     }}
                 >
-                    등록된 사업자 등록증이 없습니다.{"\n"}
-                    사업자 등록증을 등록하시겠습니까?
+                    필요한 서류가 등록되지 않았습니다.{"\n"}
+                    등록하시겠습니까?
                 </RegularText>
             </PopupWithButtons>
         </View>
