@@ -142,6 +142,7 @@ const STEP = [
 function OrderProgress({ navigation, route }) {
     const { info } = useContext(UserContext);
     const [loading, setLoading] = useState(true);
+    const [processing, setProcessing] = useState(false);
 
     const [progress, setProgress] = useState(0);
     const [status, setStatus] = useState(-1);
@@ -269,6 +270,7 @@ function OrderProgress({ navigation, route }) {
 
                 console.log("cancelOrder : ", result);
                 showMessage("요청한 오더가 취소되었습니다.");
+                //TODO: 요청 취소 다시
                 navigation.goBack();
             })
             .catch((error) => {
@@ -278,6 +280,9 @@ function OrderProgress({ navigation, route }) {
     };
 
     const confirmOrder = async () => {
+        if (processing) return;
+
+        setProcessing(true);
         axios
             .patch(
                 SERVER + "/works/order/confirm",
@@ -306,7 +311,9 @@ function OrderProgress({ navigation, route }) {
             .catch((error) => {
                 showError(error);
             })
-            .finally(() => {});
+            .finally(() => {
+                setProcessing(false);
+            });
     };
     const getStatus = (statusId) => {
         if (statusId === 1) return 1;
@@ -379,7 +386,7 @@ function OrderProgress({ navigation, route }) {
                     bottomButtonProps={
                         status === 4 && {
                             title: "작업 완료 확인",
-                            onPress: confirmOrder,
+                            onPress: processing ? null : confirmOrder,
                         }
                     }
                     kakaoBtnShown={true}
