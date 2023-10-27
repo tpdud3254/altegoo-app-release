@@ -376,8 +376,7 @@ function AddOtherData({ navigation }) {
                 <ItemTitle />
                 <Wrapper>
                     <Line />
-                    {/*
-                    NEXT: 비용 세부 조정 일단 삭제
+                    {/* NEXT: 비용 세부 조정 일단 삭제
                     <RegularText style={{ fontSize: 14, marginTop: 7 }}>
                         비용 세부 조정
                     </RegularText>
