@@ -296,12 +296,8 @@ function OrderProgress({ navigation, route }) {
                 }
             )
             .then(({ data }) => {
-                const {
-                    result,
-                    data: { list },
-                } = data;
+                const { result } = data;
 
-                console.log(data);
                 showMessage("작업 완료 확인이 완료되었습니다.");
                 navigation.goBack();
                 if (result === VALID) {
@@ -309,7 +305,8 @@ function OrderProgress({ navigation, route }) {
                 }
             })
             .catch((error) => {
-                showError(error);
+                console.log(error);
+                // showError(error);
             })
             .finally(() => {
                 setProcessing(false);
