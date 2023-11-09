@@ -114,7 +114,7 @@ function SearchAddress({ route, navigation }) {
                 return 6;
         }
 
-        return null;
+        return 7;
     };
 
     const onNextStep = async (data) => {
@@ -125,10 +125,10 @@ function SearchAddress({ route, navigation }) {
             route?.params?.selectAddress1?.sigungu
         );
 
-        if (!regionId) {
-            showErrorMessage("해당 지역은 서비스를 이용할 수 없습니다.");
-            return;
-        }
+        // if (!regionId) {
+        //     showErrorMessage("해당 지역은 서비스를 이용할 수 없습니다.");
+        //     return;
+        // }
 
         let latitude = null;
         let longitude = null;
