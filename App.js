@@ -110,7 +110,7 @@ const initBackgroundFetch = async (taskName, taskFn, interval = 60 * 15) => {
 };
 
 initBackgroundFetch(WEB_SOCKET_TASK, createSocketOnBackground, 5);
-// initBackgroundFetch(LOCATION_TASK, getCurrentLocation, 5);
+initBackgroundFetch(LOCATION_TASK, getCurrentLocation, 5);
 
 export default function App() {
     const [appIsReady, setAppIsReady] = useState(false);
@@ -186,27 +186,6 @@ export default function App() {
         }
     }, [foreground, background]);
 
-    const askPushPermission = async () => {
-        if (Device.isDevice) {
-            const { status: existingStatus } =
-                await Notifications.getPermissionsAsync();
-
-            console.log("askPushPermission existingStatus : ", existingStatus);
-            let finalStatus = existingStatus;
-            if (existingStatus !== "granted") {
-                const { status } =
-                    await Notifications.requestPermissionsAsync();
-                finalStatus = status;
-            }
-
-            console.log("askPushPermission finalStatus : ", finalStatus);
-            if (finalStatus !== "granted") {
-                setPushGranted(false);
-                return;
-            }
-        }
-    };
-
     function cacheImages(images) {
         return images.map((image) => {
             if (typeof image === "string") {
@@ -218,7 +197,6 @@ export default function App() {
     }
 
     const requestPermissions = async () => {
-        //TODO: 권한 관련 로직 수정 (권한없으면 진행안되고 앱 종료,,,)
         console.log(
             "[location] foreground granted : ",
             foreground.granted,
