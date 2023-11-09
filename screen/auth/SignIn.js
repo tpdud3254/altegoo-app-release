@@ -35,7 +35,7 @@ const FindPassword = styled.View`
 function SignIn() {
     const navigation = useNavigation();
     const { setInfo } = useContext(UserContext);
-    const { setIsLoggedIn } = useContext(LoginContext);
+    const { setIsLoggedIn, setFirstLogin } = useContext(LoginContext);
     const { register, setValue, watch, getValues } = useForm();
 
     const [focus, setFocus] = useState("phone");
@@ -78,6 +78,7 @@ function SignIn() {
                 await SetAsyncStorageUid(user.id);
                 await SetAsyncStorageUserType(user.userTypeId);
                 setIsLoggedIn(true);
+                setFirstLogin(false);
             }
         } catch (error) {
             console.log(error);
