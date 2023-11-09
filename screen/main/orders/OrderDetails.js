@@ -616,34 +616,48 @@ function OrderDetails({ navigation, route }) {
                                 }
                             />
                         )}
-                        <Item
-                            title="고객 연락처"
-                            value={GetPhoneNumberWithDash(order.phone)}
-                            button={
-                                <ItemButton>
-                                    <Image
-                                        source={require(`../../../assets/images/icons/icon_phone.png`)}
-                                        style={{ width: 26, height: 26 }}
-                                    />
-                                </ItemButton>
-                            }
-                        />
-                        <Item
-                            title="현장 연락처"
-                            value={
-                                order.directPhone
-                                    ? GetPhoneNumberWithDash(order.directPhone)
-                                    : "없음"
-                            }
-                            button={
-                                <ItemButton>
-                                    <Image
-                                        source={require(`../../../assets/images/icons/icon_phone.png`)}
-                                        style={{ width: 26, height: 26 }}
-                                    />
-                                </ItemButton>
-                            }
-                        />
+                        {order.orderStatusId === 1 ||
+                        order.acceptUser !== info.id ? null : (
+                            <>
+                                <Item
+                                    title="고객 연락처"
+                                    value={GetPhoneNumberWithDash(order.phone)}
+                                    button={
+                                        <ItemButton>
+                                            <Image
+                                                source={require(`../../../assets/images/icons/icon_phone.png`)}
+                                                style={{
+                                                    width: 26,
+                                                    height: 26,
+                                                }}
+                                            />
+                                        </ItemButton>
+                                    }
+                                />
+                                <Item
+                                    title="현장 연락처"
+                                    value={
+                                        order.directPhone
+                                            ? GetPhoneNumberWithDash(
+                                                  order.directPhone
+                                              )
+                                            : "없음"
+                                    }
+                                    button={
+                                        <ItemButton>
+                                            <Image
+                                                source={require(`../../../assets/images/icons/icon_phone.png`)}
+                                                style={{
+                                                    width: 26,
+                                                    height: 26,
+                                                }}
+                                            />
+                                        </ItemButton>
+                                    }
+                                />
+                            </>
+                        )}
+
                         <Item title="특이사항" value={order.memo || "없음"} />
                         <Item
                             title="작업 비용"
