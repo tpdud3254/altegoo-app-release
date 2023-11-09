@@ -22,16 +22,16 @@ import LoadingLayout from "../../../component/layout/LoadingLayout";
 
 const Container = styled.View`
     justify-content: space-between;
-    height: ${(props) => props.height - 200}px;
+    height: ${(props) => props.height - 150}px;
     max-width: 400px;
 `;
 
 const Wrapper = styled.View`
-    margin-top: 40px;
+    margin-top: 0px;
 `;
 
 const Item = styled.View`
-    margin-bottom: 25px;
+    margin-bottom: 20px;
 `;
 
 const SkipButton = styled.TouchableOpacity`
