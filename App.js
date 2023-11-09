@@ -18,6 +18,7 @@ import * as Notifications from "expo-notifications";
 import * as BackgroundFetch from "expo-background-fetch";
 import * as TaskManager from "expo-task-manager";
 import { WSS_SERVER } from "./constant";
+import Permission from "./screen/Permission";
 
 SplashScreen.preventAutoHideAsync();
 
@@ -60,15 +61,6 @@ function createSocket() {
     //BUG: 서버 쪽 연결 끊기고 다시 연결 되었을 때 여러개 연결되는거 fix (tts메세지에 인덱스를 붙여서 해당 인덱스가 이미 실행되었으면 실행안하게?)
 }
 
-Notifications.setNotificationHandler({
-    handleNotification: async () => ({
-        shouldShowAlert: true,
-        shouldPlaySound: true,
-        shouldSetBadge: true,
-        priority: AndroidNotificationPriority.MAX,
-    }),
-});
-
 const createSocketOnBackground = () => {
     try {
         console.log("ws.readyState on background : ", ws.readyState);
@@ -81,6 +73,25 @@ const createSocketOnBackground = () => {
     } catch (err) {
         return BackgroundFetch.BackgroundFetchResult.Failed;
     }
+};
+
+Notifications.setNotificationHandler({
+    handleNotification: async () => ({
+        shouldShowAlert: true,
+        shouldPlaySound: true,
+        shouldSetBadge: true,
+        priority: AndroidNotificationPriority.MAX,
+    }),
+});
+
+const getCurrentLocation = async () => {
+    const location = await Location.getCurrentPositionAsync();
+    console.log("get location on background : ", location);
+    const {
+        coords: { latitude, longitude },
+    } = location;
+
+    checkPosition({ latitude, longitude });
 };
 
 const initBackgroundFetch = async (taskName, taskFn, interval = 60 * 15) => {
@@ -98,23 +109,11 @@ const initBackgroundFetch = async (taskName, taskFn, interval = 60 * 15) => {
     }
 };
 
-const getCurrentLocation = async () => {
-    const location = await Location.getCurrentPositionAsync();
-    console.log("get location on background : ", location);
-    const {
-        coords: { latitude, longitude },
-    } = location;
-
-    checkPosition({ latitude, longitude });
-};
-
 initBackgroundFetch(WEB_SOCKET_TASK, createSocketOnBackground, 5);
-initBackgroundFetch(LOCATION_TASK, getCurrentLocation, 5);
+// initBackgroundFetch(LOCATION_TASK, getCurrentLocation, 5);
 
 export default function App() {
     const [appIsReady, setAppIsReady] = useState(false);
-    const [locationGranted, setLocationGranted] = useState(true);
-    const [pushGranted, setPushGranted] = useState(true);
     const [fontsLoaded] = useFonts({
         "SpoqaHanSansNeo-Bold": require("./assets/fonts/SpoqaHanSansNeo-Bold.otf"),
         "SpoqaHanSansNeo-Light": require("./assets/fonts/SpoqaHanSansNeo-Light.otf"),
@@ -122,6 +121,12 @@ export default function App() {
         "SpoqaHanSansNeo-Regular": require("./assets/fonts/SpoqaHanSansNeo-Regular.otf"),
         "SpoqaHanSansNeo-Thin": require("./assets/fonts/SpoqaHanSansNeo-Thin.otf"),
     });
+
+    const [foreground, requestForeground] = Location.useForegroundPermissions();
+    const [background, requestBackground] = Location.useBackgroundPermissions();
+
+    const [pushGranted, setPushGranted] = useState(false);
+    const [locationGranted, setLocationGranted] = useState(false);
 
     useEffect(() => {
         async function prepare() {
@@ -131,21 +136,23 @@ export default function App() {
                     require(`./assets/images/intro/img_02.png`),
                     require(`./assets/images/intro/img_03.png`),
                 ]);
-
                 await Promise.all([...imageAssets]);
 
-                askLocationPermission();
-                askPushPermission();
+                const response = await Notifications.getPermissionsAsync();
+
+                if (response.status === "granted") {
+                    setPushGranted(true);
+                }
             } catch (e) {
-                console.warn(e);
+                console.warn("prepare error : ", e);
             } finally {
                 setAppIsReady(true);
             }
         }
 
         AppState.addEventListener("change", (state) => {
-            console.log("state : ", state);
-            console.log("addEventlistner");
+            // console.log("state : ", state);
+            // console.log("addEventlistner");
             console.log(ws);
             if (state === "background") {
                 // if (ws) {
@@ -160,6 +167,7 @@ export default function App() {
         });
 
         if (ws === null) createSocket();
+
         prepare();
 
         return () => {
@@ -167,25 +175,16 @@ export default function App() {
         };
     }, []);
 
-    const askLocationPermission = async () => {
-        //TODO: 권한 관련 로직 수정 (권한없으면 진행안되고 앱 종료,,,)
-        const { granted: foregroundGranted } =
-            await Location.requestForegroundPermissionsAsync();
-        const { granted: backgroundGranted } =
-            await Location.requestBackgroundPermissionsAsync();
-
-        console.log(
-            "askLocationPermission foregroundGranted : ",
-            foregroundGranted
-        );
-        console.log(
-            "askLocationPermission backgroundGranted : ",
-            backgroundGranted
-        );
-        if (!foregroundGranted || !backgroundGranted) {
-            setLocationGranted(false);
+    useEffect(() => {
+        if (
+            foreground &&
+            foreground.granted &&
+            background &&
+            background.granted
+        ) {
+            setLocationGranted(true);
         }
-    };
+    }, [foreground, background]);
 
     const askPushPermission = async () => {
         if (Device.isDevice) {
@@ -218,15 +217,66 @@ export default function App() {
         });
     }
 
-    const onLayoutRootView = useCallback(async () => {
-        if (!locationGranted || !pushGranted) {
-            //TODO:앱종료 추가
-            return null;
+    const requestPermissions = async () => {
+        //TODO: 권한 관련 로직 수정 (권한없으면 진행안되고 앱 종료,,,)
+        console.log(
+            "[location] foreground granted : ",
+            foreground.granted,
+            " / status : ",
+            foreground.status
+        );
+        console.log(
+            "[location] background granted : ",
+            background.granted,
+            " / status : ",
+            background.status
+        );
+
+        if (!foreground || !foreground.granted) {
+            const response = await requestForeground();
+            console.log("[location] request foreground response : ", response);
         }
+
+        if (!background || !background.granted) {
+            const response = await requestBackground();
+            console.log("[location] request background response : ", response);
+        }
+
+        if (Device.isDevice) {
+            const response = await Notifications.getPermissionsAsync();
+
+            console.log(
+                "[notification] get permission granted : ",
+                response.granted,
+                " / status : ",
+                response.status
+            );
+            let finalStatus = response.status;
+            if (response.status !== "granted") {
+                const response = await Notifications.requestPermissionsAsync();
+                finalStatus = response.status;
+            }
+
+            console.log("[notification] request response : ", response);
+            if (finalStatus === "granted") {
+                setPushGranted(true);
+            }
+        }
+    };
+
+    const onLayoutRootView = useCallback(async () => {
         if (appIsReady && fontsLoaded) {
             await SplashScreen.hideAsync();
         }
-    }, [appIsReady, fontsLoaded]);
+    }, [appIsReady, fontsLoaded, locationGranted, pushGranted]);
+
+    if (fontsLoaded && (!locationGranted || !pushGranted)) {
+        return (
+            <View style={{ flex: 1 }} onLayout={onLayoutRootView}>
+                <Permission onPress={requestPermissions} />
+            </View>
+        );
+    }
 
     if (!appIsReady || !fontsLoaded) {
         return null;
