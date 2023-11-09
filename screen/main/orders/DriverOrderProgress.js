@@ -359,9 +359,7 @@ function DriverOrderProgress({ navigation, route }) {
             .catch((error) => {
                 showError(error);
             })
-            .finally(() => {
-                onClose();
-            });
+            .finally(() => {});
     };
     const Item = ({ title, value, center, onClick }) => (
         <SItem center={center}>
