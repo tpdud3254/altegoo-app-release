@@ -64,6 +64,7 @@ const areaObj = {
         "경기 남동부",
     ],
     인천: ["인천 전체"],
+    기타: ["그 외 지역"],
 };
 
 const areaDetailObj = {
@@ -99,6 +100,7 @@ function WorkingArea({ route }) {
         경기 북동부 => 4 => [1, 2]
         경기 남서부 => 5 => [1, 3]
         경기 남동부 => 6 => [1, 4]
+        그 외 지역 => 7 => [3, 0]
         */
 
         const workRegion = [];
@@ -114,6 +116,8 @@ function WorkingArea({ route }) {
                 }
             } else if (element[0] === 2 && element[1] === 0) {
                 workRegion.push(2);
+            } else if (element[0] === 3 && element[1] === 0) {
+                workRegion.push(7);
             }
         });
 
