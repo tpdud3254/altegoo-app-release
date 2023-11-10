@@ -199,6 +199,15 @@ export const Order = {
                 );
                 return;
             }
+
+            if (
+                info.userType === DRIVER &&
+                (!info.vehicle || !info.vehiclePermission)
+            ) {
+                showMessage("내 정보 > 회원정보에서 차량 정보를 등록해주세요.");
+                return;
+            }
+
             try {
                 const response = await axios.patch(
                     SERVER + "/works/order/accept",
