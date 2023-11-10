@@ -19,6 +19,7 @@ import {
     GetDayOfWeek,
     getAsyncStorageToken,
     numberWithComma,
+    numberWithZero,
     showError,
 } from "../../../../utils";
 import RegularText from "../../../../component/text/RegularText";
@@ -101,9 +102,9 @@ function PointBreakdown() {
             const dateTime = new Date(value.date);
 
             const key = `${dateTime
-                .getFullYear()
+                .getUTCFullYear()
                 .toString()
-                .substring(2, 4)}년 ${dateTime.getMonth() + 1}월`;
+                .substring(2, 4)}년 ${dateTime.getUTCMonth() + 1}월`;
 
             if (!result[key]) result[key] = [];
 

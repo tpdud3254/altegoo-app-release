@@ -203,8 +203,8 @@ function SearchAddress({ route, navigation }) {
                 title: "다음으로",
                 disabled: !validation,
             }}
+            touchableElement={() => <OptionScroll data={optionData} />}
         >
-            <OptionScroll data={optionData} />
             <KeyboardAvoidingView>
                 {registInfo.direction === DIRECTION[2] ? (
                     <>

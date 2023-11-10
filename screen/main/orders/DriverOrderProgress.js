@@ -11,6 +11,7 @@ import Car from "../../../assets/images/icons/Procress_car.png";
 import Button from "../../../component/button/Button";
 import {
     CheckLoading,
+    GetCurrentDateTime,
     GetDate,
     GetPhoneNumberWithDash,
     GetTime,
@@ -203,7 +204,7 @@ function DriverOrderProgress({ navigation, route }) {
     const checkStartOrder = (order) => {
         if (order.orderStatusId !== 2) return;
 
-        const now = new Date();
+        const now = GetCurrentDateTime();
         const orderDateTime = new Date(order.dateTime);
 
         if (orderDateTime > now) {

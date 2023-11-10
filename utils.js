@@ -82,20 +82,20 @@ export const GetDate = (dateTime, mode = "short") => {
 
     if (mode === "short")
         return `${workDateTime
-            .getFullYear()
+            .getUTCFullYear()
             .toString()
             .substring(2, 4)}.${numberWithZero(
-            workDateTime.getMonth() + 1
-        )}.${numberWithZero(workDateTime.getDate())}`;
+            workDateTime.getUTCMonth() + 1
+        )}.${numberWithZero(workDateTime.getUTCDate())}`;
     else if (mode === "long")
-        return `${workDateTime.getFullYear()}년 ${
-            workDateTime.getMonth() + 1
-        }월 ${workDateTime.getDate()}일`;
+        return `${workDateTime.getUTCFullYear()}년 ${
+            workDateTime.getUTCMonth() + 1
+        }월 ${workDateTime.getUTCDate()}일`;
 };
 
 export const GetDayOfWeek = (dateTime) => {
     const workDateTime = new Date(dateTime);
-    const dayOfWeek = workDateTime.getDay();
+    const dayOfWeek = workDateTime.getUTCDay();
     let str = "";
     switch (dayOfWeek) {
         case 0:
@@ -127,90 +127,28 @@ export const GetTime = (dateTime, mode = "short") => {
     const workDateTime = new Date(dateTime);
 
     const hours =
-        workDateTime.getHours() === 0
+        workDateTime.getUTCHours() === 0
             ? 12
-            : workDateTime.getHours() > 12
-            ? workDateTime.getHours() - 12
-            : workDateTime.getHours();
+            : workDateTime.getUTCHours() > 12
+            ? workDateTime.getUTCHours() - 12
+            : workDateTime.getUTCHours();
 
     if (mode === "short")
-        return `${GetAmpm(workDateTime.getHours())} ${numberWithZero(
+        return `${GetAmpm(workDateTime.getUTCHours())} ${numberWithZero(
             hours
-        )}:${numberWithZero(workDateTime.getMinutes())}`;
+        )}:${numberWithZero(workDateTime.getUTCMinutes())}`;
     else if (mode === "long")
-        return `${GetAmpm(workDateTime.getHours())} ${numberWithZero(
+        return `${GetAmpm(workDateTime.getUTCHours())} ${numberWithZero(
             hours
-        )}시 ${numberWithZero(workDateTime.getMinutes())}분`;
+        )}시 ${numberWithZero(workDateTime.getUTCMinutes())}분`;
     else if (mode === "24")
-        return `${numberWithZero(workDateTime.getHours())}:${numberWithZero(
-            workDateTime.getMinutes()
+        return `${numberWithZero(workDateTime.getUTCHours())}:${numberWithZero(
+            workDateTime.getUTCMinutes()
         )}`;
 };
 
 export const GetAmpm = (hours) => {
     return hours === 0 ? "오전" : hours >= 12 ? "오후" : "오전";
-};
-
-export const getWorkTime = (dateTime, mode) => {
-    const getDay = (index) => {
-        switch (index) {
-            case 0:
-                return "일";
-            case 1:
-                return "월";
-            case 2:
-                return "화";
-            case 3:
-                return "수";
-            case 4:
-                return "목";
-            case 5:
-                return "금";
-            case 6:
-                return "토";
-
-            default:
-                break;
-        }
-    };
-    const workDateTime = new Date(dateTime);
-
-    if (mode === "short")
-        return `${workDateTime.getFullYear()}.${
-            workDateTime.getMonth() + 1 < 10
-                ? "0" + (workDateTime.getMonth() + 1)
-                : workDateTime.getMonth() + 1
-        }.${
-            workDateTime.getDate() < 10
-                ? "0" + workDateTime.getDate()
-                : workDateTime.getDate()
-        } ${
-            workDateTime.getHours() < 10
-                ? "0" + workDateTime.getHours()
-                : workDateTime.getHours()
-        }:${
-            workDateTime.getMinutes() < 10
-                ? "0" + workDateTime.getMinutes()
-                : workDateTime.getMinutes()
-        }`;
-    else
-        return `${workDateTime.getFullYear()}년 ${
-            workDateTime.getMonth() + 1 < 10
-                ? "0" + (workDateTime.getMonth() + 1)
-                : workDateTime.getMonth() + 1
-        }월 ${
-            workDateTime.getDate() < 10
-                ? "0" + workDateTime.getDate()
-                : workDateTime.getDate()
-        }일 (${getDay(workDateTime.getDay())}) ${
-            workDateTime.getHours() < 10
-                ? "0" + workDateTime.getHours()
-                : workDateTime.getHours()
-        }:${
-            workDateTime.getMinutes() < 10
-                ? "0" + workDateTime.getMinutes()
-                : workDateTime.getMinutes()
-        }`;
 };
 
 export const showError = (error) => {
@@ -330,14 +268,14 @@ export const checkPosition = async (location) => {
 
             if (list.length > 0) {
                 list.map((order) => {
-                    const now = new Date();
+                    const now = GetCurrentDateTime();
                     const compareDate = new Date(order.dateTime);
                     if (now > compareDate) {
                         return;
                     }
 
                     if (!order1) {
-                        compareDate.setHours(compareDate.getHours() - 1); //작업시간이 한 시간 이하로 남았을 경우
+                        compareDate.setUTCHours(compareDate.getUTCHours() - 1); //작업시간이 한 시간 이하로 남았을 경우
 
                         if (order.orderStatusId === 2 && now > compareDate) {
                             order1 = order;
@@ -888,19 +826,19 @@ export const Filter = ({ data, period, orderBy }) => {
     if (period === "전체 기간") {
         return data;
     }
-    const today = new Date();
-    const ago = new Date();
+    const today = GetCurrentDateTime();
+    const ago = GetCurrentDateTime();
 
     if (period === "1주일") {
-        ago.setDate(today.getDate() - 7);
+        ago.setUTCDate(today.getUTCDate() - 7);
     } else if (period === "1개월") {
-        ago.setMonth(today.getMonth() - 1);
+        ago.setUTCMonth(today.getUTCMonth() - 1);
     } else if (period === "3개월") {
-        ago.setMonth(today.getMonth() - 3);
+        ago.setUTCMonth(today.getUTCMonth() - 3);
     } else if (period === "6개월") {
-        ago.setMonth(today.getMonth() - 6);
+        ago.setUTCMonth(today.getUTCMonth() - 6);
     } else if (period === "12개월") {
-        ago.setMonth(today.getMonth() - 12);
+        ago.setUTCMonth(today.getUTCMonth() - 12);
     }
 
     const result = [];
@@ -1003,4 +941,24 @@ export const GoToKakaoNavi = async (address) => {
     Linking.openURL(
         `https://master.d1p7wg3e032x9j.amplifyapp.com/navi?name=${address}&x=${longitude}&y=${latitude}`
     );
+};
+
+export const GetCurrentDateTime = () => {
+    const curr = new Date();
+
+    const kr_curr = curr.setHours(curr.getHours() + 9);
+
+    const result = new Date(kr_curr);
+
+    return result;
+};
+
+export const GetKrDateTime = (datetime) => {
+    const curr = new Date(datetime);
+
+    const kr_curr = curr.setHours(curr.getHours() + 9);
+
+    const result = new Date(kr_curr);
+
+    return result;
 };

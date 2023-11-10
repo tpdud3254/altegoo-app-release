@@ -19,9 +19,12 @@ import { shadowProps } from "../../../component/Shadow";
 import Dialog, { DialogContent } from "react-native-popup-dialog";
 import RNDateTimePicker from "@react-native-community/datetimepicker";
 import {
+    GetCurrentDateTime,
     GetDate,
+    GetKrDateTime,
     GetOrderOption,
     GetTime,
+    numberWithZero,
     showErrorMessage,
 } from "../../../utils";
 
@@ -89,16 +92,18 @@ function SelectDateTime({ navigation }) {
     };
 
     const getMonth = (date) => {
-        return date.getMonth() + 1 < 10
-            ? "0" + (date.getMonth() + 1)
-            : date.getMonth() + 1;
+        return date.getUTCMonth() + 1 < 10
+            ? "0" + (date.getUTCMonth() + 1)
+            : date.getUTCMonth() + 1;
     };
 
     const getMinDate = () => {
-        const today = new Date();
+        const today = GetCurrentDateTime();
 
-        return `${today.getFullYear()}-${getMonth(today)}-${
-            today.getDate() < 10 ? "0" + today.getDate() : today.getDate()
+        return `${today.getUTCFullYear()}-${getMonth(today)}-${
+            today.getUTCDate() < 10
+                ? "0" + today.getUTCDate()
+                : today.getUTCDate()
         }`;
     };
     const isHandDay = (dateString, month) =>
@@ -111,48 +116,51 @@ function SelectDateTime({ navigation }) {
         setSelectedDay(GetDate(dateString, "long"));
         hidePopup();
     };
+    const getTime = (dateTime) => {
+        const workDateTime = new Date(dateTime);
 
+        const hours =
+            workDateTime.getHours() === 0
+                ? 12
+                : workDateTime.getHours() > 12
+                ? workDateTime.getHours() - 12
+                : workDateTime.getHours();
+
+        return `${GetAmpm(workDateTime.getHours())} ${numberWithZero(
+            hours
+        )}시 ${numberWithZero(workDateTime.getMinutes())}분`;
+    };
     const onSelectTime = (e) => {
         hidePopup();
 
-        const date = new Date(e.nativeEvent.timestamp);
-        setTime(`${date.getHours()}:${date.getMinutes()}`);
+        const date = GetKrDateTime(e.nativeEvent.timestamp);
+        console.log("date : ", date);
+        setTime(`${date.getUTCHours()}:${date.getUTCMinutes()}`);
         setSelectedTime(GetTime(date, "long"));
     };
     const onNextStep = () => {
-        const sendDateTime = new Date();
-
-        // console.log("day : ", day);
-        // console.log("time : ", time);
+        const sendDateTime = GetCurrentDateTime();
 
         const year = day.substring(0, 4);
         const month = day.substring(5, 7);
         const date = day.substring(8, 10);
         const [hours, min] = time.split(":");
 
-        // sendDateTime.setFullYear(Number(year));
-        // sendDateTime.setMonth(Number(month) - 1);
-        // sendDateTime.setDate(Number(date));
-        // sendDateTime.setHours(hours);
-        // sendDateTime.setMinutes(min);
-
-        // console.log("sendDateTime1 : ", sendDateTime);
-        //TODO: datetime UTC로 바꾸기
         sendDateTime.setUTCFullYear(Number(year));
         sendDateTime.setUTCMonth(Number(month) - 1);
         sendDateTime.setUTCDate(Number(date));
         sendDateTime.setUTCHours(hours);
         sendDateTime.setUTCMinutes(min);
 
-        const now = new Date();
+        const now = GetCurrentDateTime();
 
         if (now >= sendDateTime) {
             showErrorMessage("현재 시각 이후로 선택해 주세요.");
             return;
         }
+        console.log("now : ", now);
+        console.log("sendDateTime1 : ", sendDateTime);
 
-        // console.log("sendDateTime tolocale : ", sendDateTime.toLocaleString());
-        // console.log("sendDateTime2 : ", sendDateTime);
         setRegistInfo({ ...registInfo, dateTime: sendDateTime });
 
         navigation.navigate(REGIST_NAV[2]);
@@ -271,7 +279,7 @@ function SelectDateTime({ navigation }) {
                     renderHeader={(date) => (
                         <View>
                             <MediumText>
-                                {date.getFullYear()}년 {getMonth(date)}월
+                                {date.getUTCFullYear()}년 {getMonth(date)}월
                             </MediumText>
                         </View>
                     )}

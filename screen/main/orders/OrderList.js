@@ -146,9 +146,9 @@ function OrderList({ navigation }) {
             const dateTime = new Date(order.dateTime);
 
             const key = `${dateTime
-                .getFullYear()
+                .getUTCFullYear()
                 .toString()
-                .substring(2, 4)}년 ${dateTime.getMonth() + 1}월`;
+                .substring(2, 4)}년 ${dateTime.getUTCMonth() + 1}월`;
 
             if (!result[key]) result[key] = [];
 
