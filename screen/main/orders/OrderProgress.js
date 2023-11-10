@@ -259,18 +259,23 @@ function OrderProgress({ navigation, route }) {
 
     const cancelOrder = async () => {
         axios
-            .delete(SERVER + "/orders/delete", {
-                data: { orderId: route?.params?.orderId, userId: info.id },
-                headers: {
-                    auth: await getAsyncStorageToken(),
+            .patch(
+                SERVER + "/works/cancel",
+                {
+                    id: route?.params?.orderId,
                 },
-            })
+                {
+                    headers: {
+                        auth: await getAsyncStorageToken(),
+                    },
+                }
+            )
             .then(({ data }) => {
                 const { result } = data;
 
                 console.log("cancelOrder : ", result);
                 showMessage("요청한 오더가 취소되었습니다.");
-                //TODO: 요청 취소 다시
+
                 navigation.goBack();
             })
             .catch((error) => {
