@@ -122,18 +122,27 @@ function SelectDateTime({ navigation }) {
     const onNextStep = () => {
         const sendDateTime = new Date();
 
+        // console.log("day : ", day);
+        // console.log("time : ", time);
+
         const year = day.substring(0, 4);
         const month = day.substring(5, 7);
         const date = day.substring(8, 10);
         const [hours, min] = time.split(":");
 
-        sendDateTime.setFullYear(Number(year));
-        sendDateTime.setMonth(Number(month) - 1);
-        sendDateTime.setDate(Number(date));
-        sendDateTime.setHours(+hours);
-        sendDateTime.setMinutes(min);
+        // sendDateTime.setFullYear(Number(year));
+        // sendDateTime.setMonth(Number(month) - 1);
+        // sendDateTime.setDate(Number(date));
+        // sendDateTime.setHours(hours);
+        // sendDateTime.setMinutes(min);
 
-        console.log(sendDateTime);
+        // console.log("sendDateTime1 : ", sendDateTime);
+        //TODO: datetime UTC로 바꾸기
+        sendDateTime.setUTCFullYear(Number(year));
+        sendDateTime.setUTCMonth(Number(month) - 1);
+        sendDateTime.setUTCDate(Number(date));
+        sendDateTime.setUTCHours(hours);
+        sendDateTime.setUTCMinutes(min);
 
         const now = new Date();
 
@@ -142,6 +151,8 @@ function SelectDateTime({ navigation }) {
             return;
         }
 
+        // console.log("sendDateTime tolocale : ", sendDateTime.toLocaleString());
+        // console.log("sendDateTime2 : ", sendDateTime);
         setRegistInfo({ ...registInfo, dateTime: sendDateTime });
 
         navigation.navigate(REGIST_NAV[2]);
