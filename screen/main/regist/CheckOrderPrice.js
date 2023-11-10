@@ -64,6 +64,7 @@ const CheckOrderPrice = ({ navigation }) => {
         register("price"); //운임
         register("emergencyPrice"); // 긴급 비용
         register("curPoint"); //보유한 포인트
+        register("orderPrice"); //??
         register("usePoint"); //사용할 포인트
         register("totalPrice"); //최종 결제 금액
         register("registPoint"); //적립 예정 포인트
@@ -86,10 +87,12 @@ const CheckOrderPrice = ({ navigation }) => {
         const emergencyPriceNum = Number(emergencyPrice) || 0;
         const usePointNum = Number(usePoint) || 0;
 
+        const orderPrice = priceNum + emergencyPriceNum;
         const totalPrice = priceNum + emergencyPriceNum - usePointNum;
         const registPoint = GetSavePoint(priceNum + emergencyPriceNum);
         const tax = GetTax(totalPrice);
 
+        setValue("orderPrice", orderPrice.toString());
         setValue("totalPrice", totalPrice.toString());
         setValue("registPoint", registPoint.toString());
         setValue("tax", tax.toString());
