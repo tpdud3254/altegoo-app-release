@@ -146,9 +146,28 @@ function Permission({ onPress }) {
                                     fontSize: 15,
                                 }}
                             >
-                                * 위치정보는 [앱 사용 중에만 허용], [항상
-                                허용]으로 선택하셔야 정상적인 앱 이용이
-                                가능합니다.
+                                * 위치정보 :{" "}
+                                <BoldText
+                                    style={{
+                                        color: color.red,
+                                        fontSize: 15,
+                                        marginTop: 10,
+                                    }}
+                                >
+                                    [앱 사용 중에만 허용], [항상 허용]
+                                </BoldText>
+                                {"\n"}
+                                알림 :{" "}
+                                <BoldText
+                                    style={{
+                                        color: color.red,
+                                        fontSize: 15,
+                                        marginTop: 10,
+                                    }}
+                                >
+                                    [허용]
+                                </BoldText>
+                                으로 선택하셔야 정상적인 앱 이용이 가능합니다.
                             </RegularText>
                             <RegularText
                                 style={{
@@ -157,8 +176,19 @@ function Permission({ onPress }) {
                                     marginTop: 10,
                                 }}
                             >
-                                * 권한 거절 시 [설정 {">"} 애플리케이션 {">"}
-                                알테구]에서 알림과 위치 설정을 변경해주세요.
+                                * 권한 거절을 했거나 확인 버튼을 눌러도 동작
+                                안할 시{" "}
+                                <BoldText
+                                    style={{
+                                        color: color.red,
+                                        fontSize: 15,
+                                        marginTop: 10,
+                                    }}
+                                >
+                                    [설정 {">"} 애플리케이션 {">"}
+                                    알테구]
+                                </BoldText>
+                                에서 알림과 위치 설정을 변경해주세요.
                             </RegularText>
                         </Noti>
                     </Content>
